@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+	<head>
+		<title>test de líneas</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+		<script src="js/jquery.jsPlumb-1.7.2-min.js"></script>
+		<script src="js/actions.js"></script>
+	</head>
+	<body>
+		<h2>Quiz de Colores</h2>
+		<p id="note">no resuelto</p>
+		<div id="col-container">
+			<div class="col col-1">
+				<ul>
+					<li id="origen-0" data-respuesta="0">amarillo</li>
+					<li id="origen-1" data-respuesta="0">rojo</li>
+					<li id="origen-2" data-respuesta="0">negro</li>
+					<li id="origen-3" data-respuesta="0">blanco</li>
+				</ul>
+			</div>
+			<div class=" col col-2">
+				<ul>
+					<li id="destino-0" data-origen="3">white</li>
+					<li id="destino-1" data-origen="2">black</li>
+					<li id="destino-2" data-origen="0">yellow</li>
+					<li id="destino-3" data-origen="1">red</li>
+				</ul>
+			</div>
+		</div>
+		<button id="check">verificar</button>
+	</body>
+</html>

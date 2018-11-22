@@ -1,0 +1,424 @@
+/* 
+    Created on : 28/11/2013, 12:34:43 PM
+    Author     : ragan
+*/
+
+html, body{
+	margin: 0px;
+	padding: 0px;
+	color: #666;
+	font-size: 14px;
+	font-family: Calibri, Helvetica, Arial, sans-serif;
+	background: #f9f9f9;
+}
+
+a, a:hover, a:active, a:focus { text-decoration: none; }
+a img { border: none; }
+
+table{
+	border: 1px solid #CCC;
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+
+p{ line-height: 20px; }
+
+h1, h2, h3, h4, h5, h6{ 
+	font-weight: 500;
+	font-family: 'Ubuntu', sans-serif; 
+}
+
+h1{
+	color: #000;
+	font-size: 32px;
+	font-weight: 300;
+	text-shadow: 2px 2px 1px #FFF;
+}
+
+p:first-child,
+h1:first-child, 
+h2:first-child, 
+h3:first-child, 
+h4:first-child, 
+h5:first-child, 
+h6:first-child { margin-top: 0.25em; }
+
+/* ---------------------------------- */
+/* -------- LAYOUT STRUCTURE -------- */
+/* ---------------------------------- */
+
+.main_nav_col{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 112px;
+	color: #E2EDE2;
+	background: #89CB4E;
+	min-height: 100%;
+}
+
+.main_logo{
+	display: block;
+	margin: 0px auto;
+	padding: 12px;
+	text-align: center;
+}
+
+.main_container{
+	padding-top: 12px;
+	min-width: 184px;
+	//margin: 0px 12px 0px 124px;
+        margin: 0px 0px 0px 112px;  //pcrn-mod 2015-04-01
+}
+
+.col{ overflow: auto; }
+
+.col_box{ 
+	background: #FFF;
+	border-radius: 4px;
+	box-shadow: 1px 1px 4px 1px #E2EDE2;
+}
+
+.info_container_title{
+	color: #FFF;
+	padding: 8px 12px;
+	font-size: 1.125em;
+	font-weight: 300;
+	letter-spacing: 1px;
+	background: #428BCA;
+	border-bottom: 1px solid #F3F6F3;
+}
+
+.info_container_title:first-child{
+	margin: 0px;
+}
+
+.collapse_box{
+	float: right;
+	cursor: pointer;
+}
+
+.info_container_body{
+	padding: 12px;
+}
+
+.main_footer{
+	color: #000;
+	font-size: 12px;
+	text-align: right;
+	padding: 12px;
+}
+
+.menu_switch{
+	display: none;
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	color: #333;
+	padding: 4px 8px;
+	background: #F2F2F2;
+	border-radius: 4px;
+}
+
+.menu_switch:hover{
+	color: #000;
+	background: #FFF;
+}
+
+.menu_switch span{
+	font-weight: bold;
+	padding-left: 4px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+/* ----------------------------------- */
+/* -------- MAIN NAV CONTENTS -------- */
+/* ----------------------------------- */
+
+.main_nav, .sub_nav{
+	padding: 0px;
+	margin: 0px;
+	list-style: none;
+}
+
+.main_nav > li{
+	position: relative;
+}
+
+.main_nav > li > a{
+	display: block;
+	margin: 0px;
+	color: #FFF;
+	line-height: 24px;
+	font-size: 15px;
+	text-align: center;
+	padding: 20px 0px;
+	transition: all 125ms ease-out;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.main_nav > li > a:hover, .main_nav > li > a.current{
+	box-shadow: inset 0px 0px 72px #609127;
+}
+
+.main_nav > li > a > span{
+	display: block;
+}
+
+.sub_nav{
+	position: absolute;
+	left: 112px;
+	top: 0px;
+	width: 148px;
+	background: #EAEFE1;
+	border: 1px solid #9BAA81;
+	box-shadow: 4px 4px 8px 2px rgba(0,0,0,0.5);
+	z-index: 9999;
+}
+
+.sub_nav li a{
+	color: #262821;
+	display: block;
+	padding: 8px 10px;
+	margin: 6px 0px;
+	transition: border 125ms ease-out;
+	border-left: 0px solid #4B6334;
+}
+
+.sub_nav li a:hover, .sub_nav li a.current{
+	color: #FFF;
+	background: #7EBB48;
+	border-left: 4px solid #4B6334;
+}
+
+.sub_nav li .fa{
+	padding-right: 6px;
+}
+
+.gossip{
+	display: block;
+	line-height: 18px;
+	overflow: hidden;
+	color: #FFF;
+	font-size: 10px;
+	text-align: center;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	padding: 2px;
+	box-shadow: inset 0px 4px 16px #577A2A;
+	border-bottom: 1px solid #A8D676;
+}
+
+/* -------------------------------------- */
+/* ------- BREADCRUMBS & MINI_NAV ------- */
+/* -------------------------------------- */
+
+.breadcrumbs, .mini_nav{
+	margin: 12px 0px;
+	font-size: 15px;
+}
+
+.breadcrumbs a{
+	display: inline-block;
+	margin: 0px 2px;
+}
+
+.breadcrumbs_divisor{
+	display: inline-block;
+	color: #999;
+	margin: 0px 2px;
+}
+
+.mini_nav ul{
+	list-style: none;
+	padding: 0px;
+	margin: 0px 0px 8px 0px;
+}
+
+.main_container .mini_nav a{
+        text-align: center;
+	display: inline-block;
+	padding: 2px 10px; 
+	margin: 0px 0px 8px 0px;
+	background: #FFF;
+	border-radius: 2px; /* pcrn, antes 3px */
+	border: 1px solid #69A5D1;
+	transition: all 125ms ease-out;
+}
+
+.main_container .mini_nav a:hover, .main_container .mini_nav a.current{ 
+	color: #FFF;
+	background: #428BCA;
+	padding: 2px 15px;
+}
+
+/* ----------------------------------- */
+/* ----------- SEARCH FORM ----------- */
+/* ----------------------------------- */
+
+.search_container{
+	padding: 8px;
+	background: #89CB4E;
+	border-radius: 6px;
+	width: 96px;
+	transition: all 230ms ease-out;
+        -webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+        z-index: 999;
+}
+
+.search_container form{
+	position: relative;
+	padding: 3px 4px;
+	background: #FFF;
+	border-radius: 4px;
+        
+}
+
+.search_container i{
+	display: block;
+	position: absolute;
+	top: 5px;
+	left: 7px;
+	color: #999;
+	margin-right: 8px;
+}
+
+.search_box{
+	display: block;
+	padding: 0px;
+	margin-left: 20px;
+	border: none;
+	width: 68px;
+	color: #CCC;
+	transition: all 250ms ease-out;
+}
+
+@media all and (max-width: 480px){
+	
+	.search_container{
+		width: auto;
+	}
+	
+	.search_container i{
+		display: none;
+	}
+
+	.search_box{
+		margin: 0px;
+		width: 100%;
+	}
+}
+
+/* ----------------------------------- */
+/* ---------- MAIN CONTENTS ---------- */
+/* ----------------------------------- */
+
+.main_container a{ /*color: #2082F9;*/ }
+
+.main_container a:hover{ /*color: #6CBC17;*/ }
+
+.col_box a{ /* color: #B64C4C; */ }
+
+.col_box a:hover{ /* color: #D80505; */}
+
+/* ------------------------------------ */
+/* ------ RESPONSIVE BEHAVIORS  ------- */
+/* ------------------------------------ */
+
+@media all and (max-width: 480px){
+	
+	.menu_switch{
+		display: block;
+	}
+	
+	.fa-2x{
+		font-size: inherit;
+	}
+	
+	.main_nav_col{
+		position: relative;
+		top: 0px;
+		left: 0px;
+		width: auto;
+		min-width: 320px;
+	}
+	
+	.main_logo{
+		text-align: left;
+	}
+	
+	.main_nav > li > a{
+		height: auto;
+		padding: 20px 0px;
+		font-size: 18px;
+		border-bottom: 1px solid #B0D887;
+	}
+	
+	.main_nav > li > a.current{
+		height: auto;
+	}
+	
+	.main_nav > li > a > span{
+		display: inline;
+		padding-left: 5px;
+	}
+	
+	.sub_nav{
+		position: relative;
+		top: auto;
+		left: auto;
+		width: auto;
+		border: none;
+		box-shadow: none;
+		background: #7EBB48;
+	}
+	
+	.gossip{
+		display: none;
+	}
+
+	.sub_nav li a{
+		color: #FFF;
+		margin: 0px;
+		border: none;
+		border-bottom: 1px solid #AED188;
+	}
+	
+	.sub_nav li a:hover, .sub_nav li a.current{
+		background: #73AA3D;
+	}
+	
+	.main_container{
+		min-width: 296px;
+		margin: 0px 12px 0px 12px;
+	}
+	
+}
+
+/* ------------------------------------------ */
+/* ----- OVERRIDE RESPONSIVE GRID SYSTEM----- */
+/* ------------------------------------------ */
+
+@media all and (max-width: 640px){
+	.col { 
+		width: 100%;
+		margin: 1% 0 1% 0%; 
+	}
+}
+
+/* ------------------------------------------ */
+/* ----------- OVERRIDE BOOTSTRAP ----------- */
+/* ------------------------------------------ */
+
+*, *:before, *:after {
+	/*-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;*/
+}
+
+.nav:first-child{
+	margin-top: 0px;
+}

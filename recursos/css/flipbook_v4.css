@@ -1,0 +1,114 @@
+body{
+    padding-top: 10px;
+}
+
+h1, h2, h3, h4, h5, h6{ 
+    font-weight: 500;
+    font-family: 'Ubuntu', sans-serif; 
+}
+
+div.flipbook{
+    text-align: center;
+}
+
+div.flipbook table {
+    margin: 0 auto;
+    text-align: left;
+}
+
+div.seccion_contenido{
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+div.seccion_pagina{
+    margin-bottom: 10px;
+}
+
+#indice_flipbook{
+    background: #fff;
+    overflow: hidden;
+}
+
+#elementos_indice{
+    padding: 10px;
+}
+
+#titulo_indice{
+    background: #89cb4e;
+    color: white;
+    padding: 5px 0 5px 0;
+    margin-bottom: 10px;
+}
+
+.link_indice{
+    background: #f9f9f9;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    border: 1px solid #DDD;
+    height: 45px;
+    margin: 0 5px 5px 0;
+    padding: 3px;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.link_indice:hover{
+    background: #d5eeff;
+    text-decoration: none;
+}
+
+#slider{
+    margin-top: 15px
+}
+
+.iconos {
+    width: 45px;
+    text-align: center;
+}
+
+.iconos img{
+    border: 1px solid #888;
+    margin-bottom: 5px;
+    padding: 3px;
+    background: #f8f8f8;
+    border-radius: 3px;
+    cursor: pointer;
+    cursor: hand;
+}
+
+.iconos img:hover{
+    /*padding: 3px;*/
+    border: 1px solid #eee;
+    background: #eee;
+}
+
+.oculto{
+    display: none;
+}
+
+.acciones{
+    vertical-align: top;
+    text-align: center;
+}
+
+textArea.anotacion{
+    width: 100%;
+    background: #fcfaed;
+    border: 1px solid #eeebda;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+img.pf_v4{
+    border: 1px solid #EEE;
+    -webkit-box-shadow: 5px 5px 15px 2px rgba(51,51,51,1);
+    -moz-box-shadow: 5px 5px 15px 2px rgba(51,51,51,1);
+    box-shadow: 5px 5px 15px 2px rgba(51,51,51,1);
+}
+
+.dropdown-menu a{
+    cursor: pointer;
+    cursor: hand;
+}

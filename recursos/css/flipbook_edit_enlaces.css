@@ -1,0 +1,92 @@
+@charset "UTF-8";
+/* CSS Document */
+
+html, body{
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.bg_castellano{ background: url(../media/images/flipbook_resources/castellano_bg.jpg) no-repeat center center fixed; }
+.bg_matematicas{ background: url(../media/images/flipbook_resources/matematicas_bg.jpg) no-repeat center center fixed; }
+.bg_naturales{ background: url(../media/images/flipbook_resources/naturales_bg.jpg) no-repeat center center fixed; }
+.bg_sociales{ background: url(../media/images/flipbook_resources/sociales_bg.jpg) no-repeat center center fixed; }
+
+.bg_castellano, .bg_matematicas, .bg_naturales, .bg_sociales{
+	-moz-background-size: cover;
+	-webkit-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
+/* -------- INDEX ----------- */
+
+.flipbook_index{
+	float: left;
+	width: 236px;
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+	background: #FFF;
+}
+
+.flipbook_page_preview{
+	float: left;
+}
+
+.page_container{
+	position: relative;
+	width: 400px;
+	height: 512px;
+	margin: 8px;
+	background-color: #DDD;
+	background-repeat: no-repeat;
+	background-position: top left;
+}
+
+.secure_area{
+	position: absolute;
+	width: 304px;
+	height: 416px;
+	margin: 48px;
+	border: 1px dotted #FF0;
+	background: rgba(255, 0, 255, 0.125);
+}
+
+.resource_mark{
+	position: absolute;
+	width: 32px;
+	height: 32px;
+	border: 1px dotted #000;
+}
+
+.icon_delete{
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	top: 0px;
+	left: 32px;
+	cursor: pointer;
+	background: url(../media/images/flipbook_resources/close_box_small.png) no-repeat;
+}
+
+.flipbook_page_index{
+	display: block;
+	width: 200px;
+	height: 256;
+	margin: 8px;
+	box-shadow: 2px 2px 2px #DDD;
+	cursor: pointer;
+}
+
+.data_form_container{
+	float: left;
+	margin: 8px;
+}
+
+.current_resource{
+	border: 1px dotted #FF00FF;
+	box-shadow: 0px 0px 4px rgba(255, 0, 255, 0.5);
+}

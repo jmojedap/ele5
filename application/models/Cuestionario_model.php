@@ -1,0 +1,2938 @@
+<?php
+class Cuestionario_model extends CI_Model
+{
+    
+    function basico($cuestionario_id)
+    {
+        $row = $this->datos_cuestionario($cuestionario_id);
+        
+        $basico['cuestionario_id'] = $cuestionario_id;
+        $basico['row'] = $row;
+        $basico['titulo_pagina'] = $row->nombre_cuestionario;
+        $basico['vista_a'] = 'cuestionarios/cuestionario_v';
+        $basico['reg_cuestionario'] = $row;
+        
+        return $basico;
+    }
+    
+    /**
+     * Búsqueda de cuestionarios
+     * 
+     * @param type $busqueda
+     * @param type $per_page
+     * @param type $offset
+     * @return type
+     */
+    function buscar($busqueda, $per_page = NULL, $offset = NULL)
+    {
+
+        //Filtro según el rol de usuario que se tenga
+            $filtro_rol = $this->filtro_cuestionarios();
+        
+        //Texto búsqueda
+            //Crear array con términos de búsqueda
+            if ( strlen($busqueda['q']) > 2 ){
+                $palabras = $this->Busqueda_model->palabras($busqueda['q']);
+
+                foreach ($palabras as $palabra_busqueda) {
+                    $this->db->like('CONCAT(nombre_cuestionario, IFNULL(descripcion,""))', $palabra_busqueda);
+                }
+            }
+            
+        //Otros filtros
+            if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
+            if ( $busqueda['n'] != '' ) { $this->db->where('nivel', $busqueda['n']); }      //Nivel
+            if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_id', $busqueda['tp']); }  //Tipo
+            if ( $busqueda['i'] != '' ) { $this->db->where('institucion_id', $busqueda['i']); }  //
+                
+        //Otros
+            $this->db->where($filtro_rol);  //Filtro por rol
+            $this->db->order_by('editado', 'DESC');
+                
+        //Condición especial
+            //if ( $busqueda['condicion'] ) { $this->db->where($busqueda['condicion']); }
+            if ( $busqueda['condicion'] != '' ) { $this->db->where($busqueda['condicion']); }   //Condición especial
+            
+        //Obtener resultados
+        if ( is_null($per_page) ){
+            $query = $this->db->get('cuestionario'); //Resultados totales
+        } else {
+            $query = $this->db->get('cuestionario', $per_page, $offset); //Resultados por página
+        }
+        
+        return $query;
+    }
+    
+    function filtro_cuestionarios($usuario_id = NULL)
+    {
+        
+        if ( is_null($usuario_id) ){ $usuario_id = $this->session->userdata('usuario_id'); }
+        
+        $row_usuario = $this->Pcrn->registro_id('usuario', $usuario_id);
+        $condicion = "id = 0";  //Valor por defecto, ningún usuario, se obtendrían cero resultados.
+        
+        if ( $row_usuario->rol_id == 0 ) {          //Desarrollador
+            //Administrador, todos los flipbooks
+            $condicion = 'id > 0';
+        } elseif ( $row_usuario->rol_id == 1 ) {    //Administrador
+            $condicion = 'id > 0';
+        } elseif ( $row_usuario->rol_id == 2 ) {    //Editor
+            $condicion = 'id > 0';
+        } elseif ( $row_usuario->rol_id == 3 ) {    //Admin. Institucional
+            $condicion = "( tipo_id IN (3,4) AND ( institucion_id = '{$this->session->userdata('institucion_id')}' ) )";
+        } elseif ( $row_usuario->rol_id == 4 ) {    //Directivo
+            $condicion = "( tipo_id IN (3,4) AND (institucion_id = '{$this->session->userdata('institucion_id')}' ) )";
+        } elseif ( $row_usuario->rol_id == 5 ) {    //Profesor
+            $condicion = "( tipo_id IN (3,4) AND ( creado_usuario_id = ({$this->session->userdata('usuario_id')})) )";
+        } elseif ( $row_usuario->rol_id == 7 ) {    //Digitador
+            $condicion = "id > 0";
+        } elseif ( $row_usuario->rol_id == 8 ) {    //Comercial
+            $condicion = "id > 0";
+        } else {
+            $condicion = 'id = 0';  //Pendiente, ningún resultado
+        }
+        
+        return $condicion;
+        
+    }
+    
+    function datos_cuestionario($cuestionario_id)
+    {
+        
+        $row = $this->Pcrn->registro_id('cuestionario', $cuestionario_id);
+        
+        //Número de preguntas
+            $row->num_preguntas = $this->num_preguntas($cuestionario_id);
+        
+        //Número de estudiantes
+            $this->db->where("cuestionario_id = {$cuestionario_id}");
+            $query = $this->db->get('usuario_cuestionario');
+            $row->num_estudiantes = $query->num_rows();
+        
+        return $row;
+    }
+    
+    function num_preguntas($cuestionario_id)
+    {
+        $condicion = "cuestionario_id = {$cuestionario_id}";
+        $cant_preguntas = $this->Pcrn->num_registros('cuestionario_pregunta', $condicion);
+            
+        return $cant_preguntas;
+    }
+    
+    /**
+     * Array con key => id competencia y valor => num_competencia
+     * Útil para resumenes y gráficos de resultados
+     * 
+     * @param type $area_id
+     * @return type
+     */
+    function arr_competencias($area_id)
+    {
+        $this->db->where('categoria_id', 4);        //Competencias
+        $this->db->where('item_grupo', $area_id);   //Área
+        $this->db->order_by('orden', 'ASC');
+        $query = $this->db->get('item');
+        
+        $arr_competencias = $this->Pcrn->query_to_array($query, 'id', 'orden');
+        
+        return $arr_competencias;
+    }
+    
+    /**
+     * Array con los datos básicos de una asignación de cuestionario, tabla
+     * usuario_cuestionario (uc).
+     * 
+     * @param type $uc_id
+     * @return type
+     */
+    function basico_uc($uc_id)
+    {
+        $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $uc_id);
+        $basico['row'] = $this->datos_cuestionario($row_uc->cuestionario_id);
+        $basico['row_uc'] = $row_uc;
+        $basico['row_usuario'] = $this->Pcrn->registro_id('usuario', $row_uc->usuario_id);
+        $basico['titulo_pagina'] = $basico['row']->nombre_cuestionario;
+        $basico['uc_id'] = $uc_id;
+        $basico['cuestionario_id'] = $row_uc->cuestionario_id;
+        
+        return $basico;
+    }
+    
+    /**
+     * Devuelve TRUE o FAlSE, para determinar si se habilita la edición de un 
+     * cuestionario o no.
+     * 
+     * @param type $cuestionario_id
+     * @return boolean
+     */
+    function editable($cuestionario_id)
+    {
+        $editable = FALSE;
+        
+        $row_cuestionario = $this->Pcrn->registro_id('cuestionario', $cuestionario_id);
+        
+        if ( $this->session->userdata('rol_id') <= 2 ){ $editable = TRUE; }
+        
+        if ( $row_cuestionario->creado_usuario_id == $this->session->userdata('usuario_id') )
+        {
+            //El usuario actual creó el cuestionario
+            $editable = TRUE;
+        }
+        
+        return $editable;
+        
+    }
+    
+    /**
+     * Devuevlve TRUE o FALSE, determina si el cuestionario cumple con los
+     * requisitos para ser convertido de tipo 3 a tipo 4.
+     * @param type $cuestionario_id
+     */
+    function convertible($cuestionario_id)
+    {
+        $convertible = FALSE;
+        $row = $this->Pcrn->registro_id('cuestionario', $cuestionario_id);
+        
+        $condiciones = 0;   //Valor por defecto
+        
+        if ( $row->tipo_id == 3 ) { $condiciones++; }  //Debe ser tipo 3, generado desde un contenido
+        if ( $row->creado_usuario_id == $this->session->userdata('usuario_id') ) { $condiciones++; }  //El usuario en sesión debe ser el creador del cuestionario
+        
+        //Si cumple con las condiciones es convertible
+        if ( $condiciones == 2 ) { $convertible = TRUE; }
+        
+        return $convertible;
+    }
+    
+//CRUD CUESTIONARIOS
+//---------------------------------------------------------------------------------------------------
+    
+    function eliminar($cuestionario_id)
+    {
+        //Tabla principal
+            $this->db->where('id', $cuestionario_id);
+            $this->db->delete('cuestionario');
+            
+        //Tablas relacionadas
+            $tablas = array(
+                'cuestionario_pregunta',
+                'cuestionario_sugerencia',
+                'usuario_cuestionario',
+                'usuario_pregunta',
+                'dw_usuario_pregunta'
+            );
+            
+            foreach ( $tablas as $tabla ) 
+            {
+                $this->db->where('cuestionario_id', $cuestionario_id);
+                $this->db->delete($tabla);
+            }
+            
+        //Otras consultas
+            $arr_sql[] = "DELETE FROM evento WHERE tipo_id = 1 AND referente_2_id = {$cuestionario_id}";
+            $arr_sql[] = "DELETE FROM evento WHERE tipo_id = 11 AND referente_2_id = {$cuestionario_id}";
+            $arr_sql[] = "DELETE FROM evento WHERE tipo_id = 21 AND referente_id = {$cuestionario_id}";     //Evento de creación del cuestionario
+            
+            foreach ( $arr_sql as $sql ) 
+            {
+                $this->db->query($sql);
+            }
+        
+    }
+    
+    
+//GROCERY CRUD DE CUESTIONARIOS
+//---------------------------------------------------------------------------------------------------
+    
+    function crud_editar()
+    {
+        
+        //Grocery crud
+        $this->load->library('grocery_CRUD');
+        
+        $crud = new grocery_CRUD();
+        $crud->set_table('cuestionario');
+        $crud->set_subject('cuestionario');
+        $crud->unset_export();
+        $crud->unset_print();
+        $crud->unset_back_to_list();
+        $crud->unset_delete();
+        $crud->unset_read();
+        $crud->columns('nombre_cuestionario');
+        
+        //Filtro
+            $crud->where('cuestionario.id', 0);
+
+        //Callback, vista
+            $crud->callback_column('nombre_cuestionario', array($this,'gc_link_cuestionario'));
+        
+        //Títulos de los campos
+            $crud->display_as('area_id', 'Área');
+            $crud->display_as('descripcion', 'Descripción');
+            $crud->display_as('tipo_id', 'Tipo');
+        
+        //Relaciones
+            $crud->set_relation('area_id', 'item', 'item', 'categoria_id = 1');
+
+        //Formulario Edit
+            $crud->edit_fields(
+                    'nombre_cuestionario',
+                    'area_id',
+                    'nivel',
+                    'tipo_id',
+                    'interno',
+                    'tiempo_minutos',
+                    'descripcion',
+                    'editado',
+                    'editado_usuario_id'
+            );
+            
+            $crud->add_fields(
+                    'nombre_cuestionario',
+                    'area_id',
+                    'nivel',
+                    'tipo_id',
+                    'interno',
+                    'tiempo_minutos',
+                    'descripcion',
+                    'creado',
+                    'editado',
+                    'creado_usuario_id',
+                    'editado_usuario_id'
+            );
+
+        //Procesos
+            $crud->callback_after_insert(array($this, 'gc_after_insert'));
+
+        //Reglas de validación
+            $crud->required_fields('nombre_cuestionario', 'nivel');
+            $crud->set_rules('nivel', 'Nivel', 'greater_than[0]|less_than[12]');
+            $crud->set_rules('anio_generacion', 'Año generación', 'numeric|greater_than[2000]|less_than[2022]');
+            $crud->set_rules('tiempo_minutos', 'Tiempo minutos', 'numeric|greater_than[9]|less_than[2000]');   //Rango de tiempo para resolver un cuestionario
+            
+        //Tipo de campos
+            $opciones_anio = $this->Pcrn->array_rango(date('Y')-10, date('Y')+10);
+            $opciones_interno = $this->Item_model->opciones('categoria_id = 55 AND id_interno < 2');
+            $opciones_tipo = $this->Item_model->opciones('categoria_id = 15');
+            $crud->field_type('anio_generacion', 'enum', $opciones_anio);
+            if ( $this->session->userdata('rol_id') > 3 ) { $crud->field_type('interno', 'hidden', '00'); }
+            
+        //Valores por defecto
+            $crud->field_type('interno', 'dropdown', $opciones_interno);
+            $crud->field_type('tipo_id', 'dropdown', $opciones_tipo);
+            $crud->field_type('creado', 'hidden', date('Y-m-d H:i:s'));
+            $crud->field_type('creado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
+            $crud->field_type('editado', 'hidden', date('Y-m-d H:i:s'));
+            $crud->field_type('editado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
+            
+        //Opciones nivel
+            $opciones_nivel = $this->App_model->opciones_nivel('item_largo');
+            $crud->field_type('nivel', 'dropdown', $opciones_nivel);
+        
+        //Formato
+            $crud->unset_texteditor('descripcion');
+        
+        $output = $crud->render();
+        
+        return $output;
+        
+    }
+    
+    function crud_editar_profesor()
+    {
+        
+        //Grocery crud
+        $this->load->library('grocery_CRUD');
+        
+        $crud = new grocery_CRUD();
+        $crud->set_table('cuestionario');
+        $crud->set_subject('cuestionario');
+        $crud->unset_export();
+        $crud->unset_print();
+        $crud->unset_back_to_list();
+        $crud->unset_delete();
+        $crud->unset_read();
+        $crud->columns('nombre_cuestionario');
+        
+        //Filtro
+            $crud->where('cuestionario.id', 0);
+        
+        //Títulos de los campos
+            $crud->display_as('area_id', 'Área');
+            $crud->display_as('descripcion', 'Descripción');
+        
+        //Relaciones
+            $crud->set_relation('area_id', 'item', 'item', 'categoria_id = 1');
+
+        //Formulario Edit
+            $crud->edit_fields(
+                    'nombre_cuestionario',
+                    'area_id',
+                    'nivel',
+                    'interno',
+                    'tiempo_minutos',
+                    'descripcion',
+                    'editado',
+                    'editado_usuario_id'
+            );
+            
+            $crud->add_fields(
+                    'nombre_cuestionario',
+                    'area_id',
+                    'nivel',
+                    'tiempo_minutos',
+                    'interno',
+                    'descripcion',
+                    'tipo_id',
+                    'institucion_id',
+                    'creado',
+                    'editado',
+                    'creado_usuario_id',
+                    'editado_usuario_id'
+            );
+
+        //Reglas de validación
+            $crud->required_fields('nombre_cuestionario', 'nivel');
+            $crud->set_rules('nivel', 'Nivel', 'greater_than[-5]|less_than[12]');
+            $crud->set_rules('anio_generacion', 'Año generación', 'numeric|greater_than[2000]|less_than[2022]');
+            $crud->set_rules('tiempo_minutos', 'Tiempo minutos', 'numeric|greater_than[9]|less_than[2000]');   //Rango de tiempo para resolver un cuestionario
+            
+        //Opciones nivel
+            $opciones_nivel = $this->App_model->opciones_nivel('item_largo');
+            $crud->field_type('nivel', 'dropdown', $opciones_nivel);
+        
+        //Opciones    
+            $opciones_anio = $this->Pcrn->array_rango(date('Y')-1, date('Y')+2);
+            
+        //Tipo de campos
+            $crud->field_type('anio_generacion', 'enum', $opciones_anio);
+            $crud->field_type('interno', 'hidden', '00');
+            $crud->field_type('tipo_id', 'hidden', 4);
+            $crud->field_type('institucion_id', 'hidden', $this->session->userdata('institucion_id'));
+            
+        //Valores por defecto
+            
+            $crud->field_type('creado', 'hidden', date('Y-m-d H:i:s'));
+            $crud->field_type('creado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
+            $crud->field_type('editado', 'hidden', date('Y-m-d H:i:s'));
+            $crud->field_type('editado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
+            
+        //Procesos
+            $crud->callback_after_insert(array($this, 'gc_after_insert'));
+        
+        //Formato
+            $crud->unset_texteditor('descripcion');
+        
+        $output = $crud->render();
+        
+        return $output;
+        
+    }
+    
+    /**
+     * Proceso después de la creación de un cuestionario
+     * @param type $post_array
+     * @param type $primary_key
+     */
+    function gc_after_insert($post_array, $primary_key)
+    {
+        //Se registra la creación del cuestionario en la tabla evento
+        $this->load->model('Evento_model');
+        $this->Evento_model->guardar_ev_crea_ctn($primary_key);
+        
+    }
+    
+    /**
+     * Convierte un cuestionario generado desde contenido (tipo 3) a cuestionario
+     * simple (tipo 4), crea copia de las preguntas y las vuelve editables por
+     * el usuario docente
+     * 
+     * @param type $cuestionario_id
+     * @return string
+     */
+    function convertir($cuestionario_id)
+    {
+        //Resultado por defecto
+            $resultado['ejecutado'] = 0;
+            $resultado['mensaje'] = 'El cuestionario no fue convertido';
+            $resultado['clase'] = 'alert-danger';
+            $resultado['icono'] = 'fa-times';
+        
+        if ( $this->convertible($cuestionario_id) )
+        {
+            //Actulizar tipo en la tabla "cuestionario"
+                $registro['tipo_id'] = 4; //Nuevo tipo
+
+                $this->db->where('id', $cuestionario_id);
+                $this->db->update('cuestionario', $registro);
+                
+            //Clonar y asignar preguntas
+                $this->clonar_preguntas($cuestionario_id);
+            
+            //Resultado
+                $resultado['ejecutado'] = 1;
+                $resultado['mensaje'] = 'El cuestionario fue convertido correctamente, ya puede empezar a editarlo.';
+                $resultado['clase'] = 'alert-success';
+                $resultado['icono'] = 'fa-check';
+        }
+        
+        
+        return $resultado;
+    }
+    
+    function clonar_preguntas($cuestionario_id)
+    {
+        $this->load->model('Pregunta_model');
+        
+        $preguntas = $this->db->get_where('cuestionario_pregunta', "cuestionario_id = {$cuestionario_id}");
+        
+        foreach ( $preguntas->result() as $row_cp ) 
+        {
+            $nueva_pregunta_id = $this->Pregunta_model->clonar($row_cp->pregunta_id);
+            
+            $registro['pregunta_id'] = $nueva_pregunta_id;
+            
+            $this->db->where('id', $row_cp->id);
+            $this->db->update('cuestionario_pregunta', $registro);
+        }
+    }
+
+//DATOS RELACIONADOS
+//---------------------------------------------------------------------------------------------------
+    
+    /**
+     * Preguntas de un cuestionario
+     * 
+     * @param type $cuestionario_id
+     * @return type
+     */
+    function preguntas($cuestionario_id)
+    {
+        
+        //$this->db->select('cuestionario_pregunta.id, cuestionario_id, pregunta_id, cuestionario_pregunta.orden, pregunta.area_id');
+        $this->db->join('pregunta', 'cuestionario_pregunta.pregunta_id = pregunta.id');
+        $this->db->order_by('cuestionario_pregunta.orden', 'ASC');
+        $this->db->where('cuestionario_pregunta.cuestionario_id', $cuestionario_id );
+        
+        $query = $this->db->get('cuestionario_pregunta');
+        
+        return $query;   
+    }
+    
+    /**
+     * Preguntas de un cuestionario
+     * 
+     * @param type $cuestionario_id
+     * @return type
+     */
+    function lista_preguntas($cuestionario_id)
+    {
+        $select = 'pregunta.id AS pregunta_id, ';
+        $select .= 'texto_pregunta, opcion_1, opcion_2, opcion_3, opcion_4, enunciado_id, ';
+        $select .= 'CONCAT("' . URL_UPLOADS . 'preguntas/", (archivo_imagen)) AS url_imagen_pregunta, archivo_imagen, ' ;
+        $select .= 'respuesta_correcta AS clv, "0" AS rta, "0" AS res, ';
+        $select .= 'post.contenido AS contenido_enunciado, post.nombre_post AS titulo_enunciado, ';
+        $select .= 'CONCAT("' . URL_UPLOADS . 'enunciados/", texto_2) AS url_imagen_enunciado, post.texto_2 AS archivo_enunciado';
+        
+        $this->db->select($select);
+        $this->db->join('pregunta', 'cuestionario_pregunta.pregunta_id = pregunta.id');
+        $this->db->join('post', 'pregunta.enunciado_id = post.id', 'LEFT');
+        $this->db->order_by('cuestionario_pregunta.orden', 'ASC');
+        $this->db->where('cuestionario_pregunta.cuestionario_id', $cuestionario_id );
+        
+        $query = $this->db->get('cuestionario_pregunta');
+        
+        return $query;   
+    }
+    
+    /**
+     * Enunciados asociados a las preguntas de un cuestionario
+     * 
+     * @param type $cuestionario_id
+     * @return type
+     */
+    function enunciados($cuestionario_id)
+    {
+        
+        $this->db->select('pregunta.enunciado_id, pregunta_id');
+        $this->db->join('pregunta', 'cuestionario_pregunta.pregunta_id = pregunta.id');
+        $this->db->join('post', 'pregunta.enunciado_id = post.id');
+        $this->db->order_by('cuestionario_pregunta.orden', 'ASC');
+        $this->db->where('cuestionario_pregunta.cuestionario_id', $cuestionario_id );
+        
+        $query = $this->db->get('cuestionario_pregunta');
+        
+        return $query;   
+    }
+
+    
+    /**
+     * Devuelve un query con los estudiantes de un grupo que están asignados con un determinado cuestionario
+     * 
+     * @param type $cuestionario_id
+     * @param type $grupo_id
+     * @return type 
+     */
+    function estudiantes($cuestionario_id, $grupo_id)
+    {
+        $select = 'nombre, apellidos';
+        $select .= ', usuario_cuestionario.id AS uc_id, usuario_cuestionario.usuario_id, fecha_inicio, fecha_fin, usuario_cuestionario.estado';
+        $select .= ', inicio_respuesta';
+        
+        $this->db->select($select);
+        $this->db->join('usuario_cuestionario', 'usuario.id = usuario_cuestionario.usuario_id', 'LEFT');
+        $this->db->join('item', 'usuario_cuestionario.estado = item.id_interno AND item.categoria_id = 151');
+        $this->db->where("cuestionario_id = {$cuestionario_id}");
+        $this->db->where("usuario_cuestionario.grupo_id = {$grupo_id}");
+        $this->db->order_by('apellidos', 'ASC');
+        $query = $this->db->get('usuario');
+        return $query;
+        
+        /*$select = 'nombre, apellidos, ';
+        $select .= 'usuario_grupo.usuario_id, fecha_inicio, fecha_fin, usuario_cuestionario.estado, num_con_respuesta, inicio_respuesta, ';
+        $select .= 'item.item AS nombre_estado, ';
+        $select .= 'usuario_cuestionario.id AS uc_id';*/
+        
+        /*$this->db->select($select);
+        $this->db->join('usuario_grupo', 'usuario.id = usuario_grupo.usuario_id');
+        $this->db->where('usuario_grupo.grupo_id', $grupo_id);
+        $this->db->where('usuario.iniciado', 1);
+        $this->db->order_by('apellidos', 'ASC');
+        $this->db->join('usuario_cuestionario', "usuario.id = usuario_cuestionario.usuario_id AND cuestionario_id = {$cuestionario_id}", 'LEFT');
+        $query = $this->db->get('usuario');*/
+    }
+    
+    
+//GESTIÓN DE ASIGNACIÓN
+//---------------------------------------------------------------------------------------------------
+    
+    /**
+     * Devuelve un query con los grupos con estudiantes que están asignados a un determinado cuestionario
+     * @param type $cuestionario_id
+     * @return type 
+     */
+    function grupos($cuestionario_id, $institucion_id = NULL)
+    {
+        $this->db->select('grupo_id, institucion_id');
+        $this->db->where('cuestionario_id', $cuestionario_id);
+        $this->db->group_by('grupo_id, institucion_id');
+        if ( ! is_null($institucion_id) ) { $this->db->where('institucion_id', $institucion_id); }
+        
+        $query = $this->db->get('usuario_cuestionario');
+        
+        return $query;
+    }
+    
+    function n_grupos($cuestionario_id, $institucion_id = NULL, $nivel = NULL)
+    {
+        $this->db->select('id AS grupo_id, nombre_grupo, nivel, institucion_id');
+        if ( ! is_null($institucion_id) ) { $this->db->where('institucion_id', $institucion_id); }
+        if ( ! is_null($nivel) ) { $this->db->where('nivel', $nivel); }
+        $this->db->order_by('nivel', 'ASC');
+        $this->db->order_by('nombre_grupo', 'ASC');
+        $query = $this->db->get('grupo');
+        
+        return $query;
+    }
+    
+    
+    /**
+     * 2018-09-20
+     * Query con grupos asignados a un cuestionario.
+     * 
+     * @param type $cuestionario_id
+     * @return type
+     */
+    function z_n_grupos($cuestionario_id, $institucion_id)
+    {
+        $select = 'evento.id, evento.grupo_id, nombre_grupo';
+        $select .= ', grupo.institucion_id, nombre_institucion';
+        $select .= ', entero_1 AS tiempo_minutos, fecha_inicio, fecha_fin';
+        
+        $this->db->select($select);
+        $this->db->where('referente_id', $cuestionario_id);
+        $this->db->where('evento.institucion_id', $institucion_id);
+        $this->db->where('tipo_id', 22);    //Asignación de cuestionario
+        $this->db->join('grupo', 'grupo.id = evento.grupo_id');
+        $this->db->join('institucion', 'institucion.id = grupo.institucion_id');
+        $this->db->order_by('grupo.nombre_grupo', 'ASC');
+        $query = $this->db->get('evento');
+        
+        return $query;
+    }
+    
+    /**
+     * 2018-09-20
+     * Query con grupos asignados a un cuestionario.
+     * 
+     * @param type $cuestionario_id
+     * @return type
+     */
+    function grupos_asignables($cuestionario_id, $institucion_id)
+    {
+        $this->db->select('id, nombre_grupo');
+        $this->db->where('institucion_id', $institucion_id);
+        $this->db->order_by('nombre_grupo', 'ASC');
+        $query = $this->db->get('grupo');
+        
+        return $query;
+    }
+    
+    /**
+     * 2018-09-20
+     * Eliminar asignación de cuestionario-grupo, y usuario_cuestionario
+     * 
+     * @param type $cuestionario_id
+     * @param type $evento_id
+     */
+    function eliminar_cg($cuestionario_id, $evento_id) 
+    {
+        //Eliminar de la tabla usuario_cuestionario
+            $this->db->where('cg_id', $evento_id);
+            $this->db->delete('usuario_cuestionario');
+        
+        //Eliminar de la tabla evento (cuestionario_grupo)
+            $this->db->where('id', $evento_id);
+            $this->db->where('referente_id', $cuestionario_id);
+            $this->db->delete('evento');
+            
+        //Resultado
+            $resultado['ejecutado'] = 1;
+            
+            return $resultado;
+    }
+    
+    /**
+     * Guarda los registros enviados desde el formulario de asignar_cuestionario
+     * se ejecuta después de la validación en cuestionarios/validar_asignación
+     * @param type $cuestionario_id
+     */
+    function crear_asignacion($cuestionario_id)
+    {
+        //Cargando modelo de cuestionarios
+        $this->load->model('Grupo_model');
+        
+        $grupo_id = $this->input->post('grupo_id');
+        
+        $resultado['num_insertados'] = 0;
+        
+        //Creando registro
+            //Variables comunes
+            $registro['cuestionario_id'] = $cuestionario_id;
+            $registro['grupo_id'] = $grupo_id;
+            $registro['institucion_id'] = $this->Pcrn->campo('grupo', "id = {$grupo_id}", 'institucion_id');
+            $registro['fecha_inicio'] = $this->input->post('fecha_inicio');
+            $registro['fecha_fin'] = substr($this->input->post('fecha_fin'), 0, 10) . ' 23:59:59'; //Hasta el final del día
+            $registro['tiempo_minutos'] = $this->input->post('tiempo_minutos');
+            $registro['creado_usuario_id'] = $this->session->userdata['usuario_id'];
+            $registro['editado_usuario_id'] = $this->session->userdata['usuario_id'];
+            $registro['creado'] = date('Y-m-d H:i:s');
+            $registro['editado'] = date('Y-m-d H:i:s');
+            $registro['estado'] = 1;    //Sin responder
+        
+        //Se carga la lista de estudiantes que pertenecen un grupo
+            $estudiantes = $this->Grupo_model->estudiantes($grupo_id);
+        
+        foreach ($estudiantes->result() as $row_estudiante)
+        {
+            if ( $this->input->post($row_estudiante->id) )
+            {
+                $registro['usuario_id'] = $row_estudiante->id;
+                $resultado['num_insertados'] += $this->agregar_uc($registro);
+            }
+        }
+        return $resultado;
+        
+    }
+    
+    /**
+     * 2018-09-21
+     * Crea el registro de asignación de cuestionario a un grupo en la tabla 
+     * evento
+     * 
+     * @param type $cuestionario_id
+     * @return type
+     */
+    function asignar($cuestionario_id)
+    {
+        $registro['fecha_inicio'] = $this->input->post('fecha_inicio');
+        $registro['hora_inicio'] = '00:00:00';
+        $registro['fecha_fin'] = $this->input->post('fecha_fin');
+        $registro['hora_fin'] = '23:59:59';
+        $registro['tipo_id'] = 22;  //Asignación de cuestionario a grupo
+        $registro['referente_id'] = $cuestionario_id;
+        $registro['grupo_id'] = $this->input->post('grupo_id');
+        $registro['institucion_id'] = $this->Pcrn->campo_id('grupo', $this->input->post('grupo_id'), 'institucion_id');
+        $registro['entero_1'] = $this->input->post('tiempo_minutos');
+        
+        $this->load->model('Evento_model');
+        $evento_id = $this->Evento_model->guardar_evento($registro, "grupo_id = {$registro['grupo_id']}");
+        
+        return $evento_id;
+    }
+    
+    /**
+     * 2018-09-21
+     * Se asigna el cuestionario a todos los estudiantes de un grupo, teniendo
+     * como referencia la asignación de grupo guardada en la tabla evento.
+     * Solo se asignan estudiantes "iniciados".
+     * 
+     * @param type $cg_id
+     */
+    function asignar_estudiantes($cg_id)
+    {
+        $row_asignacion = $this->Pcrn->registro_id('evento', $cg_id);
+        
+        $resultado['num_insertados'] = 0;
+        
+        //Creando registro
+            //Variables comunes
+            $registro['cuestionario_id'] = $row_asignacion->referente_id;
+            $registro['grupo_id'] = $row_asignacion->grupo_id;
+            $registro['institucion_id'] = $row_asignacion->institucion_id;
+            $registro['cg_id'] = $row_asignacion->id;
+            $registro['fecha_inicio'] = $row_asignacion->fecha_inicio . ' ' . $row_asignacion->hora_inicio;
+            $registro['fecha_fin'] = $row_asignacion->fecha_fin . ' ' . $row_asignacion->hora_fin;
+            $registro['tiempo_minutos'] = $row_asignacion->entero_1;
+            $registro['creado_usuario_id'] = $this->session->userdata('usuario_id');
+            $registro['editado_usuario_id'] = $this->session->userdata('usuario_id');
+            $registro['creado'] = date('Y-m-d H:i:s');
+            $registro['editado'] = date('Y-m-d H:i:s');
+            $registro['estado'] = 1;    //Sin responder
+        
+        //Se carga la lista de estudiantes que pertenecen un grupo
+            $this->load->model('Grupo_model');
+            $estudiantes = $this->Grupo_model->estudiantes($row_asignacion->grupo_id, 'iniciado = 1');
+        
+            foreach ($estudiantes->result() as $row_estudiante)
+            {
+                $registro['usuario_id'] = $row_estudiante->id;
+                $resultado['num_insertados'] += $this->agregar_uc($registro);
+            }
+            
+        return $resultado;
+        
+    }
+    
+    /**
+     * Crea el registro de asignación de cuestionario a un grupo en la tabla 
+     * meta
+     * 
+     * @param type $cuestionario_id
+     * @return type
+     */
+    function z_asignar_alt($cuestionario_id)
+    {
+        $registro['tabla_id'] = 4100;   //Tabla grupo
+        $registro['dato_id'] = 410011;  //Asignación de grupo
+        $registro['elemento_id'] = $this->input->post('grupo_id');
+        $registro['relacionado_id'] = $cuestionario_id;
+        $registro['entero_1'] = $this->input->post('tiempo_minutos');
+        $registro['fecha_1'] = $this->input->post('fecha_inicio') . ' 00:00:00';
+        $registro['fecha_2'] = $this->input->post('fecha_fin') . ' 23:59:59';
+        $registro['editado'] = date('Y-m-d H:i:s');
+        $registro['creado'] = date('Y-m-d H:i:s');
+        $registro['usuario_id'] = $this->session->userdata('usuario_id');
+        
+        $this->load->model('Meta_model');
+        $meta_id = $this->Meta_model->guardar($registro);
+        
+        return $meta_id;
+    }
+
+    /**
+     * Genera la asignación de usuario_cuestionario con los datos del array
+     * tomado del archivo de excel, formato de cargue 17
+     * 
+     * La asignación se hace a todos los estudiantes de los grupos relacionados en el formato
+     * 
+     * @param type $array_hoja
+     * @return int
+     */
+    function asignar_masivo($array_hoja)
+    {
+        $no_cargados = array();
+        $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
+        
+        foreach ( $array_hoja as $row_asignacion ) 
+        {
+            $cuestionario_id = $row_asignacion[0];
+            $grupo_id = $row_asignacion[1];
+            $tiempo_minutos = $row_asignacion[4];
+            
+            $row_cuestionario = $this->Pcrn->registro_id('cuestionario', $cuestionario_id);
+            $row_grupo = $this->Pcrn->registro_id('grupo', $grupo_id);
+            
+            if ( ! is_integer($row_asignacion[4]) ) { $tiempo_minutos = $row_cuestionario->tiempo_minutos; }
+            
+            $cant_condiciones = 0;
+            if ( ! is_null($row_cuestionario) ) { $cant_condiciones++; }
+            if ( ! is_null($row_grupo) ) { $cant_condiciones++; }
+            
+            //Se agrega si cumple las dos condiciones
+            if ( $cant_condiciones == 2 )
+            {
+                $mk_inicio = $this->Pcrn->fexcel_unix($row_asignacion[2]);
+                $mk_fin = $this->Pcrn->fexcel_unix($row_asignacion[3]) + (24*60*60-1);
+                
+                //Registro
+                $registro['fecha_inicio'] = date('Y-m-d H:i:s', $mk_inicio);
+                $registro['fecha_fin'] = date('Y-m-d H:i:s', $mk_fin);
+                $registro['tiempo_minutos'] = $tiempo_minutos;
+                $registro['grupo_id'] = $grupo_id;
+                $registro['institucion_id'] = $row_grupo->institucion_id;
+                
+                $this->asignar_grupo($cuestionario_id, $registro);
+            } else {
+                $no_cargados[] = $fila;
+            }
+            
+            $fila++;    //Para siguiente ciclo   
+        }
+        
+        return $no_cargados;
+    }
+    
+    
+    /**
+     * Asigna un cuestionario a todos los estudiantes de un grupo
+     * 
+     * @param type $cuestionario_id
+     * @param type $registro
+     * @return type
+     */
+    function asignar_grupo($cuestionario_id, $registro)
+    {
+        //Creando registro
+            //Variables comunes
+            $registro['cuestionario_id'] = $cuestionario_id;
+            $registro['creado_usuario_id'] = $this->session->userdata('usuario_id');
+            $registro['editado_usuario_id'] = $this->session->userdata('usuario_id');
+            $registro['creado'] = date('Y-m-d H:i:s');
+            $registro['editado'] = date('Y-m-d H:i:s');
+            $registro['estado'] = 1;    //Sin responder
+        
+        //Se carga la lista de estudiantes que pertenecen un grupo
+            $this->load->model('Grupo_model');
+            $estudiantes = $this->Grupo_model->estudiantes($registro['grupo_id']);
+        
+        foreach ($estudiantes->result() as $row_estudiante)
+        {
+            $registro['usuario_id'] = $row_estudiante->id;
+            $this->agregar_uc($registro);
+        }
+        return $estudiantes->num_rows();
+    }
+    
+    /**
+     * Agrega un registro en la tabla usuario_cuestionario
+     * 2018-09-21, ya no se agrega la asignación en la tabla evento
+     * 
+     * @param type $registro
+     * @return int
+     */
+    function agregar_uc($registro)
+    {    
+        $uc_id = 0;
+        
+        $condicion = "usuario_id = {$registro['usuario_id']} AND cuestionario_id = {$registro['cuestionario_id']}";
+        $cant_registros = $this->Pcrn->num_registros('usuario_cuestionario', $condicion);
+        
+        if ( $cant_registros == 0 ) 
+        {
+            //El registro no existe, se inserta
+            $this->db->insert('usuario_cuestionario', $registro);
+            $uc_id = $this->db->insert_id();
+        } else {
+            //El registro si existe, se edita, solo algunos campos
+            $reg_edit['fecha_inicio'] = $registro['fecha_inicio'];
+            $reg_edit['fecha_fin'] = $registro['fecha_fin'];
+            $reg_edit['editado'] = $registro['editado'];
+            $reg_edit['editado_usuario_id'] = $registro['editado_usuario_id'];
+                    
+            $uc_id = $this->Pcrn->guardar('usuario_cuestionario', $condicion, $reg_edit);
+        }
+        
+        //Guardar asignación en la tabla evento, DESACTIVADA 2018-09-21
+            /*$this->load->model('Evento_model');
+            $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $uc_id);
+            $this->Evento_model->guardar_asignar_ctn($row_uc);*/
+            
+        
+        return $uc_id;
+        
+    }
+    
+    /**
+     *  Elimina un registro de la tabla usuario_cuestionario (uc)
+     * El parámetro condición es un array con el usuario_id y el cuestionario_id
+     * que se desea eliminar
+     */
+    function eliminar_uc($condicion)
+    {   
+        //Eliminando asignación de cuestionarios
+        $this->db->where($condicion);
+        $this->db->delete('usuario_cuestionario');
+        
+        $resultado = $this->db->affected_rows();
+        
+        //Eliminando respuestas
+        $this->db->where($condicion);
+        $this->db->delete('usuario_pregunta');
+        
+        //Eliminando de registro relacionado en tabla evento
+        $condicion_evento['tipo_id'] = 1;   //Asignación de cuestionario
+        $condicion_evento['usuario_id'] = $condicion['usuario_id'];
+        $condicion_evento['referente_2_id'] = $condicion['cuestionario_id'];
+        
+        $this->db->where($condicion_evento);
+        $this->db->delete('evento');
+        
+        return $resultado;
+        
+    }
+    
+    /**
+     * Crea una copia de un cuestionario, incluyendo las temas que lo componen
+     * 
+     * 
+     * @param type $datos
+     * @return type 
+     */
+    function generar_copia($datos)
+    {
+        
+        $row_cuestionario = $this->Pcrn->registro('cuestionario', "id = {$datos['cuestionario_id']}");  //Tema original
+        
+        //Crear nuevo registro en la tabla cuestionario
+            $registro = array(
+                'nombre_cuestionario' => $datos['nombre_cuestionario'],
+                'anio_generacion' =>  $row_cuestionario->anio_generacion,
+                'nivel' =>  $row_cuestionario->nivel,
+                'area_id' =>  $row_cuestionario->area_id,
+                'unidad' =>  $row_cuestionario->unidad,
+                'institucion_id' =>  $this->session->userdata('institucion_id'),
+                'tipo_id' =>  $row_cuestionario->tipo_id,
+                'interno' =>  $row_cuestionario->interno,
+                'privado' =>  $row_cuestionario->privado,
+                'prueba_periodica' =>  $row_cuestionario->prueba_periodica,
+                'descripcion' =>  $datos['descripcion'],
+                'areas' =>  $row_cuestionario->areas,
+                'creado' =>  date('Y-m-d H:i:s'),
+                'editado' =>  date('Y-m-d H:i:s'),
+                'creado_usuario_id' => $this->session->userdata('usuario_id'),
+                'editado_usuario_id' => $this->session->userdata('usuario_id')
+            );
+        
+            $this->db->insert('cuestionario', $registro);
+            $cuestionario_id_nuevo = $this->db->insert_id();
+            
+        //Crear registros de temas incluidos. Tabla cuestionario_tema
+            $this->copiar_preguntas($datos['cuestionario_id'], $cuestionario_id_nuevo);
+            
+        return $cuestionario_id_nuevo;  //Se devuelve el id del nuevo cuestionario
+        
+    }
+    
+    /**
+     * Asignar las preguntas de un cuestionario a otro
+     * 
+     * @param type $cuestionario_id
+     * @param type $cuestionario_id_nuevo
+     */
+    function copiar_preguntas($cuestionario_id, $cuestionario_id_nuevo)
+    {
+        $registro_cp['cuestionario_id'] = $cuestionario_id_nuevo;
+
+        $this->db->where('cuestionario_id', $cuestionario_id);
+        $this->db->order_by('orden', 'ASC');
+        $preguntas = $this->db->get('cuestionario_pregunta');
+
+        foreach ( $preguntas->result() as $row_cp ) {
+            $registro_cp['orden'] = $row_cp->orden;
+            $registro_cp['pregunta_id'] = $row_cp->pregunta_id;
+
+            $this->db->insert('cuestionario_pregunta', $registro_cp);
+        }
+        
+        $this->actualizar_areas($cuestionario_id);
+    }
+    
+    function quitar_pregunta($cuestionario_id, $pregunta_id)
+    {
+        //Eliminar el registro
+            $this->db->where('cuestionario_id', $cuestionario_id);
+            $this->db->where('pregunta_id', $pregunta_id);
+            $this->db->delete('cuestionario_pregunta');
+            
+        //Actualizar el cuestionario
+            $this->reenumerar_cuestionario($cuestionario_id);
+            $this->actualizar_areas($cuestionario_id);
+    }
+    
+    /**
+     * Enumerar ordenadamente las página de un cuestionario
+     * Se actualiza el campo cuestionario_pregunta.orden
+     * 
+     * @param type $cuestionario_id
+     * @return int 
+     */
+    function reenumerar_cuestionario($cuestionario_id)
+    {
+        
+        $this->db->where('cuestionario_id', $cuestionario_id);
+        $this->db->order_by('orden', 'ASC');
+        $preguntas = $this->db->get('cuestionario_pregunta');
+        $i = 0;
+        
+        foreach ( $preguntas->result() as $row_pregunta ) {
+            
+            $datos = array('orden' => $i);
+            $this->db->where('id', $row_pregunta->id);
+            $this->db->update('cuestionario_pregunta', $datos);
+            
+            $i += 1;
+        }
+        
+        return $i;
+        
+    }
+    
+    /**
+     * Actualizar campo cuestionario.areas
+     */
+    function actualizar_areas($cuestionario_id)
+    {
+        $this->db->select('area_id');
+        $this->db->join('cuestionario_pregunta', 'pregunta.id = cuestionario_pregunta.pregunta_id');
+        $this->db->where('cuestionario_id', $cuestionario_id);
+        $this->db->group_by('area_id');
+        $areas_query = $this->db->get('pregunta');
+        
+        $areas_array = $this->Pcrn->query_to_array($areas_query, 'area_id', 'area_id');
+        $areas = implode('-', $areas_array);
+        
+        $registro['areas'] = "-$areas-";
+        
+        $this->db->where('id', $cuestionario_id);
+        $this->db->update('cuestionario', $registro);
+        
+    }
+    
+    /**
+     * Cambia el valor del campo cuestionario_pregunta.orden para una pregunta
+     * Modifica los valores de ese campo para las preguntas contiguas
+     * cambiar_pos_pregunta: Cambiar posición de pregunta
+     * 
+     * @param type $cuestionario_id
+     * @param type $pregunta_id
+     * @param type $pos_final
+     * @return type
+     */
+    function cambiar_pos_pregunta($cuestionario_id, $pregunta_id, $pos_final)
+    {
+        //Fila de la pregunta que se va a mover
+            $row_pregunta = $this->Pcrn->registro('cuestionario_pregunta', "pregunta_id = {$pregunta_id} AND cuestionario_id = {$cuestionario_id}");
+            
+        //Condición que selecciona el conjunto de registros a modificar
+            $condicion_1 = "cuestionario_id = {$cuestionario_id}";
+        
+        //Variables proceso
+            $pos_inicial = $row_pregunta->orden;  //Posición actual del objeto
+            $cant_registros = $this->Pcrn->num_registros('cuestionario_pregunta', $condicion_1);
+            
+            //Control: Limitar la posición final en la que se ubicará la pregunta
+            $pos_final = $this->Pcrn->limitar_entre($pos_final, 0, $cant_registros - 1);    //Menos uno porque el conteo inicia en 0
+        
+        //Hacer cambios si los valores de posición inicial y final son diferentes
+        $sql = '';
+        if ( $pos_final != $pos_inicial ){
+            
+            if ( $pos_final > $pos_inicial ){
+                $operacion = 'orden = orden - 1';
+                $condicion_2 = "orden > {$pos_inicial} AND orden <= {$pos_final}";
+            } elseif ( $pos_final < $pos_inicial ) {
+                $operacion = 'orden = orden + 1';
+                $condicion_2 = "orden >= {$pos_final} AND orden < {$pos_inicial}";
+            }
+            
+            //Cambiar el valor de las preguntas contiguas
+                $sql = 'UPDATE cuestionario_pregunta';
+                $sql .= " SET {$operacion}";
+                $sql .= " WHERE {$condicion_1}";
+                $sql .= " AND {$condicion_2}";
+
+                $this->db->query($sql);
+        
+            //Cambiar la posición a la pregunta específica
+                $registro['orden'] = $pos_final;
+                $this->db->where('pregunta_id', $pregunta_id);
+                $this->db->update('cuestionario_pregunta', $registro);
+        }
+        
+        return $sql;
+        
+    }
+    
+    /**
+     * Devuelve un query con las instituciones con estudiantes que están asignados a un determinado cuestionario
+     * @param type $cuestionario_id
+     * @return type 
+     */
+    function instituciones($cuestionario_id)
+    {
+        
+        $this->db->select('institucion.id, nombre_institucion');
+        $this->db->where('cuestionario_id', $cuestionario_id);
+        $this->db->group_by('institucion_id');
+        $this->db->join('institucion', 'usuario_cuestionario.institucion_id = institucion.id');
+        $this->db->order_by('nombre_institucion', 'ASC');
+        
+        //Filtro de instituciones según el rol
+        if ( in_array($this->session->userdata('rol_id'), array(3, 4, 5, 6)) ) { $this->db->where('institucion_id', $this->session->userdata('institucion_id')); }
+        
+        $query = $this->db->get('usuario_cuestionario');
+        
+        return $query;
+    }
+    
+    /**
+     * Devuelve un query con las áreas que componene un cuestionario (area_id, de la pregunta relacionada
+     * @param type $cuestionario_id
+     * @return type
+     */
+    function areas($cuestionario_id)
+    {
+        $this->db->select('area_id');
+        $this->db->join('pregunta', 'pregunta.id = cuestionario_pregunta.pregunta_id');
+        $this->db->where('cuestionario_id', $cuestionario_id);
+        $this->db->group_by('area_id');
+        
+        $query = $this->db->get('cuestionario_pregunta');
+        
+        return $query;
+    }
+    
+    /**
+     * Devuelve un query con los temas que componene un cuestionario (tema_id, de la pregunta relacionada
+     * @param type $cuestionario_id
+     * @return type
+     */
+    function temas($cuestionario_id)
+    {
+        $this->db->select('tema_id, tema.*');
+        $this->db->join('pregunta', 'pregunta.id = cuestionario_pregunta.pregunta_id');
+        $this->db->join('tema', 'tema.id = pregunta.tema_id');
+        $this->db->where('cuestionario_id', $cuestionario_id);
+        $this->db->group_by('tema_id');
+        
+        $query = $this->db->get('cuestionario_pregunta');
+        
+        return $query;
+    }
+    
+    /**
+     * Devuelve un query con las competencias que componen un cuestionario
+     * y para un área en específica
+     * 
+     * @param type $cuestionario_id
+     * @param type $area_id
+     * @return type
+     */
+    function competencias($cuestionario_id, $area_id = NULL){
+        
+        $this->db->select('competencia_id, Count(cuestionario_pregunta.id) AS num_preguntas');
+        $this->db->join('pregunta', 'pregunta.id = cuestionario_pregunta.pregunta_id');
+        $this->db->where('competencia_id IS NOT NULL');
+        $this->db->where('cuestionario_id', $cuestionario_id);
+        if ( ! is_null( $area_id ) ) {  $this->db->where('area_id', $area_id); }    //2014-06-02, para generación de resúmenes
+        $this->db->group_by('pregunta.competencia_id, cuestionario_pregunta.cuestionario_id, pregunta.area_id');
+        
+        $query = $this->db->get('cuestionario_pregunta');
+        
+        return $query;
+    }
+    
+    /**
+     * Devuelve query con competencias definidas para una área
+     * @param type $area_id
+     * @return type
+     */
+    function competencias_area($area_id)
+    {
+        $this->db->select('id AS competencia_id, item AS nombre_competencia');
+        $this->db->where('categoria_id', 4);    //Competencias
+        $this->db->where('item_grupo', $area_id);
+        $this->db->where('abreviatura IS NOT NULL');
+        $this->db->order_by('orden', 'ASC');
+        
+        $competencias = $this->db->get('item');
+        
+        return $competencias;
+    }
+    
+    /**
+     * Devuelve un query con los componentes asociadas a las preguntas de un cuestionario
+     * y para un área en específico
+     * 
+     * @param type $cuestionario_id
+     * @param type $area_id
+     * @return type
+     */
+    function componentes($cuestionario_id, $area_id = NULL)
+    {
+        
+        $this->db->select('componente_id, Count(cuestionario_pregunta.id) AS num_preguntas');
+        $this->db->join('pregunta', 'pregunta.id = cuestionario_pregunta.pregunta_id');
+        $this->db->where('cuestionario_id', $cuestionario_id);
+        if ( ! is_null( $area_id ) ) { $this->db->where('area_id', $area_id); }
+        $this->db->where('componente_id IS NOT NULL');
+        $this->db->group_by('pregunta.componente_id, cuestionario_pregunta.cuestionario_id, pregunta.area_id');
+        
+        $query = $this->db->get('cuestionario_pregunta');
+        
+        return $query;
+    }
+    
+    function buscar_preguntas($busqueda)
+    {
+        if ( $busqueda['texto_pregunta'] != '' ) {
+            $this->db->like('texto_pregunta', $busqueda['texto_pregunta']);    
+        }
+        
+        if ( $busqueda['nivel'] != '' ) {
+            $this->db->where('nivel', $busqueda['nivel']);    
+        }
+        
+        $query = $this->db->get('pregunta');
+        return $query;
+        
+    }
+    
+    /**
+     * Verificar si el usuario tiene permiso para responder el cuestionario 
+     */
+    function permiso_uc($uc_id)
+    {
+        $permiso = TRUE; //Valor inicial
+        $row_uc = $this->Pcrn->registro('usuario_cuestionario', "id = {$uc_id}");
+        
+        //Verificar fechas límite
+            $mkt1 = $this->Pcrn->texto_a_mktime($row_uc->fecha_inicio);
+            $mkt2 = $this->Pcrn->texto_a_mktime($row_uc->fecha_fin);
+
+            if ( time() < $mkt1  ) { $permiso = FALSE; }
+            if ( time() > $mkt2  ) { $permiso = FALSE; }
+            
+        //Verificar que el cuestionario no haya sido ya finalizado
+            if ( $row_uc->estado >= 3  ) { $permiso = FALSE; }
+            
+        //Vefificar cantidad de segundos disponibles para resolver
+            if ( ! is_null($row_uc->inicio_respuesta) && is_null($row_uc->fin_respuesta) )
+            {
+                //Se ha empezado a responder pero no se ha finalizado
+                
+                //Se calcula la marca de tiempo máxima para responder
+                $mkt2 = $this->Pcrn->texto_a_mktime($row_uc->inicio_respuesta) + ( $row_uc->tiempo_minutos * 60 );
+                
+                if ( time() > $mkt2 ) { $permiso = FALSE; }
+            }
+            
+        return $permiso;
+        
+        
+    }
+    
+    /** Actualiza el campo usuario_cuestionario.inicio_respuesta, 
+     *
+     *  Con la fecha y hora en la que se empieza a resolver el cuestionario por parte del alumno.
+     */
+    function iniciar($row_uc)
+    {
+        if ( is_null($row_uc->inicio_respuesta) )
+        {
+            //Se actualiza la fecha
+            $registro['inicio_respuesta'] = date('Y-m-d H:i:s');
+            $registro['estado'] = 2;    //Iniciado
+            $this->db->where('id', $row_uc->id);
+            $this->db->update('usuario_cuestionario', $registro);
+        }
+    }
+    
+    /**
+     * Finalizar y cerrar el proceso de respuesta de un cuestionario por un usuario 
+     */
+    function finalizar($uc_id)
+    {   
+        $row_uc = $this->Pcrn->registro('usuario_cuestionario', "id = {$uc_id}");
+        
+        //Marcar finalización de respuesta de cuestionario
+            $registro['respondido'] = 1;
+            $registro['estado'] = 3;    //Finalizado
+            $registro['editado_usuario_id'] = $this->session->userdata('usuario_id');
+            $registro['editado'] = date('Y-m-d H:i:s');
+            $registro['fin_respuesta'] = date('Y-m-d H:i:s');
+            
+            $this->db->where('id', $uc_id);
+            $this->db->update('usuario_cuestionario', $registro);
+        
+        //Gestión de Eventos relacionados
+            $this->load->model('Evento_model');
+            $this->Evento_model->act_estado(1, $row_uc->id, 1); //Modificar la asignación del cuestionario
+            $this->Evento_model->guardar_fin_ctn($row_uc);      //Registrar la finalización del cuestionario en la tabla [evento], 
+    }
+    
+    /**
+     * Finalizar y cerrar el proceso de respuesta de un cuestionario por un usuario 
+     */
+    function n_finalizar($uc_id)
+    {   
+        $row_uc = $this->Pcrn->registro('usuario_cuestionario', "id = {$uc_id}");
+        
+        //Marcar finalización de respuesta de cuestionario
+            $registro['respondido'] = 1;
+            $registro['estado'] = 3;    //Finalizado
+            $registro['editado_usuario_id'] = $this->session->userdata('usuario_id');
+            $registro['editado'] = date('Y-m-d H:i:s');
+            $registro['fin_respuesta'] = date('Y-m-d H:i:s');
+            $registro['resumen'] = $this->resumen($uc_id);
+            
+            $this->db->where('id', $uc_id);
+            $this->db->update('usuario_cuestionario', $registro);
+        
+        //Gestión de Eventos relacionados
+            $this->load->model('Evento_model');
+            $this->Evento_model->act_estado(1, $row_uc->id, 1); //Modificar la asignación del cuestionario
+            $this->Evento_model->guardar_fin_ctn($row_uc);      //Registrar la finalización del cuestionario en la tabla [evento], 
+    }
+    
+    /**
+     * Esta función permite eliminar las respuestas de un estudiante para un cuestionario
+     * al que está asignado, no elimina la asignación, sólo la modifica
+     *
+     * @param type $uc_id
+     * @param type $usuario_id
+     * @param type $cuestionario_id 
+     */
+    function reiniciar($uc_id){
+        
+        $row_uc = $this->Pcrn->registro('usuario_cuestionario', "id = {$uc_id}");
+        
+        //Eliminando de la tabla usuario_pregunta
+            $this->db->where('usuario_id', $row_uc->usuario_id);
+            $this->db->where('cuestionario_id', $row_uc->cuestionario_id);
+            $this->db->delete('usuario_pregunta');
+            
+        //Editando, tabla usuario_cuestionario
+            $registro = array(
+                'fecha_inicio' =>   date('Y-m-d'),
+                'fecha_fin' =>   date('Y-m-d', strtotime('+1 week')),
+                'inicio_respuesta' => NULL,
+                'fin_respuesta' => NULL,
+                'editado' => date('Y-m-d H:i:s'),
+                'editado_usuario_id' => $this->session->userdata('usuario_id'),
+                'respondido' => 0,
+                'estado' => 1,  //Sin responder
+                'num_con_respuesta' => 0,
+                'respuestas' => '',
+                'resultados' => '',
+                'resumen' => ''
+            );
+            
+            $this->db->where('id', $uc_id);
+            $this->db->update('usuario_cuestionario', $registro);
+            
+        return $row_uc;
+    }
+    
+    /**
+     * A partir del string en usuario_cuestionario.respuestas, crea los registros
+     * de respuesta en la tabla usuario_pregunta. Si ya existen los registros
+     * son actualizados. 2018-08-27
+     * 
+     * @param type $uc_id
+     * @return int
+     */
+    function generar_respuestas($uc_id)
+    {
+        $i = 0; //Índice de preguntas
+        $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $uc_id);
+        
+        //Si hay resultados generados, se crean registros de respuesta
+        if ( strlen($row_uc->resultados) > 0 )
+        {
+            $respuestas = explode('-', $row_uc->respuestas);
+            $resultados = explode('-', $row_uc->resultados);
+
+            $preguntas = $this->preguntas($row_uc->cuestionario_id);
+
+            $registro['usuario_id'] = $row_uc->usuario_id;
+            $registro['cuestionario_id'] = $row_uc->cuestionario_id;
+
+            foreach ( $preguntas->result() as $row_pregunta )
+            {
+                $registro['pregunta_id'] = $row_pregunta->pregunta_id;
+                $registro['respuesta'] = $respuestas[$i];
+                $registro['resultado'] = $resultados[$i];
+
+                $this->n_guardar_respuesta($registro);
+                $i++;
+            }
+        }
+        
+        
+        return $i;  //Cantidad de preguntas
+    }
+    
+    /**
+     * Devuelve el registro de una pregunta de un cuestionario según el orden establecido
+     * 
+     * @param type $cuestionario_id
+     * @param type $num_pregunta
+     * @return type 
+     */
+    function pregunta_cuestionario($cuestionario_id, $num_pregunta)
+    {
+        
+        //Construyendo la consulta
+            $this->db->select('pregunta.id, cuestionario_pregunta.orden, texto_pregunta, opcion_1, opcion_2, opcion_3, opcion_4, archivo_imagen, enunciado_id, post_id, respuesta_correcta');
+            $this->db->join('pregunta', 'cuestionario_pregunta.pregunta_id = pregunta.id');
+            $this->db->where('cuestionario_id' , $cuestionario_id);
+            $this->db->order_by('cuestionario_pregunta.orden', 'ASC');
+            $this->db->order_by('pregunta_id', 'ASC');
+        
+        //Obteniendo datos
+        $query = $this->db->get('cuestionario_pregunta');
+        return $query->row( $num_pregunta - 1 );
+    }
+    
+    function row_respuesta($usuario_id, $pregunta_id, $cuestionario_id)
+    {
+        
+        $this->db->where('usuario_id', $usuario_id);
+        $this->db->where('pregunta_id', $pregunta_id);
+        $this->db->where('cuestionario_id', $cuestionario_id);
+        
+        $query = $this->db->get('usuario_pregunta');
+        
+        if ( $query->num_rows() > 0 ){
+            $row = $query->row();
+            
+            //Enriqueciendo $row
+            $opciones_letras = array('Sin respuesta', 'A', 'B', 'C', 'D', 'E', 'F', 'G');
+            $row->respuesta_letra = $opciones_letras[$row->respuesta];
+            
+        } else {
+            $row = NULL;
+        }
+        
+        return $row;
+    }
+    
+    /**
+     * Crea un array con los datos de respuesta tomados del post,
+     * Enviado desde el formulario en cuestionarios/resolver
+     * @return type
+     */
+    function registro_respuesta()
+    {
+        $registro = array(
+            'usuario_id' => $this->input->post('usuario_id'),
+            'pregunta_id' => $this->input->post('pregunta_id'),
+            'cuestionario_id' => $this->input->post('cuestionario_id'),
+            'respuesta' => $this->input->post('respuesta')
+        );
+        
+        return $registro;
+    }
+    
+    /**
+     * Crea o actualiza un registro en la tabla usuario_pregunta
+     * Corresponde a la respuesta de un usuario en un cuestionario
+     * 
+     * @param type $registro
+     * @return type 
+     */
+    function guardar_respuesta($registro)
+    {   
+        $condicion = "usuario_id = {$registro['usuario_id']} AND ";
+        $condicion .= "pregunta_id = {$registro['pregunta_id']} AND ";
+        $condicion .= "cuestionario_id = {$registro['cuestionario_id']}";
+        $row_pregunta = $this->Pcrn->registro('pregunta', "id = {$registro['pregunta_id']}");
+        
+        $registro['resultado'] = 0;
+        //Verificar si la respuesta es correcta, para resultado
+        if ( $registro['respuesta'] == $row_pregunta->respuesta_correcta )
+        {
+            $registro['resultado'] = 1;
+        }
+        
+        $up_id = $this->Pcrn->guardar('usuario_pregunta', $condicion, $registro);
+        
+        return $up_id;
+    }
+    
+    
+    /**
+     * Crea o actualiza un registro en la tabla usuario_pregunta
+     * Corresponde a la respuesta de un usuario en un cuestionario
+     * 
+     * @param type $registro
+     * @return type 
+     */
+    function n_guardar_respuesta($registro)
+    {   
+        $condicion = "usuario_id = {$registro['usuario_id']} AND ";
+        $condicion .= "pregunta_id = {$registro['pregunta_id']} AND ";
+        $condicion .= "cuestionario_id = {$registro['cuestionario_id']}";
+        
+        $up_id = $this->Pcrn->guardar('usuario_pregunta', $condicion, $registro);
+        
+        return $up_id;
+    }
+    
+    /**
+     * Guardar los datos de las respuestas en la tabla
+     * Y actualiza los datos del momento y el usuarios que carga la información
+     * en la tabla usuario_cuestionario
+     * 
+     * @param type $usuario_id
+     * @param type $cuestionario_id
+     * @param type $respuestas 
+     */
+    function guardar_lote($usuario_id, $cuestionario_id, $respuestas)
+    {
+        $registro['usuario_id'] = $usuario_id;
+        $registro['cuestionario_id'] = $cuestionario_id;
+        
+        foreach ($respuestas as $key => $value)
+        {
+            $condicion = "cuestionario_id = {$cuestionario_id} AND orden = {$key}";
+            $registro['pregunta_id'] = $this->Pcrn->campo('cuestionario_pregunta', $condicion, 'pregunta_id');
+            $registro['respuesta'] = $value;
+            $this->guardar_respuesta($registro);
+        }
+        
+        //Calcular datos de totales
+    }
+    
+// CARGUE MASIVO DE RESPUESTAS
+//-----------------------------------------------------------------------------
+    
+    /**
+     * Inserta masivamente respuestas de cuestionarios
+     * tabla usuario_pregunta
+     * 
+     * @param type $array_hoja    Array con los datos de las respuestas
+     */
+    function responder_masivo($array_hoja)
+    {   
+        $this->load->model('Esp');
+        
+        $no_importados = array();
+        $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
+        
+        $letras = array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4);
+        
+        foreach ( $array_hoja as $array_fila )
+        {
+            //Identificar valores
+                $respuesta = 0;
+                $letra = trim(strtolower($array_fila[3]));  //Sin espacios y minúscula
+                if ( array_key_exists($letra, $letras) ) { $respuesta = $letras[$letra]; }
+                
+                $username = trim($array_fila[1]);
+                $usuario_id_pre = $this->Pcrn->campo('usuario', "username = '{$username}'", 'id');  //Columna B
+                $usuario_id = $this->Pcrn->si_nulo($usuario_id_pre, 0);
+                $cuestionario_id = $this->Pcrn->si_strlen($array_fila[0], 0);
+                
+                $row_uc = $this->Pcrn->registro('usuario_cuestionario', "usuario_id = {$usuario_id} AND cuestionario_id = {$cuestionario_id}");
+            
+            //Complementar registro
+                $registro['usuario_id'] = $usuario_id;
+                $registro['pregunta_id'] = $this->pregunta_id($cuestionario_id, $array_fila[2]);  //Columna C
+                $registro['cuestionario_id'] = $cuestionario_id;    //Columna A
+                $registro['respuesta'] = $respuesta;                //Columna D
+                
+            //Validar
+                $condiciones = 0;
+                if ( $registro['usuario_id'] > 0 ) { $condiciones++; }      //Debe tener usuario identificado
+                if ( $registro['pregunta_id'] > 0 ) { $condiciones++; }     //Debe tener pregunta identificada
+                if ( $respuesta != 0 ) { $condiciones++; }                  //Tiene respuesta identificada
+                if ( ! is_null($row_uc) ) { $condiciones++; }               //Existe la asignación de cuestionario
+                
+            //Si cumple las condiciones
+            if ( $condiciones == 4 )
+            {   
+                $this->guardar_respuesta($registro);
+                $this->actualizar_uc($row_uc->id);
+            } else {
+                $no_importados[] = $fila;
+            }
+            
+            $fila++;    //Para siguiente fila
+        }
+        
+        return $no_importados;
+    }
+    
+    function pregunta_id($cuestionario_id, $num_pregunta)
+    {
+        $orden = $this->Pcrn->limitar_entre($num_pregunta - 1, 0, 1000);  //Entre 0 y 1000 preguntas
+        $pregunta_id = $this->Pcrn->campo('cuestionario_pregunta', "cuestionario_id = {$cuestionario_id} AND orden = {$orden}", 'pregunta_id');
+        
+        return $pregunta_id;
+    }
+    
+    /**
+     * Devuelve un array con el listado preguntas que componen un cuestionario (cuestionario_id)
+     * asociado a un usuario (usuario_id), el índice del array es el id de la pregunta (pregunta_id)
+     * y el valor del elemento del array es
+     * 
+     */
+    function estado_cuestionario($cuestionario_id, $usuario_id)
+    {
+        
+            $this->db->select("*, CONCAT('0') as respuesta");
+            $this->db->where('cuestionario_pregunta.cuestionario_id', $cuestionario_id);
+            $this->db->where('usuario_pregunta.usuario_id', $usuario_id);
+            $this->db->join('usuario_pregunta', 'cuestionario_pregunta.cuestionario_id = usuario_pregunta.cuestionario_id', 'LEFT');
+            $this->db->order_by('cuestionario_pregunta.orden', 'ASC');
+            $this->db->order_by('cuestionario_pregunta.pregunta_id', 'ASC');
+            $query = $this->db->get('cuestionario_pregunta');
+            
+        //Se convierte el resultado de la consulta en el array
+            $array = $this->Pcrn->query_to_array($query, 'respuesta', 'orden');
+        
+        return $array;
+    }
+    
+    /**
+     * Insertar un registro en la tabla 'cuestionario_pregunta'
+     */
+    function insertar_cp($registro)
+    {
+        
+        //Verificar que la pregunta no esté ya en el cuestionario
+            $this->db->where('cuestionario_id', $registro['cuestionario_id']);
+            $this->db->where('pregunta_id', $registro['pregunta_id']);
+            $cant_registros = $this->db->count_all_results('cuestionario_pregunta');
+            
+        //Se inserta si el registro no existe
+            if ( $cant_registros == 0 ){
+                
+                //Calculando el número de preguntas actual
+                $query = $this->db->get_where('cuestionario_pregunta', "cuestionario_id = {$registro['cuestionario_id']}");
+                $cant_preguntas = $query->num_rows();        
+
+                //Verificar campo cuestionario_pregunta.orden
+                if ( $cant_preguntas == 0 ) {
+                    //No hay preguntas en el cuestionario, es la primera
+                    $registro['orden'] = 0;
+                } elseif ( $registro['orden'] > $cant_preguntas OR !is_numeric($registro['orden']) ) {
+                    //Es mayor al número actual de preguntas, se cambia, poniéndolo al final
+                    $registro['orden'] = $cant_preguntas;
+                } else {
+                    //Se inserta en un punto intermedio, se cambian los números de las preguntas siguientes
+                    $this->db->query("UPDATE cuestionario_pregunta SET orden = (orden + 1) WHERE orden >= {$registro['orden']} AND cuestionario_id = {$registro['cuestionario_id']}");
+                }
+
+                //Se inserta el registro en la tabla
+                $this->db->insert('cuestionario_pregunta', $registro);
+            }
+        
+    }
+    
+//CUESTIONARIOS - ACUMULADOR > usuario_pregunta.acumulador
+//---------------------------------------------------------------------------------------------------
+    
+    /**
+     * Devuelve objeto query con listado de preguntas respondidas por un usuario
+     * ordenadas por competencia y fin de la respuesta
+     * 
+     * @param type $usuario_id
+     * @return type
+     */
+    function query_acumulador($usuario_id)
+    {
+        $this->db->select('usuario_pregunta.id, usuario_pregunta.usuario_id, fin_respuesta, competencia_id, consecutivo, acumulador');
+        $this->db->join('usuario_cuestionario', 'usuario_pregunta.usuario_id = usuario_cuestionario.usuario_id AND usuario_pregunta.cuestionario_id = usuario_cuestionario.cuestionario_id');
+        $this->db->join('pregunta', 'usuario_pregunta.pregunta_id = pregunta.id');
+        $this->db->join('cuestionario', 'usuario_pregunta.cuestionario_id = cuestionario.id AND usuario_cuestionario.cuestionario_id = cuestionario.id');   //2015-09-21, corrección de error
+        $this->db->where('usuario_cuestionario.usuario_id', $usuario_id);
+        $this->db->where('pregunta.competencia_id IS NOT NULL');
+        $this->db->where('cuestionario.tipo_id > 1');   //No es prueba diagnóstica
+        $this->db->order_by('usuario_pregunta.usuario_id');
+        $this->db->order_by('competencia_id', 'ASC');
+        $this->db->order_by('fin_respuesta', 'ASC');
+        $query = $this->db->get('usuario_pregunta');
+        
+        return $query;
+    }
+    
+    /**
+     * Actualizar el campo usuario_pregunta.consecutivo
+     * Toma todas las preguntas de un usuario_id, para una competencia específica
+     * y las enumera ordenadamente iniciando en 1
+     * 
+     * @param type $usuario_id
+     * @return type
+     */
+    function actualizar_consecutivo($usuario_id)
+    {
+        $query = $this->query_acumulador($usuario_id);
+        
+        $contador = 0;
+        $competencia_id = 0;
+        
+        foreach ( $query->result() as $row_up ) 
+        {
+            
+            //Verificar para reiniciar contador
+            if ( $competencia_id != $row_up->competencia_id ) { $contador = 0; }
+            
+            $contador++;
+            
+            $registro['consecutivo'] = $contador;
+            $this->db->where('id', $row_up->id);
+            $this->db->update('usuario_pregunta', $registro);
+            
+            //Para siguiente ciclo
+            $competencia_id = $row_up->competencia_id;
+            
+        }
+        
+        return $query->num_rows();
+    }
+    
+    function actualizar_acumuladores($usuario_id)
+    {
+        $this->actualizar_acumulador_1($usuario_id);
+        //$this->actualizar_acumulador_2($usuario_id);  //Desactivada 2018-05-11
+    }
+    
+    /**
+     * Actualiza el campo usuario_pregunta.acumulador
+     * Campo utilizado para calcular y mostrar estadísticas acumuladas por competencias
+     * 
+     * @param type $usuario_id
+     */
+    function actualizar_acumulador_1($usuario_id)
+    {
+        $this->actualizar_consecutivo($usuario_id);
+        
+        $institucion_id = $this->Pcrn->campo_id('usuario', $usuario_id, 'institucion_id');
+        $factor_acumulador = $this->Pcrn->campo_id('institucion', $institucion_id, 'acumulador');
+        
+        $sql = 'UPDATE usuario_pregunta SET acumulador = CEIL(consecutivo/' . $factor_acumulador . ') WHERE usuario_id = ' . $usuario_id . ';';
+        
+        $this->db->query($sql);
+    }
+    
+    /**
+     * Actualizar el campo usuario_pregunta.acumulador_2
+     * @param type $usuario_id
+     */
+    function actualizar_acumulador_2($usuario_id)
+    {
+        $sql = 'UPDATE usuario_pregunta ';
+        $sql .= 'JOIN cuestionario ON usuario_pregunta.cuestionario_id = cuestionario.id ';
+        $sql .= 'SET acumulador_2 = IF(cuestionario.tipo_id < 2, cuestionario.nombre_cuestionario, acumulador) ';
+        $sql .= 'WHERE usuario_id = ' . $usuario_id . ';';
+        
+        $this->db->query($sql);
+    }
+    
+    /**
+     * Calcula el máximo acumulador de resultados de preguntas
+     * 
+     * @param type $filtros
+     * @return type
+     */
+    function cant_acumuladores($filtros)
+    {
+        $this->db->select('MAX(acumulador) AS max_acumulador');
+        $this->db->join('usuario_cuestionario', 'usuario_pregunta.usuario_id = usuario_cuestionario.usuario_id AND usuario_pregunta.cuestionario_id = usuario_cuestionario.cuestionario_id');
+        $this->db->join('pregunta', 'usuario_pregunta.pregunta_id = pregunta.id');
+        $this->db->where($filtros);
+        $this->db->where('pregunta.competencia_id IS NOT NULL');
+        $query = $this->db->get('usuario_pregunta');
+        
+        $cant_acumuladores = $query->row()->max_acumulador;
+        
+        return $cant_acumuladores;
+    }
+    
+    /**
+     * Devuelve un query con los acumuladores de acuerdo a unos filtros
+     * campo: usuario_pregunta.acumulador_2
+     * 
+     * Utilizado en la gráfica de resultados de cuestionarios resumen03
+     * 
+     * @param type $filtros
+     * @return type
+     */
+    function acumuladores_2($filtros)
+    {
+        $this->db->select('acumulador_2');
+        $this->db->join('usuario_cuestionario', 'usuario_pregunta.usuario_id = usuario_cuestionario.usuario_id AND usuario_pregunta.cuestionario_id = usuario_cuestionario.cuestionario_id');
+        $this->db->join('pregunta', 'usuario_pregunta.pregunta_id = pregunta.id');
+        $this->db->group_by('acumulador_2');
+        $this->db->order_by('usuario_pregunta.cuestionario_id', 'ASC');
+        //$this->db->order_by('usuario_pregunta.acumulador_2', 'ASC');
+        $this->db->where($filtros);
+        $this->db->where('LENGTH(acumulador_2) > 0');   //Agregado 2015-09-15
+        $acumuladores = $this->db->get('usuario_pregunta');
+        
+        return $acumuladores;
+    }
+    
+//CUESTIONARIOS DESDE FLIPBOOKS
+//---------------------------------------------------------------------------------------------------
+
+    /**
+     * Crea un nuevo cuestionario creado desde un flipbook (fb). Inserta registro
+     * en la tabla cuestionario
+     * 
+     * @param type $flipbook_id
+     * @return type
+     */
+    function nuevo_de_fb($flipbook_id)
+    {
+        $row_flipbook = $this->Pcrn->registro_id('flipbook', $flipbook_id);
+        
+        $registro['nombre_cuestionario'] = $this->input->post('nombre_cuestionario');
+        $registro['anio_generacion'] = date('Y');
+        $registro['nivel'] = $row_flipbook->nivel;
+        $registro['area_id'] = $row_flipbook->area_id;
+        $registro['tiempo_minutos'] = 120;
+        $registro['unidad'] = 1;
+        $registro['institucion_id'] = $this->session->userdata('institucion_id');
+        $registro['tipo_id'] = 3;
+        $registro['interno'] = 0;   //No es de En Línea Editores
+        $registro['privado'] = 1;
+        $registro['prueba_periodica'] = 0;
+        $registro['descripcion'] = 'Creado desde el Contenido: ' . $row_flipbook->nombre_flipbook;
+        $registro['creado'] = date('Y-m-d H:i:s');
+        $registro['editado'] = date('Y-m-d H:i:s');
+        $registro['creado_usuario_id'] = $this->session->userdata('usuario_id');
+        $registro['editado_usuario_id'] = $this->session->userdata('usuario_id');
+        
+        $this->db->insert('cuestionario', $registro);
+        $cuestionario_id  = $this->db->insert_id();
+        
+        return $cuestionario_id;
+    }
+    
+    /**
+     * Agrega las preguntas de un tema al cuestionario
+     * 
+     * @param type $cuestionario_id
+     * @param type $tema_id
+     */
+    function agregar_preguntas($cuestionario_id, $tema_id)
+    {
+        $this->load->model('Tema_model');
+        
+        $registro['cuestionario_id'] = $cuestionario_id;
+        $registro['orden'] = 10000; //Número grande para que las preguntas se vayan creando en orden
+        
+        $preguntas = $this->Tema_model->preguntas($tema_id);
+        foreach ( $preguntas->result() as $row_pregunta ) {
+            $registro['pregunta_id'] = $row_pregunta->id;
+            $this->insertar_cp($registro);
+        }
+        
+        $this->actualizar_areas($cuestionario_id);
+    }
+    
+    /**
+     * Agregar a un cuestionario preguntas de los temas relacionados, Unidades Temáticas
+     * 
+     * @param type $cuestionario_id
+     * @param type $tema_id
+     */
+    function agregar_prg_rel($cuestionario_id, $tema_id)
+    {
+        $prefijos = array('prv_', 'cpt_', 'prf_');
+        
+        foreach ( $prefijos as $prefijo )
+        {
+            $str_temas = $this->input->post($prefijo . $tema_id);
+            $arr_temas = explode('-', $str_temas);
+            foreach ($arr_temas as $relacionado_id) {
+                $this->agregar_preguntas($cuestionario_id, $relacionado_id);
+            }
+        }
+        
+    }
+    
+    function tema_evaluado($tema_id)
+    {   
+        $tema_evaluado = 0;
+        
+        $this->db->where('pregunta.tema_id', $tema_id);
+        $this->db->where('cuestionario.creado_usuario_id', $this->session->userdata('usuario_id'));
+        $this->db->join('cuestionario', 'cuestionario_pregunta.cuestionario_id = cuestionario.id');
+        $this->db->join('pregunta', 'cuestionario_pregunta.pregunta_id = pregunta.id');
+        $preguntas = $this->db->get('cuestionario_pregunta');
+        
+        if ( $preguntas->num_rows() > 0 ) { $tema_evaluado = 1; }
+        
+        //$tema_evaluado = $preguntas->num_rows();
+        //$tema_evaluado = $preguntas->row()->cuestionario_id;
+        
+        return $tema_evaluado; 
+                
+    }
+    
+
+//---------------------------------------------------------------------------------------------------
+//FIN CUESTIONARIOS DESDE FLIPBOOKS
+    
+    /**
+     * Muestra las sugerencias para un cuestionario según unos criterios definiedos en el array $busqueda
+     * 
+     * @param type $busqueda
+     * @return type
+     */
+    function sugerencias($busqueda)
+    {
+        if ( $busqueda['cuestionario_id'] && $busqueda['cuestionario_id'] > 0 ) { $this->db->where('cuestionario_id', $busqueda['cuestionario_id']); }
+        if ( $busqueda['area_id'] && $busqueda['area_id'] > 0 ) { $this->db->where('area_id', $busqueda['area_id']); }
+        if ( $busqueda['competencia_id'] && $busqueda['competencia_id'] > 0 ) { $this->db->where('competencia_id', $busqueda['competencia_id']); }
+        
+        $query = $this->db->get('cuestionario_sugerencia');
+        
+        return $query;
+    }
+    
+    /**
+     * Devuelve las áreas para las cuales hay sugerencias
+     * @param type $cuestionario_id
+     * @return type
+     */
+    function areas_sugerencias($cuestionario_id)
+    {
+        $this->db->select('area_id');
+        $this->db->where('cuestionario_id', $cuestionario_id);
+        $this->db->join('cuestionario_pregunta', 'pregunta.id = cuestionario_pregunta.pregunta_id');
+        $this->db->group_by('area_id');
+        $query = $this->db->get('pregunta');
+        
+        return $query;
+    }
+    
+//ESTADÍSTICAS DE RESULTADOS
+//---------------------------------------------------------------------------------------------------
+
+    /**
+     * Query de cuestionarios respondidos por un usuario
+     * 
+     * @param type $usuario_id
+     * @return type
+     */
+    function resumen_usuario($usuario_id)
+    {
+        //Consulta
+        $this->db->select('usuario_cuestionario.id AS uc_id, usuario_cuestionario.cuestionario_id, nombre_cuestionario, fin_respuesta, COUNT(usuario_pregunta.id) AS respondidas,SUM(resultado) AS correctas');
+        $this->db->where('usuario_cuestionario.usuario_id', $usuario_id);
+        $this->db->join('usuario_cuestionario', 'cuestionario.id = usuario_cuestionario.cuestionario_id');
+        $this->db->join('usuario_pregunta', 'usuario_pregunta.cuestionario_id = usuario_cuestionario.cuestionario_id AND usuario_pregunta.usuario_id = usuario_cuestionario.usuario_id');
+        $this->db->where('usuario_cuestionario.estado >= 3');   //Mod 2017-05-13
+        $this->db->where('tipo_id <> 4');  //Solicitado jtorrest 2015-02-17
+        $this->db->group_by('usuario_cuestionario.cuestionario_id');
+        $this->db->order_by('fin_respuesta', 'DESC');
+        $cuestionarios = $this->db->get('cuestionario');
+        
+        return $cuestionarios;
+    }
+    
+    /**
+     * Devuelve un array con los id de los componentes de un grupo de cuestionarios
+     * 
+     * @param type $condiciones
+     * @return type
+     */
+    function componentes_cuestionarios($condiciones)
+    {
+        
+        //Aplicando condiciones
+        foreach ( $condiciones as $condicion ) {
+            $this->db->where($condicion);
+        }
+        
+        $this->db->select('componente_id');
+        $this->db->where('componente_id IS NOT NULL');
+        $this->db->join('cuestionario', 'usuario_cuestionario.cuestionario_id = cuestionario.id');
+        $this->db->join('usuario_pregunta', 'usuario_cuestionario.usuario_id = usuario_pregunta.usuario_id');
+        $this->db->join('pregunta', 'usuario_pregunta.pregunta_id = pregunta.id');
+        $this->db->group_by('componente_id');
+        $query = $this->db->get('usuario_cuestionario');
+        
+        $componentes_cuestionarios = $this->Pcrn->query_to_array($query, 'componente_id', 'componente_id');
+                
+        return $componentes_cuestionarios;
+        
+    }
+    
+    /**
+     * Devuelve un array con los id de las competencias de un grupo de cuestionarios
+     * 
+     * @param type $condiciones
+     * @return type
+     */
+    function competencias_cuestionarios($condiciones)
+    {
+        
+        //Aplicando condiciones
+        foreach ( $condiciones as $condicion ) {
+            $this->db->where($condicion);
+        }
+        
+        $this->db->select('competencia_id');
+        $this->db->where('competencia_id IS NOT NULL');
+        $this->db->join('cuestionario', 'usuario_cuestionario.cuestionario_id = cuestionario.id');
+        $this->db->join('usuario_pregunta', 'usuario_cuestionario.usuario_id = usuario_pregunta.usuario_id');
+        $this->db->join('pregunta', 'usuario_pregunta.pregunta_id = pregunta.id');
+        $this->db->group_by('competencia_id');
+        $query = $this->db->get('usuario_cuestionario');
+        
+        $competencias_cuestionarios = $this->Pcrn->query_to_array($query, 'competencia_id', 'competencia_id');
+                
+        return $competencias_cuestionarios;
+        
+    }
+    
+    /**
+     * Devuelve query con las respuestas de un usuario a un cuestionario
+     * 
+     * @param type $uc_id   id de la tabla usuario_cuestionario (asignación)
+     * @return type
+     */
+    function array_respuestas($uc_id)
+    {
+        $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $uc_id);
+        
+        if ( $row_uc->respuestas > 0 ) {
+            $array_respuestas = explode('-', $row_uc->respuestas);
+        } else {
+            $row_cuestionario = $this->datos_cuestionario($row_uc->cuestionario_id);
+            $str_respuestas = str_repeat('0-', $row_cuestionario->num_preguntas);
+            $str_respuestas = $this->Pcrn->cortar_der($str_respuestas, 1);
+            $array_respuestas = explode('-', $str_respuestas);
+        }
+        
+        return $array_respuestas;
+    }
+    
+    /**
+     * Array con resumen del resultado de un cuestionario
+     * 
+     * Muestra el resultado de un cues
+     * @param type $condiciones
+     */
+    function resultado_detalle($condiciones)
+    {
+        
+        foreach ( $condiciones AS $condicion ){
+            $this->db->where($condicion);
+        }
+        
+        $this->db->select('COUNT(pregunta_id) as respondidas');
+        $this->db->join('pregunta', 'usuario_pregunta.pregunta_id = pregunta.id');
+        $this->db->group_by();
+        $query = $this->db->get('usuario_pregunta');
+        $row = $query->row();
+        
+        $resultado['respondidas'] = $row->respondidas;
+        
+        return $resultado;
+    }
+    
+    //Actualizar el contenido de la tabla dw_usuario_pregunta
+    function actualizar_dw_up($mes)
+    {
+        //Eliminar datos
+            $this->db->where('mes >= "' . $mes . '"');
+            $this->db->delete('dw_usuario_pregunta');
+        
+        //Cargar datos
+            $sql = 'INSERT INTO dw_usuario_pregunta (mes, cuestionario_id, institucion_id, grupo_id, area_id, competencia_id, cant_respondidas, cant_correctas) ';
+            $sql .= 'SELECT LEFT(fin_respuesta, 7), usuario_pregunta.cuestionario_id, grupo.institucion_id, usuario_cuestionario.grupo_id AS grupo_id, pregunta.area_id, pregunta.competencia_id, COUNT( usuario_pregunta.id ) AS cant_preguntas, SUM( usuario_pregunta.resultado ) AS cant_correctas ';
+            $sql .= 'FROM  usuario_pregunta ';
+            $sql .= 'JOIN usuario ON usuario_pregunta.usuario_id = usuario.id ';
+            $sql .= 'JOIN usuario_cuestionario ON usuario_pregunta.usuario_id = usuario_cuestionario.usuario_id ';
+            $sql .= 'JOIN grupo ON usuario_cuestionario.grupo_id = grupo.id AND usuario_pregunta.cuestionario_id = usuario_cuestionario.cuestionario_id ';
+            $sql .= 'JOIN pregunta ON usuario_pregunta.pregunta_id = pregunta.id ';
+            $sql .= 'WHERE fin_respuesta >= "' . $mes . '" ';
+            $sql .= 'GROUP BY LEFT(fin_respuesta, 7), usuario_pregunta.cuestionario_id, usuario_cuestionario.grupo_id, grupo.institucion_id, area_id, competencia_id';
+            
+            $this->db->query($sql);
+        
+        return $sql;
+    }
+    
+    //Actualizar el contenido de la tabla dw_usuario_cuestionario
+    function actualizar_dw_uc($mes)
+    {
+        //Eliminar datos
+            $this->db->where('mes >= "' . $mes . '"');
+            //$this->db->where('id > 0');
+            $this->db->delete('dw_usuario_cuestionario');
+        
+        //Cargar datos
+            $sql = 'INSERT INTO dw_usuario_cuestionario (mes, cuestionario_id, institucion_id, grupo_id, area_id, nivel, cant_asignados, cant_respondieron) ';
+            $sql .= 'SELECT LEFT(usuario_cuestionario.creado, 7), usuario_cuestionario.cuestionario_id, usuario_cuestionario.institucion_id, usuario_cuestionario.grupo_id AS grupo_id, cuestionario.area_id, grupo.nivel, COUNT( usuario_cuestionario.id ) AS cant_asignados, SUM( usuario_cuestionario.respondido ) AS cant_respondieron ';
+            $sql .= 'FROM  usuario_cuestionario ';
+            $sql .= 'JOIN cuestionario ON usuario_cuestionario.cuestionario_id = cuestionario.id ';
+            $sql .= 'JOIN grupo ON usuario_cuestionario.grupo_id = grupo.id ';
+            $sql .= 'WHERE usuario_cuestionario.creado >= "' . $mes . '" ';
+            $sql .= 'GROUP BY LEFT(usuario_cuestionario.creado, 7), usuario_cuestionario.cuestionario_id, usuario_cuestionario.institucion_id, usuario_cuestionario.grupo_id, area_id, nivel';
+            
+            $this->db->query($sql);
+        
+        return $sql;
+    }
+    
+    
+    //Actualizar el contenido de la tabla dw_cuestionario_pregunta
+    function actualizar_dw_cp($mes)
+    {
+        
+        //Eliminar datos
+            $this->db->where('mes >= "' . $mes . '"');
+            $this->db->delete('dw_usuario_pregunta');
+        
+        //Cargar datos
+            $sql = 'INSERT INTO dw_cuestionario_pregunta (mes, cuestionario_id, area_id, competencia_id, cant_preguntas) ';
+            $sql .= 'SELECT LEFT(cuestionario.creado, 7), cuestionario_pregunta.cuestionario_id, pregunta.area_id, pregunta.competencia_id, COUNT( cuestionario_pregunta.id ) AS cant_preguntas ';
+            $sql .= 'FROM  cuestionario_pregunta ';
+            $sql .= 'JOIN cuestionario ON cuestionario_pregunta.cuestionario_id = cuestionario.id ';
+            $sql .= 'JOIN pregunta ON cuestionario_pregunta.pregunta_id = pregunta.id ';
+            $sql .= 'WHERE cuestionario.creado >= "' . $mes . '" ';
+            $sql .= 'GROUP BY LEFT(cuestionario.creado, 7), cuestionario_pregunta.cuestionario_id, pregunta.area_id, pregunta.competencia_id';
+            
+            $this->db->query($sql);
+        
+        return $sql;
+    }
+    
+    /**
+     * Actualiza el campo usuario_cuestionario.num_con_respuesta
+     * 
+     * usuario_cuestionario.respuestas
+     * usuario_cuestionario.resultados
+     * 
+     * @param type $uc_id
+     */
+    function actualizar_respondidas($uc_id)
+    {
+        //num_con_respuesta
+        $respondidas = $this->respondidas($uc_id);
+        $registro['num_con_respuesta'] = $respondidas->num_rows();
+        
+        //estado
+        $registro['estado'] = 2;    //Iniciado
+        $registro['editado_usuario_id'] = $this->session->userdata('usuario_id');
+        $registro['editado'] = date('Y-m-d H:i:s');
+        $registro['fin_respuesta'] = date('Y-m-d H:i:s');        
+
+        //Actualizar
+            $this->db->where('id', $uc_id);
+            $this->db->update('usuario_cuestionario', $registro);
+    }
+    
+    /**
+     * Actualiza los campos de la tabla usuario_cuestionario: respuestas y resultados
+     * usuario_cuestionario.resupuestas
+     * usuario_cuestionario.resultados
+     * 
+     * @param type $uc_id
+     */
+    function actualizar_uc($uc_id)
+    {
+        
+        //respuestas
+        $arr_respuestas = $this->arr_respuestas($uc_id);
+        $registro['respuestas'] = implode('-', $arr_respuestas);
+        
+        //resultados
+        $arr_resultados = $this->arr_resultados($uc_id);
+        $registro['resultados'] = implode('-', $arr_resultados);
+        
+        //num_con_respuesta
+        $respondidas = $this->respondidas($uc_id);
+        $registro['num_con_respuesta'] = $respondidas->num_rows();
+        
+        //resumen
+        $resumen = $this->resumen($uc_id);
+        $registro['resumen'] = $resumen;
+        
+        //estado
+        $registro['estado'] = 2;    //Iniciado
+        $registro['editado_usuario_id'] = $this->session->userdata('usuario_id');
+        $registro['editado'] = date('Y-m-d H:i:s');
+        $registro['fin_respuesta'] = date('Y-m-d H:i:s');
+
+        //Actualizar
+            $this->db->where('id', $uc_id);
+            $this->db->update('usuario_cuestionario', $registro);
+    }
+    
+    /**
+     * Devuelve query con las respuestas de un usuario a un cuestionario
+     * 
+     * @param type $uc_id   id de la tabla usuario_cuestionario (asignación)
+     * @return type
+     */
+    function respondidas($uc_id)
+    {
+        $condicion_join = 'cuestionario_pregunta.cuestionario_id = usuario_pregunta.cuestionario_id AND ';
+        $condicion_join .= 'cuestionario_pregunta.pregunta_id = usuario_pregunta.pregunta_id';
+        
+        $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $uc_id);
+        
+        $this->db->select('cuestionario_pregunta.pregunta_id, orden, respuesta, resultado');
+        $this->db->where('cuestionario_pregunta.cuestionario_id', $row_uc->cuestionario_id);
+        $this->db->where('usuario_pregunta.usuario_id', $row_uc->usuario_id);
+        $this->db->where('usuario_pregunta.respuesta > 0'); //Han sido respondidas
+        $this->db->join('usuario_pregunta', $condicion_join, 'LEFT');
+        $this->db->order_by('orden', 'ASC');
+        $respuestas = $this->db->get('cuestionario_pregunta');
+        
+        return $respuestas;
+    }
+    
+    /**
+     * Devuelve un array con un número de elementos igual al número de preguntas
+     * El valor del elemento corresponde a la respuesta del usuario
+     * @param type $uc_id
+     * @return type
+     */
+    function arr_respuestas($uc_id)
+    {
+        $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $uc_id);
+        $row_cuestionario = $this->datos_cuestionario($row_uc->cuestionario_id);
+        $arr_respuestas = array();
+        $respondidas = $this->respondidas($uc_id);
+        
+        for ( $i = 0; $i < $row_cuestionario->num_preguntas; $i++ )
+        {
+            $arr_respuestas[$i] = 0;
+        }
+        
+        foreach( $respondidas->result() as $row_respuesta ){
+            $arr_respuestas[$row_respuesta->orden] = $row_respuesta->respuesta;
+        }
+        
+        return $arr_respuestas;
+    }
+    
+    /**
+     * Devuelve un array con un número de elementos igual al número de preguntas
+     * El valor del elemento corresponde al resultado de la respuesta del usuario
+     * @param type $uc_id
+     * @return type
+     */
+    function arr_resultados($uc_id)
+    {
+        $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $uc_id);
+        $row_cuestionario = $this->datos_cuestionario($row_uc->cuestionario_id);
+        $arr_resultados = array();
+        $respondidas = $this->respondidas($uc_id);
+        
+        for ( $i = 0; $i < $row_cuestionario->num_preguntas; $i++ ){
+            $arr_resultados[$i] = 0;
+        }
+        
+        foreach( $respondidas->result() as $row_respuesta ){
+            $arr_resultados[$row_respuesta->orden] = $row_respuesta->resultado;
+        }
+        
+        return $arr_resultados;
+    }
+
+//RESULTADOS RESUMEN DW
+//---------------------------------------------------------------------------------------------------
+    
+    function resultados_grupo($cuestionario_id, $grupo_id)
+    {
+        $resultados['cant_respondidas'] = 0;
+        $resultados['cant_correctas'] = 0;
+        
+        $this->db->select('SUM(cant_respondidas) AS sum_cant_respondidas, SUM(cant_correctas) AS sum_cant_correctas');
+        $this->db->where('cuestionario_id', $cuestionario_id);
+        $this->db->where('grupo_id', $grupo_id);
+        $query = $this->db->get('dw_usuario_pregunta');
+        
+        if ( $query->num_rows() > 0 ) {
+            $resultados['cant_respondidas'] = $query->row()->sum_cant_respondidas;
+            $resultados['cant_correctas'] = $query->row()->sum_cant_correctas;
+        }
+        
+        return $resultados;
+    }
+    
+//RESUMEN DEL CUESTIONARIO usuario_cuestionario.resumen
+//---------------------------------------------------------------------------------------------------
+    
+    /**
+     * Búsqueda de cuestionarios
+     * 
+     * @param type $busqueda
+     * @param type $per_page
+     * @param type $offset
+     * @return type
+     */
+    function asignaciones($busqueda, $per_page = NULL, $offset = NULL)
+    {
+
+        //Filtro según el rol de usuario que se tenga
+            //$filtro_rol = $this->filtro_asignaciones();
+        
+        //Texto búsqueda
+            //Crear array con términos de búsqueda
+            if ( strlen($busqueda['q']) > 2 )
+            {
+                $palabras = $this->Busqueda_model->palabras($busqueda['q']);
+
+                foreach ($palabras as $palabra_busqueda) 
+                {
+                    $concat_campos = $this->Busqueda_model->concat_campos(array('nombre_cuestionario'));
+                    $this->db->like("CONCAT({$concat_campos})", $palabra_busqueda);
+                }
+            }
+            
+        //Otros filtros
+            if ( $busqueda['est'] != '' ) { $this->db->where('estado', $busqueda['est']); }         //Estado
+            if ( $busqueda['i'] != '' ) { $this->db->where('institucion_id', $busqueda['i']); }     //Instituciones
+            if ( $busqueda['tp'] != '' ) 
+            {
+                $condicion_tipo = "cuestionario_id IN (SELECT id FROM cuestionario WHERE tipo_id = {$busqueda['tp']})";
+                $this->db->where($condicion_tipo);
+            }
+                
+        //Otros
+            //$this->db->where($filtro_rol);  //Filtro por rol
+            $this->db->order_by('editado', 'DESC');
+                
+        //Condición especial
+            //if ( $busqueda['condicion'] != '' ) { $this->db->where($busqueda['condicion']); }   //Condición especial
+            
+        //Obtener resultados
+        if ( is_null($per_page) ){
+            $query = $this->db->get('usuario_cuestionario'); //Resultados totales
+        } else {
+            $query = $this->db->get('usuario_cuestionario', $per_page, $offset); //Resultados por página
+        }
+        
+        return $query;
+    }
+    
+    function asignados($filtros)
+    {
+        $this->db->where($filtros);
+        $query = $this->db->get('usuario_cuestionario');
+        
+        return $query->num_rows();
+    }
+    
+    
+    /**
+     * Resumen del resultado de una prueba en JSON para el campo 
+     * usuario_cuestionario.resumen
+     * 
+     * @param type $uc_id
+     * @return type JSON
+     */
+    function resumen($uc_id)
+    {
+        $respondidas = $this->respondidas($uc_id);    //Query
+        
+        //Se verifica que existan respuestas del usuario en el cuestionario
+        if ( $respondidas->num_rows() > 0 ) 
+        {
+            
+            $row_uc = $this->Pcrn->registro_id('usuario_cuestionario' ,$uc_id);
+
+            //Resultado total
+                $resultado = $this->App_model->res_cuestionario($row_uc->cuestionario_id, "usuario_id = {$row_uc->usuario_id}");
+
+                $total[0] = $resultado['correctas'];
+                $total[1] = $resultado['num_preguntas'];
+
+                $resumen_array['total'] = $total;
+
+            //Resultado por áreas
+                $resumen_areas = $this->resumen_areas($uc_id);
+                $resumen_array = array_merge($resumen_array, $resumen_areas);
+
+            //Resultado por competencias
+                $resumen_competencias = $this->resumen_competencias($uc_id);
+                $resumen_array = array_merge($resumen_array, $resumen_competencias);
+
+            //Resultado por componente
+                $resumen_componentes = $this->resumen_componentes($uc_id);
+                $resumen_array = array_merge($resumen_array, $resumen_componentes);
+
+
+            //Actualización del campo
+                $resumen = json_encode($resumen_array);
+                
+            return $resumen;
+        
+        }
+    }
+    
+    /**
+     * Actualiza el campo usuario_cuestionario.resumen
+     * @param type $uc_id
+     */
+    function actualizar_resumen($uc_id)
+    {
+        $registro['resumen'] = $this->resumen($uc_id);
+
+        $this->db->where('id', $uc_id);
+        $this->db->update('usuario_cuestionario', $registro);
+    }
+    
+    /**
+     * Array con el resultado de un usuario en un cuestionario, por áreas
+     * Cantidad preguntas y correctas
+     * 
+     * @param type $uc_id
+     * @return type
+     */
+    function resumen_areas($uc_id)
+    {
+        
+        $resumen_areas = array();
+        
+        $row_uc = $this->Pcrn->registro_id('usuario_cuestionario' ,$uc_id);
+        
+        //Resultado por áreas
+            $areas = $this->areas($row_uc->cuestionario_id);
+            
+            foreach ( $areas->result() as $row_area )
+            {
+                $area_key = "a{$row_area->area_id}";
+                $resultado = $this->App_model->res_cuestionario($row_uc->cuestionario_id, "usuario_id = {$row_uc->usuario_id}", "area_id = {$row_area->area_id}");
+
+                $resultado[$area_key][0] = $resultado['correctas'];
+                $resultado[$area_key][1] = $resultado['num_preguntas'];
+
+                $resumen_areas[$area_key] = $resultado[$area_key];
+            }
+            
+        return $resumen_areas;
+    }
+    
+    /**
+     * Array con el resultado de un usuario en un cuestionario, por competencias
+     * Cantidad preguntas y correctas
+     * 
+     * @param type $uc_id
+     * @return type
+     */
+    function resumen_competencias($uc_id)
+    {
+        $resumen_competencias = array();
+        
+        $row_uc = $this->Pcrn->registro_id('usuario_cuestionario' ,$uc_id);
+        
+        //Resultado por competencias
+            $competencias = $this->competencias($row_uc->cuestionario_id);
+            
+            foreach ( $competencias->result() as $row_competencia ){
+                $competencia_key = "c{$row_competencia->competencia_id}";   //Prefijo c al id de la competencia
+                $resultado = $this->App_model->res_cuestionario($row_uc->cuestionario_id, "usuario_id = {$row_uc->usuario_id}", "competencia_id = {$row_competencia->competencia_id}");
+
+                $resumen[$competencia_key][0] = $resultado['correctas'];
+                $resumen[$competencia_key][1] = $resultado['num_preguntas'];                
+
+                $resumen_competencias[$competencia_key] = $resumen[$competencia_key];
+            }
+            
+        return $resumen_competencias;
+    }
+    
+    /**
+     * Array con el resultado de un usuario en un cuestionario, por componentes
+     * Cantidad preguntas y correctas
+     * 
+     * @param type $uc_id
+     * @return type
+     */
+    function resumen_componentes($uc_id)
+    {
+        $resumen_componentes = array();
+        $row_uc = $this->Pcrn->registro_id('usuario_cuestionario' ,$uc_id);
+        
+        //Resultado por componentes
+            $componentes = $this->componentes($row_uc->cuestionario_id);
+            
+            foreach ( $componentes->result() as $row_componente ){
+                $componente_key = "p{$row_componente->componente_id}";  //Prefijo p al id del componente
+                $resultado = $this->App_model->res_cuestionario($row_uc->cuestionario_id, "usuario_id = {$row_uc->usuario_id}", "componente_id = {$row_componente->componente_id}");
+
+                $resumen[$componente_key][] = $resultado['correctas'];
+                $resumen[$componente_key][] = $resultado['num_preguntas'];        
+
+                $resumen_componentes[$componente_key] = $resumen[$componente_key];
+            }
+            
+        return $resumen_componentes;
+    }
+    
+    /**
+     * Decodifica y completa el campo usuario_cuestionario.resumen
+     * Agrega los datos calculados
+     */
+    function resultado_usuario($uc_id, $filtro = 'total')
+    {
+        $row_uc = $this->Pcrn->registro_id('usuario_cuestionario' ,$uc_id);
+        $resumen = json_decode($row_uc->resumen, true);
+        $resultado = $resumen[$filtro];
+        
+        $resultado_completo['correctas'] = $resultado[0];
+        $resultado_completo['cant_preguntas'] = $resultado[1];
+        $resultado_completo['incorrectas'] = $resultado[1] - $resultado[0];
+        $resultado_completo['porcentaje'] = number_format( 100 * $resultado[0] / $this->Pcrn->no_cero($resultado[1]), 2);
+        
+        return $resultado_completo;
+    }
+    
+    /**
+     * Actualiza el campo usuario_cuestionario.fin_respuesta
+     * @param type $uc_id
+     */
+    function z_actualizar_fin_respuesta($uc_id)
+    {
+        $registro['estado'] = 3;    //Finalizado
+        $registro['respondido'] = 1;
+        $registro['editado_usuario_id'] = $this->session->userdata('usuario_id');
+        $registro['editado'] = date('Y-m-d H:i:s');
+        $registro['fin_respuesta'] = date('Y-m-d H:i:s');
+        
+        $this->db->where('id', $uc_id);
+        $this->db->update('usuario_cuestionario', $registro);
+    }
+    
+// RESULTADOS
+//-----------------------------------------------------------------------------
+    
+    /**
+     * Resultados acumulados
+     * 
+     * @param type $busqueda
+     * @return type
+     */
+    function res($busqueda)
+    {
+        $res_respuestas = $this->res_respuestas($busqueda);
+        $res_num_preguntas = $this->res_num_preguntas($busqueda);
+        $res_num_usuarios = $this->res_num_usuarios($busqueda);
+        
+        $res = array_merge($res_respuestas, $res_num_preguntas, $res_num_usuarios);
+        
+        return $res;
+    }
+    
+    
+    function res_respuestas($busqueda)
+    {
+        //Valores iniciales
+            $res['correctas_abs'] = 0;
+            $res['respondidas_abs'] = 0;
+            $res['incorrectas_abs'] = 0;
+            $res['porcentaje'] = 0;
+        
+        //Consulta Respuestas
+            $this->db->select('SUM(cant_correctas) AS correctas, SUM(cant_respondidas) AS respondidas');
+            if ( strlen($busqueda['ctn']) > 0 ) { $this->db->where('cuestionario_id', $busqueda['ctn']); }
+            if ( strlen($busqueda['i']) > 0 ) { $this->db->where('institucion_id', $busqueda['i']); }
+            if ( strlen($busqueda['g']) > 0 ) { $this->db->where('grupo_id', $busqueda['g']); }
+            if ( strlen($busqueda['a']) > 0 ) { $this->db->where('area_id', $busqueda['a']); }
+            if ( strlen($busqueda['n']) > 0 ) { $this->db->where("grupo_id IN (SELECT id FROM grupo WHERE nivel = {$busqueda['n']})"); }
+            $query = $this->db->get('dw_usuario_pregunta');
+        
+            if ( $query->num_rows() > 0 ) 
+            {
+                $row = $query->row();
+
+                $res['correctas_abs'] = $row->correctas;
+                $res['respondidas_abs'] = $row->respondidas;
+                $res['incorrectas_abs'] = $row->respondidas - $row->correctas;
+                $res['porcentaje'] = $this->Pcrn->int_percent($row->correctas, $row->respondidas);
+            }
+        
+        return $res;
+    }
+    
+    function res_num_preguntas($busqueda)
+    {
+        
+        $res_num_preguntas['num_preguntas'] = 0;
+        
+        $this->db->select('SUM(cant_preguntas) AS num_preguntas');
+        //$this->db->join('dw_usuario_cuestionario', 'dw_cuestionario_pregunta.cuestionario_id = dw_usuario_cuestionario.cuestionario_id');
+        
+        if ( strlen($busqueda['i']) > 0 ) { $this->db->where("cuestionario_id IN (SELECT cuestionario_id FROM dw_usuario_cuestionario WHERE institucion_id = {$busqueda['i']})"); }
+        if ( strlen($busqueda['g']) > 0 ) { $this->db->where("cuestionario_id IN (SELECT cuestionario_id FROM dw_usuario_cuestionario WHERE grupo_id = {$busqueda['g']})"); }
+        if ( strlen($busqueda['ctn']) > 0 ) { $this->db->where('cuestionario_id', $busqueda['ctn']); }
+        if ( strlen($busqueda['a']) > 0 ) { $this->db->where('area_id', $busqueda['a']); }
+        $query = $this->db->get('dw_cuestionario_pregunta');
+        
+        if ( $query->num_rows() > 0 ) {
+            $res_num_preguntas['num_preguntas'] = $query->row()->num_preguntas;
+        }
+        
+        return $res_num_preguntas;
+    }
+    
+    function res_num_usuarios($busqueda)
+    {
+        //Valores iniciales
+            $res_num_usuarios['cant_asignados'] = 0;
+            $res_num_usuarios['cant_respondieron'] = 0;
+            $res_num_usuarios['porcentaje_respodieron'] = 0;
+        
+        //Consulta Respuestas
+            //$this->db->select('SUM(cant_respondieron) AS cant_respondieron, COUNT(id) AS cant_asignados');
+            $this->db->select('SUM(cant_asignados) AS cant_asignados, SUM(cant_respondieron) AS cant_respondieron');
+            if ( strlen($busqueda['i']) > 0 ) { $this->db->where('institucion_id', $busqueda['i']); }
+            if ( strlen($busqueda['g']) > 0 ) { $this->db->where('grupo_id', $busqueda['g']); }
+            if ( strlen($busqueda['ctn']) > 0 ) { $this->db->where('cuestionario_id', $busqueda['ctn']); }
+            if ( strlen($busqueda['a']) > 0 ) { $this->db->where('area_id', $busqueda['a']); }
+            if ( strlen($busqueda['n']) > 0 ) { $this->db->where('nivel', $busqueda['n']); }
+            $query = $this->db->get('dw_usuario_cuestionario');
+        
+            if ( $query->num_rows() > 0 ) {
+                $row = $query->row();
+
+                $res_num_usuarios['cant_asignados'] = $row->cant_asignados;
+                $res_num_usuarios['cant_respondieron'] = $row->cant_respondieron;
+                $res_num_usuarios['porcentaje_respondieron'] = $this->Pcrn->int_percent($row->cant_respondieron, $row->cant_asignados);
+            }
+        
+        return $res_num_usuarios;
+    }
+    
+    function resultado_pregunta($filtros)
+    {
+        
+        $resultado['respuesta'] = 0;
+        $resultado['resultado'] = 0;
+        
+        $this->db->where($filtros);
+        $respuestas = $this->db->get('usuario_pregunta');
+        
+        if ( $respuestas->num_rows() > 0 ) {
+            $row_respuesta = $respuestas->row();
+            if ( ! is_null($row_respuesta->respuesta) ) { $resultado['respuesta'] = $row_respuesta->respuesta; }
+            if ( ! is_null($row_respuesta->resultado) ) { $resultado['resultado'] = $row_respuesta->resultado; }
+        }
+        
+        return $resultado;
+        
+    }
+    
+    //Valores totales
+    function resultado_absoluto($cuestionario_id, $condicion, $condicion_pregunta = NULL)
+    {
+        
+        //La función Pcrn->no_cero(), es utilizada para evitar divisiones por cero
+        
+        //Datos del cuestionario
+            $datos_cuestionario = $this->datos_cuestionario($cuestionario_id);
+            
+        //Filtro sobre preguntas
+            //$num_preguntas = $datos_cuestionario->num_preguntas;
+            if ( ! is_null($condicion_pregunta) ){
+                $this->db->where($condicion_pregunta);
+            }
+            
+            $this->db->join('pregunta', 'pregunta.id = cuestionario_pregunta.pregunta_id');
+            $this->db->where('cuestionario_id', $cuestionario_id);
+            $preguntas = $this->db->get('cuestionario_pregunta');
+            $num_preguntas = $preguntas->num_rows();
+            
+        //Consulta
+            $this->db->select('SUM(cant_correctas) AS correctas, SUM(cant_respondidas) AS respondidas');
+            $this->db->where('cuestionario_id', $cuestionario_id);
+            $this->db->where($condicion);
+            if ( ! is_null($condicion_pregunta) ) { $this->db->where($condicion_pregunta); }
+            $query = $this->db->get('dw_usuario_pregunta');
+            $row = $query->row();
+        
+        //Resultado
+            $resultado['cuestionario_id'] = $cuestionario_id;
+            $resultado['respondidas'] = $row->respondidas;
+            $resultado['correctas'] = $row->correctas;
+            $resultado['incorrectas'] = $row->respondidas - $row->correctas;
+            $resultado['porcentaje'] = number_format(100 * ($row->correctas / $this->Pcrn->no_cero($row->respondidas)), 0);
+            $resultado['cant_usuarios'] = $row->respondidas / $this->Pcrn->no_cero($datos_cuestionario->num_preguntas);
+            //$resultado['cant_usuarios_total'] = $this->usuarios_cuestionario($cuestionario_id, $condicion, $condicion_pregunta);
+            $resultado['num_preguntas'] = $num_preguntas;
+        
+        return $resultado;
+    }
+    
+    //Valores relativos
+    function resultado($cuestionario_id, $condicion, $condicion_pregunta = NULL)
+    {
+        $resultado = $this->resultado_absoluto($cuestionario_id, $condicion, $condicion_pregunta);
+            
+            $resultado['correctas'] =  ( $resultado['correctas'] /  $this->Pcrn->no_cero($resultado['respondidas']) ) * $resultado['num_preguntas'];
+            $resultado['incorrectas'] = $resultado['num_preguntas'] - $resultado['correctas'];
+            $resultado['respondidas'] = $resultado['num_preguntas'];
+        
+        return $resultado;
+    }
+    
+    
+    /**
+     * Devuelve el número de respuestas correctas para unos filtros específicos
+     * Usado en el resumen de resultados por competencias
+     * La tabla item, se incluye para filtrar el no. 1, 2 y 3 de las competencias por área
+     * 
+     * @param type $filtros
+     * @return type
+     */
+    function cant_correctas($filtros)
+    {
+        $cant_correctas = NULL;
+        
+        $this->db->select('SUM(resultado) AS cant_correctas');
+        $this->db->where($filtros);
+        $this->db->join('pregunta', 'pregunta.id = usuario_pregunta.pregunta_id');
+        $this->db->join('usuario_cuestionario', 'usuario_pregunta.usuario_id = usuario_cuestionario.usuario_id AND usuario_pregunta.cuestionario_id = usuario_cuestionario.cuestionario_id');
+        $this->db->join('item', 'pregunta.competencia_id = item.id');
+        $query = $this->db->get('usuario_pregunta');
+        
+        if ( $query->num_rows() > 0 ) { $cant_correctas = $query->row()->cant_correctas; }
+        
+        return $cant_correctas;
+    }
+    
+    /**
+     * Devuelve el número de respuestas correctas para unos filtros específicos
+     * Usado en el resumen de resultados por competencias
+     * Simple, porque no incluye los filtros por competencias
+     * 
+     * @param type $filtros
+     * @return type
+     */
+    function cant_correctas_simple($filtros)
+    {
+        $cant_correctas = NULL;
+        
+        $this->db->select('SUM(resultado) AS cant_correctas');
+        $this->db->where($filtros);
+        $this->db->join('pregunta', 'pregunta.id = usuario_pregunta.pregunta_id');
+        $this->db->join('usuario_cuestionario', 'usuario_pregunta.usuario_id = usuario_cuestionario.usuario_id AND usuario_pregunta.cuestionario_id = usuario_cuestionario.cuestionario_id');
+        $query = $this->db->get('usuario_pregunta');
+        
+        if ( $query->num_rows() > 0 ) { $cant_correctas = $query->row()->cant_correctas; }
+        
+        return $cant_correctas;
+        
+    }
+    
+    /**
+     * 
+     * Devuelve un array con el resultado acumulado calculado desde la tabla usuario_pregunta
+     * correctas, incorrectas, respondidas y el porcentaje de respuestas correctas
+     * 
+     * @param type $filtros array
+     * @return type array
+     */
+    function up_resultado($filtros)
+    {
+        $resultado['cant_correctas'] = 0;
+        $resultado['cant_incorrectas'] = 0;
+        $resultado['cant_respondidas'] = 0;
+        $resultado['porcentaje'] = 0;
+        
+        $this->db->select('COUNT(usuario_pregunta.id) AS cant_respondidas, SUM(resultado) AS cant_correctas');
+        $this->db->where($filtros);
+        $this->db->join('pregunta', 'pregunta.id = usuario_pregunta.pregunta_id');
+        $this->db->join('usuario_cuestionario', 'usuario_pregunta.usuario_id = usuario_cuestionario.usuario_id AND usuario_pregunta.cuestionario_id = usuario_cuestionario.cuestionario_id');
+        $this->db->join('item', 'pregunta.competencia_id = item.id');
+        $query = $this->db->get('usuario_pregunta');
+        
+        if ( $query->num_rows() > 0 ) 
+        {
+            $resultado['cant_correctas'] = $query->row()->cant_correctas;
+            $resultado['cant_respondidas'] = $query->row()->cant_respondidas;
+            $resultado['porcentaje'] = $query->row()->cant_correctas / $this->Pcrn->no_cero($query->row()->cant_respondidas);
+            $resultado['incorrectas'] = $query->row()->cant_respondidas - $query->row()->cant_correctas;
+        }
+        
+        return $resultado;
+    }
+    
+    function archivo_grupos_exportar($cuestionario_id, $grupo_id)
+    {
+        //Datos
+        $row = $this->Pcrn->registro_id('cuestionario', $cuestionario_id);
+        $row_grupo = $this->Pcrn->registro_id('grupo', $grupo_id);
+        $num_preguntas = $this->num_preguntas($cuestionario_id);
+        $arr_estados = $this->Item_model->arr_interno('categoria_id = 151');
+        
+        $campos = array(
+                'estudiante',
+                'username',
+                'grupo',
+                'cuestionario',
+                'estado',
+                'num_preguntas',
+                'num_correctas',
+                'porcentaje_correctas',
+                'fecha_respuesta'
+            );
+        
+        $estudiantes = $this->estudiantes($cuestionario_id, $grupo_id);
+        
+        //Variables comunes
+            $arr_fila['cuestionario'] = "{$cuestionario_id} - {$row->nombre_cuestionario}";
+            $arr_fila['num_preguntas'] = $num_preguntas;
+            $arr_fila['grupo'] = "{$row_grupo->nivel} - {$row_grupo->grupo}";
+        
+        //Cargando datos
+            $array = array();
+            foreach ($estudiantes->result() as $row_estudiante)
+            {
+                //Cálculo variables
+                    $filtros['usuario_pregunta.usuario_id'] = $row_estudiante->usuario_id;
+                    $filtros['usuario_pregunta.cuestionario_id'] = $row->id;
+                    $cant_correctas = $this->Cuestionario_model->cant_correctas_simple($filtros);
+
+                    $porcentaje_correctas = '';
+                    if ( $row_estudiante->estado >= 3 ) { $porcentaje_correctas = 100 * $this->Pcrn->dividir($cant_correctas, $num_preguntas); }
+                
+                //Cargue array
+                    $arr_fila['estudiante'] = $this->App_model->nombre_usuario($row_estudiante->usuario_id, 3);
+                    $arr_fila['username'] = $this->App_model->nombre_usuario($row_estudiante->usuario_id);
+                    $arr_fila['estado'] = $arr_estados[$row_estudiante->estado];
+                    $arr_fila['num_correctas'] = $cant_correctas;
+                    $arr_fila['porcentaje_correctas'] = $porcentaje_correctas;
+                    $arr_fila['fecha_respuesta'] = $this->Pcrn->fecha_formato($row_estudiante->inicio_respuesta, 'Y-m-d');
+
+                //Cargue fila en array
+                    $array[] = $arr_fila;
+            }
+        
+        //Array para objeto
+            $datos['nombre_hoja'] = "{$cuestionario_id} - " . substr($row->nombre_cuestionario, 0, 20);
+            $datos['campos'] = $campos;
+            $datos['arr_datos'] = $array;
+        
+        $objeto_archivo = $this->Pcrn_excel->archivo_array($datos);
+        
+        return $objeto_archivo;
+                
+    }
+}

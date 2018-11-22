@@ -1,0 +1,49 @@
+div.flipbook{
+    text-align: center;
+}
+
+div.flipbook table {
+    margin: 0 auto;
+    text-align: left;
+}
+
+.iconos {
+    width: 45px;
+    text-align: center;
+}
+
+.iconos img{
+    border: 1px solid #888;
+    margin-bottom: 5px;
+    padding: 3px;
+    background: #f8f8f8;
+    border-radius: 3px;
+    cursor: pointer; cursor: hand;
+    
+}
+
+.iconos img:hover{
+    /*padding: 3px;*/
+    border: 1px solid #eee;
+    background: #eee;
+}
+
+.oculto{
+    display: none;
+}
+
+
+
+.acciones{
+    vertical-align: top;
+    text-align: center;
+}
+
+textArea.anotacion{
+    width: 605px;
+    background: #faf7e6;
+    border: 1px solid #eeebda;
+    padding: 10px;
+    border-radius: 3px;
+}
+
