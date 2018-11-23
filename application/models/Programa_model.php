@@ -490,8 +490,8 @@ class Programa_Model extends CI_Model{
                 $registro['programa_id'] = $row_programa->id;
                 $registro['creado'] = date('Y-m-d H:i:s');
                 $registro['editado'] = date('Y-m-d H:i:s');
-                $registro['creado_usuario_id'] = $this->session->userdata('usuario_id');
-                $registro['editado_usuario_id'] = $this->session->userdata('usuario_id');
+                $registro['creador_id'] = $this->session->userdata('usuario_id');
+                $registro['editor_id'] = $this->session->userdata('usuario_id');
                 
             //Validar
                 $condiciones = 0;
@@ -548,7 +548,7 @@ class Programa_Model extends CI_Model{
     {
         //Actualizar flipbook
             $registro['programa_id'] = $programa_id;
-            $registro['editado_usuario_id'] = $this->session->userdata('usuario_id');
+            $registro['editor_id'] = $this->session->userdata('usuario_id');
             $registro['editado'] = date('Y-m-d H:i:s');
 
             $this->db->where('id', $flipbook_id);

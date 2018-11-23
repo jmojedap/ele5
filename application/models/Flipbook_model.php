@@ -157,7 +157,7 @@ class Flipbook_model extends CI_Model {
         $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
         //Predeterminados registro modificado
         $registro['editado'] = date('Y-m-d H:i:s');
-        $registro['editado_usuario_id'] = $this->session->userdata('usuario_id');
+        $registro['editor_id'] = $this->session->userdata('usuario_id');
 
         foreach ($array_hoja as $array_fila) {
             //Complementar registro
@@ -230,12 +230,12 @@ class Flipbook_model extends CI_Model {
 
         //Formulario Edit
         $crud->edit_fields(
-                'nombre_flipbook', 'anio_generacion', 'area_id', 'nivel', 'taller_id', 'tipo_flipbook_id', 'descripcion', 'editado', 'editado_usuario_id'
+                'nombre_flipbook', 'anio_generacion', 'area_id', 'nivel', 'taller_id', 'tipo_flipbook_id', 'descripcion', 'editado', 'editor_id'
         );
 
         //Formulario Add
         $crud->add_fields(
-                'nombre_flipbook', 'anio_generacion', 'area_id', 'nivel', 'descripcion', 'editado', 'editado_usuario_id', 'creado', 'creado_usuario_id'
+                'nombre_flipbook', 'anio_generacion', 'area_id', 'nivel', 'descripcion', 'editado', 'editor_id', 'creado', 'creador_id'
         );
 
         //Funciones
@@ -251,9 +251,9 @@ class Flipbook_model extends CI_Model {
         $crud->field_type('anio_generacion', 'enum', $opciones_anio);
         $crud->field_type('tipo_flipbook_id', 'dropdown', $opciones_tipo);
         $crud->field_type('editado', 'hidden', date('Y-m-d H:i:s'));
-        $crud->field_type('editado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
+        $crud->field_type('editor_id', 'hidden', $this->session->userdata('usuario_id'));
         $crud->field_type('creado', 'hidden', date('Y-m-d H:i:s'));
-        $crud->field_type('creado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
+        $crud->field_type('creador_id', 'hidden', $this->session->userdata('usuario_id'));
 
         //Formato
         $crud->unset_texteditor('descripcion');
@@ -291,7 +291,7 @@ class Flipbook_model extends CI_Model {
 
         //Formulario Add
         $crud->add_fields(
-                'nombre_flipbook', 'anio_generacion', 'area_id', 'nivel', 'descripcion', 'editado', 'editado_usuario_id', 'creado', 'creado_usuario_id'
+                'nombre_flipbook', 'anio_generacion', 'area_id', 'nivel', 'descripcion', 'editado', 'editor_id', 'creado', 'creador_id'
         );
 
         //Opciones nivel
@@ -308,9 +308,9 @@ class Flipbook_model extends CI_Model {
 
         //Valores por defecto
         $crud->change_field_type('editado', 'hidden', date('Y-m-d H:i:s'));
-        $crud->change_field_type('editado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
+        $crud->change_field_type('editor_id', 'hidden', $this->session->userdata('usuario_id'));
         $crud->change_field_type('creado', 'hidden', date('Y-m-d H:i:s'));
-        $crud->change_field_type('creado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
+        $crud->change_field_type('creador_id', 'hidden', $this->session->userdata('usuario_id'));
 
         //Formato
         $crud->unset_texteditor('descripcion');
@@ -827,7 +827,8 @@ class Flipbook_model extends CI_Model {
      * 
      *
      */
-    function insertar_flipbook_contenido($registro) {
+    function insertar_flipbook_contenido($registro) 
+    {
         //Calculando el número de páginas actual
         $query = $this->db->get_where('flipbook_contenido', "flipbook_id = {$registro['flipbook_id']}");
         $num_paginas = $query->num_rows();
@@ -845,9 +846,6 @@ class Flipbook_model extends CI_Model {
 
         //Se inserta el registro
         $this->db->insert('flipbook_contenido', $registro);
-
-        //Actualizar portada de flipbook
-        $this->primera_pagina($registro['flipbook_id']);
     }
 
     /**
@@ -874,8 +872,8 @@ class Flipbook_model extends CI_Model {
             'descripcion' => $datos['descripcion'],
             'creado' => date('Y-m-d H:i:s'),
             'editado' => date('Y-m-d H:i:s'),
-            'creado_usuario_id' => $this->session->userdata('usuario_id'),
-            'editado_usuario_id' => $this->session->userdata('usuario_id')
+            'creador_id' => $this->session->userdata('usuario_id'),
+            'editor_id' => $this->session->userdata('usuario_id')
         );
 
         $this->db->insert('flipbook', $registro);
@@ -984,9 +982,6 @@ class Flipbook_model extends CI_Model {
             $this->db->where('id', $row_pag_sig->id);
             $this->db->update('flipbook_contenido', array('num_pagina' => $row_pag_sig->num_pagina - 1));
         }
-
-        //Actualizar portada de flipbook
-        $this->primera_pagina($flipbook_id);
     }
 
     /**
@@ -1018,9 +1013,6 @@ class Flipbook_model extends CI_Model {
             $this->db->where('id', $row_pag_ant->id);
             $this->db->update('flipbook_contenido', array('num_pagina' => $row_pag_ant->num_pagina + 1));
         }
-
-        //Actualizar portada de flipbook
-        $this->primera_pagina($flipbook_id);
     }
 
 //---------------------------------------------------------------------------------------------------
@@ -1284,7 +1276,8 @@ class Flipbook_model extends CI_Model {
      * @param type $flipbook_id
      * @return int 
      */
-    function reenumerar_flipbook($flipbook_id) {
+    function reenumerar_flipbook($flipbook_id) 
+    {
 
         $this->db->where('flipbook_id', $flipbook_id);
         $this->db->order_by('num_pagina', 'ASC');
@@ -1301,33 +1294,6 @@ class Flipbook_model extends CI_Model {
         }
 
         return $i;
-    }
-
-    /**
-     * Identifica la primera página de un flipbook
-     * Se actualiza el campo flipbook.primera_pagina_id
-     * 
-     * @param type $flipbook_id
-     * @return int
-     */
-    function primera_pagina($flipbook_id) {
-        $this->db->where('flipbook_id', $flipbook_id);
-        $this->db->order_by('num_pagina', 'ASC');
-        $query = $this->db->get('flipbook_contenido');
-
-        $modificado = 0;
-
-        if ($query->num_rows() > 0) {
-            $row = $query->row();
-            $registro['primera_pagina_id'] = $row->pagina_id;
-
-            $this->db->where('id', $flipbook_id);
-            $this->db->update('flipbook', $registro);
-
-            $modificado = 1;
-        }
-
-        return $modificado;
     }
 
     /* Devuelve un array con las opciones de la tabla flipbook, limitadas por una condición definida

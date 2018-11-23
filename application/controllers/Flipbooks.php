@@ -1096,34 +1096,5 @@ class Flipbooks extends CI_Controller{
             $this->load->view('p_apanel2/plantilla_v', $data);
         
     }
-    
-    /**
-     * Actualiza el campo flipbook.primera_pagina_id
-     * 
-     * @param type $flipbook_id 
-     */
-    function primera_pagina($flipbook_id = NULL){
-        //Seleccionar flipbooks
-            //Si el $flipbook_id se le agrega la condición, en caso contrario se eligen todos los flipbooks
-            if ( ! is_null($flipbook_id) ){
-                $this->db->where('id', $flipbook_id);
-            }
-
-            $flipbooks = $this->db->get('flipbook');
-        
-        //Procesar datos
-            $registros_modificados = 0;
-
-            foreach ($flipbooks->result() as $row_flipbook) {
-                $registros_modificados += $this->Flipbook_model->primera_pagina($row_flipbook->id);
-            }
-        
-        //Cargando vista
-            $data['titulo_pagina'] = 'Primeras páginas';
-            $data['mensaje'] = "Se actualizaron {$registros_modificados} registros para el campo primera_pagina_id";
-            $data['link_volver'] = 'develop/procesos';
-            $data['vista_a'] = "app/mensaje_v";
-
-            $this->load->view('p_apanel2/plantilla_v', $data);
-    }   
+     
 }

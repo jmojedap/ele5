@@ -948,7 +948,7 @@ class Usuarios extends CI_Controller{
         {   //Es estudiante
             $data['flipbooks'] = $this->Usuario_model->flipbooks($data['row']);
         } else {
-            $data['flipbooks'] = $this->Usuario_model->flipbooks_profesor($usuario_id);
+            $data['flipbooks'] = $this->Usuario_model->flipbooks_profesor($data['row']);
         }
         
         //Solicitar vista
