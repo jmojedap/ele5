@@ -733,18 +733,16 @@ class Flipbook_model extends CI_Model {
 
     /**
      * Temas que están incluidos en las páginas que componen un flipbook.
+     * Modificado 2018-11-27
+     * 
      * @param type $flipbook_id
      * @return type
      */
-    function temas($flipbook_id) {
-        //$this->db->select('tema.*, tema.id as tema_id');
-        $this->db->select('tema.*, tema.id as tema_id, MIN(num_pagina) AS min_num_pagina');
-        $this->db->join('pagina_flipbook', 'tema.id = pagina_flipbook.tema_id');
-        $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
-        $this->db->where('flipbook_id', $flipbook_id);
-        $this->db->where('tema_id IS NOT NULL');
-        $this->db->group_by('tema_id');
-        $this->db->order_by('flipbook_contenido.num_pagina', 'ASC');
+    function temas($flipbook_id)
+    {
+        $this->db->select('id, cod_tema, nombre_tema, area_id, nivel');
+        $this->db->where("id IN (SELECT tema_id FROM flipbook_tema WHERE flipbook_id = {$flipbook_id})");
+
         $temas = $this->db->get('tema');
 
         return $temas;

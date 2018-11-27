@@ -234,7 +234,7 @@ class Flipbooks extends CI_Controller{
         
         //Solicitar vista
             $data['vista_b'] = 'flipbooks/temas_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     /**
