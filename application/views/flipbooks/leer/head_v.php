@@ -1,6 +1,6 @@
 <head>
-    <title><?= $titulo_pagina ?></title>
-    <link rel="shortcut icon" href="<?= URL_IMG ?>admin/icono.png" type="image/ico" />
+    <title><?php echo $titulo_pagina ?></title>
+    <link rel="shortcut icon" href="<?php echo URL_IMG ?>admin/icono.png" type="image/ico" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
 
@@ -21,17 +21,18 @@
     <script src="<?= URL_ASSETS ?>bootstrap_submenu/dist/js/bootstrap-submenu.min.js" defer></script>
 
     <!--Slider-->
-    <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+<!--    <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
-    <script src="<?php echo URL_RECURSOS ?>js/jquery.ui.touch-punch.min.js"></script>
+    <script src="<?php //echo URL_RECURSOS ?>js/jquery.ui.touch-punch.min.js"></script>-->
 
     <script type="text/javascript" src="<?php echo URL_RECURSOS ?>js/pcrn.js"></script> <!--Funciones especiales-->
+    
+    <?php //$this->load->view('flipbooks/leer/jquery_v'); ?>
+    <?php $this->load->view('assets/vue'); ?>
+    <?php $this->load->view('assets/toastr'); ?>
 
     <?php
         //Seguimiento google analytics
         $this->load->view('head_includes/google_analytics');
     ?>
-
-    <?php $this->load->view('flipbooks/leer/leer_js_v') ?>
-
 </head>

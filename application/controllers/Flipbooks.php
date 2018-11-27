@@ -620,7 +620,7 @@ class Flipbooks extends CI_Controller{
      * @param type $flipbook_id
      * @param type $num_pagina
      */
-    function leer($flipbook_id, $num_pagina = NULL)
+    function z_leer($flipbook_id, $num_pagina = NULL)
     {
         if ( $this->input->get('profiler') == 1 ) { $this->output->enable_profiler(TRUE); }
         
@@ -740,7 +740,7 @@ class Flipbooks extends CI_Controller{
      * @param type $flipbook_id
      * @param type $num_pagina
      */
-    function n_leer($flipbook_id, $num_pagina = 0)
+    function leer($flipbook_id, $num_pagina = 0)
     {
         if ( $this->input->get('profiler') == 1 ) { $this->output->enable_profiler(TRUE); }
         
@@ -756,7 +756,7 @@ class Flipbooks extends CI_Controller{
             $data['elementos_fb'] = $this->Flipbook_model->elementos_fb($data['row']);
             
         //Cargar vista
-        $this->load->view('flipbooks/n_leer/leer_v', $data);
+        $this->load->view('flipbooks/leer/leer_v', $data);
     }
     
     /**
