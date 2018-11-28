@@ -218,7 +218,7 @@ class Flipbooks extends CI_Controller{
             $this->load->view(PTL_ADMIN, $data);
     }
     
-// SECCIONES
+// GESTIÓN DE TEMAS
 //-----------------------------------------------------------------------------
     
     function temas($flipbook_id)
@@ -230,12 +230,64 @@ class Flipbooks extends CI_Controller{
         //Variables data
             $data['seccion'] = 'Temas';
             $data['temas'] = $this->Flipbook_model->temas($flipbook_id);
+            $data['areas'] = $this->Item_model->items(1);
             $data['subtitulo_pagina'] = "{$data['temas']->num_rows()} temas";
         
         //Solicitar vista
             $data['vista_b'] = 'flipbooks/temas_v';
             $this->load->view(PTL_ADMIN, $data);
     }
+
+    /**
+     * AJAX JSON
+     * Lista de temas que integran un tema
+     */
+    function lista_temas($flipbook_id)
+    {
+        $temas = $this->Flipbook_model->temas($flipbook_id);
+
+        $data['lista'] = $temas->result();
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
+    }
+
+    function agregar_tema($flipbook_id, $tema_id, $orden)
+    {
+        $resultado = $this->Flipbook_model->agregar_tema($flipbook_id, $tema_id, $orden);
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($resultado));
+    }
+
+    function crud_temas($flipbook_id, $proceso = 'guardar')
+    {
+        $resultado = array('ejecutado' => 0, 'mensaje' => 'No ejecutado');
+        if ( 'proceso' == 'eliminar' )
+        {   
+            $ft_id = $this->input->post('ft_id');
+            $resultado = $this->Flipbook_model->eliminar_tema($flipbook_id, $ft_id);
+        }
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($resultado));
+    }
+    
+    //Función temporal 2018-11-27
+    function importar_temas_programa($flipbook_id)
+    {
+        $resulado = $this->Flipbook_model->importar_temas_programa($flipbook_id);
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($resulado));
+    }
+
+// SECCIONES
+//-----------------------------------------------------------------------------
     
     /**
      * Formulario para la crear un cuestionario a partir de la selección de los

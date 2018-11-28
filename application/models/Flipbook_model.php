@@ -740,12 +740,112 @@ class Flipbook_model extends CI_Model {
      */
     function temas($flipbook_id)
     {
-        $this->db->select('id, cod_tema, nombre_tema, area_id, nivel');
-        $this->db->where("id IN (SELECT tema_id FROM flipbook_tema WHERE flipbook_id = {$flipbook_id})");
+        $this->db->select('flipbook_tema.id AS ft_id, tema.id, cod_tema, nombre_tema, area_id, nivel, tipo_id, orden');
+        $this->db->join('flipbook_tema', 'tema.id = flipbook_tema.tema_id');
+        $this->db->where('flipbook_id', $flipbook_id);
 
         $temas = $this->db->get('tema');
 
         return $temas;
+    }
+
+    function agregar_tema($flipbook_id, $tema_id, $orden)
+    {
+        $resultado['ejecutado'] = 0;
+        $resultado['mensaje'] = 'Proceso no ejecutado';
+
+        $registro['flipbook_id'] = $flipbook_id;
+        $registro['tema_id'] = $tema_id;
+        $registro['orden'] = $orden;
+
+        $condicion = "flipbook_id = {$registro['flipbook_id']} AND tema_id = {$registro['tema_id']}";
+
+        $ft_id = $this->Pcrn->guardar('flipbook_tema', $condicion, $registro);
+
+        if ( $ft_id > 0 )
+        {
+            $resultado['ejecutado'] = 1;
+            $resultado['mensaje'] = 'FT Agregado ID: ' . $ft_id;
+            $resultado['ft_id'] = $ft_id;
+        }
+
+        return $resultado;
+    }
+
+    function eliminar_tema($flipbook_id, $ft_id)
+    {
+        $resultado = $this->Pcrn->res_inicial();
+
+        $this->db->where('flipbook_ide', $flipbook_id);
+        $this->db->where('id', $ft_id);
+        $this->db->delete('fipbook_tema');
+
+        if ( $this->db->affected_rows() > 0 ) 
+        {
+            $resultado['ejecutado'] = 1;
+            $resultado['mensaje'] = 'Registro eliminado';
+        }
+
+        return $resultado;
+        
+    }
+
+    /**
+     * Temas que están incluidos en las páginas que componen un flipbook.
+     * @param type $flipbook_id
+     * @return type
+     */
+    function temas_programa($flipbook_id)
+    {
+        $row = $this->Pcrn->registro_id('flipbook', $flipbook_id);
+        $temas = NULL;
+
+        if ( strlen($row->programa_id) > 0 )
+        {
+            $this->db->select('tema.id AS tema_id, cod_tema, nombre_tema, area_id, nivel, tipo_id');
+            $this->db->join('programa_tema', 'programa_tema.tema_id = tema.id');
+            $this->db->where('programa_id', $row->programa_id);
+            $this->db->order_by('programa_tema.orden', 'ASC');
+            
+            $temas = $this->db->get('tema');
+        }
+
+        return $temas;
+    }
+
+    /**
+     * 2018-11-27
+     * Función temporal
+     */
+    function importar_temas_programa($flipbook_id)
+    {
+        $resultado['ejecutado'] = 0;
+        $resultado['mensaje'] = 'Temas no importados';
+
+        $temas = $this->Flipbook_model->temas($flipbook_id);
+        $temas_programa = $this->Flipbook_model->temas_programa($flipbook_id);
+        $i = 0; //Valor inicial
+
+        if ( $temas->num_rows() == 0 )
+        {
+            $registro['flipbook_id'] = $flipbook_id;
+            
+            foreach( $temas_programa->result() as $row_tema )
+            {
+                $registro['tema_id'] = $row_tema->tema_id;
+                $registro['orden'] = $i;
+
+                $this->db->insert('flipbook_tema', $registro);
+
+                $i++;   //Para siguiente tema
+            }
+
+            $resultado['ejecutado'] = 1;
+            $resultado['mensaje'] = 'Temas importados: ' . $i;
+        }
+
+        return $resultado;
+
     }
 
     /**
