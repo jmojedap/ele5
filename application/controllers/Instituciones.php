@@ -1358,7 +1358,7 @@ class Instituciones extends CI_Controller{
         //Solicitar vista
             $data['subtitulo_pagina'] = 'Procesos';
             $data['vista_b'] = 'instituciones/procesos_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     function actualizar_acumulador($institucion_id)

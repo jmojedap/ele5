@@ -24,12 +24,12 @@
 
 ?>
 
-<table class="table table-responsive table-hover bg-blanco" cellspacing="0">
+<table class="table table-default bg-blanco" cellspacing="0">
     <thead>
             <tr class="">
                 <th width="10px;"><?= form_checkbox($att_check_todos) ?></th>
                 <th width="50px;">ID</th>
-                <th><?= $elemento_s ?></th>
+                <th>Cuestionario</th>
                 
                 <th class="<?= $clases_col['nivel'] ?>" style="min-width: 200px;">Nivel Área</th>
                 <th class="<?= $clases_col['preguntas'] ?>">Preguntas</th>
@@ -94,7 +94,7 @@
                     
                     <td class="hidden-xs">
                         <?php if ( $editable ){ ?>
-                            <?= anchor("cuestionarios/editar/edit/{$row_resultado->id}", '<i class="fa fa-pencil"></i>', 'class="a4" title=""') ?>
+                            <?php echo anchor("cuestionarios/editar/edit/{$row_resultado->id}", '<i class="fa fa-pencil-alt"></i>', 'class="btn btn-sm btn-light" role="button"') ?>
                         <?php } ?>
                     </td>
                 </tr>

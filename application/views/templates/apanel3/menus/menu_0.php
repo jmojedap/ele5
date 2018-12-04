@@ -24,9 +24,6 @@
         $opciones_menus['instituciones/cargar_usuarios'] = array('institucional', 'instituciones', 'usuarios');
 
         $opciones_menus['grupos/explorar'] = array('institucional', 'institucional-grupos', 'grupos');
-        
-    //Grupos
-        $opciones_menus['grupos/explorar'] = array('institucional', 'institucional-grupos', 'grupos');
         $opciones_menus['grupos/importar_editar_anios'] = array('institucional', 'institucional-grupos', 'grupos');
         $opciones_menus['grupos/estudiantes'] = array('institucional', 'institucional-grupos', 'grupos');
         $opciones_menus['grupos/editar'] = array('institucional', 'institucional-grupos', 'grupos');
@@ -46,9 +43,11 @@
         $opciones_menus['grupos/cuestionarios'] = array('institucional', 'institucional-grupos', 'grupos');
         $opciones_menus['grupos/cuestionarios_resumen01'] = array('institucional', 'institucional-grupos', 'grupos');
         $opciones_menus['grupos/cuestionarios_resumen03'] = array('institucional', 'institucional-grupos', 'grupos');
-
+        
         $opciones_menus['grupos/desasignar_profesores'] = array('institucional', 'institucional-grupos', 'grupos');
         $opciones_menus['grupos/desasignar_profesores_e'] = array('institucional', 'institucional-grupos', 'grupos');
+
+        
 
         //Editor - 2
         $opciones_menus['cuestionarios/instituciones'] = array('institucional', 'instituciones', 'cuestionarios');
@@ -58,36 +57,31 @@
 
 
     //Usuarios
-        $opciones_menus['usuarios/explorar'] = array('usuarios', 'usuarios_explorar', 'cuentas');
-        $opciones_menus['usuarios/nuevo'] = array('usuarios', 'usuarios_explorar', 'usuarios');
         $opciones_menus['usuarios/eliminar_por_username'] = array('usuarios', '', '');
         $opciones_menus['usuarios/eliminar_por_username_e'] = array('usuarios', '', '');
         
-        $opciones_menus['usuarios/panel_informes'] = array('usuarios', 'usuarios_explorar', 'usuarios');
-        
+        $opciones_menus['usuarios/estudiantes'] = array('usuarios', 'estudiantes', 'estudiantes');
         $opciones_menus['usuarios/actividad'] = array('usuarios', 'usuarios_explorar', 'actividad');
-        $opciones_menus['usuarios/editar'] = array('usuarios', 'usuarios_explorar', 'usuarios');
-        $opciones_menus['usuarios/flipbooks'] = array('usuarios', 'usuarios_explorar', 'usuarios');
+        $opciones_menus['usuarios/cuestionarios'] = array('usuarios', 'estudiantes', 'cuestionarios');
+        $opciones_menus['usuarios/anotaciones'] = array('usuarios', 'usuarios_explorar', 'anotaciones');
         $opciones_menus['usuarios/quices'] = array('usuarios', 'usuarios_explorar', 'quices');
         $opciones_menus['usuarios/grupos'] = array('usuarios', 'usuarios_explorar', 'grupos');
-        
-        $opciones_menus['usuarios/cuestionarios'] = array('usuarios', 'estudiantes', 'cuestionarios');
-        $opciones_menus['usuarios/cuestionarios_resumen03'] = array('usuarios', 'estudiantes', 'resultados');
-        $opciones_menus['usuarios/cuestionarios_resumen01'] = array('usuarios', 'estudiantes', 'resultados');
-        
-        $opciones_menus['usuarios/anotaciones'] = array('usuarios', 'usuarios_explorar', 'anotaciones');
-        
-        
         $opciones_menus['usuarios/biblioteca'] = array('biblioteca', 'biblioteca', 'inicio');
         $opciones_menus['usuarios/grupos_profesor'] = array('usuarios', 'usuarios', 'grupos');
         $opciones_menus['usuarios/contrasena'] = array('mi_cuenta', '', 'contraseña');
+
+        $opciones_menus['usuarios/institucionales'] = array('usuarios', 'institucionales', 'institucionales');
+        $opciones_menus['datos/usuarios'] = array('usuarios', 'internos', 'internos');
+        $opciones_menus['usuarios/explorar'] = array('usuarios', 'usuarios_explorar', 'cuentas');
+        $opciones_menus['usuarios/nuevo'] = array('usuarios', 'usuarios_explorar', 'usuarios');
+
+        $opciones_menus['usuarios/cuestionarios_resumen01'] = array('usuarios', 'estudiantes', 'resultados');
 
         $opciones_menus['usuarios/resultados_componentes'] = array('usuarios', '', '');
         $opciones_menus['usuarios/resultados_competencias'] = array('usuarios', '', '');
         $opciones_menus['usuarios/resultados_area'] = array('usuarios', '', '');
         $opciones_menus['usuarios/resultados_detalle'] = array('usuarios', '', '');
         $opciones_menus['usuarios/resultados'] = array('usuarios', '', '');
-        
         
 
     //Recursos académicos
@@ -176,7 +170,11 @@
 
         $opciones_menus['instituciones/flipbooks'] = array('recursos', 'flipbooks', 'flipbooks');
 
-        //$opciones_menus['usuarios/biblioteca'] = array('recursos', 'flipbooks', 'mis libros');
+        $opciones_menus['posts/explorar'] = array('recursos', 'recursos-posts', 'posts');
+        $opciones_menus['posts/nuevo'] = array('recursos', 'recursos-posts', 'posts');
+        $opciones_menus['posts/editar'] = array('recursos', 'recursos-posts', 'posts');
+        $opciones_menus['posts/leer'] = array('recursos', 'recursos-posts', 'posts');
+        
     //Cuestionarios
         $opciones_menus['cuestionarios/explorar'] = array('cuestionarios', 'cuestionarios', 'cuestionarios');
         $opciones_menus['cuestionarios/nuevo'] = array('cuestionarios', 'cuestionarios', 'cuestionarios');
@@ -245,9 +243,12 @@
         $opciones_menus['lugares/sublugares'] = array('ajustes', 'ajustes-lugares', 'lugares');
         $opciones_menus['lugares/editar'] = array('ajustes', 'ajustes-lugares', 'lugares');
 
+        $opciones_menus['tickets/creados'] = array('ajustes', 'tickets', 'requerimientos');
+        $opciones_menus['tickets/asignados'] = array('ajustes', 'tickets', 'requerimientos');
+        $opciones_menus['tickets/explorar'] = array('ajustes', 'tickets', 'requerimientos');
+
         $opciones_menus['develop/tablas'] = array('ajustes', 'ajustes/database', 'base de datos');
         $opciones_menus['sincro/panel'] = array('ajustes', 'ajustes/database', 'base de datos');
-        $opciones_menus['develop/msexcel'] = array('ajustes', 'ajustes/database', 'base de datos');
 
         $opciones_menus['datos/reporte_general'] = array('ajustes', 'ajustes/database', 'base de datos');
         $opciones_menus['datos/report_usuarios_01'] = array('ajustes', 'ajustes/database', 'base de datos');
@@ -275,14 +276,21 @@
 
 <aside class="main_nav_col">
     
-    <?= $this->load->view('p_apanel2/encabezado') ?>
+    <?php $this->load->view('templates/apanel3/parts/header') ?>
     <ul class="main_nav">	
 
-        <?= $this->load->view('p_apanel2/form_busqueda') ?>
+        <?php $this->load->view('templates/apanel3/parts/search_form') ?>
 
+        <li>
+            <a href="<?= base_url('eventos/noticias') ?>" class="<?= $clase_m[''] ?>">
+                <i class="fa fa-2x fa-home"></i>
+                <span>Inicio</span>
+            </a>
+        </li>
+        
         <li class="has_submenu">
             <a href="#" class="<?= $clase_m['institucional'] ?>">
-                <i class="fa fa-2x fa-bank"></i>
+                <i class="fa fa-2x fa-university"></i>
                 <span>institucional</span>
             </a>
             <?php if ( $m_current['menu'] == 'institucional' ){ ?>
@@ -292,7 +300,7 @@
             <ul class="sub_nav">
                 <li>
                     <a href="<?= base_url('instituciones/explorar') ?>" class="<?= $clase_sm['institucional-instituciones'] ?>" title="Instituciones educativas">
-                        <i class="fa fa-bank"></i>
+                        <i class="fa fa-university"></i>
                         <span>instituciones</span>
                     </a>
                 </li>
@@ -307,12 +315,12 @@
         
         <li>
             <a href="<?= base_url('usuarios/explorar') ?>" class="<?= $clase_m['usuarios'] ?>">
-                <i class="fa fa-2x fa-user"></i>
-                <span>usuarios</span>
+                <i class="fa fa-2x fa-user"></i> <!-- icono -->
+                <span>usuarios</span> <!-- texto -->
             </a>
         </li>
 
-        <li class="has_submenu">
+        <li class="has_submenu"> <!-- contenedor item con submenu -->
             <a href="#" class="<?= $clase_m['recursos'] ?>">
                 <i class="fa fa-2x fa-book"></i>
                 <span>recursos</span>
@@ -335,7 +343,18 @@
                 <li><a href="<?= base_url()?>quices/explorar" class="<?= $clase_sm['quices'] ?>"><i class="fa fa-question"></i><span>quices</span></a></li>
                 <li><a href="<?= base_url()?>paginas/explorar" class="<?= $clase_sm['paginas'] ?>"><i class="fa fa-files-o"></i><span>páginas</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url()?>recursos/archivos" class="<?= $clase_sm['archivos'] ?>"><i class="fa fa-folder-o"></i><span>archivos</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url()?>recursos/links" class="<?= $clase_sm['links'] ?>"><i class="fa fa-globe"></i><span>links</span></a></li> <!-- subitem -->
+                <li>
+                    <a href="<?= base_url()?>recursos/links" class="<?= $clase_sm['links'] ?>">
+                        <i class="fa fa-globe"></i>
+                        <span>links</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="<?= base_url('posts/explorar')?>" class="<?= $clase_sm['recursos-posts'] ?>">
+                        <i class="fa fa-newspaper-o"></i>
+                        <span>posts</span>
+                    </a>
+                </li>
             </ul>
         </li>
         
@@ -355,29 +374,30 @@
         </li>
         
         <li class="has_submenu">
-            <a href="#" class="<?= $clase_m['ajustes'] ?>"><i class="fa fa-2x fa-sliders"></i><span>ajustes</span></a>
+            <a href="#" class="<?= $clase_m['ajustes'] ?>"><i class="fa fa-2x fa-sliders-h"></i><span>ajustes</span></a>
             <?php if ( $m_current['menu'] == 'ajustes' ){ ?>
                 <span class="gossip"><?= $m_current['submenu_show'] ?></span>
             <?php } ?>
 
             <ul class="sub_nav">
-                <li><a href="<?= base_url('datos/sis_opcion') ?>" class="<?= $clase_sm['ajustes/parametros'] ?>"><i class="fa fa-gear"></i><span>parámetros</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url() ?>datos/sis_opcion" class="<?= $clase_sm['ajustes/parametros'] ?>"><i class="fa fa-gear"></i><span>parámetros</span></a></li> <!-- subitem -->
                 <li>
                     <a href="<?= base_url('items/listado') ?>" class="<?= $clase_sm['ajustes/items'] ?>">
                         <i class="fa fa-bars"></i>
                         <span>Ítems</span>
                     </a>
                 </li>
-                <li><a href="<?= base_url('develop/procesos') ?>" class="<?= $clase_sm['ajustes/procesos'] ?>"><i class="fa fa-tasks"></i><span>procesos</span></a></li> <!-- subitem -->
+                
+                <li><a href="<?= base_url() ?>develop/procesos" class="<?= $clase_sm['ajustes/procesos'] ?>"><i class="fa fa-tasks"></i><span>procesos</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url('develop/tablas/item') ?>" class="<?= $clase_sm['ajustes/database'] ?>"><i class="fa fa-database"></i><span>base de datos</span></a></li>
-                <li><a href="<?= base_url('estadisticas/login_instituciones') ?>" class="<?= $clase_sm['estadisticas'] ?>"><i class="fa fa-bar-chart-o"></i><span>estadísticas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url() ?>estadisticas/login_instituciones" class="<?= $clase_sm['estadisticas'] ?>"><i class="fa fa-bar-chart-o"></i><span>estadísticas</span></a></li> <!-- subitem -->
                 <li>
                     <a href="<?= base_url('lugares/explorar') ?>" class="<?= $clase_sm['ajustes-lugares'] ?>">
                         <i class="fa fa-map-marker"></i>
                         <span>lugares</span>
                     </a>
                 </li>
-                <li><a href="<?= base_url('datos/ayudas_explorar') ?>" class="<?= $clase_sm['ayuda'] ?>"><i class="fa fa-question-circle"></i><span>ayuda</span></a></li>
+                <li><a href="<?= base_url() ?>datos/ayudas_explorar" class="<?= $clase_sm['ayuda'] ?>"><i class="fa fa-question-circle"></i><span>ayuda</span></a></li>
             </ul>
         </li>
         

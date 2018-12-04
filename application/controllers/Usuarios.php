@@ -57,7 +57,7 @@ class Usuarios extends CI_Controller{
             $data['subtitulo_pagina'] = number_format($data['cant_resultados'],0,',', '.');
             $data['vista_a'] = 'usuarios/explorar_v';
             $data['vista_menu'] = 'usuarios/explorar_menu_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     /**
@@ -194,7 +194,7 @@ class Usuarios extends CI_Controller{
                     $data['subtitulo_pagina'] = 'Editar mi perfil';
                     $data['vista_b'] = $vista_b;
                     $output = array_merge($data,(array)$gc_output);
-                    $this->load->view('p_apanel2/plantilla_v', $output);
+                    $this->load->view(PTL_ADMIN, $output);
             } else {
                 //No se puede editar, se redirige
                 redirect("usuarios/contrasena/");
@@ -429,7 +429,7 @@ class Usuarios extends CI_Controller{
         
         //Variables vista
         $data['vista_b'] = 'eventos/noticias/noticias_usuario_v';
-        $this->load->view('p_apanel2/plantilla_v', $data);
+        $this->load->view(PTL_ADMIN, $data);
         
     }
     
@@ -862,7 +862,7 @@ class Usuarios extends CI_Controller{
         //Solicitar vista
         $data['subtitulo_pagina'] = 'Grupos';
         $data['vista_b'] = 'usuarios/grupos_v';
-        $this->load->view('p_apanel2/plantilla_v', $data);
+        $this->load->view(PTL_ADMIN, $data);
     }
     
     /**
@@ -927,7 +927,7 @@ class Usuarios extends CI_Controller{
         //Solicitar vista
             $data['subtitulo_pagina'] = 'Evidencias';
             $data['vista_b'] = 'usuarios/quices_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
             //print_r($data['quices']);
     }
     
@@ -954,7 +954,7 @@ class Usuarios extends CI_Controller{
         //Solicitar vista
         $data['subtitulo_pagina'] = 'Contenidos';
         $data['vista_b'] = 'usuarios/flipbooks_v';
-        $this->load->view('p_apanel2/plantilla_v', $data);
+        $this->load->view(PTL_ADMIN, $data);
     }
     
     function quitar_flipbook($usuario_id, $flipbook_id)
@@ -990,7 +990,7 @@ class Usuarios extends CI_Controller{
         //Solicitar vista
         $data['subtitulo_pagina'] = 'Anotaciones';
         $data['vista_b'] = 'usuarios/anotaciones_v';
-        $this->load->view('p_apanel2/plantilla_v', $data);
+        $this->load->view(PTL_ADMIN, $data);
     }
     
 //CUESTIONARIOS
@@ -1197,7 +1197,7 @@ class Usuarios extends CI_Controller{
             $data['vista_b'] = 'usuarios/resultados/resultados_v';
             $data['vista_c'] = 'usuarios/resultados/area_v';
             $data['vista_menu'] = 'usuarios/resultados/submenu_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
         
     }
     
@@ -1257,7 +1257,7 @@ class Usuarios extends CI_Controller{
             $data['vista_b'] = 'usuarios/resultados/resultados_v';
             $data['vista_c'] = 'usuarios/resultados/competencias_v';
             $data['vista_menu'] = 'usuarios/resultados/submenu_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
         
     }
     
@@ -1352,7 +1352,7 @@ class Usuarios extends CI_Controller{
             $data['vista_b'] = 'usuarios/resultados/res01_v';
         
         //Solicitar vista
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
         
     }
     
@@ -1401,7 +1401,7 @@ class Usuarios extends CI_Controller{
         
         //Solicitar vista
             $data['subtitulo_pagina'] = 'Desempeño por competencias';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
         
     }
     

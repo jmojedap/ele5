@@ -52,7 +52,7 @@ class Flipbooks extends CI_Controller{
             $data['titulo_pagina'] = 'Contenidos';
             $data['subtitulo_pagina'] = $config['total_rows'];
             $data['vista_a'] = 'flipbooks/explorar_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     /**
@@ -127,7 +127,7 @@ class Flipbooks extends CI_Controller{
         
         $output = array_merge($data,(array)$gc_output);
         
-        $this->load->view('p_apanel2/plantilla_v', $output);
+        $this->load->view(PTL_ADMIN, $output);
     }
     
     function editar()
@@ -143,7 +143,7 @@ class Flipbooks extends CI_Controller{
             $data['subtitulo_pagina'] = 'Editar';
             $data['vista_b'] = 'comunes/gc_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view('p_apanel2/plantilla_v', $output);
+            $this->load->view(PTL_ADMIN, $output);
     }
     
 //IMPORTAR
@@ -234,7 +234,7 @@ class Flipbooks extends CI_Controller{
         
         //Solicitar vista
             $data['vista_b'] = 'flipbooks/temas_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     /**
@@ -265,7 +265,7 @@ class Flipbooks extends CI_Controller{
         
         //Solicitar vista
             $data['vista_b'] = $arr_vistas[$data['row']->tipo_flipbook_id];
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     /**
@@ -322,7 +322,7 @@ class Flipbooks extends CI_Controller{
         //Solicitar vista
             //$data['cargado'] = FALSE;
             $data['vista_b'] = 'flipbooks/paginas_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     /**
@@ -350,7 +350,7 @@ class Flipbooks extends CI_Controller{
         
         //Solicitar vista
             $data['vista_b'] = 'flipbooks/anotaciones_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     
@@ -367,7 +367,7 @@ class Flipbooks extends CI_Controller{
         
         //Solicitar vista
             $data['vista_b'] = 'flipbooks/aperturas_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     function asignados($flipbook_id, $institucion_id = NULL)
@@ -393,7 +393,7 @@ class Flipbooks extends CI_Controller{
         
         //Solicitar vista
             $data['vista_b'] = 'flipbooks/asignados_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     /**
@@ -412,7 +412,7 @@ class Flipbooks extends CI_Controller{
         //Solicitar vista
             $data['subtitulo_pagina'] = 'Crecar copia';
             $data['vista_b'] = 'flipbooks/copiar_flipbook_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     /**
@@ -916,7 +916,7 @@ class Flipbooks extends CI_Controller{
         $data['cargado'] = FALSE;
         $data['titulo_pagina'] = "Estudiantes | " . $data['titulo_pagina'];
         $data['vista_b'] = 'flipbooks/resultado_carga_v';
-        $this->load->view('p_apanel2/plantilla_v', $data);
+        $this->load->view(PTL_ADMIN, $data);
 
     }
     
@@ -1093,7 +1093,7 @@ class Flipbooks extends CI_Controller{
             $data['mensaje'] = "Se actualizaron {$registros_modificados} registros";
             $data['vista_a'] = "app/mensaje_v";
 
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
         
     }
     
@@ -1124,6 +1124,6 @@ class Flipbooks extends CI_Controller{
             $data['link_volver'] = 'develop/procesos';
             $data['vista_a'] = "app/mensaje_v";
 
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }   
 }

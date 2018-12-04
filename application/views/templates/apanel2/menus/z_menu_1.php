@@ -11,10 +11,10 @@
 
 <aside class="main_nav_col">
     
-    <?= $this->load->view('p_apanel2/encabezado') ?>
+    <?= $this->load->view('templates/apanel2/encabezado') ?>
     <ul class="main_nav">	
 
-        <?= $this->load->view('p_apanel2/form_busqueda') ?>
+        <?= $this->load->view('templates/apanel2/form_busqueda') ?>
 
         <li class=""> <!-- contenedor del item -->
             <a href="<?= base_url() ?>instituciones/explorar" class="<?= $clase_m['institucional'] ?>"> <!-- link del item -->

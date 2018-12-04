@@ -189,7 +189,7 @@ class Develop extends CI_Controller {
         
 
         $output = array_merge($data,(array)$gc_output);
-        $this->load->view('p_apanel2/plantilla_v', $output);
+        $this->load->view(PTL_ADMIN, $output);
     }
         
 //---------------------------------------------------------------------------------------------------

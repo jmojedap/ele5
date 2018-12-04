@@ -99,8 +99,8 @@ define('URL_CONTENT', 'http://localhost/ele/content/');   //URL carpeta contenid
 define('URL_UPLOADS', 'http://localhost/ele/content/uploads/');
 define('URL_RECURSOS', 'http://localhost/ele/recursos/');   //URL carpeta contenido
 define('URL_IMG', 'http://localhost/ele/recursos/imagenes/');
-define('PTL_ADMIN', 'p_apanel2/plantilla_v');   //Vista plantilla de administración
-define('PTL_ADMIN_2', 'plantillas/pikeadmin/basica_v');   //Vista plantilla de administración
+define('PTL_ADMIN', 'templates/apanel2/plantilla_v');   //Vista plantilla de administración
+define('PTL_ADMIN_2', 'templates/apanel3/main_v');   //Vista plantilla de administración
 define('VER_LOCAL', TRUE);   //Es una versión local
 define('MAX_REG_EXPORT', 5000);                //Número máximo de registros para exportar en archivo MS-Excel
 define('NOMBRE_APP', 'Plataforma en Línea');    //Nombre de la aplicación

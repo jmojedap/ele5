@@ -31,20 +31,21 @@
 
 <?= form_open("cuestionarios/redirect_explorar/{$filtro_alcance}", $att_form) ?>
     <div class="form-horizontal">
-        <div class="form-group">
-            <div class="col-sm-10">
-                <div class="input-group">
-                    <?= form_input($att_q) ?>
-                    <span class="input-group-btn" title="Mostrar búsqueda avanzada">
-                        <button class="btn btn-info" id="alternar_avanzada" type="button">
-                            <i class="fa fa-caret-down b_avanzada_si"></i>
-                            <i class="fa fa-caret-up b_avanzada_no"></i>
-                        </button>
-                    </span>
-                </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+                <button type="button" class="btn btn-default btn-block">
+                    Filtros <i class="fa fa-caret-down"></i>
+                </button>
             </div>
-            <div class="col-sm-2">
-                <?= form_submit($att_submit) ?>
+            <div class="col-md-8">
+                <div class="input-group">
+                    <?php echo form_input($att_q) ?>
+                    <div class="input-group-append" title="Mostrar búsqueda avanzada">
+                        <button class="btn btn-primary input-group-addon">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
         

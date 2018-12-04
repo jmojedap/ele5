@@ -20,14 +20,22 @@
 <?php $this->load->view('cuestionarios/explorar/script_js'); ?>
 <?php $this->load->view($vista_menu) ?>
 
+<script>
+    $(document).ready(function(){
+        $('#btn_test').click(function(){
+            console.log('hola desde botón');
+        });
+    });
+</script>
+
 <div class="row">
-    <div class="col-md-7">
+    <div class="col-md-6">
         <?php $this->load->view('cuestionarios/explorar/form_busqueda_v'); ?>
     </div>
 
     <div class="col-md-3">
         <a class="btn btn-warning <?= $clases_btn['eliminar_seleccionados'] ?>" title="Eliminar los <?= $elemento_p ?> seleccionados" data-toggle="modal" data-target="#modal_eliminar">
-            <i class="fa fa-trash-o"></i>
+            <i class="fa fa-trash"></i>
         </a>
         
         <div class="btn-group hidden-xs <?= $clases_btn['exportar'] ?>" role="group">
@@ -35,9 +43,9 @@
         </div>
     </div>
     
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="pull-right sep1">
-            <?php $this->load->view('comunes/paginacion_v'); ?>
+            <?php $this->load->view('comunes/paginacion_vue_v'); ?>
         </div>
     </div>
 </div>

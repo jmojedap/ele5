@@ -1,4 +1,4 @@
-<script src="<?= base_url('js/Math.uuid.js') ?>"></script>
+<script src="<?php URL_RECURSOS . 'js/Math.uuid.js' ?>"></script>
 
 <script>
 //Variables 

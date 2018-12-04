@@ -73,7 +73,7 @@ class Temas extends CI_Controller{
             $data['subtitulo_pagina'] = number_format($config['total_rows'], 0, ',', '.');
             $data['vista_a'] = 'temas/explorar_v';
             $data['vista_menu'] = 'temas/menu_explorar_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     /**
@@ -143,7 +143,7 @@ class Temas extends CI_Controller{
             $data['vista_a'] = 'comunes/gc_v';
             $data['vista_menu'] = 'temas/menu_explorar_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view('p_apanel2/plantilla_v', $output);
+            $this->load->view(PTL_ADMIN, $output);
     }
     
     function editar()
@@ -159,7 +159,7 @@ class Temas extends CI_Controller{
             $data['subtitulo_pagina'] = 'Editar';
             $data['vista_b'] = 'comunes/gc_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view('p_apanel2/plantilla_v', $output);
+            $this->load->view(PTL_ADMIN, $output);
     }
     
 // SECCIONES DATOS
@@ -221,7 +221,7 @@ class Temas extends CI_Controller{
         //Solicitar vista
             $data['titulo_pagina'] .= ' - Información';
             //$data['vista_b'] = 'temas/info_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
         
     }
     
@@ -237,7 +237,7 @@ class Temas extends CI_Controller{
             $data['subtitulo_pagina'] = 'Temas relacionados';
             $data['vista_b'] = 'comunes/gc_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view('p_apanel2/plantilla_v', $output);
+            $this->load->view(PTL_ADMIN, $output);
     }
     
     function quices($tema_id)
@@ -256,7 +256,7 @@ class Temas extends CI_Controller{
         //Solicitar vista
             $data['subtitulo_pagina'] = 'Evidencias de aprendizaje';
             $data['vista_b'] = 'temas/quices_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     /**
@@ -329,7 +329,7 @@ class Temas extends CI_Controller{
         //Solicitar vista
             $data['subtitulo_pagina'] = 'Programas';
             $data['vista_b'] = 'temas/programas_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     function paginas($tema_id)
@@ -352,7 +352,7 @@ class Temas extends CI_Controller{
         //Solicitar vista
             $data['subtitulo_pagina'] = 'Páginas';
             $data['vista_b'] = 'temas/paginas_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     function archivos($tema_id)
@@ -370,7 +370,7 @@ class Temas extends CI_Controller{
             $data['subtitulo_pagina'] = 'Archivos';
             $data['vista_b'] = 'comunes/gc_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view('p_apanel2/plantilla_v', $output);
+            $this->load->view(PTL_ADMIN, $output);
     }
     
     function links($tema_id)
@@ -388,7 +388,7 @@ class Temas extends CI_Controller{
             $data['subtitulo_pagina'] = 'Links';
             $data['vista_b'] = 'comunes/gc_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view('p_apanel2/plantilla_v', $output);
+            $this->load->view(PTL_ADMIN, $output);
     }
     
     
@@ -627,7 +627,7 @@ class Temas extends CI_Controller{
         //Solicitar vista
             $data['subtitulo_pagina'] = 'Crear copia';
             $data['vista_b'] = 'temas/copiar_tema_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     /**
@@ -843,7 +843,7 @@ class Temas extends CI_Controller{
             $data['vista_a'] = 'temas/recursos_v';
 
         $output = array_merge($data,(array)$gc_output);
-        $this->load->view('p_apanel2/plantilla_v', $output);
+        $this->load->view(PTL_ADMIN, $output);
     }
     
     function recursos_links()
@@ -892,7 +892,7 @@ class Temas extends CI_Controller{
         $data['vista_a'] = 'temas/recursos_v';
 
         $output = array_merge($data,(array)$output);
-        $this->load->view('p_apanel2/plantilla_v', $output);
+        $this->load->view(PTL_ADMIN, $output);
     }
     
     function recursos_quices()
@@ -942,7 +942,7 @@ class Temas extends CI_Controller{
         $data['vista_a'] = 'temas/recursos_v';
 
         $output = array_merge($data,(array)$output);
-        $this->load->view('p_apanel2/plantilla_v', $output);
+        $this->load->view(PTL_ADMIN, $output);
     }
 
 // UNIDADES TEMÁTICAS

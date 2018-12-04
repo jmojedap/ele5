@@ -62,7 +62,7 @@
 
 <aside class="main_nav_col">
     
-    <?= $this->load->view('p_apanel2/encabezado') ?>
+    <?= $this->load->view('templates/apanel2/encabezado') ?>
     <ul class="main_nav">
         
         <li class="">

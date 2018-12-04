@@ -1185,7 +1185,7 @@ class Grupos extends CI_Controller{
         //Solicitar vista
             $data['subtitulo_pagina'] = 'Cuestionarios';
             $data['vista_b'] = 'grupos/cuestionarios/cuestionarios_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     function cuestionarios_flipbooks($grupo_id)
@@ -1202,7 +1202,7 @@ class Grupos extends CI_Controller{
             $data['subtitulo_pagina'] = 'Cuestionarios desde Contenidos';
             $data['vista_b'] = 'grupos/cuestionarios_flipbooks_v';
             $data['menu_sub'] = 'grupos/menu_sub_flipbooks_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     function cuestionarios_resumen01($grupo_id, $area_id = 50)

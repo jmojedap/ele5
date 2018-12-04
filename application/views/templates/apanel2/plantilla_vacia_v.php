@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <?php $this->load->view('p_apanel2/head'); ?>
+        <?php $this->load->view('templates/apanel2/head'); ?>
     </head>
     <body>
         <div class="container">

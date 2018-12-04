@@ -1,0 +1,41 @@
+h1.estante{
+    font-size: 13px;
+    color: #FFF;
+    text-shadow: none;
+    width: 150px;
+    margin: 3px 0px 12px 24px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-align: center;
+    background: #fd353a
+}
+
+.flipbook_container{
+    background:#DDD; 
+    background: rgba(228,228,228, 0.75);
+    display: inline-block;
+    width: 100px;
+    padding: 1px;
+    border: 1px solid #CCC;
+    text-align: center;
+    margin-right: 15px;
+    margin-left: 15px;
+    width: 106px;
+}
+
+.flipbooks_strip{
+
+}
+
+
+.flipbook_container:hover{
+    background: #e5789b;
+    border: 1px solid #e5789b;
+}
+
+
+.flipbook_container a{
+    position: relative;
+    color: #069;
+    display: block;
+}

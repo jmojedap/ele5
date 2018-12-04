@@ -17,7 +17,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <?php $this->load->view('p_apanel2/head'); ?>
+        <?php $this->load->view('templates/apanel3/parts/head'); ?>
         <style>
             div.login{
                 max-width: 304px;

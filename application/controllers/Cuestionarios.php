@@ -68,7 +68,7 @@ class Cuestionarios extends CI_Controller{
             $data['subtitulo_pagina'] = $data['cant_resultados'];
             $data['vista_a'] = 'cuestionarios/explorar/explorar_v';
             $data['vista_menu'] = 'cuestionarios/explorar/menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(PTL_ADMIN_2, $data);
     }
     
     /**
@@ -223,7 +223,7 @@ class Cuestionarios extends CI_Controller{
         //Solicitar vista
             $data['titulo_pagina'] .= ' - Copiar';
             $data['vista_b'] = 'cuestionarios/copiar_cuestionario_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     /**
@@ -359,7 +359,7 @@ class Cuestionarios extends CI_Controller{
             $data['cuestionario_id'] = $cuestionario_id;
             $data['vista_b'] = 'cuestionarios/preguntas_v';
 
-        $this->load->view('p_apanel2/plantilla_v', $data);
+        $this->load->view(PTL_ADMIN, $data);
     }
     
     function temas($cuestionario_id)
@@ -401,7 +401,7 @@ class Cuestionarios extends CI_Controller{
         
         //Solicitar vista
             $data['vista_b'] = 'cuestionarios/sugerencias_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
 //PROCESO DE ASIGNACIÓN
@@ -667,7 +667,7 @@ class Cuestionarios extends CI_Controller{
         $data['vista_a'] = 'cuestionarios/asignar_masivo_v';
         $data['vista_menu'] = 'cuestionarios/menu_explorar_v';
         $data['destino_form'] = "cuestionarios/asignar_masivo_e/";
-        $this->load->view('p_apanel2/plantilla_v', $data);
+        $this->load->view(PTL_ADMIN, $data);
     }
     
     function asignar_masivo_e()
@@ -704,7 +704,7 @@ class Cuestionarios extends CI_Controller{
             $data['vista_menu'] = 'cuestionarios/menu_explorar_v';
             $data['vista_a'] = 'app/resultado_cargue_v';
             $data['subtitulo_pagina'] = 'Resultado cargue';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
 //RESOLVER CUESTIONARIO
@@ -882,7 +882,7 @@ class Cuestionarios extends CI_Controller{
             $data['valor_opciones'] = array('','','','','');
             $data['vista_a'] = 'cuestionarios/resolver_v';
             
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
             
     }
     
@@ -1020,7 +1020,7 @@ class Cuestionarios extends CI_Controller{
         
         //$this->output->enable_profiler(TRUE);
         
-        $this->load->view('p_apanel2/plantilla_v', $data);
+        $this->load->view(PTL_ADMIN, $data);
     }
     
     /**
@@ -1182,7 +1182,7 @@ class Cuestionarios extends CI_Controller{
         
         //Solicitar vista
             $data['vista_a'] = 'cuestionarios/resolver_lote_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
         
     }
     
@@ -1377,7 +1377,7 @@ class Cuestionarios extends CI_Controller{
             $data['mensaje'] = "Se actualizaron {$registros_modificados} registros";
             $data['vista_a'] = "app/mensaje_v";
 
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
         
     }
     
@@ -1421,7 +1421,7 @@ class Cuestionarios extends CI_Controller{
         $data['link_volver'] = 'develop/procesos';
         $data['vista_a'] = 'app/mensaje_v';
         
-        $this->load->view('p_apanel2/plantilla_v', $data);
+        $this->load->view(PTL_ADMIN, $data);
         
     }
     
@@ -1449,7 +1449,7 @@ class Cuestionarios extends CI_Controller{
         
         //Solicitar vista
             $data['subtitulo_pagina'] = 'Agregar pregunta';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
         
     }
     

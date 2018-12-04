@@ -211,10 +211,10 @@
 
 <aside class="main_nav_col">
     
-    <?= $this->load->view('p_apanel2/encabezado') ?>
+    <?php $this->load->view('templates/apanel3/parts/header') ?>
     <ul class="main_nav">	
 
-        <?= $this->load->view('p_apanel2/form_busqueda') ?>
+        <?php $this->load->view('templates/apanel3/parts/search_form') ?>
 
         <li class="has_submenu">
             <a href="#" class="<?= $clase_m['institucional'] ?>">

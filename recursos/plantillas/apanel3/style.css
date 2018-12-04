@@ -67,8 +67,8 @@ h6:first-child { margin-top: 0.25em; }
 .main_container{
 	padding-top: 12px;
 	min-width: 184px;
-	/*/margin: 0px 12px 0px 124px;*/
-	margin: 0px 0px 0px 112px;  /*pcrn-mod 2015-04-01*/
+	//margin: 0px 12px 0px 124px;
+        margin: 0px 0px 0px 112px;  //pcrn-mod 2015-04-01
 }
 
 .col{ overflow: auto; }

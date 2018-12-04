@@ -7,10 +7,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <?php $this->load->view('p_apanel2/head'); ?>
+        <?php $this->load->view('templates/apanel3/parts/head'); ?>
     </head>
     <body>
-        <?php $this->load->view("p_apanel2/menus/menu_{$this->session->userdata('rol_id')}"); ?>
-        <?php $this->load->view('p_apanel2/main_container'); ?>
+        <?php $this->load->view("templates/apanel3/menus/menu_{$this->session->userdata('rol_id')}"); ?>
+        <?php $this->load->view('templates/apanel3/parts/content'); ?>
     </body>
 </html>

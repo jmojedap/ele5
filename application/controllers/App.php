@@ -25,7 +25,6 @@ class App extends CI_Controller{
         
         if ( $this->session->userdata('logged') )
         {
-            
             $row_usuario = $this->Pcrn->registro_id('usuario', $this->session->userdata('usuario_id'));
             
             $destinos_rol[0] = 'usuarios/explorar';
@@ -65,7 +64,7 @@ class App extends CI_Controller{
         } else {
             $data['titulo_pagina'] = NOMBRE_APP;
             $data['vista_a'] = 'app/login_v';
-            $this->load->view('p_apanel2/inicio_v', $data);
+            $this->load->view('templates/apanel2/inicio_v', $data);
         }
     }
     
@@ -91,74 +90,16 @@ class App extends CI_Controller{
                 ->set_content_type('application/json')
                 ->set_output(json_encode($resultado));        
     }
-    
-    /**
-     * Se valida el formulario antes de crear las variables de sessión
-     * Se llega aquí mediante el formulario de login (app/login)
-     */
-    function z_validar_login()
-    {
-        
-        $this->load->model('Esp');
-        
-        $crear_sesion = TRUE;
-        $mensajes = array();
-        
-        $username = trim($this->input->post('username'));
-        $password = trim($this->input->post('password'));
-        
-        $row_usuario = $this->Esp->row_username($username);
-        
-        //Validación de password
-            $validar_password = $this->Esp->validar_password($row_usuario, $password);
-
-            if ( ! $validar_password) 
-            {
-                $crear_sesion = FALSE;
-                $mensajes[] = 'El usuario y contraseña no coinciden';
-            }
-        
-        //Verificar que el usuario esté activo
-            $estado_usuario = $this->Esp->estado_usuario($row_usuario);
-
-            if ( $estado_usuario == 2 ) 
-            {
-                $mensajes[] = 'El usuario no existe';
-                $crear_sesion = FALSE;
-            } elseif ( $estado_usuario == 0 )  {
-                $mensajes[] = 'El usuario está inactivo, consulte al administrador';
-                $crear_sesion = FALSE;
-            }
-        
-        //Verificar para crear sesión
-            if ( $crear_sesion )
-            {
-                $this->Esp->crear_sesion($row_usuario, TRUE);
-            } else {
-                $this->session->set_flashdata('username', $this->input->post('username') );
-                $this->session->set_flashdata('mensajes', $mensajes);
-            }
-            
-        //Verificar si debe cambiar contraseña por defecto
-            $tiene_dpw = 0;
-            $dpw = $this->App_model->valor_opcion(10);  //Contraseña por defecto
-            if ( $dpw == $this->input->post('password') ) { $tiene_dpw = 1; }
-            
-        $this->output->enable_profiler(TRUE);
-            
-        redirect("app/index/?dpw={$tiene_dpw}");
-
-    }
 
     function inicio()
     {
         $data['vista_a'] = 'app/inicio_v';
         $data['titulo_pagina'] = NOMBRE_APP;
-        $this->load->view('p_apanel2/plantilla_v', $data);
+        $this->load->view(PTL_ADMIN, $data);
     }
     
     function logout()
-    {   
+    {
         //Editar, evento de inicio de sesión
             if ( strlen($this->session->userdata('login_id')) > 0 ) 
             {
@@ -230,8 +171,10 @@ class App extends CI_Controller{
     
     function pruebas()
     {
-        $this->load->view('app/prueba_v');
-        
+        $data['vista_a'] = 'app/prueba_v';
+        $data['titulo_pagina'] = 'Prueba Apanel3';
+
+        $this->load->view(PTL_ADMIN_2, $data);
     }
     
 //AJAX GENERALES
@@ -274,7 +217,7 @@ class App extends CI_Controller{
     {
         $data['titulo_pagina'] = 'Autocomplete';
         $data['vista_a'] = 'app/autocomplete_v';
-        $this->load->view('p_apanel2/plantilla_v', $data);
+        $this->load->view(PTL_ADMIN, $data);
     }
     
     function arr_elementos_ajax($tabla)

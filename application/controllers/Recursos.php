@@ -315,7 +315,7 @@ class Recursos extends CI_Controller{
             $data['subtitulo_pagina'] = number_format($data['cant_resultados'],0,',', '.');
             $data['vista_a'] = 'recursos/links/explorar_v';
             $data['vista_menu'] = 'recursos/links/explorar_menu_v';
-            $this->load->view('p_apanel2/plantilla_v', $data);
+            $this->load->view(PTL_ADMIN, $data);
     }
     
     /**

@@ -90,7 +90,7 @@
 
 <aside class="main_nav_col">
     
-    <?= $this->load->view('p_apanel2/encabezado') ?>
+    <?php $this->load->view('templates/apanel3/parts/header') ?>
     <ul class="main_nav">	
 
         <li>
