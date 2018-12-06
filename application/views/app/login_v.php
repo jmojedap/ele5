@@ -1,7 +1,47 @@
-<?php $this->load->view('assets/vue'); ?>
+<script>
+// Variables
+//-----------------------------------------------------------------------------
+    var base_url = '<?php echo base_url() ?>';
 
-<div class="login" id="login-form">
-    <form accept-charset="utf-8" id="formulario" @submit.prevent="enviar_formulario">
+    $(document).ready(function(){
+        $('#formulario_login').submit(function(){
+            validar_login();
+            return false;
+        });
+    });
+
+// Funciones
+//-----------------------------------------------------------------------------
+    function validar_login(){
+        $.ajax({        
+            type: 'POST',
+            url: base_url + 'app/validar_login',
+            data: $('#formulario_login').serialize(),
+            success: function(response){
+                //console.log(response.mensajes);
+                if ( response.ejecutado ) {
+                    window.location = base_url + 'app/index/';
+                } else {
+                    mostrar_mensajes(response.mensajes);
+                }
+            }
+        });
+    }
+
+    function mostrar_mensajes(mensajes)
+    {
+        $('#mensajes').html('');
+
+        for (i in mensajes) {
+            console.log(mensajes[i]);
+            var componente = '<div class="alert alert-danger">' + mensajes[i] + '</div>'
+            $('#mensajes').append(componente);
+        }
+    }
+</script>
+
+<div class="login">
+    <form accept-charset="utf-8" id="formulario_login" method="post">
         <div class="form-group">
             <input
                 type="text"
@@ -34,35 +74,5 @@
 
     <div class="clearfix"></div>
 
-    <div class="sep2">
-        <div class="alert alert-danger" v-for="mensaje in mensajes">
-            <i class="fa fa-warning"></i>
-            {{ mensaje }}
-        </div>
-    </div>
+    <div class="sep2" id="mensajes"></div>
 </div>
-
-<script>
-    new Vue({
-        el: '#login-form',
-        data: {
-            app_url: '<?php echo base_url() ?>',
-            mensajes: []
-        },
-        methods: {
-            enviar_formulario: function(){
-                axios.post(this.app_url + 'app/validar_login/', $('#formulario').serialize())
-                .then(response => {
-                    if ( response.data.ejecutado == 0 ) {
-                        this.mensajes = response.data.mensajes;
-                    } else {
-                        window.location = this.app_url + 'app/index'
-                    }
-                })
-                .catch(function (error) {
-                     console.log(error);
-                });
-            }
-        }
-    });
-</script>
