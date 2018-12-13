@@ -692,7 +692,7 @@ class Usuarios extends CI_Controller{
             $data['titulo_pagina'] = 'Restauración de contraseña';
             $data['vista_a'] = 'usuarios/restaurar_v';
             $data['resultado'] = $resultado;
-            $this->load->view('p_apanel2/inicio_v', $data);
+            $this->load->view('templates/apanel2/inicio_v', $data);
         }
     }
     
