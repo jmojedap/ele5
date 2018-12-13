@@ -482,47 +482,45 @@ class Usuarios extends CI_Controller{
     }
     
     /**
+     * AJAX JSON
      * Ejecuta el proceso de cambio de contraseña
      */
     function contrasena_e()
     {
         
-        $this->load->model('Esp');
+        $this->load->model('Login_model');
         $condiciones = 0;
         $row_usuario = $this->Pcrn->registro_id('usuario', $this->input->post('id'));
         
         //Valores iniciales para el resultado del proceso
-            $resultado['mensaje'] = '';
-            $resultado['clase'] = 'alert-info';
+            $resultado = array('ejecutado' => 0, 'mensaje' => '');
         
         //Verificar contraseña actual
-            $validar_pw = $this->Esp->validar_password($row_usuario, $this->input->post('password_actual'));
-            if ( $validar_pw ) {
+            $validar_pw = $this->Login_model->validar_password($row_usuario->username, $this->input->post('password_actual'));
+            if ( $validar_pw['ejecutado'] ) {
                 $condiciones++;
             } else {
                 $resultado['mensaje'] = 'La contraseña actual es incorrecta. ';
-                $resultado['clase'] = 'alert-danger';
             }
         
         //Verificar que contraseña nueva coincida con la confirmación
-            if ( $this->input->post('password') == $this->input->post('re_password') ) {
+            if ( $this->input->post('password') == $this->input->post('passconf') ) {
                 $condiciones++;
             } else {
                 $resultado['mensaje'] .= 'Las contraseña de confirmación no coincide.';
-                $resultado['clase'] = 'alert-danger';
             }
         
         //Verificar condiciones necesarias
             if ( $condiciones == 2 )
             {
                 $this->Usuario_model->cambiar_contrasena($row_usuario->id, $this->input->post('password'));
-
-                $resultado['clase'] = 'alert-success';
+                $resultado['ejecutado'] = 1;
                 $resultado['mensaje'] = 'La contraseña se cambió exitosamente.';
             }
         
-        $this->session->set_flashdata('resultado', $resultado);
-        redirect("usuarios/contrasena");
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($resultado));
         
     }
     
@@ -618,7 +616,7 @@ class Usuarios extends CI_Controller{
         
         //Reglas
         $this->form_validation->set_rules('password', 'Nueva contraseña', 'trim|required|alpha_numeric|min_length[8]|md5');
-        $this->form_validation->set_rules('re_password', 'Confirmación de la nueva contraseña', 'trim|required|matches[password]|md5');
+        $this->form_validation->set_rules('passconf', 'Confirmación de la nueva contraseña', 'trim|required|matches[password]|md5');
         
         //Mensajes de validación
         $this->form_validation->set_message('required', "El campo %s es requerido");
@@ -652,7 +650,7 @@ class Usuarios extends CI_Controller{
         //Reglas
         $this->form_validation->set_rules('password_actual', 'Contraseña actual', 'trim|md5|required|callback__password_check');
         $this->form_validation->set_rules('password', 'Nueva contraseña', 'trim|required|alpha_numeric|min_length[8]');
-        $this->form_validation->set_rules('re_password', 'Confirmación de la nueva contraseña', 'trim|required|matches[password]');
+        $this->form_validation->set_rules('passconf', 'Confirmación de la nueva contraseña', 'trim|required|matches[password]');
         
         //Mensajes de validación
         $this->form_validation->set_message('required', "El campo %s es requerido");
