@@ -424,7 +424,7 @@ class Tema_Model extends CI_Model{
             $arr_relaciones = $this->Item_model->arr_interno('categoria_id = 18');
         
         //Relaciones
-            $crud->set_relation('relacionado_id', 'tema', '{cod_tema} :: {titulo_tema}', "tipo_id = 0 AND area_id ={$row_tema->area_id}");
+            $crud->set_relation('relacionado_id', 'tema', '{cod_tema} :: {nombre_tema}', "tipo_id = 0 AND area_id ={$row_tema->area_id}");
 
         //Formulario Edit
             

@@ -44,7 +44,8 @@
     //Array, cant login
         $filtros_evento['t'] = 101;
         $max_login = 5;
-        foreach ( $usuarios->result() as $row_usuario ) {
+        foreach ( $usuarios->result() as $row_usuario ) 
+        {
             $filtros_evento['u'] = $row_usuario->usuario_id;
             $cant_login = $this->Evento_model->cant_eventos($filtros_evento);
             if ( $cant_login > $max_login ) { $max_login = $cant_login; }
@@ -87,15 +88,15 @@
 
 <?php $this->load->view('comunes/resultado_proceso_v'); ?>
 
-<?= form_open("instituciones/procesar_usuarios/{$row->id}") ?>
+<?php echo form_open("instituciones/procesar_usuarios/{$row->id}") ?>
     
 <?php if ( in_array($this->session->userdata('rol_id'), array(0,1,2,3,8))  ) : ?> 
     <div class="row">
         <div class="col col-md-2">
-            <?=  form_dropdown('proceso', $opciones_proceso, set_value('proceso'), 'class="form-control select-chosen"') ?><br/>
+            <?php echo  form_dropdown('proceso', $opciones_proceso, set_value('proceso'), 'class="form-control select-chosen"') ?><br/>
         </div>
         <div class="col col-md-2">
-            <?= form_submit($att_submit) ?> 
+            <?php echo form_submit($att_submit) ?> 
         </div>
 
         <div class="col col-md-8">
@@ -109,17 +110,17 @@
 <table class="table table-hover bg-blanco" cellspacing="0">
     <thead>
         <tr>
-            <th width="10px;"><?= form_checkbox($att_check_todos) ?></th>
+            <th width="10px;"><?php echo form_checkbox($att_check_todos) ?></th>
             <?php if ( $this->session->userdata('rol_id') < 2 ){ ?>
                 <th width="70px">ID</th>
             <?php } ?>
             <th>Nombre usuario</th>
             <th>Cantidad login</th>
-            <th class="<?= $clases_col['rol'] ?>">Rol</th>
-            <th class="<?= $clases_col['sexo'] ?>">Sexo</th>
-            <th class="<?= $clases_col['email'] ?>">E-mail</th>
-            <th class="<?= $clases_col['estado'] ?>">Estado</th>
-            <th class="<?= $clases_col['grupos'] ?>">Grupos</th>
+            <th class="<?php echo $clases_col['rol'] ?>">Rol</th>
+            <th class="<?php echo $clases_col['sexo'] ?>">Sexo</th>
+            <th class="<?php echo $clases_col['email'] ?>">E-mail</th>
+            <th class="<?php echo $clases_col['estado'] ?>">Estado</th>
+            <th class="<?php echo $clases_col['grupos'] ?>">Grupos</th>
             
         </tr>
     </thead>
@@ -130,8 +131,8 @@
                 $row_usuario = $this->Pcrn->registro_id('usuario', $usuario_id);
             
                 //Activo
-                    $valor_activo = '<span class="w2 etiqueta exito">Activo</span>';
-                    if ( $row_usuario->activo == 0 ) { $valor_activo = '<span class="w2 etiqueta alerta">Inactivo</span>'; }
+                    $valor_activo = '<span class="w3 etiqueta exito">Activo</span>';
+                    if ( $row_usuario->estado == 0 ) { $valor_activo = '<span class="w3 etiqueta alerta">Inactivo</span>'; }
                 
                 $grupos = $this->Grupo_model->grupos_profesor($row_usuario->id);
                     
@@ -154,29 +155,29 @@
             ?>
 
             <tr>
-                <td><?= form_checkbox($att_check) ?></td>
+                <td><?php echo form_checkbox($att_check) ?></td>
                 <?php if ( $this->session->userdata('rol_id') < 2 ){ ?>
-                    <td class="warning text-right"><?= $row_usuario->id ?></td>
+                    <td class="warning text-right"><?php echo $row_usuario->id ?></td>
                 <?php } ?>
                 <td>
-                    <?= anchor("usuarios/actividad/{$row_usuario->id}/1", $this->App_model->nombre_usuario($row_usuario->id, 3), 'class="" title=""') ?>
+                    <?php echo anchor("usuarios/actividad/{$row_usuario->id}/1", $this->App_model->nombre_usuario($row_usuario->id, 3), 'class="" title=""') ?>
                     <br/>
-                    <?= $row_usuario->username ?>
+                    <?php echo $row_usuario->username ?>
                 </td>
                 <td>
                     <div class="progress">
-                        <div class="progress-bar <?= $clase_barra ?>" role="progressbar" aria-valuenow="<?= $percent ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?= $percent ?>%; min-width: 10px;">
-                            <?= $cant_login ?>
+                        <div class="progress-bar <?php echo $clase_barra ?>" role="progressbar" aria-valuenow="<?php echo $percent ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $percent ?>%; min-width: 10px;">
+                            <?php echo $cant_login ?>
                         </div>
                     </div>
                 </td>
-                <td class="<?= $clases_col['rol'] ?>"><?php echo $this->Item_model->nombre(58, $row_usuario->rol_id) ?></td>
-                <td class="<?= $clases_col['sexo'] ?>"><?php echo $this->Item_model->nombre(59, $row_usuario->sexo); ?></td>
-                <td class="<?= $clases_col['email'] ?>"><?php echo $row_usuario->email ?></td>
-                <td class="<?= $clases_col['estado'] ?>"><?php echo $valor_activo ?></td>
-                <td class="<?= $clases_col['grupos'] ?>">
+                <td class="<?php echo $clases_col['rol'] ?>"><?php echo $this->Item_model->nombre(58, $row_usuario->rol_id) ?></td>
+                <td class="<?php echo $clases_col['sexo'] ?>"><?php echo $this->Item_model->nombre(59, $row_usuario->sexo); ?></td>
+                <td class="<?php echo $clases_col['email'] ?>"><?php echo $row_usuario->email ?></td>
+                <td class="<?php echo $clases_col['estado'] ?>"><?php echo $valor_activo ?></td>
+                <td class="<?php echo $clases_col['grupos'] ?>">
                     <?php foreach ($grupos->result() as $row_grupo) : ?>
-                        <?= anchor("grupos/estudiantes/{$row_grupo->id}", $this->App_model->nombre_grupo($row_grupo->id), 'class="a2" title""') ?>
+                        <?php echo anchor("grupos/estudiantes/{$row_grupo->id}", $this->App_model->nombre_grupo($row_grupo->id), 'class="a2" title""') ?>
                     <?php endforeach ?>
                 </td>
                 
@@ -187,4 +188,4 @@
     </tbody>
 </table>
 
-<?= form_close() ?>
+<?php echo form_close() ?>

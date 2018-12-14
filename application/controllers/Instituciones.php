@@ -155,7 +155,6 @@ class Instituciones extends CI_Controller{
         if ( in_array($this->session->userdata('rol_id'), array(3,4,5)) ) { $institucion_id = $this->session->userdata('institucion_id'); }
         $data = $this->Institucion_model->basico($institucion_id);
         
-        //$data['usuarios'] = $this->Institucion_model->usuarios_login($institucion_id);
         $data['usuarios'] = $this->Institucion_model->usuarios($institucion_id);
         
         $this->load->model('Grupo_model');
