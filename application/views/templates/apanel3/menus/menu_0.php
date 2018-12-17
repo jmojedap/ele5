@@ -359,14 +359,22 @@
         </li>
         
         <li class="has_submenu">
-            <a href="#" class="<?= $clase_m['cuestionarios'] ?>"><i class="fa fa-2x fa-question"></i><span>cuestionarios</span></a>
+            <a href="#" class="<?= $clase_m['cuestionarios'] ?>">
+                <i class="fa fa-2x fa-question"></i>
+                <span>cuestionarios</span>
+            </a>
             
             <?php if ( $m_current['menu'] == 'cuestionarios' ){ ?>
                 <span class="gossip"><?= $m_current['submenu_show'] ?></span>
             <?php } ?>
 
             <ul class="sub_nav">
-                <li><a href="<?= base_url() ?>cuestionarios/explorar/todos" class="<?= $clase_sm['cuestionarios'] ?>"><i class="fa fa-book"></i><span>cuestionarios</span></a></li> <!-- subitem -->
+                <li>
+                    <a href="<?php echo base_url('cuestionarios/explorar') ?>" class="<?php echo $clase_sm['cuestionarios'] ?>">
+                        <i class="fa fa-book"></i>
+                        <span>cuestionarios</span>
+                    </a>
+                </li>
                 <li><a href="<?= base_url()?>datos/enunciados" class="<?= $clase_sm['enunciados'] ?>"><i class="fa fa-quote-left"></i><span>enunciados</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url()?>preguntas/explorar" class="<?= $clase_sm['preguntas'] ?>"><i class="fa fa-question"></i><span>preguntas</span></a></li> <!-- subitem -->
             </ul>

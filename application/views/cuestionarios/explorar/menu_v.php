@@ -8,7 +8,7 @@
     if ( $this->uri->segment(2) == 'asignaciones' ) { $clases['asignaciones'] = 'active'; }
 ?>
 
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs sep1">
     <?php if ( $this->session->userdata('srol') == 'institucional' ) { ?>
         <li role="presentation" class="nav-item <?php echo $clases['plataforma'] ?>">
             <?php echo anchor("cuestionarios/explorar/plataforma", 'Plataforma', 'class="nav-link" title="Cuestionarios de la Plataforma Enlace"') ?>

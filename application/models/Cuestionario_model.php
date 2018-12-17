@@ -15,6 +15,66 @@ class Cuestionario_model extends CI_Model
         return $basico;
     }
     
+// EXPLORACIÓN
+//-----------------------------------------------------------------------------
+    
+    /**
+     * Array con los datos para la vista de exploración
+     * 
+     * @return string
+     */
+    function data_explorar($num_pagina)
+    {
+        //Data inicial, de la tabla
+            $data = $this->data_tabla_explorar($num_pagina);
+        
+        //Elemento de exploración
+            $data['controlador'] = 'cuestionarios';                      //Nombre del controlador
+            $data['carpeta_vistas'] = 'cuestionarios/explorar/';         //Carpeta donde están las vistas de exploración
+            $data['titulo_pagina'] = 'Cuestionarios';
+                
+        //Otros
+            $data['cant_resultados'] = $this->Cuestionario_model->cant_resultados($data['busqueda']);
+            $data['subtitulo_pagina'] = $this->Cuestionario_model->cant_resultados($data['busqueda']);
+            $data['max_pagina'] = ceil($this->Pcrn->si_cero($data['cant_resultados'],1) / $data['per_page']);   //Cantidad de páginas
+
+        //Vistas
+            $data['vista_a'] = $data['carpeta_vistas'] . 'explorar_v';
+            $data['vista_menu'] = $data['carpeta_vistas'] . 'menu_v';
+        
+        return $data;
+    }
+    
+    /**
+     * Array con los datos para la tabla de la vista de exploración
+     * 
+     * @param type $num_pagina
+     * @return string
+     */
+    function data_tabla_explorar($num_pagina)
+    {
+        //Elemento de exploración
+            $data['cf'] = 'cuestionarios/explorar/';     //CF Controlador Función
+        
+        //Paginación
+            $data['num_pagina'] = $num_pagina;              //Número de la página de datos que se está consultado
+            $data['per_page'] = 10;                          //Cantidad de registros por página
+            $offset = ($num_pagina - 1) * $data['per_page'];      //Número de la página de datos que se está consultado
+        
+        //Búsqueda y Resultados
+            $this->load->model('Busqueda_model');
+            $data['busqueda'] = $this->Busqueda_model->busqueda_array();
+            $data['busqueda_str'] = $this->Busqueda_model->busqueda_str();
+            $data['resultados'] = $this->Cuestionario_model->buscar($data['busqueda'], $data['per_page'], $offset);    //Resultados para página
+            
+        //Otros
+            $data['cant_resultados'] = $this->Cuestionario_model->cant_resultados($data['busqueda']);
+            $data['max_pagina'] = ceil($this->Pcrn->si_cero($data['cant_resultados'],1) / $data['per_page']);   //Cantidad de páginas
+            $data['seleccionados_todos'] = '-'. $this->Pcrn->query_to_str($data['resultados'], 'id');               //Para selección masiva de todos los elementos de la página
+            
+        return $data;
+    }
+
     /**
      * Búsqueda de cuestionarios
      * 
@@ -63,6 +123,19 @@ class Cuestionario_model extends CI_Model
         return $query;
     }
     
+    /**
+     * Devuelve la cantidad de registros encontrados en la tabla con los filtros
+     * establecidos en la búsqueda
+     * 
+     * @param type $busqueda
+     * @return type
+     */
+    function cant_resultados($busqueda)
+    {
+        $resultados = $this->buscar($busqueda); //Para calcular el total de resultados
+        return $resultados->num_rows();
+    }
+
     function filtro_cuestionarios($usuario_id = NULL)
     {
         
@@ -207,7 +280,9 @@ class Cuestionario_model extends CI_Model
     
 //CRUD CUESTIONARIOS
 //---------------------------------------------------------------------------------------------------
-    
+    /**
+     * Elimina registro en la tabla cuestionario, y los registro en tablas relacionadas
+     */
     function eliminar($cuestionario_id)
     {
         //Tabla principal
@@ -233,6 +308,7 @@ class Cuestionario_model extends CI_Model
             $arr_sql[] = "DELETE FROM evento WHERE tipo_id = 1 AND referente_2_id = {$cuestionario_id}";
             $arr_sql[] = "DELETE FROM evento WHERE tipo_id = 11 AND referente_2_id = {$cuestionario_id}";
             $arr_sql[] = "DELETE FROM evento WHERE tipo_id = 21 AND referente_id = {$cuestionario_id}";     //Evento de creación del cuestionario
+            $arr_sql[] = "DELETE FROM evento WHERE tipo_id = 22 AND referente_id = {$cuestionario_id}";     //Asignación de cuestionario a grupo
             
             foreach ( $arr_sql as $sql ) 
             {

@@ -15,9 +15,11 @@
             
             <div style="display: inline-block">
                 <h1>
-                    <?php echo $titulo_pagina ?>
+                    <span id="titulo_pagina"><?php echo $titulo_pagina ?></span>
                     <?php if ( ! is_null($subtitulo_pagina) ) { ?>
-                        <span style="font-size: 0.7em; color: #333; padding-left: 0px;" class="hidden-xs"><?php echo $subtitulo_pagina ?></span>
+                        <span id="subtitulo_pagina" style="font-size: 0.7em; color: #333; padding-left: 0px;" class="hidden-xs">
+                            <?php echo $subtitulo_pagina ?>
+                        </span>
                     <?php } ?>
                 </h1>
             </div>

@@ -14,4 +14,7 @@
         <link type="text/css" rel="stylesheet" href="<?php echo URL_RECURSOS ?>plantillas/apanel3/style.css">
         <link type="text/css" rel="stylesheet" href="<?php echo URL_RECURSOS ?>plantillas/apanel3/style_add.css">
 
+        <!-- Vue.js -->
+        <?php $this->load->view('assets/vue') ?>
+
         <?php //$this->load->view('head_includes/google_analytics'); ?>

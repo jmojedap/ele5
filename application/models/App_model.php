@@ -242,11 +242,10 @@ class App_model extends CI_Model {
     function nombre_usuario($usuario_id, $formato = 1)
     {
         $nombre_usuario = "(Vacío)";
+        $row = $this->Pcrn->registro('usuario', "id = {$usuario_id}");
 
-        if (!is_null($usuario_id)) 
+        if ( ! is_null($row) ) 
         {
-            $row = $this->Pcrn->registro('usuario', "id = {$usuario_id}");
-
             if ($formato == 1) {
                 $nombre_usuario = $row->username;
             } elseif ($formato == 2) {
@@ -269,16 +268,15 @@ class App_model extends CI_Model {
      */
     function nombre_institucion($institucion_id, $formato = 1)
     {
-
         $nombre_institucion = 'ND/NA';
+        $row = $this->Pcrn->registro('institucion', "id = {$institucion_id}");
 
-        if (!is_null($institucion_id)) {
-            $row = $this->Pcrn->registro('institucion', "id = {$institucion_id}");
+        if ( ! is_null($row) ) {
             if ($formato == 1) {
                 $nombre_institucion = $row->nombre_institucion;
             }
         }
-
+        
         return $nombre_institucion;
     }
 

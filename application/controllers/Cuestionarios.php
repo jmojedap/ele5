@@ -24,53 +24,59 @@ class Cuestionarios extends CI_Controller{
     
 //CRUD DE CUESTIONARIO
 //------------------------------------------------------------------------------------------
-    
-    function explorar($filtro_alcance = 'todos')
+
+    /**
+     * Exploración y búsqueda de cuestionarios
+     */
+    function explorar($num_pagina = 1)
     {
-        //
+        //Datos básicos de la exploración
+            $data = $this->Cuestionario_model->data_explorar($num_pagina);
         
-        //Cargando
-            $this->load->model('Busqueda_model');
-            $this->load->helper('text');
+        //Opciones de filtros de búsqueda
+            $data['arr_filtros'] = array('a', 'n', 'tp', 'i');
+            $data['opciones_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
+            $data['opciones_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Nivel');
+            $data['opciones_tipo'] = $this->Item_model->opciones('categoria_id = 15', 'Tipo');
+            $data['opciones_institucion'] = $this->App_model->opciones_institucion('id > 0', 'Institución');
+            
+        //Arrays con valores para contenido en la tabla
+            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 15');
         
-        //Grupos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
-            
-        //Filtro especial
-            $condicion = 'id > 0';
-            if ( $filtro_alcance == 'mis_cuestionarios' ) 
-            {
-                $condicion = "creado_usuario_id = {$this->session->userdata('usuario_id')}";
-            } elseif ( $filtro_alcance == 'plataforma' ) {
-                $condicion = 'interno = 1';
-            }
-            
-            $busqueda['condicion'] = $condicion;
-            
-            $resultados_total = $this->Cuestionario_model->buscar($busqueda); //Para calcular el total de resultados
-            
-        //Generar resultados para mostrar
-            $data['per_page'] = 15; //Cantidad de registros por página
-            $data['offset'] = $this->input->get('per_page');
-            $resultados = $this->Cuestionario_model->buscar($busqueda, $data['per_page'], $data['offset']);
-        
-        //Variables para vista
-            $data['cant_resultados'] = $resultados_total->num_rows();
-            $data['busqueda'] = $busqueda;
-            $data['busqueda_str'] = $busqueda_str;
-            $data['resultados'] = $resultados;
-            $data['url_paginacion'] = base_url("cuestionarios/explorar/{$filtro_alcance}/?{$busqueda_str}");
-            $data['filtro_alcance'] = $filtro_alcance;
-        
-        //Solicitar vista
-            $data['titulo_pagina'] = 'Cuestionarios';
-            $data['subtitulo_pagina'] = $data['cant_resultados'];
-            $data['vista_a'] = 'cuestionarios/explorar/explorar_v';
-            $data['vista_menu'] = 'cuestionarios/explorar/menu_v';
+        //Cargar vista
             $this->load->view(PTL_ADMIN_2, $data);
     }
-    
+
+    /**
+     * AJAX
+     * 
+     * Devuelve JSON, que incluye string HTML de la tabla de exploración para la
+     * página $num_pagina, y los filtros enviados por post
+     * 
+     * @param type $num_pagina
+     */
+    function tabla_explorar($num_pagina = 1)
+    {
+        //Datos básicos de la exploración
+            $data = $this->Cuestionario_model->data_tabla_explorar($num_pagina);
+        
+        //Arrays con valores para contenido en lista
+            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 15');
+        
+        //Preparar respuesta
+            $respuesta['html'] = $this->load->view('cuestionarios/explorar/tabla_v', $data, TRUE);
+            $respuesta['seleccionados_todos'] = $data['seleccionados_todos'];
+            $respuesta['num_pagina'] = $num_pagina;
+            $respuesta['busqueda_str'] = $data['busqueda_str'];
+            $respuesta['cant_resultados'] = $data['cant_resultados'];
+            $respuesta['max_pagina'] = $data['max_pagina'];
+        
+        //Salida
+            $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($respuesta));
+    }
+
     /**
      * POST REDIRECT
      * 2018-01-17
@@ -86,13 +92,12 @@ class Cuestionarios extends CI_Controller{
     }
     
     /**
-     * AJAX
+     * AJAX JSON
      * Eliminar un grupo de registros seleccionados
      */
     function eliminar_seleccionados()
     {
         $str_seleccionados = $this->input->post('seleccionados');
-        
         $seleccionados = explode('-', $str_seleccionados);
         
         foreach ( $seleccionados as $elemento_id ) 
@@ -100,7 +105,11 @@ class Cuestionarios extends CI_Controller{
             $this->Cuestionario_model->eliminar($elemento_id);
         }
         
-        echo count($seleccionados);
+        $resultado = array('ejecutado' => 1, 'mensaje' =>  count($seleccionados) . ' cuestionarios eliminados');
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($resultado));
     }
     
     /**

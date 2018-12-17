@@ -2,24 +2,23 @@
     $att_num_pagina = array(
         'id' => 'campo-num_pagina',
         'class' => 'form-control',
-        //'style' => 'width: 70px',
         'type' => 'number',
-        'value' => $num_pagina + 1,
+        'value' => $num_pagina,
         'min' => 1,
-        'max' => $max_pagina + 1,
-        'title' => $max_pagina + 1 . ' páginas en total'
+        'max' => $max_pagina,
+        'title' => $max_pagina . ' páginas en total'
     );
 ?>
 
-<div class="pull-right" style="max-width: 125px">
+<div class="float-right" style="max-width: 125px">
     <div class="input-group">
-        <span class="input-group-btn">
+        <span class="input-group-prepend">
             <button id="btn_explorar_ant" class="btn btn-default" type="button" title="Página anterior">
                 <i class="fa fa-caret-left"></i>
             </button>
         </span>
         <?php echo form_input($att_num_pagina) ?>
-        <span class="input-group-btn">
+        <span class="input-group-append">
             <button id="btn_explorar_sig" class="btn btn-default" type="button" title="Página siguiente">
                 <i class="fa fa-caret-right"></i>
             </button>
