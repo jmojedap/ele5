@@ -14,7 +14,7 @@
     <ul class="main_nav">
         
         <li class="">
-            <a href="<?= base_url() ?>cuestionarios/explorar/todos" class="<?= $clase_m['cuestionarios'] ?>"><i class="fa fa-2x fa-question"></i><span>cuestionarios</span></a>
+            <a href="<?php echo base_url('cuestionarios/explorar') ?>" class="<?= $clase_m['cuestionarios'] ?>"><i class="fa fa-2x fa-question"></i><span>cuestionarios</span></a>
         </li>
         
         <li class="">

@@ -156,8 +156,8 @@
                 $nombre_estudiante = $row_estudiante->apellidos . ' ' . $row_estudiante->nombre;
                     
                 //Activo
-                    $valor_activo = '<span class="w2 etiqueta exito">Activo</span>';
-                    if ( $row_estudiante->activo == 0 ) { $valor_activo = '<span class="w2 etiqueta alerta">Inactivo</span>'; }
+                    $valor_activo = '<span class="w3 etiqueta exito">Activo</span>';
+                    if ( $row_estudiante->estado == 0 ) { $valor_activo = '<span class="w3 etiqueta alerta">Inactivo</span>'; }
                     
                 //Checkbox
                     $att_check['name'] = $row_estudiante->id;

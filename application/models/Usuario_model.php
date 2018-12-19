@@ -105,7 +105,7 @@ class Usuario_model extends CI_Model{
         //Especificaciones de consulta
             $this->db->select('*, CONCAT((nombre), " ", (apellidos), " | ",(username)) AS name');
             $this->db->where($filtro_rol); //Filtro según el rol de usuario que se tenga
-            $this->db->order_by('apellidos', 'ASC');
+            $this->db->order_by('creado', 'DESC');
             
         //Otros filtros
             if ( $busqueda['rol'] != '' ) { $this->db->where('rol_id', $busqueda['rol']); }    //Rol de usuario

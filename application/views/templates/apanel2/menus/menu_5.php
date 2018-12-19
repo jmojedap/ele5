@@ -88,7 +88,7 @@
 
             <ul class="sub_nav">
                 <li>
-                    <a href="<?= base_url('cuestionarios/explorar/todos') ?>" class="<?= $clase_sm['cuestionarios-cuestionarios'] ?>">
+                    <a href="<?= base_url('cuestionarios/explorar') ?>" class="<?= $clase_sm['cuestionarios-cuestionarios'] ?>">
                         <i class="fa fa-book"></i>
                         <span>cuestionarios</span>
                     </a>
