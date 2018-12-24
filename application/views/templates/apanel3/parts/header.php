@@ -3,5 +3,4 @@
 </a>
 <a href="#" class="menu_switch">
     <i class="fa fa-bars"></i>
-    <span>MENU</span>
 </a>

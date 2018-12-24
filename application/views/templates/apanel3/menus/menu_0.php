@@ -275,14 +275,13 @@
 ?>
 
 <aside class="main_nav_col">
-    
     <?php $this->load->view('templates/apanel3/parts/header') ?>
     <ul class="main_nav">	
 
         <?php $this->load->view('templates/apanel3/parts/search_form') ?>
 
         <li>
-            <a href="<?= base_url('eventos/noticias') ?>" class="<?= $clase_m[''] ?>">
+            <a href="<?php echo base_url('eventos/noticias') ?>" class="<?php echo $clase_m[''] ?>">
                 <i class="fa fa-2x fa-home"></i>
                 <span>Inicio</span>
             </a>
@@ -415,18 +414,25 @@
             </a>
         </li>
         
-        <li class="has_submenu visible-xs">
+        <li class="has_submenu d-sm-none d-md-none d-lg-none">
             <a href="#" class="<?= $clase_m['mi_cuenta'] ?>">
                 <i class="fa fa-2x fa-user"></i>
-                <span><?= $this->session->userdata('nombre') ?></span>
+                <span>mi cuenta</span>
             </a>
             <?php if ( $m_current['menu'] == 'mi_cuenta' ){ ?>
                 <span class="gossip"><?= $m_current['submenu_show'] ?></span>
             <?php } ?>
 
             <ul class="sub_nav">
-                <li><a href="<?= base_url() ?>usuarios/contrasena" class="<?= $clase_sm['contrasena'] ?>"><i class="fa fa-lock"></i><span>contraseña</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url() ?>app/logout"><i class="fa fa-sign-out"></i><span>cerrar sesión</span></a></li> <!-- subitem -->
+                <li><a href="<?php echo base_url('usuarios/contrasena') ?>" class="<?= $clase_sm['contrasena'] ?>">
+                    <i class="fa fa-lock"></i><span>contraseña</span></a>
+                </li>
+                <li>
+                    <a href="<?= base_url() ?>app/logout">
+                        <i class="fa fa-sign-out-alt"></i>
+                        <span>salir</span>
+                </a>
+                </li>
             </ul>
         </li>
     </ul>

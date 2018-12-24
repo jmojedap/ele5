@@ -1,5 +1,5 @@
 <title><?php echo $titulo_pagina ?></title>
-        <link rel="shortcut icon" href="<?= URL_IMG ?>admin/icono.png" type="image/ico" />
+        <link rel="shortcut icon" href="<?php echo URL_IMG ?>admin/icono.png" type="image/ico" />
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         
