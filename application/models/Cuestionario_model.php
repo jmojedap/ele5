@@ -32,6 +32,8 @@ class Cuestionario_model extends CI_Model
             $data['controlador'] = 'cuestionarios';                      //Nombre del controlador
             $data['carpeta_vistas'] = 'cuestionarios/explorar/';         //Carpeta donde están las vistas de exploración
             $data['titulo_pagina'] = 'Cuestionarios';
+            $data['el_plural'] = 'cuestionarios';
+            $data['el_singular'] = 'cuestionario';
                 
         //Otros
             $data['cant_resultados'] = $this->Cuestionario_model->cant_resultados($data['busqueda']);
@@ -57,9 +59,9 @@ class Cuestionario_model extends CI_Model
             $data['cf'] = 'cuestionarios/explorar/';     //CF Controlador Función
         
         //Paginación
-            $data['num_pagina'] = $num_pagina;              //Número de la página de datos que se está consultado
-            $data['per_page'] = 10;                          //Cantidad de registros por página
-            $offset = ($num_pagina - 1) * $data['per_page'];      //Número de la página de datos que se está consultado
+            $data['num_pagina'] = $num_pagina;                  //Número de la página de datos que se está consultado
+            $data['per_page'] = 10;                             //Cantidad de registros por página
+            $offset = ($num_pagina - 1) * $data['per_page'];    //Número de la página de datos que se está consultado
         
         //Búsqueda y Resultados
             $this->load->model('Busqueda_model');
@@ -70,7 +72,7 @@ class Cuestionario_model extends CI_Model
         //Otros
             $data['cant_resultados'] = $this->Cuestionario_model->cant_resultados($data['busqueda']);
             $data['max_pagina'] = ceil($this->Pcrn->si_cero($data['cant_resultados'],1) / $data['per_page']);   //Cantidad de páginas
-            $data['seleccionados_todos'] = '-'. $this->Pcrn->query_to_str($data['resultados'], 'id');               //Para selección masiva de todos los elementos de la página
+            $data['seleccionados_todos'] = '-'. $this->Pcrn->query_to_str($data['resultados'], 'id');           //Para selección masiva de todos los elementos de la página
             
         return $data;
     }
@@ -85,33 +87,23 @@ class Cuestionario_model extends CI_Model
      */
     function buscar($busqueda, $per_page = NULL, $offset = NULL)
     {
-
         //Filtro según el rol de usuario que se tenga
             $filtro_rol = $this->filtro_cuestionarios();
-        
-        //Texto búsqueda
-            //Crear array con términos de búsqueda
-            if ( strlen($busqueda['q']) > 2 ){
-                $palabras = $this->Busqueda_model->palabras($busqueda['q']);
 
-                foreach ($palabras as $palabra_busqueda) {
-                    $this->db->like('CONCAT(nombre_cuestionario, IFNULL(descripcion,""))', $palabra_busqueda);
-                }
-            }
+        //Condición con palabras contenidas en el texto de búsqueda (q)
+            $words_condition = $this->Busqueda_model->words_condition($busqueda['q'], array('nombre_cuestionario', 'descripcion'));
+            if ( $words_condition ) { $this->db->where($words_condition); }
             
         //Otros filtros
             if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
             if ( $busqueda['n'] != '' ) { $this->db->where('nivel', $busqueda['n']); }      //Nivel
             if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_id', $busqueda['tp']); }  //Tipo
             if ( $busqueda['i'] != '' ) { $this->db->where('institucion_id', $busqueda['i']); }  //
+            if ( $busqueda['condicion'] != '' ) { $this->db->where($busqueda['condicion']); }   //Condición especial
                 
         //Otros
             $this->db->where($filtro_rol);  //Filtro por rol
-            $this->db->order_by('editado', 'DESC');
-                
-        //Condición especial
-            //if ( $busqueda['condicion'] ) { $this->db->where($busqueda['condicion']); }
-            if ( $busqueda['condicion'] != '' ) { $this->db->where($busqueda['condicion']); }   //Condición especial
+            $this->db->order_by('editado', 'DESC');    
             
         //Obtener resultados
         if ( is_null($per_page) ){

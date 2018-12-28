@@ -67,13 +67,13 @@
         
         $('#btn_explorar_sig').click(function()
         {
-            num_pagina = Pcrn.limitar_entre(parseInt(num_pagina) + 1, 0, max_pagina);
+            num_pagina = Pcrn.limitar_entre(parseInt(num_pagina) + 1, 1, max_pagina);
             tabla_explorar();
         });
         
         $('#btn_explorar_ant').click(function()
         {
-            num_pagina = Pcrn.limitar_entre(parseInt(num_pagina) - 1, 0, max_pagina);
+            num_pagina = Pcrn.limitar_entre(parseInt(num_pagina) - 1, 1, max_pagina);
             tabla_explorar();
         });
         

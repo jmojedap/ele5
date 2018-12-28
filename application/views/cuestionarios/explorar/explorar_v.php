@@ -3,10 +3,7 @@
 
 <script src="<?php echo URL_RECURSOS . 'js/pcrn.js' ?>"></script>
 
-<?php
-    $elemento_s = 'cuestionario';  //Elemento en singular
-    $elemento_p = 'cuestionarios'; //Elemento en plural
-        
+<?php    
     //Clases botones acción
         $clases_btn['eliminar_seleccionados'] = 'd-none';
         if ( $this->session->userdata('rol_id') <= 1 ) { $clases_btn['eliminar_seleccionados'] = ''; }
@@ -16,17 +13,17 @@
         if ( $this->session->userdata('rol_id') <= 2 ) { $clases_btn['exportar'] = ''; }
 ?>
 
-<?php $this->load->view('cuestionarios/explorar/script_js'); ?>
-<?php $this->load->view($vista_menu) ?>
+<?php $this->load->view($carpeta_vistas . 'script_js'); ?>
+<?php $this->load->view($carpeta_vistas . 'menu_v') ?>
 
 <div class="row">
     <div class="col-md-6">
-        <?php $this->load->view('cuestionarios/explorar/form_busqueda_v'); ?>
+        <?php $this->load->view($carpeta_vistas . 'form_busqueda_v'); ?>
     </div>
 
     <div class="col-md-3">
         <a class="btn btn-warning text-light <?php echo $clases_btn['eliminar_seleccionados'] ?>"
-            title="Eliminar los <?php echo $elemento_p ?> seleccionados"
+            title="Eliminar los <?php echo $el_prural ?> seleccionados"
             data-toggle="modal"
             data-target="#modal_eliminar"
             >
@@ -34,7 +31,9 @@
         </a>
         
         <div class="btn-group hidden-xs <?php echo $clases_btn['exportar'] ?>" role="group">
-            <?php echo anchor("cuestionarios/exportar/?{$busqueda_str}", '<i class="fa fa-file-excel"></i> Exportar', 'class="btn btn-success" title="Exportar los ' . $cant_resultados . ' registros a archivo de MS Excel"') ?>
+            <a href="<?php echo base_url("cuestionarios/exportar/?{$busqueda_str}") ?>" class="btn btn-success" title="Exportar los <?php echo $cant_registros ?> registros a archivo de MS Excel">
+                <i class="fa fa-file-excel"></i> Exportar
+            </a>
         </div>
     </div>
     
@@ -46,7 +45,7 @@
 </div>
 
 <div id="tabla_resultados">
-    <?php $this->load->view("{$carpeta_vistas}tabla_v"); ?>
+    <?php $this->load->view($carpeta_vistas . 'tabla_v'); ?>
 </div>
 
 <?php $this->load->view('comunes/bs4/modal_eliminar_v'); ?>

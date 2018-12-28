@@ -179,6 +179,30 @@ class Busqueda_model extends CI_Model{
         
         return $rangos_dias;
     }
+
+    /**
+     * Condición SQL con para cada palabra de la búsqueda del texto buscado
+     */
+    function words_condition($text_search, $fields)
+    {
+        $condition = NULL;
+        
+        if ( strlen($text_search) > 2 )
+        {
+            $concat_fields = $this->concat_campos($fields);
+            $words = $this->palabras($text_search);
+
+            foreach ($words as $word) 
+            {
+                $condition .= "CONCAT({$concat_fields}) LIKE '%{$word}%' AND ";
+            }
+            
+            $condition = substr($condition, 0, -5);
+            
+        }
+        
+        return $condition;
+    }
     
 // Búsquedas de elementos
 //-----------------------------------------------------------------------------

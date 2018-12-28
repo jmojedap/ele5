@@ -9,32 +9,32 @@
 ?>
 
 <!--Menú grande-->
-<div class="hidden-xs hidden-sm sep2">
-    <ul class="nav nav-tabs">
+<div class="mb-3 d-none d-md-block">
+    <ul class="nav nav-tabs nav-tabs-line">
         <?php foreach ($elementos as $elemento) : ?>
             <?php $arr_menu = $arr_menus[$elemento]; ?>
-            <li role="presentation" class="<?= $clases[$elemento] ?>">
-                <?= anchor($arr_menu['link'], $arr_menu['icono'] . ' ' .  $arr_menu['texto'], $arr_menu['atributos']) ?>
+            <li role="presentation" class="nav-item">
+                <a href="<?php echo base_url($arr_menu['link']) ?>" class="nav-link <?php echo $clases[$elemento] ?>" <?php echo $arr_menu['atributos'] ?>>
+                    <?php echo $arr_menu['icono'] . ' ' .  $arr_menu['texto'] ?>
+                </a>
             </li>
         <?php endforeach ?>
     </ul>
 </div>
 
 <!--Menú pequeño-->
-<div class="visible-xs visible-sm sep2">
-    <button class="btn btn-primary btn-block" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-        <i class="fa fa-bars"></i> &nbsp; <?= $arr_menus[$seccion]['texto'] ?>
+<div class="d-sm-block d-md-none mb-1">
+    <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#lista-menu-sm" aria-expanded="false" aria-controls="lista-menu-sm">
+        </i> &nbsp; <?php echo $arr_menus[$seccion]['texto'] ?>
+        <i class="fa fa-bars float-right"></i>
     </button>
     
-    <div class="panel collapse" id="collapseExample">
-        
-        <ul class="nav nav-pills nav-stacked">
-            <?php foreach ($elementos as $elemento) : ?>
-                <?php $arr_menu = $arr_menus[$elemento]; ?>
-                <li role="presentation" class="<?= $clases[$elemento] ?>  <?= $clases_permiso[$key] ?>">
-                    <?= anchor($arr_menu['link'], $arr_menu['icono'] . ' ' .  $arr_menu['texto'], $arr_menu['atributos']) ?>
-                </li>
-            <?php endforeach ?>
-        </ul>
-    </div> 
+    <ul class="list-group collapse" id="lista-menu-sm" style="margin: 10px 0;">
+        <?php foreach ($elementos as $elemento) : ?>
+            <?php $arr_menu = $arr_menus[$elemento]; ?>
+            <a href="<?php echo base_url($arr_menu['link']) ?>" class="list-group-item list-group-item-action <?php echo $clases[$elemento] ?>" <?php echo $arr_menu['atributos'] ?>>
+                <?php echo $arr_menu['icono'] . ' ' .  $arr_menu['texto'] ?>
+            </a>
+        <?php endforeach ?>
+    </ul>
 </div>
