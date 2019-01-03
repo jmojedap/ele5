@@ -98,12 +98,12 @@
                 <div class="header-tools">
                     <?php if (!$unset_add) { ?>
                         <div class="floatL t5">
-                            <a class="btn btn-default" href="<?php echo $add_url ?>"><i class="fa fa-plus"></i> &nbsp; <?php echo $this->l('list_add'); ?> <?php echo $subject ?></a>
+                            <a class="btn btn-secondary" href="<?php echo $add_url ?>"><i class="fa fa-plus"></i> &nbsp; <?php echo $this->l('list_add'); ?> <?php echo $subject ?></a>
                         </div>
                     <?php } ?>
                     <div class="floatR">
                         <?php if (!$unset_export) { ?>
-                            <a class="btn btn-default t5 gc-export" data-url="<?php echo $export_url; ?>">
+                            <a class="btn btn-secondary t5 gc-export" data-url="<?php echo $export_url; ?>">
                                 <i class="fa fa-cloud-download floatL t3"></i>
                                 <span class="hidden-xs floatL l5">
                                     <?php echo $this->l('list_export'); ?>
@@ -112,7 +112,7 @@
                             </a>
                         <?php } ?>
                         <?php if (!$unset_print) { ?>
-                            <a class="btn btn-default t5 gc-print" data-url="<?php echo $print_url; ?>">
+                            <a class="btn btn-secondary t5 gc-print" data-url="<?php echo $print_url; ?>">
                                 <i class="fa fa-print floatL t3"></i>
                                 <span class="hidden-xs floatL l5">
                                     <?php echo $this->l('list_print'); ?>
@@ -150,13 +150,13 @@
                             <td class="no-border-left <?php if ($buttons_counter === 0) { ?>hidden<?php } ?>">
                                 <div class="floatL">
                                     <a href="javascript:void(0);" title="<?php echo $this->l('list_delete') ?>"
-                                       class="hidden btn btn-default delete-selected-button">
+                                       class="hidden btn btn-secondary delete-selected-button">
                                         <i class="fa fa-trash-o text-danger"></i>
                                         <span class="text-danger"><?php echo $this->l('list_delete') ?></span>
                                     </a>
                                 </div>
                                 <div class="floatR l5">
-                                    <a href="javascript:void(0);" class="btn btn-default gc-refresh">
+                                    <a href="javascript:void(0);" class="btn btn-secondary gc-refresh">
                                         <i class="fa fa-refresh"></i>
                                     </a>
                                 </div>
@@ -179,12 +179,12 @@
                 <div class="footer-tools">
 
                     <!-- "Show 10/25/50/100 entries" (dropdown per-page) -->
-                    <div class="floatL t20 l5">
+                    <div class="float-left t20 l5">
                         <div class="floatL t10">
                             <?php list($show_lang_string, $entries_lang_string) = explode('{paging}', $this->l('list_show_entries')); ?>
                             <?php echo $show_lang_string; ?>
                         </div>
-                        <div class="floatL r5 l5 t3">
+                        <div class="float-left r5 l5 t3">
                             <select name="per_page" class="per_page form-control">
                                 <?php foreach ($paging_options as $option) { ?>
                                     <option value="<?php echo $option; ?>"
@@ -194,7 +194,7 @@
                                 <?php } ?>
                             </select>
                         </div>
-                        <div class="floatL t10">
+                        <div class="float-left t10">
                             <?php echo $entries_lang_string; ?>
                         </div>
                         <div class="clear"></div>
@@ -202,7 +202,7 @@
                     <!-- End of "Show 10/25/50/100 entries" (dropdown per-page) -->
 
 
-                    <div class="floatR r5">
+                    <div class="float-right r5">
 
                         <!-- Buttons - First,Previous,Next,Last Page -->
                         <ul class="pagination">
@@ -237,19 +237,17 @@
                         <input type="hidden" name="page_number" class="page-number-hidden" value="1" />
 
                         <!-- Start of: Settings button -->
-                        <div class="btn-group floatR t20 l10 settings-button-container">
-                            <button type="button" class="btn btn-default dropdown-toggle settings-button" data-toggle="dropdown">
+                        <div class="btn-group float-right t20 l10 settings-button-container">
+                            <button type="button" class="btn btn-secondary dropdown-toggle settings-button" data-toggle="dropdown">
                                 <i class="fa fa-cog r5"></i>
                                 <span class="caret"></span>
                             </button>
 
-                            <ul class="dropdown-menu dropdown-menu-right">
-                                <li>
-                                    <a href="javascript:void(0)" class="clear-filtering">
-                                        <i class="fa fa-eraser"></i> Clear filtering
-                                    </a>
-                                </li>
-                            </ul>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a href="javascript:void(0)" class="clear-filtering dropdown-item">
+                                    <i class="fa fa-eraser"></i> Clear filtering
+                                </a>
+                            </div>
                         </div>
                         <!-- End of: Settings button -->
 
@@ -288,7 +286,7 @@
                         <p><?php echo $this->l('alert_delete'); ?></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $this->l('form_cancel'); ?></button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo $this->l('form_cancel'); ?></button>
                         <button type="button" class="btn btn-danger delete-confirmation-button"><?php echo $this->l('list_delete'); ?></button>
                     </div>
                 </div>
@@ -308,7 +306,7 @@
                         <p><?php echo $this->l('alert_delete'); ?></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
                             <?php echo $this->l('form_cancel'); ?>
                         </button>
                         <button type="button" class="btn btn-danger delete-multiple-confirmation-button"
