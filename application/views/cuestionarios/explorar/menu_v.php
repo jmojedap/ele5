@@ -18,18 +18,25 @@
             'icono' => '<i class="fa fa-plus"></i>',
             'texto' => 'Nuevo',
             'link' => "cuestionarios/nuevo/",
-            'atributos' => ''
+            'atributos' => 'title="Crear un nuevo cuestionario"'
         );
 
         $arr_menus['asignar_masivo'] = array(
-            'icono' => '',
+            'icono' => '<i class="fa fa-file-excel"></i>',
             'texto' => 'Asignar',
             'link' => "cuestionarios/asignar_masivo/",
-            'atributos' => ''
+            'atributos' => 'title="Asignar cuestionarios mediante archivo Excel"'
+        );
+
+        $arr_menus['responder_masivo'] = array(
+            'icono' => '<i class="fa fa-file-excel"></i>',
+            'texto' => 'Cargar respuestas',
+            'link' => "cuestionarios/responder_masivo/",
+            'atributos' => 'title="Cargar respuestas con archivo Excel"'
         );
 
     //Elementos de menú para cada rol
-        $elementos_rol[0] = array('explorar', 'nuevo', 'asignar_masivo');
+        $elementos_rol[0] = array('explorar', 'nuevo', 'asignar_masivo', 'responder_masivo');
         $elementos_rol[1] = array('explorar', 'importar_asignaciones', 'nuevo');
         $elementos_rol[2] = array('explorar', 'nuevo');
         

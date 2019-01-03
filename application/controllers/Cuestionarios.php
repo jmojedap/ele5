@@ -170,11 +170,11 @@ class Cuestionarios extends CI_Controller{
             $data['titulo_pagina'] = 'Cuestionarios';
             $data['subtitulo_pagina'] = 'Nuevo';
             $data['vista_a'] = 'app/gc_v';
-            $data['vista_menu'] = 'cuestionarios/menu_explorar_v';
+            $data['vista_menu'] = 'cuestionarios/explorar/menu_v';
         
         $output = array_merge($data,(array)$gc_output);
         
-        $this->load->view(PTL_ADMIN, $output);
+        $this->load->view(PTL_ADMIN_2, $output);
     }
     
     /**
