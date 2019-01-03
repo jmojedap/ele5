@@ -17,7 +17,7 @@
         $arr_menus['nuevo'] = array(
             'icono' => '<i class="fa fa-plus"></i>',
             'texto' => 'Nuevo',
-            'link' => "cuestionarios/nuevo/",
+            'link' => "cuestionarios/nuevo/add/",
             'atributos' => 'title="Crear un nuevo cuestionario"'
         );
 

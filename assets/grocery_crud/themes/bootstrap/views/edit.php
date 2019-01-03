@@ -1,6 +1,6 @@
 <?php
-    $this->set_css($this->default_theme_path.'/bootstrap/css/bootstrap/bootstrap.min.css');
-    $this->set_css($this->default_theme_path.'/bootstrap/css/font-awesome/css/font-awesome.min.css');
+    //$this->set_css($this->default_theme_path.'/bootstrap/css/bootstrap/bootstrap.min.css');
+    //$this->set_css($this->default_theme_path.'/bootstrap/css/font-awesome/css/font-awesome.min.css');
     $this->set_css($this->default_theme_path.'/bootstrap/css/common.css');
     $this->set_css($this->default_theme_path.'/bootstrap/css/general.css');
     $this->set_css($this->default_theme_path.'/bootstrap/css/add-edit-form.css');
@@ -21,7 +21,7 @@
 	$this->set_js_lib($this->default_javascript_path.'/jquery_plugins/config/jquery.noty.config.js');
 ?>
 <div class="crud-form" data-unique-hash="<?php echo $unique_hash; ?>">
-    <div class="container_gc_pcrn gc-container" style="margin-top: 10px;">
+    <div class="container_gc_pcrn gc-container bg-white">
         <div class="row">
             <div class="col-md-12">
                 <div class="table-label">
@@ -40,8 +40,8 @@
                         <?php echo form_open( $update_url, 'method="post" id="crudForm"  enctype="multipart/form-data" class="form-horizontal"'); ?>
 
                             <?php foreach($fields as $field) { ?>
-                                <div class="form-group <?php echo $field->field_name; ?>_form_group">
-                                    <label class="col-sm-3 control-label">
+                                <div class="row form-group <?php echo $field->field_name; ?>_form_group">
+                                    <label class="col-sm-4 control-label text-right">
                                         <?php echo $input_fields[$field->field_name]->display_as?><?php echo ($input_fields[$field->field_name]->required)? "<span class='required'>*</span> " : ""?>
                                     </label>
                                     <div class="col-sm-8">
@@ -64,8 +64,8 @@
                                 <div id='report-error' class='report-div error bg-danger' style="display:none"></div>
                                 <div id='report-success' class='report-div success bg-success' style="display:none"></div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-offset-3 col-sm-7">
+                            <div class="form-group row">
+                                <div class="offset-sm-4 col-sm-7">
                                     <button class="btn btn-success b10" type="submit" id="form-button-save">
                                         <i class="fa fa-check"></i>
                                         <?php echo $this->l('form_update_changes'); ?>
