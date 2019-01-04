@@ -282,7 +282,7 @@
 
         <li class="has_submenu">
             <a href="#" class="<?= $clase_m['institucional'] ?>">
-                <i class="fa fa-2x fa-bank"></i>
+                <i class="fa fa-2x fa-university"></i>
                 <span>institucional</span>
             </a>
             <?php if ( $m_current['menu'] == 'institucional' ){ ?>
@@ -292,7 +292,7 @@
             <ul class="sub_nav">
                 <li>
                     <a href="<?= base_url('instituciones/explorar') ?>" class="<?= $clase_sm['institucional-instituciones'] ?>" title="Instituciones educativas">
-                        <i class="fa fa-bank"></i>
+                        <i class="fa fa-university"></i>
                         <span>instituciones</span>
                     </a>
                 </li>
@@ -333,8 +333,8 @@
                     </a>
                 </li>
                 <li><a href="<?= base_url()?>quices/explorar" class="<?= $clase_sm['quices'] ?>"><i class="fa fa-question"></i><span>quices</span></a></li>
-                <li><a href="<?= base_url()?>paginas/explorar" class="<?= $clase_sm['paginas'] ?>"><i class="fa fa-files-o"></i><span>páginas</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url()?>recursos/archivos" class="<?= $clase_sm['archivos'] ?>"><i class="fa fa-folder-o"></i><span>archivos</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url()?>paginas/explorar" class="<?= $clase_sm['paginas'] ?>"><i class="fa fa-file"></i><span>páginas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url()?>recursos/archivos" class="<?= $clase_sm['archivos'] ?>"><i class="fa fa-folder"></i><span>archivos</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url()?>recursos/links" class="<?= $clase_sm['links'] ?>"><i class="fa fa-globe"></i><span>links</span></a></li> <!-- subitem -->
             </ul>
         </li>
@@ -360,13 +360,13 @@
         </li>
         
         <li class="has_submenu">
-            <a href="#" class="<?= $clase_m['ajustes'] ?>"><i class="fa fa-2x fa-sliders"></i><span>ajustes</span></a>
+            <a href="#" class="<?= $clase_m['ajustes'] ?>"><i class="fa fa-2x fa-sliders-h"></i><span>ajustes</span></a>
             <?php if ( $m_current['menu'] == 'ajustes' ){ ?>
                 <span class="gossip"><?= $m_current['submenu_show'] ?></span>
             <?php } ?>
 
             <ul class="sub_nav">
-                <li><a href="<?= base_url('datos/sis_opcion') ?>" class="<?= $clase_sm['ajustes/parametros'] ?>"><i class="fa fa-gear"></i><span>parámetros</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url('datos/sis_opcion') ?>" class="<?= $clase_sm['ajustes/parametros'] ?>"><i class="fa fa-cog"></i><span>parámetros</span></a></li> <!-- subitem -->
                 <li>
                     <a href="<?= base_url('items/listado') ?>" class="<?= $clase_sm['ajustes/items'] ?>">
                         <i class="fa fa-bars"></i>
@@ -375,10 +375,10 @@
                 </li>
                 <li><a href="<?= base_url('develop/procesos') ?>" class="<?= $clase_sm['ajustes/procesos'] ?>"><i class="fa fa-tasks"></i><span>procesos</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url('develop/tablas/item') ?>" class="<?= $clase_sm['ajustes/database'] ?>"><i class="fa fa-database"></i><span>base de datos</span></a></li>
-                <li><a href="<?= base_url('estadisticas/login_instituciones') ?>" class="<?= $clase_sm['estadisticas'] ?>"><i class="fa fa-bar-chart-o"></i><span>estadísticas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url('estadisticas/login_instituciones') ?>" class="<?= $clase_sm['estadisticas'] ?>"><i class="fa fa-chart-line"></i><span>estadísticas</span></a></li> <!-- subitem -->
                 <li>
                     <a href="<?= base_url('lugares/explorar') ?>" class="<?= $clase_sm['ajustes-lugares'] ?>">
-                        <i class="fa fa-map-marker"></i>
+                        <i class="fa fa-map-marker-alt"></i>
                         <span>lugares</span>
                     </a>
                 </li>
@@ -392,18 +392,25 @@
             </a>
         </li>
         
-        <li class="has_submenu visible-xs">
+        <li class="has_submenu d-sm-none d-md-none d-lg-none">
             <a href="#" class="<?= $clase_m['mi_cuenta'] ?>">
                 <i class="fa fa-2x fa-user"></i>
-                <span><?= $this->session->userdata('nombre') ?></span>
+                <span>mi cuenta</span>
             </a>
             <?php if ( $m_current['menu'] == 'mi_cuenta' ){ ?>
                 <span class="gossip"><?= $m_current['submenu_show'] ?></span>
             <?php } ?>
 
             <ul class="sub_nav">
-                <li><a href="<?= base_url() ?>usuarios/contrasena" class="<?= $clase_sm['contrasena'] ?>"><i class="fa fa-lock"></i><span>contraseña</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url() ?>app/logout"><i class="fa fa-sign-out"></i><span>cerrar sesión</span></a></li> <!-- subitem -->
+                <li><a href="<?php echo base_url('usuarios/contrasena') ?>" class="<?= $clase_sm['contrasena'] ?>">
+                    <i class="fa fa-lock"></i><span>contraseña</span></a>
+                </li>
+                <li>
+                    <a href="<?= base_url() ?>app/logout">
+                        <i class="fa fa-sign-out-alt"></i>
+                        <span>salir</span>
+                </a>
+                </li>
             </ul>
         </li>
     </ul>

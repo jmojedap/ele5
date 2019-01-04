@@ -140,7 +140,7 @@
 
         <li class=""> 
             <a href="<?= base_url('instituciones/explorar') ?>" class="<?= $clase_m['institucional'] ?>"> 
-                <i class="fa fa-2x fa-bank"></i> 
+                <i class="fa fa-2x fa-university"></i> 
                 <span>institucional</span> 
             </a>
         </li>
@@ -173,25 +173,25 @@
 
             <ul class="sub_nav">
                 <li>
-                    <a href="<?= base_url('cuestionarios/explorar') ?>" class="<?= $clase_sm['cuestionarios'] ?>">
+                    <a href="<?php echo base_url('cuestionarios/explorar') ?>" class="<?= $clase_sm['cuestionarios'] ?>">
                         <i class="fa fa-book"></i>
                         <span>cuestionarios</span>
                     </a>
                 </li>
-                <li><a href="<?= base_url()?>datos/enunciados" class="<?= $clase_sm['enunciados'] ?>"><i class="fa fa-quote-left"></i><span>enunciados</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url()?>preguntas/explorar" class="<?= $clase_sm['preguntas'] ?>"><i class="fa fa-question"></i><span>preguntas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url('datos/enunciados')?>" class="<?= $clase_sm['enunciados'] ?>"><i class="fa fa-quote-left"></i><span>enunciados</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url('preguntas/explorar')?>" class="<?= $clase_sm['preguntas'] ?>"><i class="fa fa-question"></i><span>preguntas</span></a></li> <!-- subitem -->
             </ul>
 
         </li>
         
         <li class="has_submenu"> 
-            <a href="#" class="<?= $clase_m['panel_control'] ?>"><i class="fa fa-2x fa-sliders"></i><span>ajustes</span></a>
+            <a href="#" class="<?= $clase_m['panel_control'] ?>"><i class="fa fa-2x fa-sliders-h"></i><span>ajustes</span></a>
             <?php if ( $m_current['menu'] == 'panel_control' ){ ?>
                 <span class="gossip"><?= $m_current['submenu_show'] ?></span>
             <?php } ?>
 
             <ul class="sub_nav">
-                <li><a href="<?= base_url()?>estadisticas/login_usuarios" class="<?= $clase_sm['estadisticas'] ?>"><i class="fa fa-bar-chart-o"></i><span>estadísticas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url()?>estadisticas/login_usuarios" class="<?= $clase_sm['estadisticas'] ?>"><i class="fa fa-chart-line"></i><span>estadísticas</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url() ?>datos/ayudas_explorar" class="<?= $clase_sm['ayuda'] ?>"><i class="fa fa-question-circle"></i><span>ayuda</span></a></li>
             </ul>
         </li>

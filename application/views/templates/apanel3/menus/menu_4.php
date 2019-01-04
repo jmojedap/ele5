@@ -91,7 +91,7 @@
 
         <li>
             <a href="<?= base_url() . 'instituciones/grupos' ?>" class="<?= $clase_m['institucional'] ?>">
-                <i class="fa fa-2x fa-bank"></i> <!-- icono -->
+                <i class="fa fa-2x fa-university"></i> <!-- icono -->
                 <span>institución</span> <!-- texto -->
             </a>
         </li>

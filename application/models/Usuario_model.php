@@ -1330,7 +1330,7 @@ class Usuario_model extends CI_Model{
         //$anio_usuario = $this->anio_usuario($usuario_id); //Desactivado 2015-08-20
         
         $this->db->select("flipbook.id AS flipbook_id, nombre_flipbook, flipbook.tipo_flipbook_id, nivel, area_id");
-        $this->db->join('pagina_flipbook', 'flipbook.primera_pagina_id = pagina_flipbook.id', 'left');
+        //$this->db->join('pagina_flipbook', 'flipbook.primera_pagina_id = pagina_flipbook.id', 'left');
         $this->db->where($condicion_profesor);
         $this->db->group_by('flipbook.id, nombre_flipbook, tipo_flipbook_id, nivel, area_id');
         if ( ! is_null($tipos) ) { $this->db->where("tipo_flipbook_id IN ({$tipos})"); }    //2017-01-12

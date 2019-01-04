@@ -95,7 +95,7 @@
 
         <li>
             <a href="<?= base_url() . 'instituciones/grupos' ?>" class="<?= $clase_m['institucional'] ?>">
-                <i class="fa fa-2x fa-bank"></i> <!-- icono -->
+                <i class="fa fa-2x fa-university"></i> <!-- icono -->
                 <span>institución</span> <!-- texto -->
             </a>
         </li>
@@ -128,13 +128,13 @@
         </li>
         
         <li class="has_submenu"> <!-- contenedor item con submenu -->
-            <a href="#" class="<?= $clase_m['panel_control'] ?>"><i class="fa fa-2x fa-dashboard"></i><span>panel de control</span></a>
+            <a href="#" class="<?= $clase_m['panel_control'] ?>"><i class="fa fa-2x fa-sliders-h"></i><span>panel de control</span></a>
             <?php if ( $m_current['menu'] == 'panel_control' ){ ?>
                 <span class="gossip"><?= $m_current['submenu_show'] ?></span>
             <?php } ?>
 
             <ul class="sub_nav"><!-- SUBMENU -->
-                <li><a href="<?= base_url()?>estadisticas/login_usuarios" class="<?= $clase_sm['estadisticas'] ?>"><i class="fa fa-bar-chart-o"></i><span>estadísticas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url()?>estadisticas/login_usuarios" class="<?= $clase_sm['estadisticas'] ?>"><i class="fa fa-chart-line"></i><span>estadísticas</span></a></li> <!-- subitem -->
             </ul>
         </li>
         

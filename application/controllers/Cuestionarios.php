@@ -660,23 +660,43 @@ class Cuestionarios extends CI_Controller{
         
         echo $cant_eliminados;
     }
-    
+
+// ASIGNACIÓN MASIVA DE CUESTIONARIOS A ESTUDIANTES DE GRUPOS
+//-----------------------------------------------------------------------------
+
     /**
-     * Mostrar formulario de cargue de estudiantes mediante archivos de excel.
+     * Mostrar formulario de asignación masiva de cuestionarios mediante archivos de excel.
      * El resultado del formulario se envía a 'cuestionarios/asignar_masivo_e'
      * 
      * @param type $grupo_id
      */
     function asignar_masivo()
     {
-        //Cargando datos básicos (basico)
+        //Iniciales
+            $nombre_archivo = '17_formato_asignacion_cuestionarios.xlsx';
+            $parrafos_ayuda = array(
+                "Si el cuestionario relacionado en la casilla '<b class='text-danger'>ID cuestionario</b>' (columna A) no existe el grupo no será asignado.",
+                "Si el grupo relacionado en la casilla '<b class='text-danger'>ID grupo</b>' (columna B) no existe el grupo no será asignado."
+            );
         
-        $data['titulo_pagina'] = 'Asignar';
-        $data['subtitulo_pagina'] = 'masivamente cuestionarios';
-        $data['vista_a'] = 'cuestionarios/asignar_masivo_v';
-        $data['vista_menu'] = 'cuestionarios/menu_explorar_v';
-        $data['destino_form'] = "cuestionarios/asignar_masivo_e/";
-        $this->load->view(PTL_ADMIN, $data);
+        //Instructivo
+            $data['titulo_ayuda'] = '¿Cómo asignar cuestionarios masivamente?';
+            $data['nota_ayuda'] = 'Se asignarán cuestionarios a estudianes de forma masiva';
+            $data['parrafos_ayuda'] = $parrafos_ayuda;
+        
+        //Variables específicas
+            $data['destino_form'] = 'cuestionarios/asignar_masivo_e';
+            $data['nombre_archivo'] = $nombre_archivo;
+            $data['nombre_hoja'] = 'cuestionarios';
+            $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
+            
+        //Variables generales
+            $data['titulo_pagina'] = 'Cuestionarios';
+            $data['subtitulo_pagina'] = 'Asignar masivamente';
+            $data['vista_a'] = 'comunes/bs4/importar_v';
+            $data['vista_menu'] = 'cuestionarios/explorar/menu_v';
+        
+        $this->load->view(PTL_ADMIN_2, $data);
     }
     
     function asignar_masivo_e()
@@ -1299,11 +1319,11 @@ class Cuestionarios extends CI_Controller{
         //Variables generales
             $data['titulo_pagina'] = 'Cuestionarios';
             $data['subtitulo_pagina'] = 'Importar respuestas';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'cuestionarios/menu_explorar_v';
+            $data['vista_a'] = 'comunes/bs4/importar_v';
+            $data['vista_menu'] = 'cuestionarios/explorar/menu_v';
             $data['ayuda_id'] = 143;
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(PTL_ADMIN_2, $data);
     }
     
     function responder_masivo_e()

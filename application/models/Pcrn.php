@@ -404,7 +404,7 @@ class Pcrn extends CI_Model{
                 $sufijo_periodo =' sem';
             } elseif ($segundos < $segundos_periodo['anio']){
                 $valor_tiempo = $segundos / $segundos_periodo['mes'];
-                $sufijo_periodo = ' mes';
+                $sufijo_periodo = ' meses';
             } else {
                 $valor_tiempo = $segundos / $segundos_periodo['anio'];
                 $sufijo_periodo = ' años';

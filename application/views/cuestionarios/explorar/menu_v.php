@@ -8,7 +8,7 @@
     
     //Atributos de los elementos del menú
         $arr_menus['explorar'] = array(
-            'icono' => '<i class="fa fa-list-alt"></i>',
+            'icono' => '<i class="fa fa-table"></i>',
             'texto' => 'Explorar',
             'link' => "cuestionarios/explorar/",
             'atributos' => ''
@@ -37,8 +37,13 @@
 
     //Elementos de menú para cada rol
         $elementos_rol[0] = array('explorar', 'nuevo', 'asignar_masivo', 'responder_masivo');
-        $elementos_rol[1] = array('explorar', 'importar_asignaciones', 'nuevo');
+        $elementos_rol[1] = array('explorar', 'nuevo', 'asignar_masivo', 'responder_masivo');
         $elementos_rol[2] = array('explorar', 'nuevo');
+        $elementos_rol[3] = array('explorar', 'nuevo');
+        $elementos_rol[4] = array('explorar', 'nuevo');
+        $elementos_rol[5] = array('explorar', 'nuevo');
+        $elementos_rol[7] = array('explorar', 'nuevo');
+        $elementos_rol[8] = array('explorar', 'nuevo');
         
     //Definiendo menú mostrar
         $elementos = $elementos_rol[$this->session->userdata('rol_id')];

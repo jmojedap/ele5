@@ -14,25 +14,25 @@
 
 <?= form_open_multipart($destino_form) ?>
 
-<div class="div2">
+<div class="">
     <div class="row">
 
         <div class="col col-md-7">
             <div class="panel panel-default">
                 <div class="panel-body">      
-                    <div class="div1">
+                    <div class="">
                         <label for="file" class="">Seleccionar archivo</label><br/>
                         <input type="file" class="form-control" name="file" required>
                     </div>
 
-                    <div class="div1">
+                    <div class="">
                         <label for="nombre_hoja" class="label1">Nombre Hoja</label><br/>
                         <span class="descripcion">Digite el nombre de la hoja de cálculo dentro del archivo de excel de donde se tomarán los datos de los cuestionarios</span>
 
                         <?= form_input($att_nombre_hoja) ?>
                     </div>
 
-                    <div class="div1">
+                    <div class="">
                         <input type="submit" class="btn btn-primary" value="Importar">
                     </div>
 
@@ -40,7 +40,7 @@
                     <?php //Mensajes de validación del formulario ?>
 
                     <?php if ( isset($resultado) ):?>
-                        <div class="div1">
+                        <div class="">
                             <?php foreach ($resultado as $mensaje_resultado): ?>
                                 <div class="alert alert-danger">
                                     <?= $mensaje_resultado ?>
