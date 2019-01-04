@@ -98,7 +98,8 @@ define('URL_UPLOADS', 'http://www.plataformaenlinea.com/v3/assets/uploads/');
 define('URL_RECURSOS', 'http://www.plataformaenlinea.com/2017/recursos/');   //URL carpeta contenido
 define('URL_ASSETS', 'http://www.plataformaenlinea.com/2017/assets/');
 define('URL_IMG', 'http://www.plataformaenlinea.com/2017/media/images/');
-define('PTL_ADMIN', 'p_apanel2/plantilla_v');   //Vista plantilla de administración
+define('PTL_ADMIN', 'templates/apanel2/plantilla_v');   //Vista plantilla de administración
+define('PTL_ADMIN_2', 'templates/apanel3/main_v');   //Vista plantilla de administración
 define('VER_LOCAL', FALSE);   //No es una versión local
 define('MAX_REG_EXPORT', 2500);   //Número máximo de registros para exportar en archivo MS-Excel
 define('NOMBRE_APP', 'Plataforma en Línea');   //Nombre de la aplicación
