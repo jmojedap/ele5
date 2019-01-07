@@ -24,4 +24,4 @@
     </h1>
     <?php echo $this->load->view($vista_a) ?>
 </div>
-<footer class="main_footer">En Línea Editores &copy; 2019</footer>
+<footer class="main_footer text-right text-muted">&copy; 2019 - En Línea Editores</footer>
