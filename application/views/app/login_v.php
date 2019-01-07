@@ -40,7 +40,7 @@
     }
 </script>
 
-<div class="login">
+<div class="start_content">
     <form accept-charset="utf-8" id="formulario_login" method="post">
         <div class="form-group">
             <input
@@ -48,7 +48,7 @@
                 name="username"
                 value=""
                 id="username"
-                class="form-control login"
+                class="form-control form-control-lg"
                 required="required"
                 autofocus="1"
                 title="Escriba su nombre de usuario"
@@ -61,14 +61,16 @@
                 name="password"
                 value="" 
                 id="password"
-                class="form-control login"
+                class="form-control form-control-lg"
                 required="required"
                 title="Escriba su contraseña"
                 placeholder="contraseña"
                 >
         </div>
-        <div class="">
-            <input type="submit" value="Ingresar" class="btn btn-success btn-block">
+        <div class="form-group">
+            <button class="btn btn-success btn-block btn-lg" type="submit">
+                Entrar
+            </button>
         </div>
     </form>
 

@@ -62,9 +62,9 @@ class App extends CI_Controller{
         {
             redirect('app/index');
         } else {
-            $data['titulo_pagina'] = NOMBRE_APP;
+            $data['titulo_pagina'] = 'En Línea Editores :: Bienvenidos';
             $data['vista_a'] = 'app/login_v';
-            $this->load->view('templates/apanel2/inicio_v', $data);
+            $this->load->view('templates/apanel3/start_v', $data);
         }
     }
     

@@ -18,7 +18,7 @@
         'name'   => 'email',
         'required'   => TRUE,
         'autofocus'   => TRUE,
-        'class'  => 'form-control',
+        'class'  => 'form-control form-control-lg',
         'pattern'  => '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$',
         'placeholder'   => 'Correo electrónico',
         'title'   => 'Escriba su dirección de correo electrónico'
@@ -26,14 +26,14 @@
     
     $submit = array(
         'value' =>  'Enviar',
-        'class' => 'btn btn-primary btn-block'
+        'class' => 'btn btn-primary btn-block btn-lg'
     );
     
 ?>
 
-<div class="login">
+<div class="start_content">
     <p class="text-center">
-        Ingrese su dirección de <span class="resaltar">correo electrónico</span>, enviaremos un mensaje para restaurar la contraseña de su cuenta de usuario.
+        Escriba su dirección de <span class="">correo electrónico</span>, enviaremos un mensaje para restaurar la contraseña de su cuenta de usuario.
     </p>
 
     <?= form_open($destino_form); ?>

@@ -4,7 +4,7 @@
 
 <html>
 <head>
-    <title>Enlace | Procesando</title>
+    <title>En Línea Editores | Procesando</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <?= "<meta http-equiv='Refresh' content='{$seconds};{$url}'>" ?>
     
