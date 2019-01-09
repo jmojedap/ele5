@@ -70,7 +70,7 @@
                         <!--QUICES-->
                     
                         <a id="btn_listado_quices" href="#listado_quices" data-toggle="collapse" aria-expanded="true" class="btn btn-default btn-block" style="margin-bottom: 5px;">
-                            <img id="mostrar_quices" src="<?php echo URL_IMG ?>flipbook/quices_banner_v4.png">
+                            <img id="mostrar_quices" src="<?php echo URL_RECURSOS . 'imagenes/flipbook/quices_banner_v4.png'; ?>">
                         </a>
 
                         <div id="listado_quices" class="collapse sep2">
@@ -98,7 +98,7 @@
                         <!--ARCHIVOS-->
                     
                         <a id="btn_listado_archivos" href="#listado_archivos" data-toggle="collapse" aria-expanded="true" class="btn btn-default btn-block" style="margin-bottom: 5px;">
-                            <img src="<?php URL_IMG ?>flipbook/archivos_banner_v4.png" title="Archivos complementarios">
+                            <img src="<?php echo URL_RECURSOS ?>imagenes/flipbook/archivos_banner_v4.png" title="Archivos complementarios">
                         </a>
 
                         <div id="listado_archivos" class="collapse sep2">
@@ -156,7 +156,7 @@
                         <?php } ?>
 
                         <?php if ( $elementos_fb['plan_aula'] ){ ?>
-                            <?= anchor("flipbooks/plan_aula/{$row->id}", '<i class="fa fa-book"></i>Planeador de clases', 'class="btn btn-default btn-block" title="Programar temas de contenido" target="_blank"') ?>
+                            <?= anchor("flipbooks/plan_aula/{$row->id}", '<i class="fa fa-book"></i>Plan de aula', 'class="btn btn-default btn-block" title="Programar temas de contenido" target="_blank"') ?>
                         <?php } ?>
                     </div>
 
@@ -186,7 +186,7 @@
                                             $clase_pagina = 'pagina_' . $row_pa->num_pagina;
                                         ?>
                                         <li class="recurso hidden <?= $clase_pagina ?>">
-                                            <?= anchor(RUTA_UPLOADS . $row_pa->ubicacion, '<i class="fa fa-book"></i> Planeador de clases', 'title="Ver plan de aula" target="_blank"') ?>
+                                            <?= anchor(RUTA_UPLOADS . $row_pa->ubicacion, '<i class="fa fa-book"></i> Plan de aula', 'title="Ver plan de aula" target="_blank"') ?>
                                         </li>
                                     <?php endforeach; ?>
                                 <?php } ?>
@@ -204,9 +204,12 @@
 
                                         <ul class="dropdown-menu">
                                             <?php foreach($relacionados[1]->result() as $row_relacionado) : ?>
+                                                <?php
+                                                    $row_tema_rel = $this->Pcrn->registro_id('tema', $row_relacionado->relacionado_id);
+                                                ?>
                                                 <li class="recurso hidden pagina_<?= $row_relacionado->num_pagina ?>">
                                                     <a tabindex="0" href="<?= base_url("temas/leer/{$row_relacionado->relacionado_id}") ?>" target="_blank">
-                                                        <?= $row_relacionado->nombre_tema_relacionado ?>
+                                                        <?= $row_tema_rel->nombre_tema ?>
                                                     </a>
                                                 </li>
                                             <?php endforeach; ?>
@@ -217,9 +220,12 @@
 
                                         <ul class="dropdown-menu">
                                             <?php foreach($relacionados[2]->result() as $row_relacionado) : ?>
+                                                <?php
+                                                    $row_tema_rel = $this->Pcrn->registro_id('tema', $row_relacionado->relacionado_id);
+                                                ?>
                                                 <li class="recurso hidden pagina_<?= $row_relacionado->num_pagina ?>">
                                                     <a tabindex="0" href="<?= base_url("temas/leer/{$row_relacionado->relacionado_id}") ?>" target="_blank">
-                                                        <?= $row_relacionado->nombre_tema_relacionado ?>
+                                                        <?= $row_tema_rel->nombre_tema ?>
                                                     </a>
                                                 </li>
                                             <?php endforeach; ?>
@@ -230,9 +236,12 @@
 
                                         <ul class="dropdown-menu">
                                             <?php foreach($relacionados[3]->result() as $row_relacionado) : ?>
+                                                <?php
+                                                    $row_tema_rel = $this->Pcrn->registro_id('tema', $row_relacionado->relacionado_id);
+                                                ?>
                                                 <li class="recurso hidden pagina_<?= $row_relacionado->num_pagina ?>">
                                                     <a tabindex="0" href="<?= base_url("temas/leer/{$row_relacionado->relacionado_id}") ?>" target="_blank">
-                                                        <?= $row_relacionado->nombre_tema_relacionado ?>
+                                                        <?= $row_tema_rel->nombre_tema ?>
                                                     </a>
                                                 </li>
                                             <?php endforeach; ?>
@@ -253,7 +262,7 @@
                     <?= img($att_img) ?>
                 </div>
                 
-                <div id="indice_flipbook"> 
+                <div id="indice_flipbook">   
                     <div id="titulo_indice">
                         <h3 class="text-center"><?= $titulo_pagina ?></h3>
                     </div>

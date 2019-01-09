@@ -594,6 +594,25 @@ class Flipbooks extends CI_Controller{
 // LECTURA
 //-----------------------------------------------------------------------------
     
+    function abrir($flipbook_id, $num_pagina = NULL)
+    {
+        //Redirigir
+        $this->load->model('Esp');
+        $navegador = $this->Esp->navegador();
+
+        $destino = "flipbooks/leer/{$flipbook_id}/{$num_pagina}";
+        $navegadores_ant = array('Internet Explorer', 'Safari');
+
+        if ( in_array($navegador, $navegadores_ant) )
+        {
+            $destino = "flipbooks/leer_v3/{$flipbook_id}/{$num_pagina}";
+        }
+        //echo $navegador;
+
+        redirect($destino);
+        
+    }
+
     /**
      * Registra el evento de abrir el flipbook y redirige a la lectura
      * 
@@ -611,7 +630,17 @@ class Flipbooks extends CI_Controller{
             }
             
         //Redirigir
-            redirect("flipbooks/leer/{$flipbook_id}/{$num_pagina}");
+            $this->load->model('Esp');
+            $navegador = $this->Esp->navegador();
+            $navegadores_ant = array('Internet Explorer', 'Safari');
+
+            $destino = "flipbooks/leer/{$flipbook_id}/{$num_pagina}";
+            if ( in_array($navegador, $navegadores_ant) )
+            {
+                $destino = "flipbooks/leer_v3/{$flipbook_id}/{$num_pagina}";
+            }
+
+            redirect($destino);
     }
     
     /**
@@ -620,10 +649,9 @@ class Flipbooks extends CI_Controller{
      * @param type $flipbook_id
      * @param type $num_pagina
      */
-    function z_leer($flipbook_id, $num_pagina = NULL)
+    function leer_v3($flipbook_id, $num_pagina = NULL)
     {
         if ( $this->input->get('profiler') == 1 ) { $this->output->enable_profiler(TRUE); }
-        
         
         //Datos básicos
             $data = $this->Flipbook_model->basico($flipbook_id);
@@ -649,7 +677,7 @@ class Flipbooks extends CI_Controller{
         //Cargar vista
             $vista = 'app/no_permitido_v';
             $visible = $this->Flipbook_model->visible($flipbook_id);
-            if ( $visible ) { $vista = 'flipbooks/leer/leer_v'; }
+            if ( $visible ) { $vista = 'flipbooks/leer_v3/leer_v'; }
             
             $this->load->view($vista, $data);       
     }

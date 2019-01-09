@@ -19,7 +19,7 @@
         $arr_menus['explorar'] = array(
             'icono' => '<i class="fa fa-list-alt"></i>',
             'texto' => '',
-            'link' => "cuestionarios/explorar/todos",
+            'link' => "cuestionarios/explorar/",
             'atributos' => 'title="Ir a lista de cuestionarios"'
         );
             

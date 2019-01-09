@@ -5,6 +5,6 @@
 ?>
 <!DOCTYPE html>
 <html>
-    <?php $this->load->view('flipbooks/leer/head_v'); ?>
-    <?php $this->load->view('flipbooks/leer/body_v') ?>
+    <?php $this->load->view('flipbooks/leer_v3/head_v'); ?>
+    <?php $this->load->view('flipbooks/leer_v3/body_v') ?>
 </html>

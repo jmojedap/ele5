@@ -219,7 +219,7 @@
                     </td>
                     
                     <td class="<?= $clases_col['leer'] ?>">
-                        <?php echo anchor("flipbooks/leer/{$row_resultado->id}", '<i class="fa fa-book"></i>', 'class="btn btn-info btn-sm" title="Leer" target="_blank"') ?>
+                        <?php echo anchor("flipbooks/abrir/{$row_resultado->id}", '<i class="fa fa-book"></i>', 'class="btn btn-info btn-sm" title="Leer" target="_blank"') ?>
                     </td>
                     
                     <td class="<?= $clases_col['area'] ?>">

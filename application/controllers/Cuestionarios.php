@@ -289,7 +289,6 @@ class Cuestionarios extends CI_Controller{
      */
     function grupos($cuestionario_id, $institucion_id = NULL, $grupo_id = NULL)
     {
-        //$this->output->enable_profiler(TRUE);
         //Cargando datos básicos (Cuestionario_model->basico)
             $data = $this->Cuestionario_model->basico($cuestionario_id);
         
@@ -747,12 +746,18 @@ class Cuestionarios extends CI_Controller{
      */
     function preliminar($uc_id, $origen = 'bibloteca')
     {
+        
+
         $permiso_uc = $this->Cuestionario_model->permiso_uc($uc_id);
         
         if ( $permiso_uc )
         {
             //Variable inicial
                 $data = $this->Cuestionario_model->basico_uc($uc_id);
+
+            //Identificar navegador para compatibilidad
+                $this->load->model('Esp');
+                $data['navegador'] = $this->Esp->navegador();
 
             //Variables específicas
                 $data['origen'] = $origen;

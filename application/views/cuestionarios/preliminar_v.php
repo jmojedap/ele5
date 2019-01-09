@@ -26,6 +26,16 @@
         } else {
             $mensajes[] = "La fecha máxima para resolver el cuestionario ya pasó: <b> {$fecha_fin} </b>";
         }
+
+        $navegadores_no = array('Internet Explorer', 'Safari');
+        if ( ! in_array($navegador, $navegadores_no) )
+        {
+            $condiciones++;
+        } else {
+            $mensajes[] = 'El navegador <b>' . $navegador . '</b> no es compatible con la herramienta para resolver cuestionarios. ';
+            $mensajes[] = 'Le sugerimos utilizar otro navegador como Mozilla Firefox, Google Chrome o Microsoft Edge.';
+        }
+
 ?>
 
 <script>
@@ -78,7 +88,7 @@
     </div>
 <?php endforeach; ?>
 
-<?php if ( $condiciones == 2 ) { ?>
+<?php if ( $condiciones == 3 ) { ?>
     <div class="jumbotron" id="preliminar">
         <h1>Estamos listos</h1>
         <p>

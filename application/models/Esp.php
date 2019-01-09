@@ -433,4 +433,30 @@ class Esp extends CI_Model {
         return $email_valido;
     }
 
+    //String con el nombre del navegador
+    function navegador()
+    {
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $navegador = 'NA';
+        
+        if(strpos($user_agent, 'MSIE') !== FALSE)
+            $navegador = 'Internet Explorer';
+        elseif(strpos($user_agent, 'Edge') !== FALSE) //Microsoft Edge
+        $navegador = 'Microsoft Edge';
+        elseif(strpos($user_agent, 'Trident') !== FALSE) //IE 11
+            $navegador = 'Internet Explorer';
+        elseif(strpos($user_agent, 'Opera Mini') !== FALSE)
+            $navegador = "Opera Mini";
+        elseif(strpos($user_agent, 'Opera') || strpos($user_agent, 'OPR') !== FALSE)
+            $navegador = "Opera";
+        elseif(strpos($user_agent, 'Firefox') !== FALSE)
+            $navegador = 'Mozilla Firefox';
+        elseif(strpos($user_agent, 'Chrome') !== FALSE)
+            $navegador = 'Google Chrome';
+        elseif(strpos($user_agent, 'Safari') !== FALSE)
+            $navegador = "Safari";
+
+        return $navegador;
+    }
+
 }
