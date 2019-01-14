@@ -174,7 +174,7 @@ class Institucion_model extends CI_Model{
         //Predeterminados registro nuevo
             $registro['rol_id'] = 6;    //Estudiante
             $registro['cpw'] = 1;   //Nueva encriptación de contraseña
-            $registro['activo'] = 1;
+            $registro['estado'] = 1;    //Mod. 2019-01-14
             $registro['institucion_id'] = $institucion_id;
             $registro['creado'] = date('Y-m-d h:i:s');
             $registro['editado'] = date('Y-m-d h:i:s');
@@ -252,7 +252,7 @@ class Institucion_model extends CI_Model{
             
         //Predeterminados registro nuevo
             $registro['cpw'] = 1;   //Nueva encriptación de contraseña
-            $registro['activo'] = 1;
+            $registro['estado'] = 1;    //Mod. 2019-01-14
             $registro['institucion_id'] = $institucion_id;
             $registro['creado'] = date('Y-m-d h:i:s');
             $registro['editado'] = date('Y-m-d h:i:s');
