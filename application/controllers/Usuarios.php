@@ -222,6 +222,8 @@ class Usuarios extends CI_Controller{
      */
     function importar_estudiantes()
     {
+        set_time_limit(120);    //120 segundos, 2 minutos para cargar
+        
         //Iniciales
             $nombre_archivo = '30_formato_cargue_estudiantes_general.xlsx';
             $parrafos_ayuda = array(
