@@ -744,7 +744,7 @@ class Usuarios extends CI_Controller{
      * Función requerida si el usuario tiene como contraseña la contraseña
      * establecida por defecto
      */
-    function cambiar_dpw()
+    function cambio_dpw()
     {
         $data = $this->Usuario_model->basico($this->session->userdata('usuario_id'));
         
@@ -754,15 +754,16 @@ class Usuarios extends CI_Controller{
         
         //Solicitar vista
             $data['titulo_pagina'] = 'Cambio de contraseña';
-            $data['vista_a'] = 'usuarios/cambiar_dpw_v';
-            $this->load->view('p_apanel2/plantilla_vacia_v', $data);
+            $data['vista_a'] = 'usuarios/cambio_dpw_v';
+            $this->load->view('templates/apanel3/start_v', $data);
     }
     
     /**
-     * Cambiar Default PassWord Ejecutar
-     * Ejecuta el proceso de cambio de contraseña por defecto
+     * AJAX JSON
+     * Ejecuta el proceso de cambio de contraseña por defecto, recibe los datos enviados por
+     * AJAX POST desde usuarios/cambio_dpw
      */
-    function cambiar_dpw_e()
+    function cambiar_dpw()
     {
         
         $this->load->model('Esp');
@@ -771,24 +772,22 @@ class Usuarios extends CI_Controller{
         $row_usuario = $this->Pcrn->registro_id('usuario', $this->session->userdata('usuario_id'));
         
         //Valores iniciales para el resultado del proceso
-            $resultado['mensaje'] = '';
-            $resultado['clase'] = 'alert-info';
+            $resultado['ejecutado'] = 0;
+            $resultado['mensajes'] = array();
             
         //Verificar que la contraseña nueva no sea la contraseña por defecto
             $dpw = $this->App_model->valor_opcion(10);
             if ( $this->input->post('password') != $dpw ) {
                 $condiciones++;
             } else {
-                $resultado['mensaje'] .= 'La contraseña nueva no puede ser igual a la contraseña por defecto. ';
-                $resultado['clase'] = 'alert-danger';
+                $resultado['mensajes'][] .= 'La contraseña nueva no puede ser igual a la contraseña por defecto. ';
             }
         
         //Verificar que contraseña nueva coincida con la confirmación
             if ( $this->input->post('password') == $this->input->post('passconf') ) {
                 $condiciones++;
             } else {
-                $resultado['mensaje'] .= 'La contraseña de confirmación no coincide.';
-                $resultado['clase'] = 'alert-danger';
+                $resultado['mensajes'][] .= 'La contraseña de confirmación no coincide.';
             }
         
         //Verificar condiciones necesarias
@@ -797,14 +796,15 @@ class Usuarios extends CI_Controller{
                 $this->Usuario_model->cambiar_contrasena($row_usuario->id, $this->input->post('password'));
                 $this->Usuario_model->marcar_pagado($row_usuario->id);  //2016-11-19, Al cambiar contraseña se considera que ya pagó
 
-                $resultado['clase'] = 'alert-success';
-                $resultado['mensaje'] = 'La contraseña se cambió exitosamente.';
+                $resultado['ejecutado'] = 1;
+                $resultado['mensajes'] = array('La contraseña se cambió exitosamente.');
                 
                 $destino = 'app/index';
             }
         
-        $this->session->set_flashdata('resultado', $resultado);
-        redirect($destino);
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($resultado));
         
     }
     

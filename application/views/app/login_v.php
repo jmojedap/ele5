@@ -18,9 +18,10 @@
             url: base_url + 'app/validar_login',
             data: $('#formulario_login').serialize(),
             success: function(response){
+                console.log(response);
                 //console.log(response.mensajes);
                 if ( response.ejecutado ) {
-                    window.location = base_url + 'app/index/';
+                    window.location = base_url + 'app/index/?dpw=' + response.tiene_dpw;
                 } else {
                     mostrar_mensajes(response.mensajes);
                 }

@@ -44,7 +44,7 @@ class App extends CI_Controller{
                 if ( $row_usuario->iniciado == 0 && $row_usuario->rol_id == 6 ) { $destino = "usuarios/editarme/edit/{$row_usuario->id}"; }
                 
             //Verificar que no tenga contraseña por defecto, o se redirige a formulairo de cambio de contraseña
-                if ( $this->input->get('dpw') == 1 ) { $destino = 'usuarios/cambiar_dpw'; }
+                if ( $this->input->get('dpw') == 1 ) { $destino = 'usuarios/cambio_dpw'; }
             
             redirect($destino);
             
@@ -83,7 +83,16 @@ class App extends CI_Controller{
             if ( $resultado['ejecutado'] )
             {
                 $this->Login_model->crear_sesion($userlogin, TRUE);
+
+                //Verificar si tiene contraseña por defecto
+                $default_password = $this->App_model->valor_opcion(10);
+                $resultado['tiene_dpw'] = 0;
+                if ( $password == $default_password  )
+                {
+                    $resultado['tiene_dpw'] = 1;
+                }
             }
+
             
         //Salida
             $this->output
