@@ -607,7 +607,6 @@ class Flipbooks extends CI_Controller{
         {
             $destino = "flipbooks/leer_v3/{$flipbook_id}/{$num_pagina}";
         }
-        //echo $navegador;
 
         redirect($destino);
         
@@ -717,9 +716,35 @@ class Flipbooks extends CI_Controller{
         echo $respuesta;
     }
     
-// NUEVAS HERRAMIENTAS PARA LLER
+// NUEVAS HERRAMIENTAS PARA LEER
 //-----------------------------------------------------------------------------
     
+    /**
+     * Mostrar el flipbook para leer, vista completa para estudiantes
+     * 2018-10-23
+     * 
+     * @param type $flipbook_id
+     * @param type $num_pagina
+     */
+    function leer($flipbook_id, $num_pagina = 0)
+    {
+        if ( $this->input->get('profiler') == 1 ) { $this->output->enable_profiler(TRUE); }
+        
+        //Datos básicos
+            $data = $this->Flipbook_model->basico($flipbook_id);
+            
+        //Datos referencia
+            $data['bookmark'] = $this->Flipbook_model->bookmark($flipbook_id);
+            $data['num_pagina'] = $this->Pcrn->si_nulo($num_pagina, $data['bookmark']);
+            $data['carpeta_uploads'] = URL_UPLOADS;
+            $data['carpeta_iconos'] = URL_IMG . 'flipbook/';
+            $data['colores'] = $this->App_model->arr_color_area();
+            $data['elementos_fb'] = $this->Flipbook_model->elementos_fb($data['row']);
+            
+        //Cargar vista
+        $this->load->view('flipbooks/leer/leer_v', $data);
+    }
+
     /**
      * String JSON para construir el flipbook para leer, vista completa para 
      * estudiantes y profesores. 1) Verifica si el archivo JSON del flipbook
@@ -730,8 +755,8 @@ class Flipbooks extends CI_Controller{
     function data($flipbook_id)
     {
         $ruta_archivo = $this->Flipbook_model->ruta_json($flipbook_id);
-        
-        if (file_exists($ruta_archivo) )
+
+        if ( file_exists($ruta_archivo) )
         {
             //El archivo JSON ya existe, se lee
             $data_str = file_get_contents($ruta_archivo);
@@ -759,32 +784,6 @@ class Flipbooks extends CI_Controller{
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($data));   
-    }
-    
-    /**
-     * Mostrar el flipbook para leer, vista completa para estudiantes
-     * 2018-10-23
-     * 
-     * @param type $flipbook_id
-     * @param type $num_pagina
-     */
-    function leer($flipbook_id, $num_pagina = 0)
-    {
-        if ( $this->input->get('profiler') == 1 ) { $this->output->enable_profiler(TRUE); }
-        
-        //Datos básicos
-            $data = $this->Flipbook_model->basico($flipbook_id);
-            
-        //Datos referencia
-            $data['bookmark'] = $this->Flipbook_model->bookmark($flipbook_id);
-            $data['num_pagina'] = $this->Pcrn->si_nulo($num_pagina, $data['bookmark']);
-            $data['carpeta_uploads'] = URL_UPLOADS;
-            $data['carpeta_iconos'] = URL_IMG . 'flipbook/';
-            $data['colores'] = $this->App_model->arr_color_area();
-            $data['elementos_fb'] = $this->Flipbook_model->elementos_fb($data['row']);
-            
-        //Cargar vista
-        $this->load->view('flipbooks/leer/leer_v', $data);
     }
     
     /**

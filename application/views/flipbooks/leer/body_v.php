@@ -207,6 +207,8 @@
                 
                 <!-- IMAGEN PÁGINA E ÍNDICE -->
                 <div class="col col-md-7 seccion_pagina">
+
+                    
                     <div class="text-center" v-show="!ver_indice">
                         <img
                             id="img_pagina"
@@ -216,7 +218,8 @@
                             v-bind:src="carpeta_uploads + 'pf_zoom/' + pagina.archivo_imagen"
                         >
                     </div>
-                    
+
+                    <!-- ÍNDICE -->
                     <div id="indice_flipbook" v-show="ver_indice"> 
                         <div id="titulo_indice">
                             <h3 class="text-center"><?php echo $titulo_pagina ?></h3>
@@ -224,12 +227,12 @@
 
                         <div id="elementos_indice">
                             <div class="row">    
-                                <div class="col-md-6" v-for="pagina in data.paginas">
+                                <div class="col-md-6" v-for="pagina in data.indice">
                                     <a 
                                         class="link_indice pull-left"
                                         v-on:click="ir_a_pagina(pagina.num_pagina)"
                                        >
-                                        <span class="etiqueta nivel w1">{{ parseInt(pagina.num_pagina) + 1 }}</span>
+                                        <span class="badge badge-primary">{{ parseInt(pagina.num_pagina) + 1 }}</span>
                                         <span class="a5_no">{{ pagina.nombre_tema }}</span>
                                     </a>    
                                 </div>

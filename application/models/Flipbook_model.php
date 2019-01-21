@@ -374,14 +374,16 @@ class Flipbook_model extends CI_Model {
      * @param type $flipbook_id
      * @return string
      */
-    function ruta_json($flipbook_id) {
+    function ruta_json($flipbook_id) 
+    {
         $nombre_archivo = str_pad($flipbook_id, 5, '0', STR_PAD_LEFT) . '.json';
         $ruta_archivo = RUTA_CONTENT . 'flipbooks_json/' . $nombre_archivo;
 
         return $ruta_archivo;
     }
 
-    function crear_json($flipbook_id) {
+    function crear_json($flipbook_id) 
+    {
         //El archivo JSON del flipbook no existe, se crea.
         //Datos básicos
         $data = $this->basico($flipbook_id);
@@ -389,6 +391,7 @@ class Flipbook_model extends CI_Model {
 
         //Variables 
         $data['paginas'] = $this->paginas($flipbook_id)->result();
+        $data['indice'] = $this->indice($flipbook_id);
         $data['archivos'] = $this->archivos($flipbook_id)->result();
         $data['audios'] = $this->archivos($flipbook_id, 621)->result();
         $data['animaciones'] = $this->archivos($flipbook_id, 619)->result();
@@ -403,7 +406,8 @@ class Flipbook_model extends CI_Model {
         return $data_str;
     }
 
-    function paginas($flipbook_id) {
+    function paginas($flipbook_id)
+    {
         $this->db->select('pagina_id, num_pagina, tema_id, archivo_imagen, nombre_tema, titulo_tema');
         $this->db->select('archivo_imagen');
         $this->db->join('pagina_flipbook', 'flipbook_contenido.pagina_id = pagina_flipbook.id');
@@ -415,13 +419,38 @@ class Flipbook_model extends CI_Model {
         return $paginas;
     }
 
+    function indice($flipbook_id)
+    {
+        $indice = array();
+        $paginas = $this->paginas($flipbook_id);
+        $tema_id = 0;
+
+        foreach ( $paginas->result() as $row_pagina )
+        {
+            if ( $tema_id != $row_pagina->tema_id )
+            {
+                $elemento['num_pagina'] = $row_pagina->num_pagina;
+                $elemento['tema_id'] = $row_pagina->tema_id;
+                $elemento['nombre_tema'] = $row_pagina->nombre_tema;
+                
+                $indice[] = $elemento;
+            }
+
+            $tema_id = $row_pagina->tema_id;    //Tema para comparar en siguiente página
+
+        }
+
+        return $indice;
+    }
+
     /**
      * Query con archivos asociados a un flipbook, filtratos por tipo
      * @param type $flipbook_id
      * @param type $tipo_archivo_id (Agregado 2018-10-09)
      * @return type
      */
-    function archivos($flipbook_id, $tipo_archivo_id = NULL) {
+    function archivos($flipbook_id, $tipo_archivo_id = NULL)
+    {
         $this->db->select('recurso.id AS archivo_id, nombre_archivo, slug AS tipo_archivo, CONCAT( (slug), (".png")) AS icono, CONCAT( (slug), ("/"),(nombre_archivo)) AS ubicacion, num_pagina');
         $this->db->join('pagina_flipbook', 'recurso.tema_id = pagina_flipbook.tema_id');
         $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
@@ -443,7 +472,8 @@ class Flipbook_model extends CI_Model {
         return $archivos;
     }
 
-    function links($flipbook_id) {
+    function links($flipbook_id)
+    {
         $this->db->select('url, num_pagina');
         $this->db->join('pagina_flipbook', 'recurso.tema_id = pagina_flipbook.tema_id');
         $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
@@ -462,7 +492,8 @@ class Flipbook_model extends CI_Model {
      * @param type $flipbook_id
      * @return type
      */
-    function quices_total($flipbook_id) {
+    function quices_total($flipbook_id)
+    {
         $arr_quices = array();
         $temas = $this->temas($flipbook_id);
         $str_temas = $this->Pcrn->query_to_str($temas, 'tema_id', ',');
