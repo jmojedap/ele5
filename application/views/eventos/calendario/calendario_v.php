@@ -83,7 +83,7 @@
                 <?php endforeach ?>
                 
                 //Eventos, programación de cuestionarios
-                <?php foreach ($eventos[22]->result() as $row_evento) : ?>
+                <?php foreach ($eventos[1]->result() as $row_evento) : ?>
                 <?php
                     $row_uc = $this->Pcrn->registro('usuario_cuestionario', "cg_id = {$row_evento->id} AND usuario_id = {$this->session->userdata('usuario_id')}");
                 ?>

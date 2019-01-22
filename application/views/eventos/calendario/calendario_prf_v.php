@@ -87,15 +87,15 @@
             eventLimit: true, // allow "more" link when too many events
             events: [
                 //Eventos, programación de cuestionarios
-                <?php foreach ($eventos[1]->result() as $row_evento) : ?>
+                <?php foreach ($eventos[22]->result() as $row_evento) : ?>
                     <?php
-                        $url = base_url() . "cuestionarios/grupos/{$row_evento->referente_2_id}/{$row_evento->institucion_id}/{$row_evento->grupo_id}";
-                        $nombre_cuestionario = $this->App_model->nombre_cuestionario($row_evento->referente_2_id);
+                        $url = base_url("cuestionarios/grupos/{$row_evento->referente_id}/{$row_evento->institucion_id}/{$row_evento->grupo_id}");
+                        $nombre_cuestionario = $this->Pcrn->campo_id('cuestionario', $row_evento->referente_id, 'nombre_cuestionario');
                         $color = $colores_evento[1];
                     ?>
                     {
-                        id: <?= $row_evento->referente_2_id ?>,
-                        title: "Cuestionario: <?= $nombre_cuestionario ?>",
+                        id: <?php echo $row_evento->referente_id ?>,
+                        title: "Cuestionario: <?php echo $nombre_cuestionario ?>",
                         start: '<?= $row_evento->fecha_inicio ?>',
                         end: '<?= $this->Pcrn->suma_fecha($row_evento->fecha_fin) ?>',
                         url: '<?= $url ?>',

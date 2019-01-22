@@ -853,6 +853,7 @@ class Cuestionario_model extends CI_Model
         $row_asignacion = $this->Pcrn->registro_id('evento', $cg_id);
         
         $resultado['insertados'] = '';
+        $resultado['institucion_id'] = $row_asignacion->institucion_id;
         
         //Creando registro
             //Variables comunes
@@ -872,13 +873,15 @@ class Cuestionario_model extends CI_Model
         //Se carga la lista de estudiantes que pertenecen un grupo
             $this->load->model('Grupo_model');
             $estudiantes = $this->Grupo_model->estudiantes($row_asignacion->grupo_id, 'iniciado = 1');
-        
+
             foreach ($estudiantes->result() as $row_estudiante)
             {
-                $registro['usuario_id'] = $row_estudiante->id;
-                $resultado['insertados'] .= $this->agregar_uc($registro) . '-';
-                $resultado['institucion_id'] = $row_asignacion->institucion_id;
-            }
+                if ( $this->input->post($row_estudiante->id) )
+                {
+                    $registro['usuario_id'] = $row_estudiante->id;
+                    $resultado['insertados'] .= $this->agregar_uc($registro) . '-';
+                }
+            }            
             
         return $resultado;
         
