@@ -93,7 +93,7 @@
 
                             <?php if ( $row_archivo->tipo_archivo == 'audios' ){ ?>
                                 <?php $datos_archivo['row_archivo'] = $row_archivo ?>
-                                <?php $this->load->view('flipbooks/leer/audio_v', $datos_archivo); ?>
+                                <?php $this->load->view('flipbooks/leer_v3/audio_v', $datos_archivo); ?>
 
                             <?php } elseif ( $row_archivo->tipo_archivo == 'animaciones' ) { ?>
 

@@ -30,7 +30,7 @@
     <script src="<?php echo URL_RECURSOS ?>js/jquery.ui.touch-punch.min.js"></script>
     
 
-    <script type="text/javascript" src="<?= base_url('js/pcrn.js') ?>"></script> <!--Funciones especiales-->
+    <script type="text/javascript" src="<?php echo URL_RECURSOS . 'js/pcrn.js' ?>"></script> <!--Funciones especiales-->
 
     <?php
         //Seguimiento google analytics
