@@ -646,7 +646,7 @@ class Evento_Model extends CI_Model{
         
         $this->db->select('nombre_evento, fecha_inicio, fecha_fin, referente_2_id, institucion_id, grupo_id');
         $this->db->where('c_usuario_id', $this->session->userdata('usuario_id'));
-        $this->db->where('tipo_id', 1); //Tipo 1 => asignación de cuestionario
+        $this->db->where('tipo_id', 22); //Tipo 2 => asignación de cuestionario a grupo
         $this->db->group_by('nombre_evento, fecha_inicio, fecha_fin, referente_2_id, institucion_id, grupo_id');
         $query = $this->db->get('evento');
         

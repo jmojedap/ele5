@@ -53,10 +53,13 @@
     );
     
     $tiempo_minutos = array(
+        'type' => 'number',
         'name' => 'tiempo_minutos',
         'class' =>  'form-control',
         'value' => $row->tiempo_minutos,
-        'required' => TRUE
+        'required' => TRUE,
+        'min' => '10',
+        'title' => 'El tiempo mínimo es de 10 minutos'
     );
     
     $submit = array(
@@ -68,12 +71,13 @@
 
 <script>
     //Variables
-    var base_url = '<?= base_url() ?>cuestionarios/asignar/<?= $row->id ?>/';
+    var base_url = '<?php echo base_url() ?>';
     var grupo_id = 0;
-</script>
-    
+    var cuestionario_id = '<?php echo $row->id ?>';
 
-<script>
+// Document Ready
+//-----------------------------------------------------------------------------
+
     $(document).ready(function(){
         $('#todos').change(function(){
             if( $(this).is(":checked") ) {
@@ -100,118 +104,145 @@
         
         $('#grupo_id').change(function(){
             grupo_id = $(this).val();
-            window.location = base_url + grupo_id;
+            window.location = base_url + 'cuestionarios/asignar/' + cuestionario_id + '/' + grupo_id;
+        });
+
+        $('#formulario_asignar').submit(function(){
+            console.log('Enviando formulario de asignación');
+            asignar();
+            return false;
         });
         
     });
+
+// Funciones
+//-----------------------------------------------------------------------------
+function asignar(){
+    $.ajax({        
+        type: 'POST',
+        url: base_url + 'cuestionarios/asignar_e/' + cuestionario_id,
+        data: $('#formulario_asignar').serialize(),
+        success: function(response){
+            console.log(response.mensaje);
+        }
+    });
+}
+
 </script>
 
-<?= form_open($destino_form, $att_form) ?>
+<form accept-charset="utf-8" method="POST" id="formulario_asignar">
 
-<div class="row">
-    <div class="col col-md-4" style="min-height: 600px;">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <p class="p1">
-                    En esta sección puede asignar o editar la asignación de los estudiantes de un grupo al cuestionario
-                    <span class="resaltar"><?= $row->nombre_cuestionario ?></span>.
-                    Si un estudiante ya ha sido agregado previamente al cuestionario no se asignará de nuevo pero se modificarán la fecha
-                    inicial y final, y el tiempo para responder.
-                </p>
+
+    <div class="row">
+        <div class="col col-md-4" style="min-height: 600px;">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <p class="p1">
+                        En esta sección puede asignar o editar la asignación de los estudiantes de un grupo al cuestionario
+                        <span class="resaltar"><?= $row->nombre_cuestionario ?></span>.
+                        Si un estudiante ya ha sido agregado previamente al cuestionario no se asignará de nuevo pero se modificarán la fecha
+                        inicial y final, y el tiempo para responder.
+                    </p>
+                    
+                    <hr/>
+
+                    <?php if ( $grupo_id > 0 ) { ?>
+                        <div class="sep1">
+                            <button class="btn btn-success btn-block" type="submit">Asignar</button>
+                        </div>
+                    <?php } ?>
+
                 
-                <hr/>
-            
-                <div class="sep1">
-                    <label for="grupo_id" class="label1">Grupo</label><br/>
-                    <?=  form_dropdown('grupo_id', $opciones_grupos, $grupo_id, 'id="grupo_id" class="form-control chosen-select"') ?><br/>
+                    <div class="sep1">
+                        <label for="grupo_id" class="label1">Grupo</label><br/>
+                        <?=  form_dropdown('grupo_id', $opciones_grupos, $grupo_id, 'id="grupo_id" class="form-control chosen-select"') ?><br/>
+                    </div>
+                
+                    <?php if ( $grupo_id > 0 ){ ?>
+                        <div class="sep1">
+                            <label for="tiempo_minutos" class="label1">Tiempo en minutos</label>
+                            <p class="descripcion">Tiempo en minutos para que el estudiante resuelva el cuestionario. Mínimo 10 minutos.</p>
+                            <?=  form_input($tiempo_minutos) ?>
+                        </div>
+
+                        <div class="sep1">
+                            <label for="fecha_inicio" class="label1">Periodo para responder</label>
+                            <p class="descripcion">Fechas entre las cuales los estudiantes pueden responder el cuestionario</p>
+                            
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <?php echo form_input($fecha_inicio) ?>
+                                </div>
+                                <div class="col-md-6">
+                                    <?php echo form_input($fecha_fin) ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
+                
+                
+                    <?php if ( validation_errors() ):?>
+                        <div class="sep1">
+                            <?= validation_errors('<div class="alert alert-danger">', '</div>') ?>
+                        </div>
+                    <?php endif ?>
+
+                    <?php if ( $this->session->flashdata('resultado') != NULL ):?>
+                        <?php $resultado = $this->session->flashdata('resultado') ?>
+                        <div class="sep1">
+                            <div class="alert alert-success">Se insertaron <?= $resultado['num_insertados'] ?> registros nuevos</div>
+                        </div>
+                    <?php endif ?>
                 </div>
-            
-                <?php if ( $grupo_id > 0 ){ ?>
-                    <div class="sep1">
-                        <label for="tiempo_minutos" class="label1">Tiempo en minutos</label>
-                        <p class="descripcion">Tiempo en minutos para que el estudiante resuelva el cuestionario. Mínimo 10 minutos.</p>
-                        <?=  form_input($tiempo_minutos) ?>
-                    </div>
-
-                    <div class="sep1">
-                        <label for="fecha_inicio" class="label1">Fecha inicio</label>
-                        <p class="descripcion">Fecha desde la cual los estudiantes pueden responder el cuestionario</p>
-                        <?=  form_input($fecha_inicio) ?>
-                    </div>
-
-
-
-                    <div class="sep1">
-                        <label for="fecha_fin" class="label1">Fecha fin</label>
-                        <p class="descripcion">Fecha hasta la cual los estudiantes pueden responder el cuestionario</p>
-                        <?=  form_input($fecha_fin) ?>
-                    </div>
-
-                    <div class="sep1">
-                        <?= form_submit($submit) ?>        
-                    </div>
-                <?php } ?>
-            
-            
-                <?php if ( validation_errors() ):?>
-                    <div class="sep1">
-                        <?= validation_errors('<div class="alert alert-danger">', '</div>') ?>
-                    </div>
-                <?php endif ?>
-
-                <?php if ( $this->session->flashdata('resultado') != NULL ):?>
-                    <?php $resultado = $this->session->flashdata('resultado') ?>
-                    <div class="sep1">
-                        <div class="alert alert-success">Se insertaron <?= $resultado['num_insertados'] ?> registros nuevos</div>
-                    </div>
-                <?php endif ?>
             </div>
         </div>
-    </div>
-    
-    <div class="col col-md-8">
-        <table class="table bg-blanco" cellspacing="0">
-            <thead>
-                <tr>
-                    <th width="10px"><?= form_checkbox($att_check_todos); ?></th>
-                    <th>Nombre estudiante</th>
-                    <th>Desde</th>
-                    <th>Hasta</th>
-                    <th>Minutos</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($estudiantes->result() as $row_estudiante): ?>
-                    <?php
-                        $clase_fila = 'info';
-                    
-                        //Registro asignación
-                            $condicion = "usuario_id = {$row_estudiante->id} AND cuestionario_id = {$row->id}";
-                            $row_uc = $this->Pcrn->registro('usuario_cuestionario', $condicion);
-                        
-                        //Checkbox
-                            $att_check['name'] = $row_estudiante->id;
-                            $att_check['class'] = 'check_registro';
-                            $att_check['value'] = 1;
-                            $att_check['checked'] = FALSE;
-                            
-                        if ( is_null($row_uc) ) {
-                            $att_check['checked'] = TRUE;
-                            $clase_fila = '';
-                        }
-                        
-                    ?>
-                    <tr class="<?= $clase_fila ?>">
-                        <td><?= form_checkbox($att_check) ?></td>
-                        <td><?= $this->App_model->nombre_usuario($row_estudiante->id, 3) ?></td>
-                        <td><?= $this->Pcrn->fecha_formato($row_uc->fecha_inicio, 'Y-m-d') ?></td>
-                        <td><?= $this->Pcrn->fecha_formato($row_uc->fecha_fin, 'Y-m-d') ?></td>
-                        <td><?= $row_uc->tiempo_minutos ?></td>
+        
+        <div class="col col-md-8">
+            <table class="table bg-blanco" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th width="10px"><?= form_checkbox($att_check_todos); ?></th>
+                        <th>Nombre estudiante</th>
+                        <th>Desde</th>
+                        <th>Hasta</th>
+                        <th>Minutos</th>
                     </tr>
-                <?php endforeach ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($estudiantes->result() as $row_estudiante): ?>
+                        <?php
+                            $clase_fila = 'info';
+                        
+                            //Registro asignación
+                                $condicion = "usuario_id = {$row_estudiante->id} AND cuestionario_id = {$row->id}";
+                                $row_uc = $this->Pcrn->registro('usuario_cuestionario', $condicion);
+                            
+                            //Checkbox
+                                $att_check['name'] = $row_estudiante->id;
+                                $att_check['class'] = 'check_registro';
+                                $att_check['value'] = 1;
+                                $att_check['checked'] = FALSE;
+                                
+                            if ( is_null($row_uc) ) {
+                                $att_check['checked'] = TRUE;
+                                $clase_fila = '';
+                            }
+                            
+                        ?>
+                        <tr class="<?= $clase_fila ?>">
+                            <td><?= form_checkbox($att_check) ?></td>
+                            <td><?= $this->App_model->nombre_usuario($row_estudiante->id, 3) ?></td>
+                            <td><?= $this->Pcrn->fecha_formato($row_uc->fecha_inicio, 'Y-m-d') ?></td>
+                            <td><?= $this->Pcrn->fecha_formato($row_uc->fecha_fin, 'Y-m-d') ?></td>
+                            <td><?= $row_uc->tiempo_minutos ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 
-<?= form_close() ?>
+</form>

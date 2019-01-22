@@ -548,11 +548,17 @@ class Cuestionarios extends CI_Controller{
      */
     function asignar_e($cuestionario_id)
     {
+        $resultado = array('ejecutado' => 0, 'mensaje' => 'Asignaciones NO creadas');
+
         $cg_id = $this->Cuestionario_model->asignar($cuestionario_id);
-        $this->Cuestionario_model->asignar_estudiantes($cg_id);
+        $resultado = $this->Cuestionario_model->asignar_estudiantes($cg_id);
         
-        $resultado['ejecutado'] = 1;
-        $resultado['cg_id'] = $cg_id;
+        if ( $cg_id > 0 ) 
+        {
+            $resultado['ejecutado'] = 1;
+            $resultado['mensaje'] = 'El cuestionario fue asignado, evento: ' . $cg_id;
+            $resultado['cg_id'] = $cg_id;
+        }
         
         $this->output
         ->set_content_type('application/json')

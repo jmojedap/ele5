@@ -852,7 +852,7 @@ class Cuestionario_model extends CI_Model
     {
         $row_asignacion = $this->Pcrn->registro_id('evento', $cg_id);
         
-        $resultado['num_insertados'] = 0;
+        $resultado['insertados'] = '';
         
         //Creando registro
             //Variables comunes
@@ -876,7 +876,8 @@ class Cuestionario_model extends CI_Model
             foreach ($estudiantes->result() as $row_estudiante)
             {
                 $registro['usuario_id'] = $row_estudiante->id;
-                $resultado['num_insertados'] += $this->agregar_uc($registro);
+                $resultado['insertados'] .= $this->agregar_uc($registro) . '-';
+                $resultado['institucion_id'] = $row_asignacion->institucion_id;
             }
             
         return $resultado;

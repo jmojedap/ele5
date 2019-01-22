@@ -139,9 +139,10 @@ class Eventos extends CI_Controller{
         } else {
             //Los demás usuarios
             $tipos_evento = '1,2,4';
-            $eventos[1] = $this->Evento_model->evs_cuestionarios_prf($busqueda);     //Asignación de cuestionarios
+            //$eventos[1] = $this->Evento_model->evs_cuestionarios_prf($busqueda);     //Asignación de cuestionarios
             $eventos[2] = $this->Evento_model->evs_temas($busqueda);                 //Programación de temas
             $eventos[4] = $this->Evento_model->evs_links($busqueda);                 //Programación de links
+            $eventos[22] = $this->Evento_model->evs_cuestionarios_prf($busqueda);     //Asignación de cuestionarios
             $vista_a = 'eventos/calendario/calendario_prf_v';
         }
         
