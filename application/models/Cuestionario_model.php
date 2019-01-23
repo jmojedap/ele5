@@ -100,6 +100,7 @@ class Cuestionario_model extends CI_Model
             if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_id', $busqueda['tp']); }  //Tipo
             if ( $busqueda['i'] != '' ) { $this->db->where('institucion_id', $busqueda['i']); }  //
             if ( $busqueda['condicion'] != '' ) { $this->db->where($busqueda['condicion']); }   //Condición especial
+            if ( $busqueda['f1'] == '1' ) { $this->db->where('creado_usuario_id', $this->session->userdata('usuario_id')); }   //Condición especial
                 
         //Otros
             $this->db->where($filtro_rol);  //Filtro por rol
@@ -148,13 +149,11 @@ class Cuestionario_model extends CI_Model
         } elseif ( $row_usuario->rol_id == 4 ) {    //Directivo
             $condicion = "( tipo_id IN (3,4) AND (institucion_id = '{$this->session->userdata('institucion_id')}' ) )";
         } elseif ( $row_usuario->rol_id == 5 ) {    //Profesor
-            $condicion = "( tipo_id IN (3,4) AND ( creado_usuario_id = ({$this->session->userdata('usuario_id')})) )";
+            $condicion = "( tipo_id IN (3,4) AND ( institucion_id = ({$this->session->userdata('institucion_id')})) )";
         } elseif ( $row_usuario->rol_id == 7 ) {    //Digitador
             $condicion = "id > 0";
         } elseif ( $row_usuario->rol_id == 8 ) {    //Comercial
             $condicion = "id > 0";
-        } else {
-            $condicion = 'id = 0';  //Pendiente, ningún resultado
         }
         
         return $condicion;
@@ -461,7 +460,7 @@ class Cuestionario_model extends CI_Model
             );
 
         //Reglas de validación
-            $crud->required_fields('nombre_cuestionario', 'nivel');
+            $crud->required_fields('nombre_cuestionario', 'nivel', 'area_id');
             $crud->set_rules('nivel', 'Nivel', 'greater_than[-5]|less_than[12]');
             $crud->set_rules('anio_generacion', 'Año generación', 'numeric|greater_than[2000]|less_than[2022]');
             $crud->set_rules('tiempo_minutos', 'Tiempo minutos', 'numeric|greater_than[9]|less_than[2000]');   //Rango de tiempo para resolver un cuestionario

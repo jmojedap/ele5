@@ -21,20 +21,30 @@
                         type="text"
                         name="q"
                         class="form-control"
-                        placeholder="Buscar por nombre o descripción"
+                        placeholder="Buscar cuestionario"
                         autofocus
-                        title="Buscar por nombre o descripción"
+                        title="Buscar cuestionario"
                         value="<?php echo $busqueda['q'] ?>"
                         >
                     <div class="input-group-append" title="Buscar">
                         <button class="btn btn-primary input-group-addon">
                             <i class="fa fa-search"></i>
+                            Buscar
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-        
+
+        <?php if ( $this->session->userdata('srol') == 'institucional' ) { ?>
+            <div class="form-group row <?php echo $clases_filtros['f1'] ?>">
+                <label for="f1" class="col-md-4 control-label text-right">Mostrar</label>
+                <div class="col-md-8">
+                    <?php echo form_dropdown('f1', $opciones_alcance, $busqueda['f1'], 'class="form-control" id="campo-alcance" title="Solo mis cuestionarios"'); ?>
+                </div>
+            </div>
+        <?php } ?>
+
         <div class="form-group row <?php echo $clases_filtros['a'] ?>">
             <label for="a" class="col-md-4 control-label text-right">Área</label>
             <div class="col-md-8">

@@ -22,7 +22,7 @@ class Cuestionarios extends CI_Controller{
         
     }
     
-//CRUD DE CUESTIONARIO
+//EXLPORACIÓN DE CUESTIONARIOS
 //------------------------------------------------------------------------------------------
 
     /**
@@ -39,6 +39,7 @@ class Cuestionarios extends CI_Controller{
             $data['opciones_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Nivel');
             $data['opciones_tipo'] = $this->Item_model->opciones('categoria_id = 15', 'Tipo');
             $data['opciones_institucion'] = $this->App_model->opciones_institucion('id > 0', 'Institución');
+            $data['opciones_alcance'] = array('00' => 'Cuestionarios de la institución', '01' => 'Solo mis cuestionarios');
             
         //Arrays con valores para contenido en la tabla
             $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 15');
@@ -82,7 +83,6 @@ class Cuestionarios extends CI_Controller{
      * 2018-01-17
      * Toma los datos de POST, los establece en formato GET para url y redirecciona
      * a la función de explorar cuestionarios
-     * 
      */
     function redirect_explorar($filtro_alcance)
     {

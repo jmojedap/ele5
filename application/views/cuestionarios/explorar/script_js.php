@@ -76,8 +76,8 @@
             num_pagina = Pcrn.limitar_entre(parseInt(num_pagina) - 1, 1, max_pagina);
             tabla_explorar();
         });
-        
-        
+
+        mostrar_eliminar();
     });
 
 // Funciones
@@ -90,8 +90,12 @@
             type: 'POST',
             url: base_url + 'cuestionarios/tabla_explorar/' + num_pagina + '/?' + busqueda_str,
             data: $("#formulario_busqueda").serialize(),
+            beforeSend: function(){
+                $('#tabla_resultados').html('<div class="text-center"><i class="text-center fa fa-spinner fa-spin fa-2x"></i></div>');
+            },
             success: function(response){
                 act_resultados(response);
+                mostrar_eliminar();
             }
         });
     }
@@ -138,6 +142,16 @@
         for ( key in arr_eliminados ) {
             $('#fila_' + arr_eliminados[key]).hide('slow');
             console.log('#fila_' + arr_eliminados[key]);
+        }
+    }
+
+    //Muestra u oculta el botón de eliminar seleccionados
+    function mostrar_eliminar()
+    {
+        if ( $('#campo-alcance').val() == 1 ) {
+            $('#btn_eliminar_selecionados').removeClass('d-none');
+        } else {
+            $('#btn_eliminar_selecionados').addClass('d-none');
         }
     }
 </script>

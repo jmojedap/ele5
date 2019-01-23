@@ -7,7 +7,7 @@
     //Clases botones acción
         $clases_btn['eliminar_seleccionados'] = 'd-none';
         if ( $this->session->userdata('rol_id') <= 1 ) { $clases_btn['eliminar_seleccionados'] = ''; }
-        if ( $filtro_alcance == 'mis_cuestionarios' ) { $clases_btn['eliminar_seleccionados'] = ''; }
+        if ( $this->input->get('f1') == 1 ) { $clases_btn['eliminar_seleccionados'] = ''; }
         
         $clases_btn['exportar'] = 'd-none';
         if ( $this->session->userdata('rol_id') <= 2 ) { $clases_btn['exportar'] = ''; }
@@ -23,6 +23,7 @@
 
     <div class="col-md-3">
         <a class="btn btn-warning text-light <?php echo $clases_btn['eliminar_seleccionados'] ?>"
+            id="btn_eliminar_selecionados"
             title="Eliminar los <?php echo $el_prural ?> seleccionados"
             data-toggle="modal"
             data-target="#modal_eliminar"
