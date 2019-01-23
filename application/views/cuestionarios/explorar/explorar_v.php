@@ -5,9 +5,9 @@
 
 <?php    
     //Clases botones acción
-        $clases_btn['eliminar_seleccionados'] = 'd-none';
+        /*$clases_btn['eliminar_seleccionados'] = '';
         if ( $this->session->userdata('rol_id') <= 1 ) { $clases_btn['eliminar_seleccionados'] = ''; }
-        if ( $this->input->get('f1') == 1 ) { $clases_btn['eliminar_seleccionados'] = ''; }
+        if ( $this->input->get('f1') == 1 ) { $clases_btn['eliminar_seleccionados'] = ''; }*/
         
         $clases_btn['exportar'] = 'd-none';
         if ( $this->session->userdata('rol_id') <= 2 ) { $clases_btn['exportar'] = ''; }
@@ -32,7 +32,7 @@
         </a>
         
         <div class="btn-group hidden-xs <?php echo $clases_btn['exportar'] ?>" role="group">
-            <a href="<?php echo base_url("cuestionarios/exportar/?{$busqueda_str}") ?>" class="btn btn-success" title="Exportar los <?php echo $cant_registros ?> registros a archivo de MS Excel">
+            <a href="<?php echo base_url("cuestionarios/exportar/?{$busqueda_str}") ?>" class="btn btn-success" title="Exportar registros encontrados a Excel">
                 <i class="fa fa-file-excel"></i> Exportar
             </a>
         </div>

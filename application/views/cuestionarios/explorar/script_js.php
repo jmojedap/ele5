@@ -9,6 +9,7 @@
     var seleccionados = '';
     var seleccionados_todos = '<?php echo $seleccionados_todos ?>';
     var registro_id = 0;
+    var srol = '<?php echo $this->session->userdata("srol"); ?>';
         
 // Document Ready
 //-----------------------------------------------------------------------------
@@ -77,6 +78,7 @@
             tabla_explorar();
         });
 
+        //Mostrar u ocultar botón de eliminar seleccionados
         mostrar_eliminar();
     });
 
@@ -148,10 +150,13 @@
     //Muestra u oculta el botón de eliminar seleccionados
     function mostrar_eliminar()
     {
-        if ( $('#campo-alcance').val() == 1 ) {
-            $('#btn_eliminar_selecionados').removeClass('d-none');
-        } else {
-            $('#btn_eliminar_selecionados').addClass('d-none');
+        if ( srol == 'institucional' )
+        {
+            if ( $('#campo-alcance').val() == 1 ) {
+                $('#btn_eliminar_selecionados').removeClass('d-none');
+            } else {
+                $('#btn_eliminar_selecionados').addClass('d-none');
+            }
         }
     }
 </script>
