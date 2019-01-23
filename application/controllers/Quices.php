@@ -244,9 +244,6 @@ class Quices extends CI_Controller{
         
         $data['vista_a'] = "quices/resolver/resolver_{$tipo_quiz_id}_v";
         $this->load->view('quices/resolver/resolver_v', $data);
-        
-        //$this->output->enable_profiler(TRUE);
-        
     }
     
     function editar()

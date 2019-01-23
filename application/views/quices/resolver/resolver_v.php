@@ -10,39 +10,52 @@
         <?php $this->load->view('quices/resolver/head_v'); ?>
     </head>
     <body>
-        <div id="quiz_contenido" class="quiz_contenido">
-            <div class="f_derecha" style="padding: 20px">
-                <img width="100px" src="<?php echo URL_IMG ?>admin/logo_enlinea.png" />
-            </div>
+        <div id="quiz_contenido" class="quiz_contenido card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h1 class="resaltar">
+                            </i> <?php echo $row_tema->nombre_tema ?>
+                        </h1>
+                        
+                        <h4>
+                            <i class="fa fa-info-circle"></i>
+                            <?php if ( strlen($row->texto_enunciado) > 0 ) { ?>
+                                <?php echo $row->texto_enunciado ?>
+                            <?php } else { ?>
+                                <?php echo $row_tipo_quiz->enunciado ?>
+                            <?php } ?>
+                        </h4>
+                    </div>
+                    <div class="col-md-2">    
+                        <img class="float-right" width="100px" src="<?php echo URL_IMG ?>admin/logo_enlinea.png" />
+                    </div>
+                </div>
             
-            <h1 class="resaltar">
-                <i class="fa fa-caret-right"></i> <?= $row_tema->nombre_tema ?>
-            </h1>
-            <h2 class="">
-                <i class="fa fa-caret-right"></i>
-                <?= $row_tipo_quiz->enunciado ?>
-            </h2>
+            
+                <div class="quiz_detalle">
+                    <?php //echo $vista_a ?>
+                    <?php $this->load->view($vista_a); ?>
+                </div>
+                
+                <div class="mb-3 text-center">
+                    <button class="btn btn-primary btn-lg" id="enviar" style="width: 150px;">
+                        Enviar
+                    </button>
+                </div>
 
-            <hr/>
+                <div class="mb-3">
+                    <p id="resultado_correcto" class="alert alert-success">
+                        <i class="fa fa-check"></i>
+                        ¡Correcto, felicitaciones!
+                    </p>
+                    <p id="resultado_incorrecto" class="alert alert-warning">
+                        <i class="fa fa-warning"></i>
+                        Incorrecto, inténtalo de nuevo
+                    </p>
+                </div>
 
-            <div class="div3">
-                <?= $row->texto_enunciado ?>
             </div>
-            
-            <div class="quiz_detalle">
-                <?php //echo $vista_a ?>
-                <?php $this->load->view($vista_a); ?>
-            </div>
-            
-            <div class="div3">
-                <span class="button orange" id="enviar">
-                    Enviar
-                </span>
-            </div>
-            
-            <h4 id="resultado_correcto" class="alert_success">¡Correcto, felicitaciones!</h4>
-            <h4 id="resultado_incorrecto" class="alert_warning">Incorrecto, inténtalo de nuevo</h4>
-            
         </div>
         
     </body>

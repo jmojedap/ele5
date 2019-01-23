@@ -1,15 +1,15 @@
 body{
-    background: #f9f9f9;
-    padding: 2px;
+    background-color:#fefefe;
+    padding: 5px 0 5px 0;
 }
 
 div.quiz_contenido{
-    border: 1px solid #bbb;
     margin: 0 auto;
     width: 810px;
     min-height: 580px;
-    background: #f8f8f8;
+    background: #FAFAFA;
     padding: 0 10px;
+    
 }
 
 div.quiz_detalle {
@@ -45,7 +45,6 @@ div.actual{
 }
 
 img.principal{
-    border: 2px solid #e5789b;
     max-height: 300px;
 }
 
@@ -55,6 +54,6 @@ img.principal{
     border: 1px #fad712 solid;
     background: #fcea81;
     margin: 2px;
-    height: 1.2em;
     padding: 3px;
+    border-radius: 2px;
 }

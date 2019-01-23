@@ -1,11 +1,6 @@
 <?php
     $cant_elementos = $elementos->num_rows() - 1;
     $key_elemento = 0;
-    
-    //Imagen principal
-    $att_img = array(
-        'class' =>  'principal'
-    );
 ?>
 
 <script>
@@ -49,14 +44,11 @@
     {
         if ( respuesta === clave ) {
             resultado = 1;
-            $('#resultado_correcto').show();
-            $('#resultado_incorrecto').hide();
+            toastr['success']('¡Correcto, felicitaciones!');
         } else {
             resultado = 0;
-            $('#resultado_correcto').hide();
-            $('#resultado_incorrecto').show();
+            toastr['warning']('Incorrecto, inténtalo de nuevo');
         }
-        
     }
     
     //Guardar resultado al resolver el quiz
@@ -73,18 +65,15 @@
         });
 
     }
-    
-    
 </script>
 
 <?php if ( strlen($imagen['src']) > 0 ){ ?>
-    <div class="div2" style="text-align: center;">
-        <?php $att_img['src'] = $imagen['src'] ?>
-        <?= img($att_img) ?>
+    <div class="text-center">
+        <img class="img-thumbnail p-3 principal" alt="Imagen principal de evidencia" src="<?php echo $imagen['src'] ?>">
     </div>
 <?php } ?>
 
-<div class="div2">
+<div class="mb-3">
     <?php foreach ($elementos->result() as $row_elemento) : ?>
         <?php
             $opciones = json_decode($row_elemento->detalle);

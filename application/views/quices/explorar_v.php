@@ -16,7 +16,8 @@
         $att_q = array(
             'class' =>  'form-control',
             'name' => 'q',
-            'placeholder' => 'Buscar',
+            'placeholder' => 'Buscar Evidencia',
+            'autofocus' => TRUE,
             'value' => $busqueda['q']
         );
 
@@ -126,18 +127,18 @@
 <?php $this->load->view($vista_menu) ?>
 
 <div class="row">
-    <div class="col-md-8 sep1">
+    <div class="col-md-7 sep1">
         <?= form_open("busquedas/explorar_redirect/{$controlador}", $att_form) ?>
         <?= form_input($att_q) ?>
-        <?= form_dropdown('a', $opciones_area, $busqueda['a'], 'class="form-control chosen-select" title="Filtrar por área"'); ?>
-        <?= form_dropdown('n', $opciones_nivel, $busqueda['n'], 'class="form-control chosen-select" title="Filtrar por nivel"'); ?>
-        <?= form_dropdown('tp', $opciones_tipo, $busqueda['tp'], 'class="form-control chosen-select" title="Filtrar por tipo"'); ?>
+        <?= form_dropdown('a', $opciones_area, $busqueda['a'], 'class="form-control" title="Filtrar por área"'); ?>
+        <?= form_dropdown('n', $opciones_nivel, $busqueda['n'], 'class="form-control" title="Filtrar por nivel"'); ?>
+        <?= form_dropdown('tp', $opciones_tipo, $busqueda['tp'], 'class="form-control" title="Filtrar por tipo"'); ?>
         
         <?= form_submit($att_submit) ?>
         <?= form_close() ?>
     </div>
 
-    <div class="col-md-2 sep1">
+    <div class="col-md-3 sep1">
         <div class="btn-toolbar" role="toolbar" aria-label="...">
             <div class="btn-group" role="group" aria-label="...">
                 <a class="btn btn-warning" title="Eliminar los <?= $elemento_s ?> seleccionados" data-toggle="modal" data-target="#modal_eliminar">

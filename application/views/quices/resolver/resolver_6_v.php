@@ -61,14 +61,11 @@
     {
         if ( respuesta === clave ) {
             resultado = 1;
-            $('#resultado_correcto').show();
-            $('#resultado_incorrecto').hide();
+            toastr['success']('¡Correcto, felicitaciones!');
         } else {
             resultado = 0;
-            $('#resultado_correcto').hide();
-            $('#resultado_incorrecto').show();
+            toastr['warning']('Incorrecto, inténtalo de nuevo');
         }
-        
     }
     
     //Guardar resultado al resolver el quiz
@@ -117,10 +114,6 @@
     });
 </script>
 
-
-
-
-
 <style>
     
     .tabla-quiz{
@@ -162,7 +155,7 @@
         box-sizing: border-box; 
         min-width: 64px; 
         min-height: 24px; 
-        padding: 2px; 
+        padding: 3px; 
         background: #fde08a; 
         border: 1px solid #f4b904;
         cursor: move;
@@ -172,7 +165,7 @@
         line-height: 20px;
         font-weight: bold;
         overflow: hidden;
-        border-radius: 2px;
+        border-radius: 3px;
         display: inline-block;
     }
     

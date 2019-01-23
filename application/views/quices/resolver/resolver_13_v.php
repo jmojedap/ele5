@@ -76,12 +76,10 @@
         //Se deben cumplir las dos condiciones
         if ( condiciones === 2 ) {
             resultado = 1;
-            $('#resultado_correcto').show();
-            $('#resultado_incorrecto').hide();
+            toastr['success']('¡Correcto, felicitaciones!');
         } else {
             resultado = 0;
-            $('#resultado_correcto').hide();
-            $('#resultado_incorrecto').show();
+            toastr['warning']('Incorrecto, inténtalo de nuevo');
         }
         
     }

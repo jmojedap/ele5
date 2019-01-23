@@ -68,14 +68,11 @@
     {
         if ( respuesta === clave ) {
             resultado = 1;
-            $('#resultado_correcto').show();
-            $('#resultado_incorrecto').hide();
+            toastr['success']('¡Correcto, felicitaciones!');
         } else {
             resultado = 0;
-            $('#resultado_correcto').hide();
-            $('#resultado_incorrecto').show();
+            toastr['warning']('Incorrecto, inténtalo de nuevo');
         }
-        
     }
     
     //Guardar resultado al resolver el quiz
@@ -115,7 +112,6 @@
     ?>
     
     <p>
-        
         <i class="fa fa-caret-right resaltar"></i>
         <?= str_replace('#casilla', $dropdown, $row_elemento->texto) ?>
     </p>

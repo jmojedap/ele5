@@ -50,14 +50,11 @@
     {
         if ( respuesta === clave ) {
             resultado = 1;
-            $('#resultado_correcto').show();
-            $('#resultado_incorrecto').hide();
+            toastr['success']('¡Correcto, felicitaciones!');
         } else {
             resultado = 0;
-            $('#resultado_correcto').hide();
-            $('#resultado_incorrecto').show();
+            toastr['warning']('Incorrecto, inténtalo de nuevo');
         }
-        
     }
     
     //Guardar resultado al resolver el quiz
@@ -79,17 +76,16 @@
 </script>
 
 <?php if ( strlen($imagen['src']) > 0 ){ ?>
-    <div class="div2" style="text-align: center;">
-        <?php $att_img['src'] = $imagen['src'] ?>
-        <?= img($att_img) ?>
+    <div class="text-center">
+        <img class="img-thumbnail p-3 principal" alt="Imagen principal de evidencia" src="<?php echo $imagen['src'] ?>">
     </div>
 <?php } ?>
 
 <ol style="list-style-type: upper-roman">
     <?php foreach ($elementos->result() as $row_elemento) : ?>
-            <li>
-                <?= $row_elemento->texto ?>
-            </li>
+        <li>
+            <?php echo $row_elemento->texto ?>
+        </li>
     <?php endforeach ?>
 </ol>
 

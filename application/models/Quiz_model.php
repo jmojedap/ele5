@@ -154,7 +154,7 @@ class Quiz_Model extends CI_Model{
             $crud->field_type('editado', 'hidden', date('Y-m-d H:i:s'));
             $crud->field_type('usuario_id', 'hidden', $this->session->userdata('usuario_id'));
             $crud->field_type('tipo_quiz_id', 'dropdown', $arr_tipo_quiz);
-            //$crud->unset_texteditor('texto_enunciado');
+            $crud->unset_texteditor('texto_enunciado');
         
         $output = $crud->render();
         
