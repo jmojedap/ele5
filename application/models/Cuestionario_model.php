@@ -872,6 +872,7 @@ class Cuestionario_model extends CI_Model
         //Se carga la lista de estudiantes que pertenecen un grupo
             $this->load->model('Grupo_model');
             $estudiantes = $this->Grupo_model->estudiantes($row_asignacion->grupo_id, 'iniciado = 1');
+            echo $estudiantes->num_rows();
 
             foreach ($estudiantes->result() as $row_estudiante)
             {

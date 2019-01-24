@@ -11,26 +11,21 @@ h1.estante{
 }
 
 .flipbook_container{
-    background:#DDD; 
+    background:#EEE; 
     background: rgba(228,228,228, 0.75);
     display: inline-block;
     width: 100px;
     padding: 1px;
-    border: 1px solid #CCC;
+    border: 1px solid #EEE;
     text-align: center;
     margin-right: 15px;
     margin-left: 15px;
     width: 106px;
 }
 
-.flipbooks_strip{
-
-}
-
-
 .flipbook_container:hover{
-    background: #e5789b;
-    border: 1px solid #e5789b;
+    background: #DD4F43;
+    border: 1px solid #DD4F43;
 }
 
 
