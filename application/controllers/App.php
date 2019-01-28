@@ -180,10 +180,11 @@ class App extends CI_Controller{
     
     function pruebas()
     {
-        $data['vista_a'] = 'app/prueba_v';
-        $data['titulo_pagina'] = 'Prueba Apanel3';
+        require 'vendor/autoload.php';
 
-        $this->load->view(PTL_ADMIN_2, $data);
+        $mpdf = new \Mpdf\Mpdf();
+        $mpdf->WriteHTML('<h1>Hello world!</h1>');
+        $mpdf->Output();
     }
     
 //AJAX GENERALES
