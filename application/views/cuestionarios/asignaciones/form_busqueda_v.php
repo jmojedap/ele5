@@ -29,7 +29,7 @@
 
 <?= form_open("busquedas/redirect/cuestionarios/asignaciones", $att_form) ?>
     <div class="form-horizontal">
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-sm-10">
                 <div class="input-group">
                     <?= form_input($att_q) ?>
@@ -47,13 +47,13 @@
         </div>
         
         <?php if ( $this->session->userdata('srol') == 'interno' ) { ?>
-            <div class="form-group <?= $clases_filtros['est'] ?>">
+            <div class="form-group row <?= $clases_filtros['est'] ?>">
                 <label for="tp" class="col-sm-3 control-label">Estado respuesta</label>
                 <div class="col-sm-7">
                     <?= form_dropdown('est', $opciones_estado, $busqueda['est'], 'class="form-control" title="Filtrar por estado respuesta"'); ?>
                 </div>
             </div>
-            <div class="form-group <?= $clases_filtros['tp'] ?>">
+            <div class="form-group row <?= $clases_filtros['tp'] ?>">
                 <label for="i" class="col-sm-3 control-label">Tipo cuestionario</label>
                 <div class="col-sm-7">
                     <?= form_dropdown('tp', $opciones_tipo, $busqueda['tp'], 'class="form-control" title="Filtrar por tipo cuestionario"'); ?>

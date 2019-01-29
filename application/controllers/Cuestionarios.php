@@ -213,7 +213,7 @@ class Cuestionarios extends CI_Controller{
         redirect($destino);
     }
     
-// Copia de cuestionarios
+// CREAR COPIA DE UN CUESTIONARIO
 //-----------------------------------------------------------------------------
     
     /**
@@ -372,13 +372,9 @@ class Cuestionarios extends CI_Controller{
     
     function temas($cuestionario_id)
     {
-        
         //Variables data
             $data = $this->Cuestionario_model->basico($cuestionario_id);
             $data['temas'] = $this->Cuestionario_model->temas($cuestionario_id);
-        
-        //Variables específicas
-        
 
         //Variables generales
             $data['subtitulo_pagina'] = 'Temas';
@@ -386,7 +382,6 @@ class Cuestionarios extends CI_Controller{
 
         $this->load->view(PTL_ADMIN, $data);
     }
-
     
     function sugerencias($cuestionario_id, $area_id = 0, $competencia_id = 0)
     {
@@ -445,7 +440,7 @@ class Cuestionarios extends CI_Controller{
             $data['subtitulo_pagina'] = $data['cant_resultados'];
             $data['vista_a'] = 'cuestionarios/asignaciones/explorar_v';
             $data['vista_menu'] = 'cuestionarios/explorar/menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(PTL_ADMIN_2, $data);
     }
     
     function n_asignar($cuestionario_id)
@@ -595,76 +590,6 @@ class Cuestionarios extends CI_Controller{
         ->set_content_type('application/json')
         ->set_output(json_encode($resultado));
     }
-    
-    function crear_asignacion($cuestionario_id)
-    {
-        
-        $this->load->library('form_validation');
-        
-        //Reglas
-            $this->form_validation->set_rules('grupo_id', 'Grupo', 'required');
-            $this->form_validation->set_rules('fecha_inicio', 'Fecha inicio', 'required|min_length[10]');
-            $this->form_validation->set_rules('fecha_fin', 'Fecha fin', 'required|min_length[10]|callback__validacion_fecha_fin');
-            $this->form_validation->set_rules('tiempo_minutos', 'Tiempo minutos', 'required|integer|greater_than[9]');
-        
-        //Mensajes de validación
-            $this->form_validation->set_message('required', "%s es obligatorio");
-            $this->form_validation->set_message('min_length', "El valor en %s no tiene un formato válido");
-            $this->form_validation->set_message('integer', "%s debe ser un número entero");
-            $this->form_validation->set_message('greater_than', "El valor de %s es muy pequeño");
-        
-        //Comprobar validación
-            if ( $this->form_validation->run() == FALSE )
-            {
-                //No se cumple la validación, se regresa al cuestionario
-                $this->asignar($cuestionario_id);
-            } else {
-                //Se cumple la validación, 
-                
-                $this->Cuestionario_model->crear_asignacion($cuestionario_id);
-                $grupo_id = $this->input->post('grupo_id');
-                $institucion_id = $this->Pcrn->campo('grupo', "id = {$grupo_id}", 'institucion_id');
-                $destino = "cuestionarios/grupos/{$cuestionario_id}/{$institucion_id}/{$grupo_id}";
-                redirect($destino);
-                //$this->output->enable_profiler(TRUE);
-            }
-    }
-    
-    function _validacion_fecha_fin()
-    {
-        $validacion = TRUE;
-        
-        if ( $this->input->post('fecha_fin') <= $this->input->post('fecha_inicio') )
-        {
-            $this->form_validation->set_message('_validacion_fecha_fin', 'La fecha fin debe ser posterior a la fecha de inicio');
-            $validacion = FALSE;
-        }
-        
-        return $validacion;
-    }
-
-    /**
-     * AJAX
-     * DESACTIVADA 2018-09-24
-     * Eliminar un grupo de registros seleccionados
-     */
-    function eliminar_seleccionados_uc()
-    {
-        $cant_eliminados = 0;
-        $str_seleccionados = $this->input->post('seleccionados');
-        
-        $seleccionados = explode('-', $str_seleccionados);
-        
-        foreach ( $seleccionados as $elemento_id ) 
-        {
-            $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $elemento_id);
-            $condicion['usuario_id'] = $row_uc->usuario_id;
-            $condicion['cuestionario_id'] = $row_uc->cuestionario_id;
-            $cant_eliminados += $this->Cuestionario_model->eliminar_uc($condicion);
-        }
-        
-        echo $cant_eliminados;
-    }
 
 // ASIGNACIÓN MASIVA DE CUESTIONARIOS A ESTUDIANTES DE GRUPOS
 //-----------------------------------------------------------------------------
@@ -752,8 +677,6 @@ class Cuestionarios extends CI_Controller{
      */
     function preliminar($uc_id, $origen = 'bibloteca')
     {
-        
-
         $permiso_uc = $this->Cuestionario_model->permiso_uc($uc_id);
         
         if ( $permiso_uc )
@@ -987,8 +910,8 @@ class Cuestionarios extends CI_Controller{
             $resultado['mensaje'] = 'Respuestas guardadas';
         
         $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($resultado));
+        ->set_content_type('application/json')
+        ->set_output(json_encode($resultado));
     }
     
     function n_finalizar($uc_id)
@@ -1377,7 +1300,6 @@ class Cuestionarios extends CI_Controller{
 //EDICIÓN DE CONTENIDO DE CUESTIONARIOS
 //------------------------------------------------------------------------------------------
 
-    
     /**
      * Eliminar un registro de la tabla 'cuestionario_pregunta'
      * No se elimina el registro de la pregunta, solo se la quita del cuestionario
@@ -1393,13 +1315,14 @@ class Cuestionarios extends CI_Controller{
     
     /**
      * Reenumera los cuestionarios del sistema
-     * Actualiza el campo cuestionario_contenido.orden
+     * Actualiza el campo cuestionario_pregunta.orden
      */
     function reenumerar_cuestionarios($cuestionario_id = NULL){
         
         //Seleccionar cuestionarios
             //Si el $cuestionario_id se le agrega la condición, en caso contrario se eligen todos los cuestionarios
-            if ( ! is_null($cuestionario_id) ){
+            if ( ! is_null($cuestionario_id) )
+            {
                 $this->db->where('id', $cuestionario_id);
             }
 
@@ -1465,34 +1388,6 @@ class Cuestionarios extends CI_Controller{
         
     }
     
-    //DESACTIVADA 2018-11-14
-    function z_pregunta_existente($cuestionario_id, $orden)
-    {
-        
-        //Cargando datos básicos (_basico)
-            $this->load->model('Busqueda_model');
-            $this->load->model('Pregunta_model');
-            $data = $this->Cuestionario_model->basico($cuestionario_id);    
-            
-            $busqueda = $this->Busqueda_model->busqueda_array();    //Construye array de búsqueda desde input->post()
-            
-            //Ejecutar búsqueda
-            $resultados = $this->Pregunta_model->buscar($busqueda, 100, 0);
-            
-        //Variables
-            $data['busqueda'] = $busqueda;
-            $data['seccion'] = 'existente';
-            $data['orden'] = $orden;
-            $data['preguntas'] = $resultados;
-            $data['destino_form'] = "cuestionarios/pregunta_existente/{$cuestionario_id}/{$orden}";
-            $data['vista_b'] = 'cuestionarios/pregunta_existente_v';
-        
-        //Solicitar vista
-            $data['subtitulo_pagina'] = 'Agregar pregunta';
-            $this->load->view(PTL_ADMIN, $data);
-        
-    }
-    
     function pregunta_nueva($cuestionario_id, $orden)
     {
         $this->load->model('Pregunta_model');
@@ -1522,5 +1417,5 @@ class Cuestionarios extends CI_Controller{
             $data['subtitulo_pagina'] = 'Nueva pregunta';
             $output = array_merge($data,(array)$gc_output);
             $this->load->view(PTL_ADMIN, $output);
-    }   
+    }
 }

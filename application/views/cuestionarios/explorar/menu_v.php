@@ -13,6 +13,13 @@
             'link' => "cuestionarios/explorar/",
             'atributos' => ''
         );
+
+        $arr_menus['asignaciones'] = array(
+            'icono' => '<i class="fa fa-users"></i>',
+            'texto' => 'Asignaciones',
+            'link' => "cuestionarios/asignaciones/",
+            'atributos' => ''
+        );
         
         $arr_menus['nuevo'] = array(
             'icono' => '<i class="fa fa-plus"></i>',
@@ -36,7 +43,7 @@
         );
 
     //Elementos de menú para cada rol
-        $elementos_rol[0] = array('explorar', 'nuevo', 'asignar_masivo', 'responder_masivo');
+        $elementos_rol[0] = array('explorar', 'asignaciones', 'nuevo', 'asignar_masivo', 'responder_masivo');
         $elementos_rol[1] = array('explorar', 'nuevo', 'asignar_masivo', 'responder_masivo');
         $elementos_rol[2] = array('explorar', 'nuevo');
         $elementos_rol[3] = array('explorar', 'nuevo');

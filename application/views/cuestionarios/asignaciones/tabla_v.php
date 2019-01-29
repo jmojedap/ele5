@@ -24,7 +24,7 @@
 
 ?>
 
-<table class="table table-responsive table-hover bg-blanco" cellspacing="0">
+<table class="table table-default bg-white">
     <thead>
             <tr class="">
                 <th width="10px;"><?= form_checkbox($att_check_todos) ?></th>

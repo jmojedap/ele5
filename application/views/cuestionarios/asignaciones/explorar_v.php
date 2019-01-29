@@ -36,7 +36,7 @@
     </div>
     
     <div class="col-md-2">
-        <div class="pull-right sep1">
+        <div class="pull-right">
             <?php $this->load->view('comunes/paginacion_v'); ?>
         </div>
     </div>
