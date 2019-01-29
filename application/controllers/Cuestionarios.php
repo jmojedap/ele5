@@ -591,6 +591,28 @@ class Cuestionarios extends CI_Controller{
         ->set_output(json_encode($resultado));
     }
 
+    /**
+     * AJAX
+     * Eliminar un conjunto de asignaciones de cuestionario seleccionadas
+     */
+    function eliminar_seleccionados_uc()
+    {
+        $cant_eliminados = 0;
+        $str_seleccionados = $this->input->post('seleccionados');
+        
+        $seleccionados = explode('-', $str_seleccionados);
+        
+        foreach ( $seleccionados as $elemento_id ) 
+        {
+            $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $elemento_id);
+            $condicion['usuario_id'] = $row_uc->usuario_id;
+            $condicion['cuestionario_id'] = $row_uc->cuestionario_id;
+            $cant_eliminados += $this->Cuestionario_model->eliminar_uc($condicion);
+        }
+        
+        echo $cant_eliminados;
+    }
+
 // ASIGNACIÓN MASIVA DE CUESTIONARIOS A ESTUDIANTES DE GRUPOS
 //-----------------------------------------------------------------------------
 

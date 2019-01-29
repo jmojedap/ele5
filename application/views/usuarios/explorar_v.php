@@ -209,7 +209,7 @@
         <div class="col-md-6 sep2">
             <?= form_open("busquedas/explorar_redirect/{$controlador}", $att_form) ?>
             <?= form_input($att_q) ?>
-            <?= form_dropdown('rol', $opciones_rol, $busqueda['rol'], 'class="form-control chosen-select" title="Filtrar por rol de usuario"'); ?>
+            <?= form_dropdown('rol', $opciones_rol, $busqueda['rol'], 'class="form-control" title="Filtrar por rol de usuario"'); ?>
             <?= form_dropdown('i', $opciones_institucion, $busqueda['i'], 'class="form-control chosen-select" title="Filtrar por tipo de institución" style="width: 260px;"'); ?>
             <?= form_submit($att_submit) ?>
             <?= form_close() ?>

@@ -33,7 +33,7 @@
                     title: 'Cuestionario: <?= str_replace("'", "\'", $row_evento->nombre_cuestionario) ?>',
                     start: '<?= $row_evento->fecha_inicio ?>',
                     end: '<?= $this->Pcrn->suma_fecha($row_evento->fecha_fin) ?>',
-                    url: base_url + 'cuestionarios/preliminar/' + <?= $row_evento->referente_id  ?>,
+                    url: base_url + 'cuestionarios/preliminar/',
                     color : '<?= $colores_evento[1] ?>'
                 },
                 <?php endforeach ?>
