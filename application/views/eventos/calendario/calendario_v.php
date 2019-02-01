@@ -29,11 +29,11 @@
                 //Eventos, programación de cuestionarios
                 <?php foreach ($eventos[1]->result() as $row_evento) : ?>
                 {
-                    id: <?= $row_evento->id ?>,
+                    id: <?php echo $row_evento->id ?>,
                     title: 'Cuestionario: <?= str_replace("'", "\'", $row_evento->nombre_cuestionario) ?>',
                     start: '<?= $row_evento->fecha_inicio ?>',
                     end: '<?= $this->Pcrn->suma_fecha($row_evento->fecha_fin) ?>',
-                    url: base_url + 'cuestionarios/preliminar/',
+                    url: base_url + 'cuestionarios/preliminar/' + '<?php echo $row_evento->referente_id ?>',
                     color : '<?= $colores_evento[1] ?>'
                 },
                 <?php endforeach ?>
@@ -80,21 +80,6 @@
                         url: '<?= $row_evento->url ?>',
                         color : '<?= $colores_evento[4] ?>'
                     },
-                <?php endforeach ?>
-                
-                //Eventos, programación de cuestionarios
-                <?php foreach ($eventos[1]->result() as $row_evento) : ?>
-                <?php
-                    $row_uc = $this->Pcrn->registro('usuario_cuestionario', "cg_id = {$row_evento->id} AND usuario_id = {$this->session->userdata('usuario_id')}");
-                ?>
-                {
-                    id: <?php echo $row_evento->id ?>,
-                    title: 'Cuestionario: <?= str_replace("'", "\'", $row_evento->nombre_cuestionario) ?>',
-                    start: '<?php echo $row_evento->fecha_inicio ?>',
-                    end: '<?php echo $this->Pcrn->suma_fecha($row_evento->fecha_fin) ?>',
-                    url: base_url + 'cuestionarios/preliminar/' + <?php echo $row_uc->id  ?>,
-                    color : '<?= $colores_evento[1] ?>'
-                },
                 <?php endforeach ?>
             ],
             eventClick: function(event) {

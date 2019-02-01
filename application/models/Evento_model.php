@@ -601,7 +601,7 @@ class Evento_Model extends CI_Model{
         $this->db->select('*');
         $this->db->where('usuario_id', $this->session->userdata('usuario_id'));
         $this->db->where('evento.tipo_id', 1); //Tipo 1 => asignación de cuestionario
-        $this->db->where('estado', 0); //Estado 0  => sin responder
+        $this->db->where('estado', 1); //Estado 1  => sin responder
         $this->db->join('cuestionario', 'cuestionario.id = evento.referente_2_id');
         $query = $this->db->get('evento');
         
@@ -609,7 +609,7 @@ class Evento_Model extends CI_Model{
     }
     
     /**
-     * 2018-09-22
+     * 2018-09-22 (EN DESARROLLO)
      * Cuestionarios programados para el usuario
      * @return type
      */
@@ -675,7 +675,7 @@ class Evento_Model extends CI_Model{
             $registro['tipo_id'] = 1;   //Asignación de cuestionario
             $registro['referente_id'] = $row_uc->id;
             $registro['referente_2_id'] = $row_uc->cuestionario_id;
-            $registro['estado'] = $row_uc->respondido;
+            $registro['estado'] = $row_uc->estado;
             $registro['usuario_id'] = $row_uc->usuario_id;
             $registro['institucion_id'] = $row_uc->institucion_id;
             $registro['grupo_id'] = $row_uc->grupo_id;

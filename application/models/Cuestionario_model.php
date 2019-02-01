@@ -1025,14 +1025,12 @@ class Cuestionario_model extends CI_Model
             $uc_id = $this->Pcrn->guardar('usuario_cuestionario', $condicion, $reg_edit);
         }
         
-        //Guardar asignación en la tabla evento, DESACTIVADA 2018-09-21
-            /*$this->load->model('Evento_model');
+        //Guardar asignación en la tabla evento, REACTIVADA 2019-02-01, DESACTIVADA 2018-09-21
+            $this->load->model('Evento_model');
             $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $uc_id);
-            $this->Evento_model->guardar_asignar_ctn($row_uc);*/
-            
+            $this->Evento_model->guardar_asignar_ctn($row_uc);
         
         return $uc_id;
-        
     }
     
     /**
