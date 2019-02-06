@@ -706,7 +706,7 @@ class Flipbooks extends CI_Controller{
         $data['row_tema'] = $this->Pcrn->registro_id('tema', $data['row']->tema_id);
         $data['titulo_pagina'] = $data['row_tema']->nombre_tema;
         
-        $this->load->view('flipbooks/leer/ver_animacion_v', $data);
+        $this->load->view('flipbooks/leer_v3/ver_animacion_v', $data);
     }
     
     function ajax_pagina($flipbook_id, $num_pagina)
