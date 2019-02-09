@@ -14,7 +14,8 @@
 		"php": ">=5.3.7",
 		"phpoffice/phpspreadsheet": "^1.4",
 		"mpdf/mpdf": "^7.1",
-		"smalot/pdfparser": "*"
+		"smalot/pdfparser": "*",
+		"chillerlan/php-qrcode": "^2.0"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

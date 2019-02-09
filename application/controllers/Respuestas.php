@@ -42,4 +42,9 @@ class Respuestas extends CI_Controller{
         $mpdf->WriteHTML($html);
         $mpdf->Output();
     }
+
+    function qr_code($uc_id)
+    {
+        //Utilizar https://packagist.org/packages/chillerlan/php-qrcode
+    }
 }
