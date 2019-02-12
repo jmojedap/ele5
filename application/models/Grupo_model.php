@@ -301,6 +301,19 @@ class Grupo_model extends CI_Model{
             $this->db->insert('usuario_grupo', $registro);
         }
     }
+
+    /**
+     * Elimina registro de la tabla usuario_grupo. Retira a un estudiante de
+     * un grupo, sin eliminarlo de la plataforma. 2019-02-11.
+     */
+    function eliminar_ug($grupo_id, $usuario_id)
+    {
+        $this->db->where('grupo_id', $grupo_id);
+        $this->db->where('usuario_id', $usuario_id);
+        $this->db->delete('usuario_grupo');
+
+        return $this->db->affected_rows();
+    }
     
     function grupos($grupo_id)
     {

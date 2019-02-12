@@ -1144,6 +1144,9 @@ class Grupos extends CI_Controller{
                     $row_grupo = $this->Pcrn->registro_id('grupo', $grupo_destino_id);
                     $this->Usuario_model->cambiar_grupo($row_estudiante->usuario_id, $grupo_id, $grupo_destino_id);
                     $resultado['proceso'] = "Mover al grupo {$row_grupo->nivel}-{$row_grupo->grupo}" ;
+                } elseif ( $proceso_id == 8 ) {
+                    $resultado['proceso'] = 'Retirar (Sin eliminar)';
+                    $this->Grupo_model->eliminar_ug($grupo_id, $row_estudiante->usuario_id);
                 }
                 
                 $resultado['num_procesados'] += 1;

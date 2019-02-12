@@ -9,8 +9,9 @@
         'p2' => 'Desactivar',
         'p3' => 'Restaurar contraseña',
         'p4' => 'Eliminar',
+        'p8' => 'Retirar (Sin eliminar)',
         'p5' => 'Marcar como pagado',
-        'p6' => 'Marcar como NO pagado'
+        'p6' => 'Marcar como NO pagado',
     );
     
     $arr_sexo = $this->Item_model->arr_item(59);
