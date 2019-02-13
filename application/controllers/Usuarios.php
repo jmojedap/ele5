@@ -834,7 +834,8 @@ class Usuarios extends CI_Controller{
         //Contenidos Acompañamiento Pedagógico
             //$data['contenidos_ap'] = $this->Usuario_model->contenidos_ap();
             
-        $vista_a = 'usuarios/biblioteca_v5_v';
+        //$vista_a = 'usuarios/biblioteca_v5_v';
+        $vista_a = 'usuarios/biblioteca_v';
         if ( $this->session->userdata('rol_id') != 6 )
         {
             $vista_a = 'usuarios/biblioteca_profesor_v';

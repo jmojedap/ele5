@@ -1335,6 +1335,7 @@ class Usuario_model extends CI_Model{
         $this->db->group_by('flipbook.id, nombre_flipbook, tipo_flipbook_id, nivel, area_id');
         if ( ! is_null($tipos) ) { $this->db->where("tipo_flipbook_id IN ({$tipos})"); }    //2017-01-12
         
+        $this->db->order_by('flipbook.nivel', 'ASC');   //Agregado 2019-02-13
         $this->db->order_by('flipbook.area_id', 'ASC');
         
         $flipbooks = $this->db->get('flipbook');

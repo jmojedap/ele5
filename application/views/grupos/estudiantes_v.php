@@ -16,7 +16,7 @@
     
     $arr_sexo = $this->Item_model->arr_item(59);
     
-    if ( $this->session->userdata('rol_id') > 2 ){
+    if ( $this->session->userdata('rol_id')> 2 ){
         $opciones_proceso = array(
             'p3' => 'Restaurar contraseña'
         );
