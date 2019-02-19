@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use Endroid\QrCode\QrCode;
+
 class Respuestas extends CI_Controller{
     
     function __construct() {
@@ -26,7 +28,7 @@ class Respuestas extends CI_Controller{
         $this->load->view('templates/bs4_print/main_v', $data);
     }
 
-    function hoja_respuestas_pdf($uc_id)
+    function formato($uc_id)
     {
         $data = $this->Respuesta_model->basico($uc_id);
 
@@ -45,6 +47,12 @@ class Respuestas extends CI_Controller{
 
     function qr_code($uc_id)
     {
-        //Utilizar https://packagist.org/packages/chillerlan/php-qrcode
+        require 'vendor/autoload.php';
+
+        $qrCode = new QrCode($uc_id);
+
+        $data['qrCode'] = $qrCode;
+
+        $this->load->view('respuestas/qr_code_v', $data);
     }
 }
