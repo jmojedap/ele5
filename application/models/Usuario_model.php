@@ -966,6 +966,8 @@ class Usuario_model extends CI_Model{
 //REGISTRO Y ACTIVACIÓN
 //---------------------------------------------------------------------------------------------------
     
+    
+
     function guardar($registro)
     {
         $registro['nombre'] = $this->input->post('nombre');

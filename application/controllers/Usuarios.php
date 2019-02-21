@@ -677,6 +677,11 @@ class Usuarios extends CI_Controller{
 //RESTAURACIÓN DE CUENTAS
 //---------------------------------------------------------------------------------------------------
     
+    function pw_test($pw)
+    {
+        echo $this->Usuario_model->encriptar_pw($pw);
+    }
+
     /**
      * Formulario para restaurar contraseña o reactivar cuenta
      * se ingresa con nombre de usuario y contraseña

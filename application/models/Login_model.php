@@ -103,15 +103,18 @@ class Login_model extends CI_Model{
         
         if ( ! is_null($row_usuario) )
         {
-            //ANTERIOR VERSIÓN DE CONTRASEÑA
-            $epw = md5($password);
-            $pw_comparar = $row_usuario->ant_password;
+            //ANTERIOR VERSIÓN DE CONTRASEÑA    DESACTIVADA 2019-02-21
+            //$epw = md5($password);
+            //$pw_comparar = $row_usuario->ant_password;
+
+            $epw = crypt($password, $row_usuario->password);
+            $pw_comparar = $row_usuario->password;
             
-            if ( $row_usuario->cpw )
+            /*if ( $row_usuario->cpw )
             {
                 $epw = crypt($password, $row_usuario->password);
                 $pw_comparar = $row_usuario->password;
-            }
+            }*/
             
             if ( $pw_comparar == $epw )
             {
