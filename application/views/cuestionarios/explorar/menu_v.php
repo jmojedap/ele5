@@ -42,8 +42,15 @@
             'atributos' => 'title="Cargar respuestas con archivo Excel"'
         );
 
+        $arr_menus['responder_json'] = array(
+            'icono' => '<i class="far fa-file"></i>',
+            'texto' => 'Respuestas JSON',
+            'link' => "respuestas/cargar_json/",
+            'atributos' => 'title="Cargar respuestas con archivo JSON"'
+        );
+
     //Elementos de menú para cada rol
-        $elementos_rol[0] = array('explorar', 'asignaciones', 'nuevo', 'asignar_masivo', 'responder_masivo');
+        $elementos_rol[0] = array('explorar', 'asignaciones', 'nuevo', 'asignar_masivo', 'responder_masivo', 'responder_json');
         $elementos_rol[1] = array('explorar', 'nuevo', 'asignar_masivo', 'responder_masivo');
         $elementos_rol[2] = array('explorar', 'nuevo');
         $elementos_rol[3] = array('explorar', 'nuevo');
