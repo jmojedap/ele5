@@ -12,6 +12,18 @@ class Respuesta_model extends CI_Model
 
         return $data;
     }
+
+    function asignaciones($cuestionario_id, $grupo_id)
+    {
+        $this->db->select('usuario_cuestionario.id AS uc_id, usuario.nombre, usuario.apellidos');
+        $this->db->where('cuestionario_id', $cuestionario_id);
+        $this->db->where('usuario_cuestionario.grupo_id', $grupo_id);
+        $this->db->join('usuario', 'usuario.id = usuario_cuestionario.usuario_id');
+        
+        $asignaciones = $this->db->get('usuario_cuestionario');
+
+        return $asignaciones;
+    }
     
 
 }

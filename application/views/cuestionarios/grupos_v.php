@@ -124,6 +124,8 @@
                     Grupo <?php echo $this->App_model->nombre_grupo($row_grupo->grupo_id) ?>
                 </a>
 
+                
+
             <?php endforeach ?>
         </div>
         
@@ -140,6 +142,11 @@
                         <i class="fa fa-trash-o"></i>
                     </a>
                     <?= anchor("cuestionarios/grupos_exportar/{$cuestionario_id}/{$grupo_id}", '<i class="fa fa-file-excel-o"></i> Exportar', 'class="btn btn-success" title="Exportar resultados a MS-Excel" target="_blank"') ?>
+
+                    <a href="<?php echo base_url("respuestas/formatos/{$cuestionario_id}/{$grupo_id}") ?>" class="btn btn-primary" target="_blank">
+                        <i class="fa fa-download"></i>
+                        Hojas respuestas
+                    </a>
                 </div>
 
                 <div class="col-md-6">
