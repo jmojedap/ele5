@@ -24,6 +24,35 @@ class Respuesta_model extends CI_Model
 
         return $asignaciones;
     }
+
+// IMPORTAR RESPUESTAS DE ARCHIVO JSON
+//-----------------------------------------------------------------------------
+
+    function importar_respuestas_json($obj_respuestas)
+    {
+        $data = array('status' => 0, 'message' => 'Proceso no ejecutado', 'imported' => array());
+
+        if ( count($obj_respuestas) )
+        {
+            $data = array('status' => 1, 'message' => 'Páginas encontradas: ' . count($obj_respuestas));
+        }
+
+        foreach ( $obj_respuestas as $pagina )
+        {
+            $data['imported'][] = $this->importar_respuesta($pagina);
+        }
+
+        return $data;
+    }
+
+    function importar_respuesta($pagina)
+    {
+        $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $pagina->asignacion_id);
+
+        $data['cuestionario_id'] = $row_uc->cuestionario_id;
+
+        return $data;
+    }
     
 
 }

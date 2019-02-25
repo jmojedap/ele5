@@ -242,8 +242,6 @@ class Temas extends CI_Controller{
     
     function quices($tema_id)
     {
-        //$this->output->enable_profiler(TRUE);
-        
         $this->load->model('Esp');
         //Cargando datos básicos
             $data = $this->Tema_model->basico($tema_id);

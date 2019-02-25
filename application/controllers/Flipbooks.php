@@ -766,8 +766,8 @@ class Flipbooks extends CI_Controller{
         }
             
         $this->output
-         ->set_content_type('application/json')
-         ->set_output($data_str);
+        ->set_content_type('application/json')
+        ->set_output($data_str);
     }
     
     /**
@@ -801,8 +801,8 @@ class Flipbooks extends CI_Controller{
         if ( strlen($data_str) > 0 ) { $resultado['ejecutado'] = 1; }
         
         $this->output
-         ->set_content_type('application/json')
-         ->set_output(json_encode($resultado));
+        ->set_content_type('application/json')
+        ->set_output(json_encode($resultado));
     }
     
     

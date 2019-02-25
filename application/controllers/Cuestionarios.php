@@ -908,8 +908,8 @@ class Cuestionarios extends CI_Controller{
         $data['cant_preguntas'] = $preguntas->num_rows();
         
         $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($data));
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
     }
     
     /**

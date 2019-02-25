@@ -551,7 +551,8 @@ class Flipbook_model extends CI_Model {
         return $arr_quices;
     }
 
-    function quices($flipbook_id) {
+    function quices($flipbook_id)
+    {
         $this->db->select('recurso.referente_id AS quiz_id, num_pagina, recurso.tema_id');
         $this->db->join('pagina_flipbook', 'recurso.tema_id = pagina_flipbook.tema_id');
         $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
