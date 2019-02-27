@@ -8,10 +8,10 @@
 <div id="app_asignar">
     <?php if ( $this->session->userdata('srol') == 'interno' ) { ?>
         <div class="sep1">
-            <?= form_dropdown('institucion_id', $opciones_institucion, $busqueda['i'], 'id="campo-institucion_id" class="form-control chosen-select" title="Filtrar por institución"'); ?>
+            <?php echo form_dropdown('institucion_id', $opciones_institucion, $busqueda['i'], 'id="campo-institucion_id" class="form-control chosen-select" title="Filtrar por institución"'); ?>
         </div>
     <?php } ?>
-    <div class="sep1">
+    <div class="mb-3">
         <?php echo form_dropdown('nivel', $opciones_nivel, $busqueda['n'], 'id="campo-nivel" class="form-control" title="Grupos por nivel"'); ?>
     </div>
 

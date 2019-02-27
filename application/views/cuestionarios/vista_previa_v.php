@@ -57,9 +57,7 @@
     $num_pregunta_sig = $this->Pcrn->rotar_entre($num_pregunta + 1, 1, $num_preguntas);
 ?>
 
-<?php $this->load->view('comunes/resultado_proceso_v'); ?>
-
-<div class="sep1">
+<div class="mb-3">
     <!-- Split button -->
     <div class="btn-group">
         <button type="button" class="btn btn-info">
@@ -72,45 +70,43 @@
         </button>
         <ul class="dropdown-menu">
             <li>
-                <?= anchor("cuestionarios/imprimir/{$row->id}", 'Cuestionario', 'title="Imprimir cuestionario" target="_blank"') ?>
+                <?php echo anchor("cuestionarios/imprimir/{$row->id}", 'Cuestionario', 'title="Imprimir cuestionario" target="_blank" class="dropdown-item"') ?>
             </li>
             <li>
-                <?= anchor("cuestionarios/imprimir/{$row->id}/respuestas", 'Respuestas', 'title="Hoja de respuestas cuestionario" target="_blank"') ?>
+                <?php echo anchor("cuestionarios/imprimir/{$row->id}/respuestas", 'Respuestas', 'title="Hoja de respuestas cuestionario" target="_blank" class="dropdown-item"') ?>
             </li>
         </ul>
     </div>
     
     <?php if ( $convertible ) { ?>
-        <?= $this->Pcrn->anchor_confirm("cuestionarios/convertir/{$row->id}", '<i class="fa fa-pencil-square-o"></i> Convertir en editable', 'class="btn btn-default" title="Convertir en un cuestionario simple, para editar preguntas."', '¿Confirma que quiere convertir este cuestionario en Editable?') ?>
+        <?php echo $this->Pcrn->anchor_confirm("cuestionarios/convertir/{$row->id}", '<i class="fa fa-pencil-square-o"></i> Convertir en editable', 'class="btn btn-secondary" title="Convertir en un cuestionario simple, para editar preguntas."', '¿Confirma que quiere convertir este cuestionario en Editable?') ?>
     <?php } ?>
     
 
 </div>
 
 
-
-
-<link type="text/css" rel="stylesheet" href="<?= base_url() ?>css/apanel2/cuestionario.css">
+<link type="text/css" rel="stylesheet" href="<?php echo base_url() ?>css/acard2/cuestionario.css">
 
 <script>
     
 //FUNCIONES
 //------------------------------------------------------------------------------------------
-    var base_url = '<?= base_url() ?>';
-    var uc_id = <?= $row->id ?>;
-    var usuario_id = <?= $row->usuario_id ?>;
-    var pregunta_id = <?= $row_pregunta->id ?>;
-    var cuestionario_id = <?= $row->cuestionario_id ?>;
+    var base_url = '<?php echo base_url() ?>';
+    var uc_id = <?php echo $row->id ?>;
+    var usuario_id = <?php echo $row->usuario_id ?>;
+    var pregunta_id = <?php echo $row_pregunta->id ?>;
+    var cuestionario_id = <?php echo $row->cuestionario_id ?>;
     
-    var num_preguntas = <?= $num_preguntas ?>;
-    var num_respondidas = <?= $row->num_con_respuesta ?>;
-    var num_respondidas_mas = <?= $num_respondidas_mas ?>;
-    var num_respondidas_menos = <?= $num_respondidas_menos ?>;
-    var sin_repuesta = <?= $sin_respuesta ?>;
+    var num_preguntas = <?php echo $num_preguntas ?>;
+    var num_respondidas = <?php echo $row->num_con_respuesta ?>;
+    var num_respondidas_mas = <?php echo $num_respondidas_mas ?>;
+    var num_respondidas_menos = <?php echo $num_respondidas_menos ?>;
+    var sin_repuesta = <?php echo $sin_respuesta ?>;
     
-    var porcentaje = <?= $porcentaje_inicial ?>;
-    var porcentaje_mas = <?= $porcentaje_mas ?>;
-    var porcentaje_menos = <?= $porcentaje_menos ?>;
+    var porcentaje = <?php echo $porcentaje_inicial ?>;
+    var porcentaje_mas = <?php echo $porcentaje_mas ?>;
+    var porcentaje_menos = <?php echo $porcentaje_menos ?>;
     var respuesta = 0;
 
 //DOCUMENT READY
@@ -190,20 +186,20 @@
     
     <div class="col-md-8">
         
-        <div class="sep1">
+        <div class="mb-3">
 
             <!-- Nav tabs -->
-            <ul class="nav nav-tabs sep1" role="tablist">
-                <li role="presentation" class="active">
-                    <a href="#tab_pregunta" aria-controls="home" role="tab" data-toggle="tab">
-                        Pregunta <?= $num_pregunta; ?>
+            <ul class="nav nav-tabs mb-3" role="tablist">
+                <li role="presentation" class="nav-item">
+                    <a href="#tab_pregunta" aria-controls="home" role="tab" data-toggle="tab" class="nav-link active">
+                        Pregunta <?php echo $num_pregunta; ?>
                     </a>
                 </li>
                 
                 <?php if ( ! is_null($row_enunciado) ) { ?>
-                    <li role="presentation" class="">
-                        <a href="#tab_enunciado" aria-controls="profile" role="tab" data-toggle="tab">
-                            <span class="label label-danger">
+                    <li role="presentation" class="nav-item">
+                        <a class="nav-link" href="#tab_enunciado" aria-controls="profile" role="tab" data-toggle="tab">
+                            <span class="badge badge-danger">
                                 <i class="fa fa-caret-right"></i> Lectura
                             </span>
                         </a>
@@ -213,28 +209,28 @@
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="tab_pregunta">
-                    <div class="sep1">
+                <div role="tabcard" class="tab-pane active" id="tab_pregunta">
+                    <div class="mb-3">
                         <div class="row">
                             <div class="col col-sm-6">
-                                <?= anchor("cuestionarios/vista_previa/{$row->id}/{$num_pregunta_ant}", '<i class="fa fa-arrow-left"></i>', 'class="btn btn-default w3" title="Pregunta anterior"') ?>
-                                <?= anchor("cuestionarios/vista_previa/{$row->id}/{$num_pregunta_sig}", '<i class="fa fa-arrow-right"></i>', 'class="btn btn-default w3" title="Siguiente pregunta"') ?>
+                                <?php echo anchor("cuestionarios/vista_previa/{$row->id}/{$num_pregunta_ant}", '<i class="fa fa-arrow-left"></i>', 'class="btn btn-secondary w3" title="Pregunta anterior"') ?>
+                                <?php echo anchor("cuestionarios/vista_previa/{$row->id}/{$num_pregunta_sig}", '<i class="fa fa-arrow-right"></i>', 'class="btn btn-secondary w3" title="Siguiente pregunta"') ?>
                             </div>
                             <div class="col col-sm-6">
-                                <div class="btn btn-default pull-right" id="borrar_respuesta">
+                                <div class="btn btn-warning float-right" id="borrar_respuesta">
                                     Borrar respuesta
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="panel panel-default">
-                        <div class="panel-body">
+                    <div class="card card-default">
+                        <div class="card-body">
 
-                            <div class="sep1">
-                                <p style="font-size: 1.1em;"><?= $row_pregunta->texto_pregunta ?></p>
+                            <div class="mb-3">
+                                <p style="font-size: 1.1em;"><?php echo $row_pregunta->texto_pregunta ?></p>
                             </div>
 
-                            <div class="sep1">
+                            <div class="mb-3">
 
                                 <?php foreach ($opciones_numeros as $opcion_numero) : ?>
                                     <?php
@@ -243,17 +239,17 @@
                                         if ( $respuesta_actual == $opcion_numero ) { $clase_opcion = 'opcion_correcta'; }
                                         $campo = 'opcion_' . $opcion_numero;
                                     ?>
-                                    <div class="panel panel-default opcion_respuesta <?= $clase_opcion ?>" data-respuesta="<?= $opcion_numero ?>">
-                                        <div class="panel-body">
+                                    <div class="card card-default mb-3 opcion_respuesta <?php echo $clase_opcion ?>" data-respuesta="<?php echo $opcion_numero ?>">
+                                        <div class="card-body">
                                             <?php if ( strlen($row_pregunta->$campo) > 0 ) { ?>
-                                                <span class="etiqueta informacion w1">
-                                                    <?= $opciones_letras[$key_opcion] ?>
+                                                <span class="badge badge-primary informacion w1">
+                                                    <?php echo $opciones_letras[$key_opcion] ?>
                                                 </span>
-                                                <?= $row_pregunta->$campo ?>
+                                                <?php echo $row_pregunta->$campo ?>
                                                 
                                             <?php } else { ?>
-                                                <span class="etiqueta informacion w1">
-                                                    <?= $opciones_letras[$opcion_numero]; ?>
+                                                <span class="badge badge-primary w1">
+                                                    <?php echo $opciones_letras[$opcion_numero]; ?>
                                                 </span>
                                             <?php } ?>
                                         </div>
@@ -265,9 +261,9 @@
                             
                             <!-- Mostrar imagen si la pregunta tiene respuestas en imagen -->
                             <?php if ( strlen($row_pregunta->archivo_imagen) > 0 ):?>
-                                <div class="sep1 text-center">
+                                <div class="mb-3 text-center">
                                     <div class="thumbnail">
-                                        <?= img($att_img) ?>
+                                        <?php echo img($att_img) ?>
                                     </div>
                                 </div>
                             <?php endif ?>
@@ -278,20 +274,20 @@
                     </div>
                 </div>
                 
-                <div role="tabpanel" class="tab-pane" id="tab_enunciado">
+                <div role="tabcard" class="tab-pane" id="tab_enunciado">
                     <!--  Mostar Enunciado si la pregunta tiene uno asignado -->
                     <?php if ( $row_enunciado != NULL ){?>
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <?= $row_enunciado->nombre_post ?>
+                        <div class="card card-default">
+                            <div class="card-heading">
+                                <?php echo $row_enunciado->nombre_post ?>
                             </div>
-                            <div class="panel-body">
-                                <?= $row_enunciado->contenido ?>
+                            <div class="card-body">
+                                <?php echo $row_enunciado->contenido ?>
                                 <?php if ( strlen($row_enunciado->texto_2) > 0 ){ ?>
                                     <hr/>
                                     <div>
                                         <div style="margin: 0 auto; max-width: 600px; max-height: 600px;">
-                                            <?= img($att_img_enunciado) ?>
+                                            <?php echo img($att_img_enunciado) ?>
                                         </div>
                                     </div>
                                 <?php } ?>
@@ -307,43 +303,46 @@
     </div>
     
     <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card card-default">
+            <div class="card-body">
                 <div id="the_final_countdown_v4"></div>
-                <div class="progress">
-                    <div id="barra_porcentaje" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: <?= $porcentaje_inicial ?>%;">
-                        <?= $porcentaje_inicial ?>%
+                <div class="progress mb-3">
+                    <div id="barra_porcentaje" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo '30' ?>%;">
+                        <?php echo '30' ?>%
                     </div>
                 </div>
-                <?php foreach ($arr_respuestas as $key => $respuesta) { ?>
-                    <?php
-                        $i = $key + 1;
-                        $clase = 'btn btn-sm btn-default';
-                        if ( $respuesta > 0 ) { $clase = 'btn btn-sm btn-info'; }
-                        if ( $i == $num_pregunta ) { $clase = 'btn btn-sm btn-warning '; }
-                        
-                    ?>
-                    <?= anchor("cuestionarios/vista_previa/{$row->id}/{$i}/", $i, 'class="' . $clase . '" style="width: 35px; margin-bottom: 2px;"') ?>
-                <?php } ?>
+
+                <div class="mb-3">
+                    <?php foreach ($arr_respuestas as $key => $respuesta) { ?>
+                        <?php
+                            $i = $key + 1;
+                            $clase = 'btn btn-sm btn-secondary';
+                            if ( $respuesta > 0 ) { $clase = 'btn btn-sm btn-info'; }
+                            if ( $i == $num_pregunta ) { $clase = 'btn btn-sm btn-warning '; }
+                            
+                        ?>
+                        <?php echo anchor("cuestionarios/vista_previa/{$row->id}/{$i}/", $i, 'class="' . $clase . '" style="width: 35px; margin-bottom: 2px;"') ?>
+                    <?php } ?>
+                </div>
                 
-                <div class="sep2 hidden-xs">
+                <div class="mb-3 hidden-xs">
                     <ul class="list-group">
                         <li class="list-group-item">
-                          <span class="badge"><?= $row->num_preguntas ?></span>
+                          <span class="badge badge-secondary"><?php echo $row->num_preguntas ?></span>
                           Preguntas
                         </li>
                         <li class="list-group-item">
-                          <span class="badge" id="num_respondidas"><?= $row->num_con_respuesta ?></span>
+                          <span class="badge badge-secondary" id="num_respondidas">0</span>
                           Respondidas
                         </li>
                         <li class="list-group-item" id="num_sin_respuesta">
-                          <span class="badge badge-danger" id="sin_respuesta"><?= $sin_respuesta ?></span>
+                          <span class="badge badge-secondary" id="sin_respuesta"><?php echo $sin_respuesta ?></span>
                           Sin responder
                         </li>
                   </ul>
                 </div>
                 
-                <div class="sep2">
+                <div class="">
                     <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#confirmar_finalizar">
                         Finalizar
                     </button>
@@ -354,24 +353,4 @@
     </div>
     
     
-</div>
-
-<?php //Ventana modal Confirma Finalizar ?>
-
-<div class="modal fade" id="confirmar_finalizar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Plataforma Enlace</h4>
-            </div>
-            <div class="modal-body" id="mensaje_confirmacion">
-                Tiene <span id="sin_respuesta_mensaje"><?= $sin_respuesta ?></span> preguntas sin responder ¿Confirma la terminación del cuestionario?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                <?= anchor("cuestionarios/vista_previa/{$row->id}", 'Finalizar', 'title="Finalizar cuestionario..." class="btn btn-primary"') ?>
-            </div>
-        </div>
-    </div>
 </div>

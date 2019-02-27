@@ -77,19 +77,6 @@ class Cuestionarios extends CI_Controller{
             ->set_content_type('application/json')
             ->set_output(json_encode($respuesta));
     }
-
-    /**
-     * POST REDIRECT
-     * 2018-01-17
-     * Toma los datos de POST, los establece en formato GET para url y redirecciona
-     * a la función de explorar cuestionarios
-     */
-    function redirect_explorar($filtro_alcance)
-    {
-        $this->load->model('Busqueda_model');
-        $busqueda_str = $this->Busqueda_model->busqueda_str();
-        redirect("cuestionarios/explorar/{$filtro_alcance}/?{$busqueda_str}");
-    }
     
     /**
      * AJAX JSON
@@ -200,17 +187,9 @@ class Cuestionarios extends CI_Controller{
             if ( ! $this->Cuestionario_model->editable($cuestionario_id) ) { $data['vista_a'] = 'app/no_permitido_v'; }
             
         //Solicitar vista
-            $data['vista_b'] = 'app/gc_v';
+            $data['vista_b'] = 'comunes/gc_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN, $output);
-    }
-    
-    function eliminar($cuestionario_id)
-    {
-        $this->Cuestionario_model->eliminar($cuestionario_id);
-        $destino = "cuestionarios/explorar";
-        
-        redirect($destino);
+            $this->load->view(PTL_ADMIN_2, $output);
     }
     
 // CREAR COPIA DE UN CUESTIONARIO
@@ -232,7 +211,7 @@ class Cuestionarios extends CI_Controller{
         //Solicitar vista
             $data['titulo_pagina'] .= ' - Copiar';
             $data['vista_b'] = 'cuestionarios/copiar_cuestionario_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(PTL_ADMIN_2, $data);
     }
     
     /**
@@ -327,7 +306,7 @@ class Cuestionarios extends CI_Controller{
         
         //Solicitar vista
             $data['vista_b'] = 'cuestionarios/grupos_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(PTL_ADMIN_2, $data);
     }
     
     /**
@@ -367,7 +346,7 @@ class Cuestionarios extends CI_Controller{
             $data['cuestionario_id'] = $cuestionario_id;
             $data['vista_b'] = 'cuestionarios/preguntas_v';
 
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(PTL_ADMIN_2, $data);
     }
     
     function temas($cuestionario_id)
@@ -380,9 +359,10 @@ class Cuestionarios extends CI_Controller{
             $data['subtitulo_pagina'] = 'Temas';
             $data['vista_b'] = 'cuestionarios/temas_v';
 
-        $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(PTL_ADMIN_2, $data);
     }
     
+    //FUNCIÓN DESACTIVADA 2019-02-25
     function sugerencias($cuestionario_id, $area_id = 0, $competencia_id = 0)
     {
         //Cargando datos básicos (Cuestionario_model->basico)
@@ -508,6 +488,9 @@ class Cuestionarios extends CI_Controller{
         ->set_output(json_encode($resultado));
     }
     
+// ASIGNACIÓN DE CUESTIONARIOS
+//-----------------------------------------------------------------------------
+
     function asignar($cuestionario_id, $grupo_id = 0, $institucion_id = 0)
     {
         $this->load->model('Grupo_model');
@@ -530,7 +513,7 @@ class Cuestionarios extends CI_Controller{
         //Solicitar vista
             $data['vista_b'] = 'cuestionarios/asignar_v';
             $data['ayuda_id'] = 116;
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(PTL_ADMIN_2, $data);
     }
     
     /**
@@ -761,10 +744,8 @@ class Cuestionarios extends CI_Controller{
         $resultado['ejecutado'] = 1;
         
         $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode($resultado));
-        
-        //$this->output->enable_profiler(TRUE);
+        ->set_content_type('application/json')
+        ->set_output(json_encode($resultado));
     }
     
     /**
@@ -938,7 +919,6 @@ class Cuestionarios extends CI_Controller{
     
     function n_finalizar($uc_id)
     {
-     
         set_time_limit(180);    //180 segundos, 3 minutos para finalizar
         
         $this->session->set_userdata('uc_id', 0);   //Se quita la asignación de cuestionarios, de la variable de sesión
@@ -951,8 +931,8 @@ class Cuestionarios extends CI_Controller{
         $resultado['cant_respuestas'] = $cant_respuestas;
 
         $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($resultado));
+        ->set_content_type('application/json')
+        ->set_output(json_encode($resultado));
     }
     
 // 
@@ -986,7 +966,7 @@ class Cuestionarios extends CI_Controller{
     }
     
     /**
-     * Finalizar un cuestionario
+     * Finalizar el proceso de respuesta de un cuestionario
      * @param type $uc_id
      */
     function finalizar($uc_id)
@@ -1002,8 +982,6 @@ class Cuestionarios extends CI_Controller{
         $data['subtitulo_pagina'] = 'Cuestionario finalizado';
         $data['vista_a'] = 'cuestionarios/cuestionario_v';
         $data['vista_b'] = 'cuestionarios/finalizar_v';
-        
-        //$this->output->enable_profiler(TRUE);
         
         $this->load->view(PTL_ADMIN, $data);
     }
@@ -1077,7 +1055,7 @@ class Cuestionarios extends CI_Controller{
         }
         
         //Cargar vista
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(PTL_ADMIN_2, $data);
     }
     
     
@@ -1167,7 +1145,7 @@ class Cuestionarios extends CI_Controller{
         
         //Solicitar vista
             $data['vista_a'] = 'cuestionarios/resolver_lote_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(PTL_ADMIN_2, $data);
         
     }
     
@@ -1438,6 +1416,6 @@ class Cuestionarios extends CI_Controller{
         //Solicitar vista
             $data['subtitulo_pagina'] = 'Nueva pregunta';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN, $output);
+            $this->load->view(PTL_ADMIN_2, $output);
     }
 }

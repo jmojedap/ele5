@@ -58,31 +58,24 @@
             'atributos' => 'title="Grupos en los que está asignado el cuestionario"'
         );
         
-        $arr_menus['sugerencias'] = array(
-            'icono' => '',
-            'texto' => 'Sugerencias',
-            'link' => "cuestionarios/sugerencias/{$row->id}",
-            'atributos' => 'title="Sugerencias"'
-        );
-        
         $arr_menus['copiar_cuestionario'] = array(
-            'icono' => '<i class="fa fa-files-o"></i>',
+            'icono' => '<i class="fa fa-files"></i>',
             'texto' => 'Copia',
             'link' => "cuestionarios/copiar_cuestionario/{$row->id}",
             'atributos' => 'title="Crear copia de cuestionario"'
         );
         
         $arr_menus['editar'] = array(
-            'icono' => '<i class="fa fa-pencil"></i>',
+            'icono' => '<i class="fa fa-pencil-alt"></i>',
             'texto' => 'Editar',
             'link' => "cuestionarios/editar/edit/{$row->id}",
             'atributos' => ''
         );
         
     //Elementos de menú para cada rol
-        $elementos_rol[0] = array('explorar', 'vista_previa', 'preguntas', 'temas', 'grupos', 'asignar', 'sugerencias', 'copiar_cuestionario', 'editar');
-        $elementos_rol[1] = array('explorar', 'vista_previa', 'preguntas', 'temas', 'grupos', 'asignar', 'sugerencias', 'copiar_cuestionario', 'editar');
-        $elementos_rol[2] = array('explorar', 'vista_previa', 'preguntas', 'temas', 'grupos', 'asignar', 'sugerencias', 'copiar_cuestionario', 'editar');
+        $elementos_rol[0] = array('explorar', 'vista_previa', 'preguntas', 'temas', 'grupos', 'asignar', 'copiar_cuestionario', 'editar');
+        $elementos_rol[1] = array('explorar', 'vista_previa', 'preguntas', 'temas', 'grupos', 'asignar', 'copiar_cuestionario', 'editar');
+        $elementos_rol[2] = array('explorar', 'vista_previa', 'preguntas', 'temas', 'grupos', 'asignar', 'copiar_cuestionario', 'editar');
         $elementos_rol[3] = array('explorar', 'vista_previa', 'temas', 'grupos', 'asignar');
         $elementos_rol[4] = array('explorar', 'vista_previa', 'temas', 'grupos', 'asignar');
         $elementos_rol[5] = array('explorar', 'vista_previa', 'temas', 'grupos', 'asignar');
@@ -130,6 +123,6 @@
     <span class="resaltar"><?= $row->num_estudiantes ?></span> |
 </p>
     
-<?= $this->load->view('app/menu_v', $data_menu)?>
-<?= $this->load->view($vista_b)?>
+<?php $this->load->view('comunes/bs4/menu_v', $data_menu)?>
+<?php $this->load->view($vista_b)?>
             

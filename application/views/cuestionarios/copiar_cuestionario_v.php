@@ -1,51 +1,46 @@
-<?php
-
-    $att_nombre_cuestionario = array(
-        'name' => 'nombre_cuestionario',
-        'class' => 'form-control',
-        'value' => "{$row->nombre_cuestionario} - Copia"
-    );
-        
+<?php   
     $att_descripcion = array(
         'name' => 'descripcion',
         'class' => 'form-control',
         'rows' => 5,
         'value' => "Copia de {$row->nombre_cuestionario} | {$row->descripcion}"
     );
-        
-    $att_submit = array(
-        'class' =>  'btn btn-primary',
-        'value' =>  'Crear'
-    );
-    
-
 ?>
 
-<?= form_open('cuestionarios/generar_copia') ?>
-    <?= form_hidden('cuestionario_id', $row->id) ?>
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div class="div1">
-                <label for="nombre_cuestionario" class="label1">Nombre del cuestionario</label><br/>
-                <p class="descripcion">Nombre del nuevo cuestionario</p>
-                <?= form_input($att_nombre_cuestionario) ?>
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <?php echo form_open('cuestionarios/generar_copia') ?>
+            <?php echo form_hidden('cuestionario_id', $row->id) ?>
+            <div class="card card-default">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="nombre_cuestionario" class="label1">Nombre del cuestionario</label><br/>
+                        <input
+                            type="text"
+                            name="nombre_cuestionario"
+                            class="form-control"
+                            placeholder="nombre cuestionario"
+                            title="nombre cuestionario"
+                            value=""<?php echo "{$row->nombre_cuestionario} - Copia" ?>
+                            >
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion" class="label1">Descripción</label><br/>
+                        <?php echo form_textarea($att_descripcion) ?>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-success btn-lg btn-block" type="submit">Crear</button>
+                    </div>
+                </div>
             </div>
-            <div class="div1">
-                <label for="descripcion" class="label1">Descripción</label><br/>
-                <p class="descripcion">Descripción del cuestionario nuevo</p>
-                <?= form_textarea($att_descripcion) ?>
-            </div>
-            <div class="div1">
-                <?= form_submit($att_submit) ?>
-            </div>
-        </div>
-    </div>
-        
+                
 
-<?= form_close() ?>
+        <?php echo form_close() ?>
 
-<?php if ( validation_errors() ):?>
-    <div class="modulo2 width_full">
-        <?= validation_errors('<div class="alert alert-danger">', '</div>') ?>
+        <?php if ( validation_errors() ):?>
+            <div class="modulo2 width_full">
+                <?php echo validation_errors('<div class="alert alert-danger">', '</div>') ?>
+            </div>
+        <?php endif ?>
     </div>
-<?php endif ?>
+</div>

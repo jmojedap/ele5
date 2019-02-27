@@ -105,7 +105,7 @@
 
 <div class="row">
     <div class="col col-md-3" style="min-height: 600px;">
-        <div class="sep1">
+        <div class="mb-3">
             <?php if ( $instituciones->num_rows() > 0 ){ ?>
                 <div class="" style="">
                     <?= form_dropdown('institucion_id', $opciones_institucion, $institucion_id, 'id="institucion_id" class="form-control chosen-select"') ?>
@@ -139,9 +139,9 @@
             <div class="row">
                 <div class="col-md-6">
                     <a class="btn btn-warning" title="Eliminar los elementos seleccionados" data-toggle="modal" data-target="#modal_eliminar">
-                        <i class="fa fa-trash-o"></i>
+                        <i class="fas fa-trash"></i>
                     </a>
-                    <?= anchor("cuestionarios/grupos_exportar/{$cuestionario_id}/{$grupo_id}", '<i class="fa fa-file-excel-o"></i> Exportar', 'class="btn btn-success" title="Exportar resultados a MS-Excel" target="_blank"') ?>
+                    <?= anchor("cuestionarios/grupos_exportar/{$cuestionario_id}/{$grupo_id}", '<i class="fa fa-file-excel"></i> Exportar', 'class="btn btn-success" title="Exportar resultados a MS-Excel" target="_blank"') ?>
 
                     <a href="<?php echo base_url("respuestas/formatos/{$cuestionario_id}/{$grupo_id}") ?>" class="btn btn-primary" target="_blank">
                         <i class="fa fa-download"></i>
@@ -181,9 +181,9 @@
                         $nombre_estudiante = $row_estudiante->apellidos . ' ' . $row_estudiante->nombre;
                         $link_estudiante = anchor("usuarios/resultados/{$row_estudiante->usuario_id}/{$row_estudiante->uc_id}", $nombre_estudiante);
 
-                        $link_responder = anchor("cuestionarios/resolver_lote/$row_estudiante->uc_id", '<i class="fa fa-pencil-square-o"></i>', 'class="btn btn-default btn-xs"');
-                        $link_reiniciar = $this->Pcrn->anchor_confirm("cuestionarios/reiniciar/{$row_estudiante->uc_id}/1", '<i class="fa fa-repeat"></i>', 'class="btn btn-warning btn-xs" title="Reiniciar el cuestionario para este estudiante"', "Las respuestas de este estudiante para esta prueba se eliminarán ¿Desea continuar?");
-                        $link_finalizar = $this->Pcrn->anchor_confirm("cuestionarios/finalizar_externo/{$row_estudiante->uc_id}/grupo", '<i class="fa fa-check"></i>', 'class="btn btn-info btn-xs" title="Finalizar el cuestionario de este estudiante"', "Se calcularán totales y se finalizará el cuestionario de este estudiante ¿Desea continuar?");
+                        $link_responder = anchor("cuestionarios/resolver_lote/$row_estudiante->uc_id", '<i class="fa fa-pencil-alt"></i>', 'class="btn btn-secondary btn-sm"');
+                        $link_reiniciar = $this->Pcrn->anchor_confirm("cuestionarios/reiniciar/{$row_estudiante->uc_id}/1", '<i class="fa fa-sync-alt"></i>', 'class="btn btn-warning btn-sm" title="Reiniciar el cuestionario para este estudiante"', "Las respuestas de este estudiante para esta prueba se eliminarán ¿Desea continuar?");
+                        $link_finalizar = $this->Pcrn->anchor_confirm("cuestionarios/finalizar_externo/{$row_estudiante->uc_id}/grupo", '<i class="fa fa-check"></i>', 'class="btn btn-info btn-sm" title="Finalizar el cuestionario de este estudiante"', "Se calcularán totales y se finalizará el cuestionario de este estudiante ¿Desea continuar?");
                         $porcentaje_con_respuesta = number_format(100 * $row_estudiante->num_con_respuesta / $this->Pcrn->no_cero($row->num_preguntas), 0);
                         
                         $filtros['usuario_pregunta.usuario_id'] = $row_estudiante->usuario_id;
@@ -274,4 +274,4 @@
     </div>
 </div>
 
-<?= $this->load->view('app/modal_eliminar'); ?>
+<?= $this->load->view('comunes/bs4/modal_eliminar_v'); ?>

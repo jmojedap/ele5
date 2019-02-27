@@ -14,13 +14,13 @@
     
     <?php if ( $editar_preguntas ) : ?>                
         <p>
-            <?= anchor("cuestionarios/pregunta_nueva/{$row->id}/0/add/{$filtro_pregunta}", 'Insertar pregunta al inicio', 'class="btn btn-default"') ?>
-            <?= anchor("cuestionarios/pregunta_nueva/{$row->id}/{$preguntas->num_rows()}/add/{$filtro_pregunta}", 'Insertar pregunta al final', 'class="btn btn-default"') ?>
+            <?php echo anchor("cuestionarios/pregunta_nueva/{$row->id}/0/add/{$filtro_pregunta}", 'Insertar pregunta al inicio', 'class="btn btn-secondary"') ?>
+            <?php echo anchor("cuestionarios/pregunta_nueva/{$row->id}/{$preguntas->num_rows()}/add/{$filtro_pregunta}", 'Insertar pregunta al final', 'class="btn btn-secondary"') ?>
         </p>
     <?php endif ?>
     
     
-    <table class="table bg-blanco">
+    <table class="table bg-white">
         <thead>
             <th width="50px">No.</th>
             <th width="50px"></th>
@@ -47,7 +47,7 @@
                     <tr>
                         <td colspan="7" class="centrado">
                             <span class="resaltar">
-                                <?= $this->App_model->nombre_item($row_pregunta->area_id); ?>
+                                <?php echo $this->App_model->nombre_item($row_pregunta->area_id); ?>
                             </span>
                         </td>
                     </tr>
@@ -56,29 +56,29 @@
                 <?php endif ?>
                         
                 <tr>
-                    <td><?= $num_registro + 1 ?></td>
-                    <td><?= $i ?></td>
-                    <td><?= $this->App_model->etiqueta_area($row_pregunta->area_id) ?></td>
-                    <td><?= $row_pregunta->texto_pregunta ?></td>
+                    <td><?php echo $num_registro + 1 ?></td>
+                    <td><?php echo $i ?></td>
+                    <td><?php echo $this->App_model->etiqueta_area($row_pregunta->area_id) ?></td>
+                    <td><?php echo $row_pregunta->texto_pregunta ?></td>
                     <td class="hidden-xs hidden-sm">
                         <?php if ( $this->session->userdata('srol') == 'interno' ) { ?>
-                            <?= anchor("temas/leer/{$row_pregunta->tema_id}", $nombre_tema, 'class="" title=""') ?>
+                            <?php echo anchor("temas/leer/{$row_pregunta->tema_id}", $nombre_tema, 'class="" title=""') ?>
                         <?php } else { ?>
-                            <?= $nombre_tema ?>
+                            <?php echo $nombre_tema ?>
                         <?php } ?>
                     </td>
-                    <td class="hidden-xs hidden-sm"><?= $this->App_model->nombre_item($row_pregunta->componente_id) ?></td>
-                    <td class="hidden-xs hidden-sm"><?= $this->App_model->nombre_item($row_pregunta->competencia_id) ?></td>
+                    <td class="hidden-xs hidden-sm"><?php echo $this->App_model->nombre_item($row_pregunta->componente_id) ?></td>
+                    <td class="hidden-xs hidden-sm"><?php echo $this->App_model->nombre_item($row_pregunta->competencia_id) ?></td>
                     <td class="hidden-xs">
                         
                         
                         <?php if ( $editar_preguntas ) : ?>                
                             
-                            <?= anchor("cuestionarios/mover_pregunta/{$row->id}/{$row_pregunta->pregunta_id}/{$num_subir}", '<i class="fa fa-caret-up"></i>', 'class="a4" title="subir pregunta"') ?>
-                            <?= anchor("cuestionarios/mover_pregunta/{$row->id}/{$row_pregunta->pregunta_id}/{$num_bajar}", '<i class="fa fa-caret-down"></i>', 'class="a4" title="bajar pregunta"') ?>
-                            <?= anchor("cuestionarios/pregunta_nueva/{$row->id}/{$num_siguiente}/add", '<i class="fa fa-caret-right"></i>', 'class="a4" title="Insertar pregunta después de esta"') ?>
-                            <?= anchor("preguntas/editar/edit/{$row_pregunta->pregunta_id}", '<i class="fa fa-pencil"></i>', 'class="a4" target="_blank" title="Detalle de la pregunta"') ?>
-                            <?= $this->Pcrn->anchor_confirm("cuestionarios/quitar_pregunta/{$row->id}/{$row_pregunta->pregunta_id}", '<i class="fa fa-times"></i>', 'class="a4" title="Quitar pregunta de este cuestionario"', '¿Desea quitar esta pregunta del cuestionario?') ?>
+                            <?php echo anchor("cuestionarios/mover_pregunta/{$row->id}/{$row_pregunta->pregunta_id}/{$num_subir}", '<i class="fa fa-caret-up"></i>', 'class="a4" title="subir pregunta"') ?>
+                            <?php echo anchor("cuestionarios/mover_pregunta/{$row->id}/{$row_pregunta->pregunta_id}/{$num_bajar}", '<i class="fa fa-caret-down"></i>', 'class="a4" title="bajar pregunta"') ?>
+                            <?php echo anchor("cuestionarios/pregunta_nueva/{$row->id}/{$num_siguiente}/add", '<i class="fa fa-caret-right"></i>', 'class="a4" title="Insertar pregunta después de esta"') ?>
+                            <?php echo anchor("preguntas/editar/edit/{$row_pregunta->pregunta_id}", '<i class="fa fa-pencil-alt"></i>', 'class="a4" target="_blank" title="Detalle de la pregunta"') ?>
+                            <?php echo $this->Pcrn->anchor_confirm("cuestionarios/quitar_pregunta/{$row->id}/{$row_pregunta->pregunta_id}", '<i class="fa fa-times"></i>', 'class="a4" title="Quitar pregunta de este cuestionario"', '¿Desea quitar esta pregunta del cuestionario?') ?>
                             
                         <?php endif ?>
                     </td>

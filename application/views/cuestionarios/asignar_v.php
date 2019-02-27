@@ -120,8 +120,8 @@
 
     <div class="row">
         <div class="col col-md-4" style="min-height: 600px;">
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     <p class="p1">
                         En esta sección puede asignar o editar la asignación de los estudiantes de un grupo al cuestionario
                         <span class="resaltar"><?= $row->nombre_cuestionario ?></span>.
