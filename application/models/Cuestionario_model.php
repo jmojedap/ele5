@@ -871,7 +871,7 @@ class Cuestionario_model extends CI_Model
         
         //Se carga la lista de estudiantes que pertenecen un grupo
             $this->load->model('Grupo_model');
-            $estudiantes = $this->Grupo_model->estudiantes($row_asignacion->grupo_id, 'iniciado = 1');
+            $estudiantes = $this->Grupo_model->estudiantes($row_asignacion->grupo_id, 'pago = 1');  //Mod 2019-02-27, antes tenía restricción con el campo usuario.iniciado
 
             foreach ($estudiantes->result() as $row_estudiante)
             {
