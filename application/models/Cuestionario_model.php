@@ -4,13 +4,11 @@ class Cuestionario_model extends CI_Model
     
     function basico($cuestionario_id)
     {
-        $row = $this->datos_cuestionario($cuestionario_id);
-        
         $basico['cuestionario_id'] = $cuestionario_id;
-        $basico['row'] = $row;
-        $basico['titulo_pagina'] = $row->nombre_cuestionario;
+        $basico['row'] =  $this->Pcrn->registro_id('cuestionario', $cuestionario_id);
+        $basico['row']->num_preguntas =  $this->num_preguntas($cuestionario_id);
+        $basico['titulo_pagina'] = $basico['row']->nombre_cuestionario;
         $basico['vista_a'] = 'cuestionarios/cuestionario_v';
-        $basico['reg_cuestionario'] = $row;
         
         return $basico;
     }
@@ -160,7 +158,7 @@ class Cuestionario_model extends CI_Model
         
     }
     
-    function datos_cuestionario($cuestionario_id)
+    /*function datos_cuestionario($cuestionario_id)
     {
         
         $row = $this->Pcrn->registro_id('cuestionario', $cuestionario_id);
@@ -174,7 +172,7 @@ class Cuestionario_model extends CI_Model
             $row->num_estudiantes = $query->num_rows();
         
         return $row;
-    }
+    }*/
     
     function num_preguntas($cuestionario_id)
     {
@@ -632,7 +630,6 @@ class Cuestionario_model extends CI_Model
         
         return $query;   
     }
-
     
     /**
      * Devuelve un query con los estudiantes de un grupo que están asignados con un determinado cuestionario
@@ -654,20 +651,8 @@ class Cuestionario_model extends CI_Model
         $this->db->where("usuario_cuestionario.grupo_id = {$grupo_id}");
         $this->db->order_by('apellidos', 'ASC');
         $query = $this->db->get('usuario');
+
         return $query;
-        
-        /*$select = 'nombre, apellidos, ';
-        $select .= 'usuario_grupo.usuario_id, fecha_inicio, fecha_fin, usuario_cuestionario.estado, num_con_respuesta, inicio_respuesta, ';
-        $select .= 'item.item AS nombre_estado, ';
-        $select .= 'usuario_cuestionario.id AS uc_id';*/
-        
-        /*$this->db->select($select);
-        $this->db->join('usuario_grupo', 'usuario.id = usuario_grupo.usuario_id');
-        $this->db->where('usuario_grupo.grupo_id', $grupo_id);
-        $this->db->where('usuario.iniciado', 1);
-        $this->db->order_by('apellidos', 'ASC');
-        $this->db->join('usuario_cuestionario', "usuario.id = usuario_cuestionario.usuario_id AND cuestionario_id = {$cuestionario_id}", 'LEFT');
-        $query = $this->db->get('usuario');*/
     }
     
     
@@ -699,32 +684,6 @@ class Cuestionario_model extends CI_Model
         $this->db->order_by('nivel', 'ASC');
         $this->db->order_by('nombre_grupo', 'ASC');
         $query = $this->db->get('grupo');
-        
-        return $query;
-    }
-    
-    
-    /**
-     * 2018-09-20
-     * Query con grupos asignados a un cuestionario.
-     * 
-     * @param type $cuestionario_id
-     * @return type
-     */
-    function z_n_grupos($cuestionario_id, $institucion_id)
-    {
-        $select = 'evento.id, evento.grupo_id, nombre_grupo';
-        $select .= ', grupo.institucion_id, nombre_institucion';
-        $select .= ', entero_1 AS tiempo_minutos, fecha_inicio, fecha_fin';
-        
-        $this->db->select($select);
-        $this->db->where('referente_id', $cuestionario_id);
-        $this->db->where('evento.institucion_id', $institucion_id);
-        $this->db->where('tipo_id', 22);    //Asignación de cuestionario
-        $this->db->join('grupo', 'grupo.id = evento.grupo_id');
-        $this->db->join('institucion', 'institucion.id = grupo.institucion_id');
-        $this->db->order_by('grupo.nombre_grupo', 'ASC');
-        $query = $this->db->get('evento');
         
         return $query;
     }
@@ -885,32 +844,6 @@ class Cuestionario_model extends CI_Model
         return $resultado;
         
     }
-    
-    /**
-     * Crea el registro de asignación de cuestionario a un grupo en la tabla 
-     * meta
-     * 
-     * @param type $cuestionario_id
-     * @return type
-     */
-    function z_asignar_alt($cuestionario_id)
-    {
-        $registro['tabla_id'] = 4100;   //Tabla grupo
-        $registro['dato_id'] = 410011;  //Asignación de grupo
-        $registro['elemento_id'] = $this->input->post('grupo_id');
-        $registro['relacionado_id'] = $cuestionario_id;
-        $registro['entero_1'] = $this->input->post('tiempo_minutos');
-        $registro['fecha_1'] = $this->input->post('fecha_inicio') . ' 00:00:00';
-        $registro['fecha_2'] = $this->input->post('fecha_fin') . ' 23:59:59';
-        $registro['editado'] = date('Y-m-d H:i:s');
-        $registro['creado'] = date('Y-m-d H:i:s');
-        $registro['usuario_id'] = $this->session->userdata('usuario_id');
-        
-        $this->load->model('Meta_model');
-        $meta_id = $this->Meta_model->guardar($registro);
-        
-        return $meta_id;
-    }
 
     /**
      * Genera la asignación de usuario_cuestionario con los datos del array
@@ -1034,7 +967,7 @@ class Cuestionario_model extends CI_Model
     }
     
     /**
-     *  Elimina un registro de la tabla usuario_cuestionario (uc)
+     * Elimina un registro de la tabla usuario_cuestionario (uc)
      * El parámetro condición es un array con el usuario_id y el cuestionario_id
      * que se desea eliminar
      */
@@ -1062,6 +995,9 @@ class Cuestionario_model extends CI_Model
         
     }
     
+// GESTIÓN DE CONTENIDO DEL CUESTIONARIO
+//-----------------------------------------------------------------------------
+
     /**
      * Crea una copia de un cuestionario, incluyendo las temas que lo componen
      * 
@@ -1243,6 +1179,38 @@ class Cuestionario_model extends CI_Model
         return $sql;
         
     }
+
+    /**
+     * String calculado, listado de respuestas correctas del cuestionario, separadas por guión.
+     */
+    function clave($cuestionario_id)
+    {
+        $clave = '';
+
+        $preguntas = $this->lista_preguntas($cuestionario_id);
+
+        if ( $preguntas->num_rows() > 0 )
+        {
+            $clave = $this->Pcrn->query_to_str($preguntas, 'clv');
+        }
+
+        return $clave;
+    }
+
+    /**
+     * Actualiza el campo cuestionario.clave, correspondiente al listado de respuestas correctas
+     * del cuestionario, separado por guión.
+     */
+    function act_clave($cuestionario_id)
+    {
+        $arr_row['clave'] = $this->clave($cuestionario_id);
+
+        $this->db->where('id', $cuestionario_id);
+        $this->db->update('cuestionario', $arr_row);
+    }
+
+// DATOS RELACIONADOS AL CUESTIONARIO
+//-----------------------------------------------------------------------------
     
     /**
      * Devuelve un query con las instituciones con estudiantes que están asignados a un determinado cuestionario
@@ -1782,15 +1750,14 @@ class Cuestionario_model extends CI_Model
      */
     function insertar_cp($registro)
     {
-        
         //Verificar que la pregunta no esté ya en el cuestionario
             $this->db->where('cuestionario_id', $registro['cuestionario_id']);
             $this->db->where('pregunta_id', $registro['pregunta_id']);
             $cant_registros = $this->db->count_all_results('cuestionario_pregunta');
             
         //Se inserta si el registro no existe
-            if ( $cant_registros == 0 ){
-                
+            if ( $cant_registros == 0 )
+            {
                 //Calculando el número de preguntas actual
                 $query = $this->db->get_where('cuestionario_pregunta', "cuestionario_id = {$registro['cuestionario_id']}");
                 $cant_preguntas = $query->num_rows();        
@@ -1809,6 +1776,8 @@ class Cuestionario_model extends CI_Model
 
                 //Se inserta el registro en la tabla
                 $this->db->insert('cuestionario_pregunta', $registro);
+
+                $this->act_clave($registro['cuestionario_id']);
             }
         
     }
@@ -2008,12 +1977,14 @@ class Cuestionario_model extends CI_Model
         $registro['orden'] = 10000; //Número grande para que las preguntas se vayan creando en orden
         
         $preguntas = $this->Tema_model->preguntas($tema_id);
-        foreach ( $preguntas->result() as $row_pregunta ) {
+        foreach ( $preguntas->result() as $row_pregunta ) 
+        {
             $registro['pregunta_id'] = $row_pregunta->id;
             $this->insertar_cp($registro);
         }
         
         $this->actualizar_areas($cuestionario_id);
+        
     }
     
     /**
@@ -2048,9 +2019,6 @@ class Cuestionario_model extends CI_Model
         $preguntas = $this->db->get('cuestionario_pregunta');
         
         if ( $preguntas->num_rows() > 0 ) { $tema_evaluado = 1; }
-        
-        //$tema_evaluado = $preguntas->num_rows();
-        //$tema_evaluado = $preguntas->row()->cuestionario_id;
         
         return $tema_evaluado; 
                 
@@ -2508,7 +2476,9 @@ class Cuestionario_model extends CI_Model
         return $query->num_rows();
     }
     
-    
+// RESULTADOS DE CUESTIONARIOS
+//-----------------------------------------------------------------------------
+
     /**
      * Resumen del resultado de una prueba en JSON para el campo 
      * usuario_cuestionario.resumen
@@ -2673,22 +2643,6 @@ class Cuestionario_model extends CI_Model
         return $resultado_completo;
     }
     
-    /**
-     * Actualiza el campo usuario_cuestionario.fin_respuesta
-     * @param type $uc_id
-     */
-    function z_actualizar_fin_respuesta($uc_id)
-    {
-        $registro['estado'] = 3;    //Finalizado
-        $registro['respondido'] = 1;
-        $registro['editado_usuario_id'] = $this->session->userdata('usuario_id');
-        $registro['editado'] = date('Y-m-d H:i:s');
-        $registro['fin_respuesta'] = date('Y-m-d H:i:s');
-        
-        $this->db->where('id', $uc_id);
-        $this->db->update('usuario_cuestionario', $registro);
-    }
-    
 // RESULTADOS
 //-----------------------------------------------------------------------------
     
@@ -2708,7 +2662,6 @@ class Cuestionario_model extends CI_Model
         
         return $res;
     }
-    
     
     function res_respuestas($busqueda)
     {

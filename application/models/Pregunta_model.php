@@ -198,7 +198,7 @@ class Pregunta_model extends CI_Model{
             );*/
             
         //Funciones
-            //$crud->callback_after_insert(array($this, 'gc_pregunta_after_insert'));
+            $crud->callback_after_update(array($this, 'gc_pregunta_after_update'));
 
         //Valores por defecto
             $crud->field_type('tipo_pregunta_id', 'hidden', 54);
@@ -285,7 +285,7 @@ class Pregunta_model extends CI_Model{
                 );
             
         //Funciones
-            //$crud->callback_after_insert(array($this, 'gc_pregunta_after_insert'));
+            $crud->callback_after_update(array($this, 'gc_pregunta_after_update'));
 
         //Valores por defecto
             $crud->field_type('editado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
@@ -528,6 +528,8 @@ class Pregunta_model extends CI_Model{
             return $output;
         
     }
+
+    
     
     function crud_add_tema($tema_id, $registro, $orden)
     {
@@ -681,7 +683,22 @@ class Pregunta_model extends CI_Model{
         //Insertar en cuestionario
             $this->load->model('Cuestionario_model');
             $this->Cuestionario_model->insertar_cp($registro);
-        
+            $this->Cuestionario_model->act_clave($registro['cuestionario_id']); //Agregada 2019-02-27
+
+        return true;
+    }
+
+    //Procesos después de insertar a un cuestionario
+    function gc_pregunta_after_update($post_array, $primary_key)
+    {
+        //Actualizar campo cuestionario.clave, de los cuestionarios donde está la pregunta incluida.
+            $this->load->model('Cuestionario_model');
+
+            $cuestionarios = $this->cuestionarios($primary_key);
+
+            foreach ( $cuestionarios->result() as $row_cuestionario ) {
+                $this->Cuestionario_model->act_clave($row_cuestionario->cuestionario_id);
+            }
 
         return true;
     }

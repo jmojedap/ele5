@@ -125,7 +125,6 @@
                 </a>
 
                 
-
             <?php endforeach ?>
         </div>
         
@@ -141,12 +140,15 @@
                     <a class="btn btn-warning" title="Eliminar los elementos seleccionados" data-toggle="modal" data-target="#modal_eliminar">
                         <i class="fas fa-trash"></i>
                     </a>
-                    <?= anchor("cuestionarios/grupos_exportar/{$cuestionario_id}/{$grupo_id}", '<i class="fa fa-file-excel"></i> Exportar', 'class="btn btn-success" title="Exportar resultados a MS-Excel" target="_blank"') ?>
+                    <?php echo anchor("cuestionarios/grupos_exportar/{$cuestionario_id}/{$grupo_id}", '<i class="fa fa-file-excel"></i> Exportar', 'class="btn btn-success" title="Exportar resultados a MS-Excel" target="_blank"') ?>
 
-                    <a href="<?php echo base_url("respuestas/formatos/{$cuestionario_id}/{$grupo_id}") ?>" class="btn btn-primary" target="_blank">
-                        <i class="fa fa-download"></i>
-                        Hojas respuestas
-                    </a>
+                    <?php if ( $this->session->userdata('rol_id') == 0 ) { ?>
+                        <a href="<?php echo base_url("respuestas/formatos/{$cuestionario_id}/{$grupo_id}") ?>" class="btn btn-primary" target="_blank">
+                            <i class="fa fa-download"></i>
+                            Hojas respuestas
+                        </a>
+                    <?php } ?>
+
                 </div>
 
                 <div class="col-md-6">

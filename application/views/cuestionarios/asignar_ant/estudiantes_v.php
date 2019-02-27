@@ -42,41 +42,39 @@
 <tbody>
     <?php foreach ($estudiantes->result() as $row_estudiante) : ?>
         <?php
-        //Variables
-        $nombre_estudiante = $row_estudiante->nombre . ' ' . $row_estudiante->apellidos;
-        $link_estudiante = anchor("usuarios/resultados/{$row_estudiante->usuario_id}/{$row_estudiante->uc_id}", $nombre_estudiante);
+            //Variables
+            $nombre_estudiante = $row_estudiante->nombre . ' ' . $row_estudiante->apellidos;
+            $link_estudiante = anchor("usuarios/resultados/{$row_estudiante->usuario_id}/{$row_estudiante->uc_id}", $nombre_estudiante);
 
-        $link_responder = anchor("cuestionarios/resolver_lote/$row_estudiante->uc_id", '<i class="fa fa-pencil-square-o"></i>', 'class="btn btn-default btn-xs"');
-        $link_reiniciar = $this->Pcrn->anchor_confirm("cuestionarios/reiniciar/{$row_estudiante->uc_id}/1", '<i class="fa fa-repeat"></i>', 'class="btn btn-warning btn-xs" title="Reiniciar el cuestionario para este estudiante"', "Las respuestas de este estudiante para esta prueba se eliminarán ¿Desea continuar?");
-        $link_finalizar = $this->Pcrn->anchor_confirm("cuestionarios/finalizar_externo/{$row_estudiante->uc_id}/grupo", '<i class="fa fa-check"></i>', 'class="btn btn-info btn-xs" title="Finalizar el cuestionario de este estudiante"', "Se calcularán totales y se finalizará el cuestionario de este estudiante ¿Desea continuar?");
-        $porcentaje_con_respuesta = number_format(100 * $row_estudiante->num_con_respuesta / $this->Pcrn->no_cero($row->num_preguntas), 0);
+            $link_responder = anchor("cuestionarios/resolver_lote/$row_estudiante->uc_id", '<i class="fa fa-pencil-square-o"></i>', 'class="btn btn-default btn-xs"');
+            $link_reiniciar = $this->Pcrn->anchor_confirm("cuestionarios/reiniciar/{$row_estudiante->uc_id}/1", '<i class="fa fa-repeat"></i>', 'class="btn btn-warning btn-xs" title="Reiniciar el cuestionario para este estudiante"', "Las respuestas de este estudiante para esta prueba se eliminarán ¿Desea continuar?");
+            $link_finalizar = $this->Pcrn->anchor_confirm("cuestionarios/finalizar_externo/{$row_estudiante->uc_id}/grupo", '<i class="fa fa-check"></i>', 'class="btn btn-info btn-xs" title="Finalizar el cuestionario de este estudiante"', "Se calcularán totales y se finalizará el cuestionario de este estudiante ¿Desea continuar?");
+            $porcentaje_con_respuesta = number_format(100 * $row_estudiante->num_con_respuesta / $this->Pcrn->no_cero($row->num_preguntas), 0);
 
-        $filtros['usuario_pregunta.usuario_id'] = $row_estudiante->usuario_id;
-        $filtros['usuario_pregunta.cuestionario_id'] = $row->id;
-        $cant_correctas = $this->Cuestionario_model->cant_correctas_simple($filtros);
+            $filtros['usuario_pregunta.usuario_id'] = $row_estudiante->usuario_id;
+            $filtros['usuario_pregunta.cuestionario_id'] = $row->id;
+            $cant_correctas = $this->Cuestionario_model->cant_correctas_simple($filtros);
 
-        $resultado = $this->App_model->res_cuestionario($row->id, "usuario_id = {$row_estudiante->usuario_id}");
-        $porcentaje_correctas = $this->Pcrn->int_percent($cant_correctas, $row->num_preguntas);
+            $resultado = $this->App_model->res_cuestionario($row->id, "usuario_id = {$row_estudiante->usuario_id}");
+            $porcentaje_correctas = $this->Pcrn->int_percent($cant_correctas, $row->num_preguntas);
 
-        $rango_usuario = $this->App_model->rango_cuestionarios($porcentaje_correctas / 100);
+            $rango_usuario = $this->App_model->rango_cuestionarios($porcentaje_correctas / 100);
 
-        
+            $clase_fecha = 'correcto';
+            if ($row_estudiante->fecha_fin < date('Y-m-d H:i:s')) {
+                $prefijo_hace = ' | Vencido hace ';
+                $clase_fecha = 'rojo';
+            }
 
-        $clase_fecha = 'correcto';
-        if ($row_estudiante->fecha_fin < date('Y-m-d H:i:s')) {
-            $prefijo_hace = ' | Vencido hace ';
-            $clase_fecha = 'rojo';
-        }
+            $clase_estado = '';
+            if ($row_estudiante->estado >= 3) {
+                $clase_estado = 'info';
+            }
 
-        $clase_estado = '';
-        if ($row_estudiante->estado >= 3) {
-            $clase_estado = 'info';
-        }
+            $clase_barra = $this->Pcrn->valor_rango($clases_porcentaje, $porcentaje_correctas);
 
-        $clase_barra = $this->Pcrn->valor_rango($clases_porcentaje, $porcentaje_correctas);
-
-        //Checkbox
-        $att_check['data-id'] = $row_estudiante->uc_id;
+            //Checkbox
+            $att_check['data-id'] = $row_estudiante->uc_id;
         ?>
 
         <tr>

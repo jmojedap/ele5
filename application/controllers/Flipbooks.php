@@ -237,6 +237,9 @@ class Flipbooks extends CI_Controller{
             $this->load->view(PTL_ADMIN, $data);
     }
     
+// CREACIÓN DE CUESTIONARIOS DESDE FLIPBOOK
+//-----------------------------------------------------------------------------
+
     /**
      * Formulario para la crear un cuestionario a partir de la selección de los
      * temas de un flipbook. Se crea con las preguntas asociadas a los temas.
@@ -295,6 +298,9 @@ class Flipbooks extends CI_Controller{
             $this->Cuestionario_model->agregar_prg_rel($cuestionario_id, $row_tema->id);
          
         }
+
+        //Actualizar la clave de respuestas correctas.
+            $this->Cuestionario_model->act_clave($cuestionario_id);
         
         //Registrar creación de cuestionario en la tabla evento
             $this->load->model('Evento_model');

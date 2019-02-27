@@ -206,10 +206,8 @@ class Cuestionarios extends CI_Controller{
         //Cargando datos básicos (_basico)
             $data = $this->Cuestionario_model->basico($cuestionario_id);
         
-        //Variables data
-        
         //Solicitar vista
-            $data['titulo_pagina'] .= ' - Copiar';
+            $data['subtitulo_pagina'] = 'Copiar';
             $data['vista_b'] = 'cuestionarios/copiar_cuestionario_v';
             $this->load->view(PTL_ADMIN_2, $data);
     }
@@ -310,7 +308,7 @@ class Cuestionarios extends CI_Controller{
     }
     
     /**
-     * Exporta en archivo MS-Excel el resultado de la respuesta de los estudiantes
+     * Exporta en archivo Excel el resultado de la respuesta de los estudiantes
      * de un grupo a un cuestionario
      * 
      * @param type $cuestionario_id
@@ -321,32 +319,9 @@ class Cuestionarios extends CI_Controller{
         $this->load->model('Pcrn_excel');
         
         $data['objWriter'] = $this->Cuestionario_model->archivo_grupos_exportar($cuestionario_id, $grupo_id);
-        $data['nombre_archivo'] = date('Ymd_His'). '_resultado_cuestionario'; //save our workbook as this file name
+        $data['nombre_archivo'] = date('Ymd_His'). '_resultado_cuestionario';
         
         $this->load->view('app/descargar_phpexcel_v', $data);
-    }
-    
-    
-    /**
-     * Editor de las preguntas que componen un cuestionario
-     * 
-     * Basado en la herramienta de relaciones n-n de grocery crud
-     * 
-     * @param type $proceso
-     * @param type $cuestionario_id 
-     */
-    function preguntas($cuestionario_id)
-    {
-        
-        //Variables data
-            $data = $this->Cuestionario_model->basico($cuestionario_id);
-            $data['preguntas'] = $this->Cuestionario_model->preguntas($cuestionario_id, 1000, 0);
-        
-        //Solicitar vista
-            $data['cuestionario_id'] = $cuestionario_id;
-            $data['vista_b'] = 'cuestionarios/preguntas_v';
-
-        $this->load->view(PTL_ADMIN_2, $data);
     }
     
     function temas($cuestionario_id)
@@ -714,6 +689,7 @@ class Cuestionarios extends CI_Controller{
     }
     
     /**
+     * AJAX - JSON
      * Proceso inicial para responder un cuestionario, asigna fechas y estado
      * de iniciado en las tablas usuario_cuestionario y evento.
      * 
@@ -1224,7 +1200,7 @@ class Cuestionarios extends CI_Controller{
         }   
     }
     
-//CARGAR RESPUESTAS CON MS-EXCEL
+//CARGAR RESPUESTAS CON EXCEL
 //------------------------------------------------------------------------------------------
     
     /**
@@ -1297,8 +1273,30 @@ class Cuestionarios extends CI_Controller{
     }
     
     
-//EDICIÓN DE CONTENIDO DE CUESTIONARIOS
-//------------------------------------------------------------------------------------------
+// GESTIÓN Y EDICIÓN DE PREGUNTAS
+//-----------------------------------------------------------------------------
+    
+    /**
+     * Editor de las preguntas que componen un cuestionario
+     * 
+     * Basado en la herramienta de relaciones n-n de grocery crud
+     * 
+     * @param type $proceso
+     * @param type $cuestionario_id 
+     */
+    function preguntas($cuestionario_id)
+    {
+        
+        //Variables data
+            $data = $this->Cuestionario_model->basico($cuestionario_id);
+            $data['preguntas'] = $this->Cuestionario_model->preguntas($cuestionario_id, 1000, 0);
+        
+        //Solicitar vista
+            $data['cuestionario_id'] = $cuestionario_id;
+            $data['vista_b'] = 'cuestionarios/preguntas_v';
+
+        $this->load->view(PTL_ADMIN_2, $data);
+    }
 
     /**
      * Eliminar un registro de la tabla 'cuestionario_pregunta'
@@ -1307,6 +1305,7 @@ class Cuestionarios extends CI_Controller{
     function quitar_pregunta($cuestionario_id, $pregunta_id)
     {
         $this->Cuestionario_model->quitar_pregunta($cuestionario_id, $pregunta_id);
+        $this->Cuestionario_model->act_clave($cuestionario_id);
         
         $data['url'] = base_url("cuestionarios/preguntas/$cuestionario_id");
         $data['msg_redirect'] = '';
@@ -1359,6 +1358,7 @@ class Cuestionarios extends CI_Controller{
         
         //Cambiar la posición de una pregunta en un cuestionario
         $this->Cuestionario_model->cambiar_pos_pregunta($cuestionario_id, $pregunta_id, $pos_final);
+        $this->Cuestionario_model->act_clave($cuestionario_id);
         
         $data['url'] = base_url("cuestionarios/preguntas/{$cuestionario_id}");
         $data['msg_redirect'] = '';

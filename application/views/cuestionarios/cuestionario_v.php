@@ -119,8 +119,8 @@
         <span class="resaltar"><?= $this->App_model->nombre_institucion($row->institucion_id) ?></span> |
     <?php endif ?>
 
-    <span class="suave">Asignados:</span> 
-    <span class="resaltar"><?= $row->num_estudiantes ?></span> |
+    <span class="suave">Key:</span> 
+    <span class="resaltar"><?php echo $row->clave ?></span> |
 </p>
     
 <?php $this->load->view('comunes/bs4/menu_v', $data_menu)?>
