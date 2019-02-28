@@ -8,7 +8,7 @@
     
     //Atributos de los elementos del menú
         $arr_menus['explorar'] = array(
-            'icono' => '<i class="fa fa-table"></i>',
+            'icono' => '<i class="fa fa-search"></i>',
             'texto' => 'Explorar',
             'link' => "cuestionarios/explorar/",
             'atributos' => ''
@@ -50,7 +50,7 @@
         );
 
     //Elementos de menú para cada rol
-        $elementos_rol[0] = array('explorar', 'asignaciones', 'nuevo', 'asignar_masivo', 'responder_masivo', 'responder_json');
+        $elementos_rol[0] = array('explorar', 'nuevo', 'asignaciones', 'asignar_masivo', 'responder_masivo', 'responder_json');
         $elementos_rol[1] = array('explorar', 'nuevo', 'asignar_masivo', 'responder_masivo');
         $elementos_rol[2] = array('explorar', 'nuevo');
         $elementos_rol[3] = array('explorar', 'nuevo');

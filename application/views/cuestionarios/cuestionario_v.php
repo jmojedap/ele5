@@ -17,7 +17,7 @@
     
     //Atributos de los elementos del menú
         $arr_menus['explorar'] = array(
-            'icono' => '<i class="fa fa-list-alt"></i>',
+            'icono' => '<i class="fa fa-search"></i>',
             'texto' => '',
             'link' => "cuestionarios/explorar/",
             'atributos' => 'title="Ir a lista de cuestionarios"'
@@ -119,8 +119,11 @@
         <span class="resaltar"><?= $this->App_model->nombre_institucion($row->institucion_id) ?></span> |
     <?php endif ?>
 
-    <span class="suave">Key:</span> 
-    <span class="resaltar"><?php echo $row->clave ?></span> |
+    <?php if ( $this->session->userdata('rol_id') == 0 ) { ?>
+        <span class="suave">Key:</span> 
+        <span class="resaltar"><?php echo $row->clave ?></span> |
+    <?php } ?>
+
 </p>
     
 <?php $this->load->view('comunes/bs4/menu_v', $data_menu)?>
