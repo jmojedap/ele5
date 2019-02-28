@@ -158,7 +158,7 @@ class Cuestionario_model extends CI_Model
         
     }
     
-    /*function datos_cuestionario($cuestionario_id)
+    function datos_cuestionario($cuestionario_id)
     {
         
         $row = $this->Pcrn->registro_id('cuestionario', $cuestionario_id);
@@ -172,7 +172,7 @@ class Cuestionario_model extends CI_Model
             $row->num_estudiantes = $query->num_rows();
         
         return $row;
-    }*/
+    }
     
     function num_preguntas($cuestionario_id)
     {
@@ -1517,7 +1517,6 @@ class Cuestionario_model extends CI_Model
                 $i++;
             }
         }
-        
         
         return $i;  //Cantidad de preguntas
     }

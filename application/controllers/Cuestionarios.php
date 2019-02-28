@@ -469,6 +469,9 @@ class Cuestionarios extends CI_Controller{
     function asignar($cuestionario_id, $grupo_id = 0, $institucion_id = 0)
     {
         $this->load->model('Grupo_model');
+
+        //Función ubicada temporalmente en este punto, para calcular clave antes de la asignación.
+            $this->Cuestionario_model->act_clave($cuestionario_id); 
         
         //Cargando datos básicos (Cuestionario_model->basico)
             $data = $this->Cuestionario_model->basico($cuestionario_id);

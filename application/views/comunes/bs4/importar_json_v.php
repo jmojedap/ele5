@@ -20,7 +20,7 @@
                     <div class="form-group row">
                         <label for="archivo" class="col-sm-2 control-label">Archivo</label>
                         <div class="col-sm-10">
-                            <input type="file" class="form-control" name="file" accept="application/json" required>
+                            <input type="file" class="form-control" name="json_file" accept="application/json" required>
                         </div>
                     </div>
                 

@@ -25,6 +25,28 @@ class Respuesta_model extends CI_Model
         return $asignaciones;
     }
 
+// RESPUESTA DE CUESTIONARIOS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Guarda registro de la tabla usuario_cuestionario
+     */
+    function guardar_uc($uc_id, $arr_row) 
+    {
+        //Construir registro
+            $arr_row['editado'] = date('Y-m-d H:i:s');
+
+        //Actualizar
+            $this->db->where('id', $uc_id);
+            $this->db->update('usuario_cuestionario', $arr_row);
+        
+        //Cargar resultado
+            $data['ejecutado'] = 1;
+            $data['mensaje'] = 'Respuestas guardadas para UC ID: ' . $uc_id;
+        
+        return $data;
+    }
+
 // IMPORTAR RESPUESTAS DE ARCHIVO JSON
 //-----------------------------------------------------------------------------
 
@@ -47,11 +69,46 @@ class Respuesta_model extends CI_Model
 
     function importar_respuesta($pagina)
     {
-        $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $pagina->asignacion_id);
+        //Datos inicales
+            $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $pagina->asignacion_id);
+            $row_cuestionario = $this->Pcrn->registro_id('cuestionario', $row_uc->cuestionario_id);
 
-        $data['cuestionario_id'] = $row_uc->cuestionario_id;
+        //Calcular string para campo usuario_cuestionario.respuestas
+            $arr_respuestas = (array) $pagina->respuestas;
+            $arr_row['respuestas'] = implode('-', $arr_respuestas);
+        
+        //String para campo usuario_cuestionario.resultados
+            $arr_row['resultados'] = $this->str_resultados($pagina->respuestas, $row_cuestionario->clave);
+
+        //Guardar registro en la tabla usuario_cuestionario
+            $data = $this->guardar_uc($row_uc->id, $arr_row);
+
+        //Generar respuestas y finalizar cuestionario
+            $this->Cuestionario_model->generar_respuestas($row_uc->id);
+            $this->Cuestionario_model->finalizar($row_uc->id);
 
         return $data;
+    }
+
+    /**
+     * Calcular string para campo usuario_cuestionario.resultados a partir
+     * de las respuestas del usuario y la clave de respuestas correctas
+     */
+    function str_resultados($respuestas, $clave)
+    {
+        //Calcular string para campo usuario_cuestionario.resultados
+        $arr_resultados = array();
+        $arr_clave = explode('-', $clave);
+        foreach ( $respuestas as $key => $respuesta )
+        {
+            $resultado = 0;
+            if ( $arr_clave[$key] == $respuesta ) { $resultado = 1; }
+            $arr_resultados[] = $resultado;
+        }
+
+        $resultados = implode('-', $arr_resultados);
+
+        return $resultados;
     }
     
 

@@ -101,13 +101,17 @@ class Respuestas extends CI_Controller{
         $this->load->view(PTL_ADMIN_2, $data);
     }
     
+    /**
+     * Recibe el archivo JSON con las respuestas vía POST, y las carga a los usuarios
+     * y asignaciones correspondientes.
+     */
     function cargar_json_e()
     {
         //Variables
         $no_cargados = array();
         
-        $file = $_FILES['file']['tmp_name'];    //Se crea un archivo temporal, no se sube al servidor, se toma el nombre temporal
-        $str_respuestas = file_get_contents($file);
+        $json_file = $_FILES['json_file']['tmp_name'];    //Se crea un archivo temporal, no se sube al servidor, se toma el nombre temporal
+        $str_respuestas = file_get_contents($json_file);
         $obj_respuestas = json_decode($str_respuestas);
 
         $data = $this->Respuesta_model->importar_respuestas_json($obj_respuestas);
