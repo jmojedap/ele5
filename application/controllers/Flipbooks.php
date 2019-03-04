@@ -732,7 +732,7 @@ class Flipbooks extends CI_Controller{
      * @param type $flipbook_id
      * @param type $num_pagina
      */
-    function leer($flipbook_id, $num_pagina = 0)
+    function leer($flipbook_id, $num_pagina = NULL)
     {
         if ( $this->input->get('profiler') == 1 ) { $this->output->enable_profiler(TRUE); }
         

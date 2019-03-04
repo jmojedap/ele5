@@ -28,7 +28,7 @@
                 axios.get(this.app_url + 'flipbooks/data/' + this.flipbook_id)
                 .then(response => {
                     this.data = response.data;
-                    this.num_pagina = this.bookmark;
+                    //this.num_pagina = this.bookmark;
                     this.cambiar_pagina();
                     this.obtener_anotaciones();
                 })
