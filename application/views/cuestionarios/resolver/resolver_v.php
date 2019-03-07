@@ -68,7 +68,7 @@
                                         <span class="label label-primary w2" style="margin-right: 15px; display: none;">
                                             {{ letras[key_clave] }}
                                         </span>
-                                        {{ opciones[clave] }}
+                                        <div v-html="opciones[clave]"></div>
                                     </div>
                                 </div>
                                 <p class="hidden">Milisec: {{ milisec }}</p>
@@ -120,7 +120,7 @@
                             <td>Pruebas<td>
                             <td>
                                 <i class="fa fa-info-circle"></i>
-                                Tabla de control para pruebas (No aparecerá en fase de producción)
+                                Tabla de control para pruebas (Solo aparece para Colegio En Línea Editores)
                             <td>
                         </tr>
                         <tr>
