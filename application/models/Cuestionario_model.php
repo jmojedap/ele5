@@ -151,7 +151,8 @@ class Cuestionario_model extends CI_Model
         } elseif ( $row_usuario->rol_id == 7 ) {    //Digitador
             $condicion = "id > 0";
         } elseif ( $row_usuario->rol_id == 8 ) {    //Comercial
-            $condicion = "id > 0";
+            //$condicion = "id > 0";    Modificado 2019-03-07
+            $condicion = "institucion_id IN (SELECT id FROM institucion WHERE ejecutivo_id = {$this->session->userdata('usuario_id')})";
         }
         
         return $condicion;
