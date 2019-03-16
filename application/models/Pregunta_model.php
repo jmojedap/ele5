@@ -144,7 +144,8 @@ class Pregunta_model extends CI_Model{
 
         //Títulos de campos
             $crud->display_as('cod_pregunta', 'Cód');
-            $crud->display_as('enunciado_id', 'Enunciado referencia');
+            $crud->display_as('enunciado_2', 'Enunciado complementario');
+            $crud->display_as('enunciado_id', 'Lectura asociada');
             $crud->display_as('opcion_1', 'Opción A');
             $crud->display_as('opcion_2', 'Opción B');
             $crud->display_as('opcion_3', 'Opción C');
@@ -155,7 +156,6 @@ class Pregunta_model extends CI_Model{
             $crud->display_as('competencia_id', 'Competencia');
             $crud->display_as('componente_id', 'Componente');
             $crud->display_as('tema_id', 'Tema');
-            $crud->display_as('enunciado_id', 'Enunciado referencia');
             $crud->display_as('creado_usuario_id', 'Creado por');
 
         //Relaciones
@@ -181,7 +181,7 @@ class Pregunta_model extends CI_Model{
             $crud->required_fields('texto_pregunta', 'respuesta_correcta', 'area_id', 'opcion_1', 'opcion_2', 'opcion_3', 'opcion_4');
 
         //Add form
-            $crud->edit_fields('cod_pregunta', 'texto_pregunta', 'enunciado_id', 'archivo_imagen', 'opcion_1', 'opcion_2', 'opcion_3', 'opcion_4', 'respuesta_correcta', 'nivel', 'area_id', 'competencia_id', 'componente_id', 'institucion_id', 'editado', 'editado_usuario_id');
+            $crud->edit_fields('cod_pregunta', 'texto_pregunta', 'enunciado_2', 'enunciado_id', 'archivo_imagen', 'opcion_1', 'opcion_2', 'opcion_3', 'opcion_4', 'respuesta_correcta', 'nivel', 'area_id', 'competencia_id', 'componente_id', 'institucion_id', 'editado', 'editado_usuario_id');
             $crud->callback_add_field('respuesta_correcta', array($this, 'gc_dropdown_respuesta_correcta'));
             $crud->callback_add_field('componente_id', array($this, 'gc_dropdown_componente'));
             $crud->callback_add_field('competencia_id', array($this, 'gc_dropdown_competencia'));
@@ -208,6 +208,7 @@ class Pregunta_model extends CI_Model{
             
         //Formato
             $crud->unset_texteditor('texto_pregunta', 'full_text');
+            $crud->unset_texteditor('enunciado_2', 'full_text');
 
         //
             $output = $crud->render();
@@ -329,8 +330,8 @@ class Pregunta_model extends CI_Model{
 
         //Títulos de campos
             $crud->display_as('cod_pregunta', 'Cód.');
-            $crud->display_as('cod_pregunta', 'Cód. pregunta');
-            $crud->display_as('enunciado_id', 'Enunciado referencia');
+            $crud->display_as('enunciado_2', 'Enunciado complementario');
+            $crud->display_as('enunciado_id', 'Lectura asociada');
             $crud->display_as('opcion_1', 'Opción A');
             $crud->display_as('opcion_2', 'Opción B');
             $crud->display_as('opcion_3', 'Opción C');
@@ -365,6 +366,7 @@ class Pregunta_model extends CI_Model{
             $crud->add_fields(
                     'cod_pregunta',
                     'texto_pregunta',
+                    'enunciado_2',
                     'enunciado_id',
                     'archivo_imagen',
                     'opcion_1',
@@ -422,6 +424,7 @@ class Pregunta_model extends CI_Model{
             
         //Formato
             $crud->unset_texteditor('texto_pregunta', 'full_text');
+            $crud->unset_texteditor('enunciado_2', 'full_text');
 
         //
             $output = $crud->render();
@@ -560,7 +563,8 @@ class Pregunta_model extends CI_Model{
 
         //Títulos de campos
             $crud->display_as('cod_pregunta', 'Código');
-            $crud->display_as('enunciado_id', 'Enunciado referencia');
+            $crud->display_as('enunciado_2', 'Enunciado complementario');
+            $crud->display_as('enunciado_id', 'Lectura asociada');
             $crud->display_as('opcion_1', 'Opción A');
             $crud->display_as('opcion_2', 'Opción B');
             $crud->display_as('opcion_3', 'Opción C');
@@ -597,6 +601,7 @@ class Pregunta_model extends CI_Model{
             $crud->add_fields(
                 'cod_pregunta',
                 'texto_pregunta',
+                'enunciado_2',
                 'enunciado_id',
                 'archivo_imagen',
                 'opcion_1',
@@ -659,6 +664,7 @@ class Pregunta_model extends CI_Model{
             
         //Formato
             $crud->unset_texteditor('texto_pregunta', 'full_text');
+            $crud->unset_texteditor('enunciado_2', 'full_text');
 
         //
             $output = $crud->render();

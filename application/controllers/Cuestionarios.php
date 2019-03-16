@@ -857,7 +857,7 @@ class Cuestionarios extends CI_Controller{
             $data['vista_a'] = 'app/no_permitido_v';
         }
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(PTL_ADMIN_2, $data);
     }
     
     function lista_preguntas($cuestionario_id)

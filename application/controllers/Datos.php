@@ -78,7 +78,7 @@ class Datos extends CI_Controller {
             $data['destino_form'] = "datos/enunciados_redirect/";
         
         //Solicitar vista
-            $data['titulo_pagina'] = 'Enunciados';
+            $data['titulo_pagina'] = 'Lecturas';
             $data['subtitulo_pagina'] = $config['total_rows'];
             $data['vista_a'] = 'datos/enunciados/explorar_v';
             $this->load->view(PTL_ADMIN, $data);
