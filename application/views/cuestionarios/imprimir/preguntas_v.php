@@ -127,23 +127,27 @@
         </div>
     <?php endif ?>
     
-        <ol style="list-style-type: upper-latin">
+        <ul style="list-style-type:none;">
             <li>
                 <i class="fa fa-square-o"></i>
+                <b>A)</b>
                 <?= $row_pregunta->opcion_1 ?>
             </li> 
             <li>
                 <i class="fa fa-square-o"></i>
+                <b>B)</b>
                 <?= $row_pregunta->opcion_2 ?>
             </li> 
             <li>
                 <i class="fa fa-square-o"></i>
+                <b>C)</b>
                 <?= $row_pregunta->opcion_3 ?>
             </li> 
             <li>
                 <i class="fa fa-square-o"></i>
+                <b>D)</b>
                 <?= $row_pregunta->opcion_4 ?>
             </li> 
-        </ol>
+        </ul>
     <hr/>
 <?php } ?>
