@@ -800,29 +800,30 @@ class Pregunta_model extends CI_Model{
         foreach ( $array_hoja as $array_fila )
         {
             $respuesta_correcta = NULL;
-            if ( strlen($array_fila[9]) > 0 ) {
-                $respuesta_correcta = $arr_letras[$array_fila[9]];
+            if ( strlen($array_fila[10]) > 0 ) {
+                $respuesta_correcta = $arr_letras[$array_fila[10]];
             }
             
             //Registro
-                $registro['cod_pregunta'] = "{$array_fila[2]}-{$array_fila[10]}";
+                $registro['cod_pregunta'] = "{$array_fila[3]}-{$array_fila[11]}";
                 $registro['texto_pregunta'] = $array_fila[1];
-                $registro['tema_id'] = $this->Pcrn->campo('tema', "cod_tema = '{$array_fila[2]}'", 'id');
-                $registro['orden'] = $array_fila[3] - 1;        //Se resta 1, para iniciar en 0
-                $registro['enunciado_id'] = $array_fila[4];
-                $registro['opcion_1'] = $array_fila[5];
-                $registro['opcion_2'] = $array_fila[6];
-                $registro['opcion_3'] = $array_fila[7];
-                $registro['opcion_4'] = $array_fila[8];
+                $registro['enunciado_2'] = $array_fila[2];
+                $registro['tema_id'] = $this->Pcrn->campo('tema', "cod_tema = '{$array_fila[3]}'", 'id');
+                $registro['orden'] = $array_fila[4] - 1;        //Se resta 1, para iniciar en 0
+                $registro['enunciado_id'] = $array_fila[5];
+                $registro['opcion_1'] = $array_fila[6];
+                $registro['opcion_2'] = $array_fila[7];
+                $registro['opcion_3'] = $array_fila[8];
+                $registro['opcion_4'] = $array_fila[9];
                 $registro['respuesta_correcta'] = $respuesta_correcta;
-                $registro['nivel'] = $this->Pcrn->campo('tema', "cod_tema = '{$array_fila[2]}'", 'nivel');
-                $registro['area_id'] = $this->Pcrn->campo('tema', "cod_tema = '{$array_fila[2]}'", 'area_id');
-                $registro['competencia_id'] = $array_fila[10];
+                $registro['nivel'] = $this->Pcrn->campo('tema', "cod_tema = '{$array_fila[3]}'", 'nivel');
+                $registro['area_id'] = $this->Pcrn->campo('tema', "cod_tema = '{$array_fila[3]}'", 'area_id');
+                $registro['competencia_id'] = $array_fila[11];
                 
             //Validar
                 $condiciones = 0;
                 if ( strlen($registro['tema_id']) > 1 ) { $condiciones++; }     //Debe tener tema definido
-                if ( strlen($array_fila[10]) > 0 ) { $condiciones++; }          //Debe tener competencia escrita
+                if ( strlen($array_fila[11]) > 0 ) { $condiciones++; }          //Debe tener competencia escrita
                 
             //Si cumple las condiciones
             if ( $condiciones == 2 )

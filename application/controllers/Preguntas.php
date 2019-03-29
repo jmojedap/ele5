@@ -196,11 +196,10 @@ class Preguntas extends CI_Controller{
      */
     function importar_e()
     {
-        
         //Proceso
             $this->load->model('Pcrn_excel');
             $no_importados = array();
-            $letra_columna = 'K';   //Última columna con datos
+            $letra_columna = 'L';   //Última columna con datos
             
             $resultado = $this->Pcrn_excel->array_hoja_default($letra_columna);
 
@@ -222,7 +221,7 @@ class Preguntas extends CI_Controller{
             $data['titulo_pagina'] = 'Preguntas';
             $data['subtitulo_pagina'] = 'Resultado cargue';
             $data['vista_a'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'preguntas/explorar_menu_v';
+            $data['vista_menu'] = 'preguntas/explorar/menu_v';
             $this->load->view(PTL_ADMIN, $data);
     }
 
