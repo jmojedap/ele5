@@ -24,13 +24,14 @@
         }
 ?>
 
-<link type="text/css" rel="stylesheet" href="<?= base_url('css/apanel2/cuestionario.css') ?>">
+<link type="text/css" rel="stylesheet" href="<?php echo URL_RECURSOS . 'plantillas/apanel2/cuestionario.css' ?>">
 
 <div class="row">
     <div class="col col-md-8">
         <div class="panel panel-default">
             <div class="panel-body">
-                <p style="font-size: 1.1em;"><?= $row_pregunta->texto_pregunta ?></p>
+                <p style="font-size: 1.1em;"><?php echo $row_pregunta->texto_pregunta ?></p>
+                <p style="font-size: 1.1em;"><?php echo $row_pregunta->enunciado_2 ?></p>
 
                 <div class="sep1">
 
@@ -40,12 +41,12 @@
                             if ( $row_pregunta->respuesta_correcta == $opcion_numero ) { $clase_opcion = 'opcion_seleccionada'; }
                             $campo = 'opcion_' . $opcion_numero;
                         ?>
-                        <div class="panel panel-default opcion_respuesta <?= $clase_opcion ?>" data-respuesta="<?= $opcion_numero ?>">
+                        <div class="panel panel-default opcion_respuesta <?php echo $clase_opcion ?>" data-respuesta="<?php echo $opcion_numero ?>">
                             <div class="panel-body">
                                 <b>
-                                    [<?= $opciones_letras[$opcion_numero] ?>]
+                                    [<?php echo $opciones_letras[$opcion_numero] ?>]
                                 </b>
-                                <?= $row_pregunta->$campo ?>
+                                <?php echo $row_pregunta->$campo ?>
                             </div>
                         </div>
                     <?php endforeach ?>
@@ -55,7 +56,7 @@
                 <?php if ( strlen($row_pregunta->archivo_imagen) > 0 ):?>
                     <div class="sep1 text-center">
                         <div class="thumbnail">
-                            <?= img($att_img) ?>
+                            <?php echo img($att_img) ?>
                         </div>
                     </div>
                 <?php else: ?>
@@ -71,15 +72,15 @@
         <?php if ( ! is_null($row_enunciado) ) { ?>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Enunciado Relacionado
+                    Lectura asociada
                 </div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col col-sm-6">
-                            <h3><?= $row_enunciado->nombre_post ?></h3>
-                            <p class="suave">Post ID: <?= $row_enunciado->id ?></p>
+                            <h3><?php echo $row_enunciado->nombre_post ?></h3>
+                            <p class="suave">Post ID: <?php echo $row_enunciado->id ?></p>
 
-                            <?= $row_enunciado->contenido ?>
+                            <?php echo $row_enunciado->contenido ?>
                         </div>
                         <div class="col col-sm-6">
                             <?php if ( strlen($row_enunciado->texto_2) > 0 ) { ?>
@@ -87,7 +88,7 @@
                                     $src = URL_UPLOADS . $row_enunciado->texto_3 . $row_enunciado->texto_2;
                                 ?>
 
-                                <?= img($src) ?>
+                                <?php echo img($src) ?>
                             <?php } ?>
                         </div>
                     </div>
@@ -104,42 +105,42 @@
                 <dl class="dl-horizontal">
                     <dt>Tema</dt>
                     <dd>
-                        <?= $this->App_model->nombre_tema($row->tema_id) ?>
+                        <?php echo $this->App_model->nombre_tema($row->tema_id) ?>
                     </dd>
                     
                     <dt>Enunciado adjunto</dt>
                     <dd>
-                        <?= $nombre_enunciado ?>
+                        <?php echo $nombre_enunciado ?>
                     </dd>
                     
                     <dt>Componente</dt>
                     <dd>
-                        <?= $this->Item_model->nombre_id($row_pregunta->componente_id) ?>
+                        <?php echo $this->Item_model->nombre_id($row_pregunta->componente_id) ?>
                     </dd>
                     
                     <dt>Competencia</dt>
                     <dd>
-                        <?= $this->Item_model->nombre_id($row_pregunta->competencia_id) ?>
+                        <?php echo $this->Item_model->nombre_id($row_pregunta->competencia_id) ?>
                     </dd>
                     
                     <dt>Editado</dt>
                     <dd>
-                        <?= $this->Pcrn->fecha_formato($row->editado) ?>
+                        <?php echo $this->Pcrn->fecha_formato($row->editado) ?>
                     </dd>
                     
                     <dt>Por</dt>
                     <dd>
-                        <?= $this->App_model->nombre_usuario($row->editado_usuario_id, 2) ?>
+                        <?php echo $this->App_model->nombre_usuario($row->editado_usuario_id, 2) ?>
                     </dd>
                     
                     <dt>Creado</dt>
                     <dd>
-                        <?= $this->Pcrn->fecha_formato($row->creado) ?>
+                        <?php echo $this->Pcrn->fecha_formato($row->creado) ?>
                     </dd>
                     
                     <dt>Por</dt>
                     <dd>
-                        <?= $this->App_model->nombre_usuario($row->creado_usuario_id, 2) ?>
+                        <?php echo $this->App_model->nombre_usuario($row->creado_usuario_id, 2) ?>
                     </dd>
                 </dl>
             </div>

@@ -6,8 +6,7 @@
     }
 
     table.estructura{
-        width: 95%;
-        margin: 0 auto;
+        width: 100%
     }
 
     table.datos{
@@ -15,14 +14,14 @@
     }
 
     table.datos td {
-        border: 1px solid #FFF;
+        border: 1px solid #CCC;
         padding: 2px;
     }
 
     div.contenedor{
-        width: 800px;
+        background-image: url('<?php echo URL_IMG ?>respuestas/hoja_respuestas_703.png');
         height: 1100px;
-        padding: 50px 40px 30px 30px;
+        padding: 30px;
     }
 </style>
 
@@ -30,39 +29,39 @@
     <table class="estructura">
         <tbody>
             <tr>
-                <td width="450px">
+                <td width="80%">
                     <table class="datos">
                         <tbody>
                             <tr>
+                                <td>Cuestionario</td>
                                 <td>
                                     <?php echo $row_cuestionario->nombre_cuestionario ?>
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <b>
-                                        <?php echo $row_uc->apellidos ?> <?php echo $row_uc->nombre ?>
-                                    </b>
-                                    
-                                </td>
+                                <td>Estudiante</td>
+                                <td><?php echo $row_uc->apellidos ?> <?php echo $row_uc->nombre ?></td>
                             </tr>
                             <tr>
+                                <td>Grupo</td>
                                 <td>
                                     <?php echo $row_grupo->nombre_grupo ?> &middot;
                                     <?php echo $nombre_institucion ?>
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <?php echo date('Y-M-d') ?> | 
-                                    <?php echo $row_uc->uc_id ?>
-                                </td>
+                                <td>Fecha:</td>
+                                <td><?php echo date('Y-M-d') ?></td>
+                            </tr>
+                            <tr>
+                                <td>Serial</td>
+                                <td><?php echo $row_uc->uc_id ?></td>
                             </tr>
                         </tbody>
                     </table>
                 </td>
                 <td style="text-align: right;">
-                    <img alt="Embedded Image" src="data:image/png;base64,<?php echo base64_encode($qr_code->writeString()); ?>" width="95px" style="float: right;"/>
+                    <img alt="Embedded Image" src="data:image/png;base64,<?php echo base64_encode($qr_code->writeString()); ?>" width="120px" style="float: left;"/>
                 </td>
             </tr>
         </tbody>

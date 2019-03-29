@@ -39,6 +39,13 @@ class Respuestas extends CI_Controller{
 
         //Crear documento PDF
         $mpdf = new \Mpdf\Mpdf();
+
+        $mpdf->SetImportUse();
+
+        $pagecount = $mpdf->SetSourceFile('recursos/template_respuestas.pdf');
+        $tplId = $mpdf->ImportPage($pagecount);
+        $mpdf->SetPageTemplate($tplId);
+
         foreach ( $paginas as $pagina )
         {
             $mpdf->WriteHTML($pagina);

@@ -33,18 +33,13 @@
                 </div>
             </div>
 
-            <!-- Texto de la pregunta y Enunciado 2 -->
+            <!-- Texto de la pregunta y Enunciado c9o -->
             <div class="card border-info mb-2">
                 <div class="card-header">
                     <b>Pregunta {{ pregunta_key + 1 }}</b>
                 </div>
                 <div class="card-body">
                     <p style="font-size: 1.3em;" v-html="pregunta.texto_pregunta"></p>
-
-                    <div v-if="pregunta.enunciado_2">
-                        <hr>
-                        <p style="font-size: 1.3em;" v-html="pregunta.enunciado_2"></p>
-                    </div>
                 </div>
             </div>
 
@@ -81,10 +76,19 @@
                 </div>
             </div>
 
-            <div class="text-muted text-center my-2">
-                Selecciona la respuesta correcta:
+            <!-- Enunciado complementario -->
+            <div v-if="pregunta.enunciado_2" class="card">
+                <div class="card-body">
+                    <p style="font-size: 1.3em;" v-html="pregunta.enunciado_2"></p>
+                </div>
             </div>
 
+            <div class="text-info text-center my-2">
+                <i class="fa fa-info-circle"></i>
+                <b>Selecciona la respuesta correcta:</b>
+            </div>
+
+            <!-- Opciones de respuesta -->
             <div>
                 <div 
                     class="card card-default opcion_respuesta mb-2"

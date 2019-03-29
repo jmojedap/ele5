@@ -186,7 +186,7 @@ class Preguntas extends CI_Controller{
             $data['titulo_pagina'] = 'Preguntas';
             $data['subtitulo_pagina'] = 'Importar preguntas';
             $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'preguntas/explorar_menu_v';
+            $data['vista_menu'] = 'preguntas/explorar/menu_v';
         
         $this->load->view(PTL_ADMIN, $data);
     }

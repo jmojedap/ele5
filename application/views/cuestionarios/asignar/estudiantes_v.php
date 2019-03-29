@@ -83,7 +83,7 @@
 
                 $clase_estado = '';
                 if ($row_estudiante->estado >= 3) {
-                    $clase_estado = 'info';
+                    $clase_estado = 'table-info';
                 }
 
                 $clase_barra = $this->Pcrn->valor_rango($clases_porcentaje, $porcentaje_correctas);
