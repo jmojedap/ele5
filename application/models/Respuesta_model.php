@@ -70,15 +70,15 @@ class Respuesta_model extends CI_Model
     function importar_respuesta($pagina)
     {
         //Datos inicales
-            $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $pagina->asignacion_id);
+            $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $pagina[0]);
             $row_cuestionario = $this->Pcrn->registro_id('cuestionario', $row_uc->cuestionario_id);
 
         //Calcular string para campo usuario_cuestionario.respuestas
-            $arr_respuestas = (array) $pagina->respuestas;
+            $arr_respuestas = array_slice($pagina, 1);
             $arr_row['respuestas'] = implode('-', $arr_respuestas);
         
         //String para campo usuario_cuestionario.resultados
-            $arr_row['resultados'] = $this->str_resultados($pagina->respuestas, $row_cuestionario->clave);
+            $arr_row['resultados'] = $this->str_resultados($arr_respuestas, $row_cuestionario->clave);
 
         //Guardar registro en la tabla usuario_cuestionario
             $data = $this->guardar_uc($row_uc->id, $arr_row);
@@ -99,10 +99,10 @@ class Respuesta_model extends CI_Model
         //Calcular string para campo usuario_cuestionario.resultados
         $arr_resultados = array();
         $arr_clave = explode('-', $clave);
-        foreach ( $respuestas as $key => $respuesta )
+        foreach ( $arr_clave as $key => $correcta )
         {
             $resultado = 0;
-            if ( $arr_clave[$key] == $respuesta ) { $resultado = 1; }
+            if ( $respuestas[$key] == $correcta ) { $resultado = 1; }
             $arr_resultados[] = $resultado;
         }
 

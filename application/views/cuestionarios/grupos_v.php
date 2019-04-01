@@ -142,7 +142,7 @@
                     </a>
                     <?php echo anchor("cuestionarios/grupos_exportar/{$cuestionario_id}/{$grupo_id}", '<i class="fa fa-file-excel"></i> Exportar', 'class="btn btn-success" title="Exportar resultados a MS-Excel" target="_blank"') ?>
 
-                    <?php if ( $this->session->userdata('rol_id') == 0 ) { ?>
+                    <?php if ( $this->session->userdata('rol_id') <= 1 && $row->num_preguntas <= 60 ) { ?>
                         <a href="<?php echo base_url("respuestas/formatos/{$cuestionario_id}/{$grupo_id}") ?>" class="btn btn-primary" target="_blank">
                             <i class="fa fa-download"></i>
                             Hojas respuestas

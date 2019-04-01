@@ -42,7 +42,7 @@ class Respuestas extends CI_Controller{
 
         $mpdf->SetImportUse();
 
-        $pagecount = $mpdf->SetSourceFile('recursos/template_respuestas.pdf');
+        $pagecount = $mpdf->SetSourceFile('recursos/cuestionarios/template_respuestas.pdf');
         $tplId = $mpdf->ImportPage($pagecount);
         $mpdf->SetPageTemplate($tplId);
 
