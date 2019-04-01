@@ -33,6 +33,7 @@
                                 class="form-control"
                                 placeholder="Escriba el nombre de la hoja de cálculo"
                                 title="Digite el nombre de la hoja de cálculo dentro del archivo Excel de donde se tomarán los datos"
+                                value="<?php echo $nombre_hoja ?>"
                                 >
                         </div>
                     </div>

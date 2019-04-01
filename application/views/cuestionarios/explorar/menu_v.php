@@ -52,7 +52,7 @@
     //Elementos de menú para cada rol
         $elementos_rol[0] = array('explorar', 'nuevo', 'asignaciones', 'asignar_masivo', 'responder_masivo', 'responder_json');
         $elementos_rol[1] = array('explorar', 'nuevo', 'asignar_masivo', 'responder_masivo');
-        $elementos_rol[2] = array('explorar', 'nuevo');
+        $elementos_rol[2] = array('explorar', 'nuevo', 'asignar_masivo');
         $elementos_rol[3] = array('explorar', 'nuevo');
         $elementos_rol[4] = array('explorar', 'nuevo');
         $elementos_rol[5] = array('explorar', 'nuevo');
