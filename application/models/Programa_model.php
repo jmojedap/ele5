@@ -463,16 +463,22 @@ class Programa_Model extends CI_Model{
      * @return type
      */
     function generar_flipbooks_multi($array_hoja)
-    {       
-        
+    {
         $no_importados = array();
         $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
         $arr_tipos = array(0,1,3);  //Tipos de flipbook existentes
+
+        //Valores comunes
+            $registro['creado'] = date('Y-m-d H:i:s');
+            $registro['editado'] = date('Y-m-d H:i:s');
+            $registro['creador_id'] = $this->session->userdata('usuario_id');
+            $registro['editor_id'] = $this->session->userdata('usuario_id');
         
         foreach ( $array_hoja as $array_fila )
         {
             //Identificar programa
                 $row_programa = $this->Pcrn->registro_id('programa', $array_fila[0]);
+                //echo $array_fila[0] . '::' . $row_programa->nombre_programa . '<br>';
                 
             //Identificar el flipbook
                 $flipbook_id = 0;
@@ -481,6 +487,8 @@ class Programa_Model extends CI_Model{
                 }
             
             //Complementar registro
+            if ( ! is_null($row_programa) )
+            {
                 $registro['nombre_flipbook'] = $row_programa->nombre_programa;
                 $registro['nivel'] = $row_programa->nivel;
                 $registro['area_id'] = $row_programa->area_id;
@@ -488,10 +496,7 @@ class Programa_Model extends CI_Model{
                 $registro['anio_generacion'] = $row_programa->anio_generacion;
                 $registro['descripcion'] = $row_programa->descripcion;
                 $registro['programa_id'] = $row_programa->id;
-                $registro['creado'] = date('Y-m-d H:i:s');
-                $registro['editado'] = date('Y-m-d H:i:s');
-                $registro['creado_usuario_id'] = $this->session->userdata('usuario_id');
-                $registro['editado_usuario_id'] = $this->session->userdata('usuario_id');
+            }
                 
             //Validar
                 $condiciones = 0;
@@ -548,7 +553,7 @@ class Programa_Model extends CI_Model{
     {
         //Actualizar flipbook
             $registro['programa_id'] = $programa_id;
-            $registro['editado_usuario_id'] = $this->session->userdata('usuario_id');
+            $registro['editor_id'] = $this->session->userdata('usuario_id');
             $registro['editado'] = date('Y-m-d H:i:s');
 
             $this->db->where('id', $flipbook_id);

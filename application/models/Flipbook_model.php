@@ -157,7 +157,7 @@ class Flipbook_model extends CI_Model {
         $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
         //Predeterminados registro modificado
         $registro['editado'] = date('Y-m-d H:i:s');
-        $registro['editado_usuario_id'] = $this->session->userdata('usuario_id');
+        $registro['editor_id'] = $this->session->userdata('usuario_id');
 
         foreach ($array_hoja as $array_fila) {
             //Complementar registro
@@ -230,12 +230,12 @@ class Flipbook_model extends CI_Model {
 
         //Formulario Edit
         $crud->edit_fields(
-                'nombre_flipbook', 'anio_generacion', 'area_id', 'nivel', 'taller_id', 'tipo_flipbook_id', 'descripcion', 'editado', 'editado_usuario_id'
+                'nombre_flipbook', 'anio_generacion', 'area_id', 'nivel', 'taller_id', 'tipo_flipbook_id', 'descripcion', 'editado', 'editor_id'
         );
 
         //Formulario Add
         $crud->add_fields(
-                'nombre_flipbook', 'anio_generacion', 'area_id', 'nivel', 'descripcion', 'editado', 'editado_usuario_id', 'creado', 'creado_usuario_id'
+                'nombre_flipbook', 'anio_generacion', 'area_id', 'nivel', 'descripcion', 'editado', 'editor_id', 'creado', 'creador_id'
         );
 
         //Funciones
@@ -251,9 +251,9 @@ class Flipbook_model extends CI_Model {
         $crud->field_type('anio_generacion', 'enum', $opciones_anio);
         $crud->field_type('tipo_flipbook_id', 'dropdown', $opciones_tipo);
         $crud->field_type('editado', 'hidden', date('Y-m-d H:i:s'));
-        $crud->field_type('editado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
+        $crud->field_type('editor_id', 'hidden', $this->session->userdata('usuario_id'));
         $crud->field_type('creado', 'hidden', date('Y-m-d H:i:s'));
-        $crud->field_type('creado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
+        $crud->field_type('creador_id', 'hidden', $this->session->userdata('usuario_id'));
 
         //Formato
         $crud->unset_texteditor('descripcion');
@@ -291,7 +291,7 @@ class Flipbook_model extends CI_Model {
 
         //Formulario Add
         $crud->add_fields(
-                'nombre_flipbook', 'anio_generacion', 'area_id', 'nivel', 'descripcion', 'editado', 'editado_usuario_id', 'creado', 'creado_usuario_id'
+                'nombre_flipbook', 'anio_generacion', 'area_id', 'nivel', 'descripcion', 'editado', 'editor_id', 'creado', 'creador_id'
         );
 
         //Opciones nivel
@@ -308,9 +308,9 @@ class Flipbook_model extends CI_Model {
 
         //Valores por defecto
         $crud->change_field_type('editado', 'hidden', date('Y-m-d H:i:s'));
-        $crud->change_field_type('editado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
+        $crud->change_field_type('editor_id', 'hidden', $this->session->userdata('usuario_id'));
         $crud->change_field_type('creado', 'hidden', date('Y-m-d H:i:s'));
-        $crud->change_field_type('creado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
+        $crud->change_field_type('creador_id', 'hidden', $this->session->userdata('usuario_id'));
 
         //Formato
         $crud->unset_texteditor('descripcion');
@@ -877,9 +877,6 @@ class Flipbook_model extends CI_Model {
 
         //Se inserta el registro
         $this->db->insert('flipbook_contenido', $registro);
-
-        //Actualizar portada de flipbook
-        $this->primera_pagina($registro['flipbook_id']);
     }
 
     /**
@@ -906,8 +903,8 @@ class Flipbook_model extends CI_Model {
             'descripcion' => $datos['descripcion'],
             'creado' => date('Y-m-d H:i:s'),
             'editado' => date('Y-m-d H:i:s'),
-            'creado_usuario_id' => $this->session->userdata('usuario_id'),
-            'editado_usuario_id' => $this->session->userdata('usuario_id')
+            'creador_id' => $this->session->userdata('usuario_id'),
+            'editor_id' => $this->session->userdata('usuario_id')
         );
 
         $this->db->insert('flipbook', $registro);
@@ -1016,9 +1013,6 @@ class Flipbook_model extends CI_Model {
             $this->db->where('id', $row_pag_sig->id);
             $this->db->update('flipbook_contenido', array('num_pagina' => $row_pag_sig->num_pagina - 1));
         }
-
-        //Actualizar portada de flipbook
-        $this->primera_pagina($flipbook_id);
     }
 
     /**
@@ -1050,9 +1044,6 @@ class Flipbook_model extends CI_Model {
             $this->db->where('id', $row_pag_ant->id);
             $this->db->update('flipbook_contenido', array('num_pagina' => $row_pag_ant->num_pagina + 1));
         }
-
-        //Actualizar portada de flipbook
-        $this->primera_pagina($flipbook_id);
     }
 
 //---------------------------------------------------------------------------------------------------
@@ -1202,7 +1193,8 @@ class Flipbook_model extends CI_Model {
      * @param type $flipbook_id
      * @return type
      */
-    function instituciones($flipbook_id) {
+    function instituciones($flipbook_id)
+    {
         $this->db->select('institucion_id, nombre_institucion');
         $this->db->where('flipbook_id', $flipbook_id);
         $this->db->join('usuario', 'usuario.id = usuario_flipbook.usuario_id');
@@ -1349,7 +1341,8 @@ class Flipbook_model extends CI_Model {
 
         $modificado = 0;
 
-        if ($query->num_rows() > 0) {
+        if ($query->num_rows() > 0) 
+        {
             $row = $query->row();
             $registro['primera_pagina_id'] = $row->pagina_id;
 
