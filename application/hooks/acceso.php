@@ -66,6 +66,8 @@ class Acceso {
         $funciones_publicas[] = 'sincro/json_estado_tablas';
         $funciones_publicas[] = 'sincro/test_ajax';
         $funciones_publicas[] = 'sincro/cant_registros';
+
+        $funciones_publicas[] = 'respuestas/cargar_json_remoto';
         
         return $funciones_publicas;
     }

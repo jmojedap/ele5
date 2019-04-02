@@ -94,7 +94,7 @@ class Respuestas extends CI_Controller{
             $data['parrafos_ayuda'] = $parrafos_ayuda;
         
         //Variables específicas
-            $data['destino_form'] = 'respuestas/cargar_json_e';
+            $data['destino_form'] = 'respuestas/cargar_json_e/';
             $data['nombre_archivo'] = $nombre_archivo;
             $data['nombre_hoja'] = 'respuestas';
             $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
@@ -114,15 +114,49 @@ class Respuestas extends CI_Controller{
      */
     function cargar_json_e()
     {
+        $data = array('status' => 0, 'message' => 'Acceso denegado');
+        
         //Variables
         $no_cargados = array();
-        
+            
         $json_file = $_FILES['json_file']['tmp_name'];    //Se crea un archivo temporal, no se sube al servidor, se toma el nombre temporal
         $str_respuestas = file_get_contents($json_file);
         $obj_respuestas = json_decode($str_respuestas);
 
         $data = $this->Respuesta_model->importar_respuestas_json($obj_respuestas);
 
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
+
+
+    }
+
+    /**
+     * Ejecuta cargue con el archivo enviado desde un cliente externo.
+     * Recibe el archivo JSON con las respuestas vía POST, y las carga a los usuarios
+     * y asignaciones correspondientes.
+     */
+    function cargar_json_remoto($key = NULL)
+    {
+        //Para permitir acceso a cliente externo
+            header('Access-Control-Allow-Origin: *'); 
+            header('Access-Control-Allow-Methods: POST');
+
+        $data = array('status' => 0, 'message' => 'Acceso denegado');
+        
+        if ( $key == 'bkdqxivimb' )
+        {
+            //Variables
+            $no_cargados = array();
+            
+            $json_file = $_FILES['json_file']['tmp_name'];    //Se crea un archivo temporal, no se sube al servidor, se toma el nombre temporal
+            $str_respuestas = file_get_contents($json_file);
+            $obj_respuestas = json_decode($str_respuestas);
+    
+            $data = $this->Respuesta_model->importar_respuestas_json($obj_respuestas);
+        }
+            
         $this->output
         ->set_content_type('application/json')
         ->set_output(json_encode($data));

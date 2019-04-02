@@ -74,18 +74,22 @@ class Respuesta_model extends CI_Model
             $row_cuestionario = $this->Pcrn->registro_id('cuestionario', $row_uc->cuestionario_id);
 
         //Calcular string para campo usuario_cuestionario.respuestas
-            $arr_respuestas = array_slice($pagina, 1);
+            $arr_respuestas = $this->arr_respuestas($pagina, $row_cuestionario->clave);
             $arr_row['respuestas'] = implode('-', $arr_respuestas);
         
         //String para campo usuario_cuestionario.resultados
             $arr_row['resultados'] = $this->str_resultados($arr_respuestas, $row_cuestionario->clave);
 
-        //Guardar registro en la tabla usuario_cuestionario
-            $data = $this->guardar_uc($row_uc->id, $arr_row);
+        $data = array('status' => 0, 'message' => 'No se cargó, ya fue respondido');
+        if ( $row_uc->estado == 1)
+        {
+            //Guardar registro en la tabla usuario_cuestionario
+                $data = $this->guardar_uc($row_uc->id, $arr_row);
 
-        //Generar respuestas y finalizar cuestionario
-            $this->Cuestionario_model->generar_respuestas($row_uc->id);
-            $this->Cuestionario_model->finalizar($row_uc->id);
+            //Generar respuestas y finalizar cuestionario
+                $this->Cuestionario_model->generar_respuestas($row_uc->id);
+                $this->Cuestionario_model->finalizar($row_uc->id);
+        }
 
         return $data;
     }
@@ -102,14 +106,38 @@ class Respuesta_model extends CI_Model
         foreach ( $arr_clave as $key => $correcta )
         {
             $resultado = 0;
-            if ( $respuestas[$key] == $correcta ) { $resultado = 1; }
+            if ( isset($respuestas[$key]) )
+            {
+                if ( $respuestas[$key] == $correcta ) { $resultado = 1; }
+            }
             $arr_resultados[] = $resultado;
         }
 
         $resultados = implode('-', $arr_resultados);
 
+        //echo $resultados;
+
         return $resultados;
     }
-    
 
+    /**
+     * Devuelve array con las respuestas, a partir de lo obtenido en la importación
+     * Si hay respuestas faltantes las completa con ceros (0).
+     */
+    function arr_respuestas($pagina, $clave)
+    {
+        $arr_clave = explode('-', $clave);
+        $num_preguntas = count($arr_clave);
+
+        $arr_respuestas = array_slice($pagina, 1);  //Quita primer elemento, correspondiente a $row_uc->id
+
+        //Verifica si hay respuestas faltantes, y las completa con ceros (0)
+        $num_faltantes = $num_preguntas - count($arr_respuestas);
+        if ( $num_faltantes > 0 )
+        {
+            for ($i=0; $i < $num_faltantes; $i++) { $arr_respuestas[] = 0;}
+        }
+
+        return $arr_respuestas;
+    }
 }
