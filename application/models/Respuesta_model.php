@@ -51,13 +51,18 @@ class Respuesta_model extends CI_Model
 // IMPORTAR RESPUESTAS DE ARCHIVO JSON
 //-----------------------------------------------------------------------------
 
+    /**
+     * Ejecuta la importación de respuestas de cuestionarios mediante un archivo JSON. Recibe el Objeto De respuestas
+     * con el conjunto de datos de páginas escaneadas.
+     */
     function importar_respuestas_json($obj_respuestas)
     {
+        //Valor inicial
         $data = array('status' => 0, 'message' => 'Proceso no ejecutado', 'imported' => array(), 'not_imported' => array());
         
         foreach ( $obj_respuestas as $pagina )
         {
-            $data_importar = $this->importar_respuesta($pagina);
+            $data_importar = $this->importar_respuesta($pagina);    //Cargar respuestas de cada página
             if ( $data_importar['status'] == 1 )
             {
                 $data['imported'][] = $data_importar['uc_id'];
@@ -66,6 +71,7 @@ class Respuesta_model extends CI_Model
             }
         }
         
+        //Verificar resultados para JSON
         if ( count($obj_respuestas) )
         {
             $data['status'] = 1;
@@ -92,8 +98,8 @@ class Respuesta_model extends CI_Model
         //String para campo usuario_cuestionario.resultados
             $arr_row['resultados'] = $this->str_resultados($arr_respuestas, $row_cuestionario->clave);
 
-        $data = array('status' => 0, 'message' => 'No se cargó, ya fue respondido');
-        if ( $row_uc->estado == 1)
+        $data = array('status' => 0, 'message' => 'No se cargó, ya fue respondido');    //Valor inicial del resultado
+        if ( $row_uc->estado == 1)  //Verificar que el cuestionario no haya sido ya respondido o cargado (1, sin responder)
         {
             //Guardar registro en la tabla usuario_cuestionario
                 $data = $this->guardar_uc($row_uc->id, $arr_row);
@@ -127,8 +133,6 @@ class Respuesta_model extends CI_Model
 
         $resultados = implode('-', $arr_resultados);
 
-        //echo $resultados;
-
         return $resultados;
     }
 
@@ -153,6 +157,9 @@ class Respuesta_model extends CI_Model
         return $arr_respuestas;
     }
 
+    /**
+     * Query de tabla usuario_cuestionario, de los cuestionarios que fueron cargados al importar el archivo JSON
+     */
     function query_importados($imported)
     {
         $condition = 'usuario_cuestionario.id = 0'; //Valor por defecto
@@ -161,7 +168,6 @@ class Respuesta_model extends CI_Model
             $str_imported = implode($imported, ',');
             $condition = "usuario_cuestionario.id IN ($str_imported)";
         }
-
 
         $this->db->select('usuario_cuestionario.id, usuario_id, cuestionario_id, resumen, nombre, apellidos, nombre_cuestionario');
         $this->db->join('usuario', 'usuario.id = usuario_cuestionario.usuario_id');
@@ -176,6 +182,9 @@ class Respuesta_model extends CI_Model
         return $query_importados;
     }
 
+    /**
+     * String con el HTML del resultado del proceso de cargue de respuestas con el archivo JSON
+     */
     function html_resultado($data)
     {
         $data['importados'] = $this->query_importados($data['imported']);

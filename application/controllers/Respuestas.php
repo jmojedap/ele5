@@ -109,8 +109,8 @@ class Respuestas extends CI_Controller{
     }
     
     /**
-     * Recibe el archivo JSON con las respuestas vía POST, y las carga a los usuarios
-     * y asignaciones correspondientes.
+     * Recibe el archivo JSON desde respuestas/cargar_json con las respuestas vía POST, y las 
+     * carga a los usuarios y asignaciones correspondientes
      */
     function cargar_json_e()
     {
@@ -158,6 +158,9 @@ class Respuestas extends CI_Controller{
         ->set_output(json_encode($data));
     }
 
+    /**
+     * Test, ejemplo de la vista HTML de respuesta después de cargar el archivo de respuestas en JSON
+     */
     function resultado_cargue_json()
     {
         $imported = array(2077867, 2077861, 2078722, 2077864, 2077020, 2077859, 2075979, 2075980, 2075981);

@@ -33,7 +33,38 @@
     }
 ?>
 
-<h1>Resultados</h1>
+<div class="row mt-2 text-center">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                Encontrados
+                <h1>
+                    <?php echo $importados->num_rows() + count($not_imported) ?>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                Cargados
+                <h1><?php echo $importados->num_rows() ?></h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+    <div class="card bg-warning text-white">
+            <div class="card-body">
+                No cargados
+                <h1><?php echo count($not_imported) ?></h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<h2>Páginas cargadas</h2>
 
 <div class="row mb-2">
     <div class="col-md-4">
@@ -92,19 +123,25 @@
     </tbody>
 </table>
 
+<hr>
+
 <?php if ( count($not_imported) > 0 ) { ?>
-    <div class="card">
-        <div class="card-header bg-danger text-white">
-            Las páginas con estos códigos no fueron importadas:
-        </div>
-        <div class="card-body">
-            <ul>
-                <?php foreach ( $not_imported as $uc_id ) { ?>
-                    <li>
-                        <?php echo $uc_id ?>
-                    </li>
-                <?php } ?>
-            </ul>
-        </div>
+
+    <h2>Páginas NO cargadas</h2>
+    <div class="alert alert-warning">
+        Las páginas con estos códigos no fueron importadas:
     </div>
+
+    <table class="table bg-white">
+        <thead>
+            <th>Cod Pág.</th>
+        </thead>        
+        <tbody>
+            <?php foreach ( $not_imported as $uc_id ) { ?>
+                <tr>
+                    <td><?php echo $uc_id ?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
 <?php } ?>
