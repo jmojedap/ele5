@@ -2521,7 +2521,6 @@ class Cuestionario_model extends CI_Model
                 $resumen = json_encode($resumen_array);
                 
             return $resumen;
-        
         }
     }
     

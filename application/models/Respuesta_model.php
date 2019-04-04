@@ -41,8 +41,9 @@ class Respuesta_model extends CI_Model
             $this->db->update('usuario_cuestionario', $arr_row);
         
         //Cargar resultado
-            $data['ejecutado'] = 1;
-            $data['mensaje'] = 'Respuestas guardadas para UC ID: ' . $uc_id;
+            $data['status'] = 1;
+            $data['message'] = 'Respuestas guardadas para UC ID: ' . $uc_id;
+            $data['uc_id'] = $uc_id;
         
         return $data;
     }
@@ -52,21 +53,32 @@ class Respuesta_model extends CI_Model
 
     function importar_respuestas_json($obj_respuestas)
     {
-        $data = array('status' => 0, 'message' => 'Proceso no ejecutado', 'imported' => array());
-
-        if ( count($obj_respuestas) )
-        {
-            $data = array('status' => 1, 'message' => 'Páginas encontradas: ' . count($obj_respuestas));
-        }
-
+        $data = array('status' => 0, 'message' => 'Proceso no ejecutado', 'imported' => array(), 'not_imported' => array());
+        
         foreach ( $obj_respuestas as $pagina )
         {
-            $data['imported'][] = $this->importar_respuesta($pagina);
+            $data_importar = $this->importar_respuesta($pagina);
+            if ( $data_importar['status'] == 1 )
+            {
+                $data['imported'][] = $data_importar['uc_id'];
+            } else {
+                $data['not_imported'][] = $pagina[0];
+            }
+        }
+        
+        if ( count($obj_respuestas) )
+        {
+            $data['status'] = 1;
+            $data['message'] = 'Resultados importados: ' . count($data['imported']);
         }
 
         return $data;
     }
 
+    /**
+     * Importa las respuestas de una página, crea las respuestas en la BD y calcula resultados
+     * totales.
+     */
     function importar_respuesta($pagina)
     {
         //Datos inicales
@@ -88,7 +100,7 @@ class Respuesta_model extends CI_Model
 
             //Generar respuestas y finalizar cuestionario
                 $this->Cuestionario_model->generar_respuestas($row_uc->id);
-                $this->Cuestionario_model->finalizar($row_uc->id);
+                $this->Cuestionario_model->n_finalizar($row_uc->id);
         }
 
         return $data;
@@ -139,5 +151,39 @@ class Respuesta_model extends CI_Model
         }
 
         return $arr_respuestas;
+    }
+
+    function query_importados($imported)
+    {
+        $condition = 'usuario_cuestionario.id = 0'; //Valor por defecto
+        if ( count($imported) > 0 )
+        {
+            $str_imported = implode($imported, ',');
+            $condition = "usuario_cuestionario.id IN ($str_imported)";
+        }
+
+
+        $this->db->select('usuario_cuestionario.id, usuario_id, cuestionario_id, resumen, nombre, apellidos, nombre_cuestionario');
+        $this->db->join('usuario', 'usuario.id = usuario_cuestionario.usuario_id');
+        $this->db->join('cuestionario', 'cuestionario.id = usuario_cuestionario.cuestionario_id');
+        $this->db->where($condition);
+        $this->db->where('usuario_cuestionario.estado', 3);
+        $this->db->order_by('usuario_cuestionario.cuestionario_id', 'ASC');
+        $this->db->order_by('usuario_cuestionario.grupo_id', 'ASC');
+        
+        $query_importados = $this->db->get('usuario_cuestionario');
+
+        return $query_importados;
+    }
+
+    function html_resultado($data)
+    {
+        $data['importados'] = $this->query_importados($data['imported']);
+
+        $data['titulo_pagina'] = 'respuestas/cargue_json/resultado_v';
+        $data['vista_a'] = 'respuestas/cargue_json/resultado_v';
+        $html_resultado = $this->load->view('templates/bs4_basic/main_v', $data, TRUE);
+
+        return $html_resultado;
     }
 }

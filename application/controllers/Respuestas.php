@@ -128,8 +128,6 @@ class Respuestas extends CI_Controller{
         $this->output
         ->set_content_type('application/json')
         ->set_output(json_encode($data));
-
-
     }
 
     /**
@@ -137,28 +135,39 @@ class Respuestas extends CI_Controller{
      * Recibe el archivo JSON con las respuestas vía POST, y las carga a los usuarios
      * y asignaciones correspondientes.
      */
-    function cargar_json_remoto($key = NULL)
+    function cargar_json_remoto()
     {
         //Para permitir acceso a cliente externo
             header('Access-Control-Allow-Origin: *'); 
             header('Access-Control-Allow-Methods: POST');
-
-        $data = array('status' => 0, 'message' => 'Acceso denegado');
         
-        if ( $key == 'bkdqxivimb' )
-        {
-            //Variables
-            $no_cargados = array();
-            
+        //Variables
             $json_file = $_FILES['json_file']['tmp_name'];    //Se crea un archivo temporal, no se sube al servidor, se toma el nombre temporal
             $str_respuestas = file_get_contents($json_file);
             $obj_respuestas = json_decode($str_respuestas);
-    
+
+        //Ejecutar importación
             $data = $this->Respuesta_model->importar_respuestas_json($obj_respuestas);
-        }
+
+        //Generar string con HTML resultado del proceso
+            $html_results = $this->Respuesta_model->html_resultado($data);
+            $data['html_results'] = $html_results;
             
         $this->output
         ->set_content_type('application/json')
         ->set_output(json_encode($data));
+    }
+
+    function resultado_cargue_json()
+    {
+        $imported = array(2077867, 2077861, 2078722, 2077864, 2077020, 2077859, 2075979, 2075980, 2075981);
+
+        $data['importados'] = $this->Respuesta_model->query_importados($imported);
+        $data['not_imported'] = array(2077021);
+
+        $data['titulo_pagina'] = 'respuestas/cargue_json/resultado_v';
+        $data['vista_a'] = 'respuestas/cargue_json/resultado_v';
+
+        $this->load->view('templates/bs4_basic/main_v', $data);
     }
 }

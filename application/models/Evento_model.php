@@ -102,7 +102,7 @@ class Evento_Model extends CI_Model{
         {
             //No existe, se inserta
             $registro['creado'] = date('Y-m-d H:i:s');
-            $registro['c_usuario_id'] = $this->session->userdata('usuario_id');
+            $registro['c_usuario_id'] = $this->Pcrn->si_nulo($this->session->userdata('usuario_id'), 0);
             
             $this->db->insert('evento', $registro);
             $evento_id = $this->db->insert_id();
