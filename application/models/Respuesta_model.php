@@ -67,7 +67,7 @@ class Respuesta_model extends CI_Model
             {
                 $data['imported'][] = $data_importar['uc_id'];
             } else {
-                $data['not_imported'][] = $pagina[0];
+                $data['not_imported'][] = $data_importar;
             }
         }
         
@@ -88,25 +88,36 @@ class Respuesta_model extends CI_Model
     function importar_respuesta($pagina)
     {
         //Datos inicales
-            $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $pagina[0]);
+            $uc_id = 0;
+            if ( count($pagina) > 0 ) { $uc_id = $pagina[0]; }  //Verificar que el array de página tenga al menos un elemento
+
+        //Resultado por defecto
+            $data = array('status' => 0, 'message' => 'El código de página no fue encontrado en la plataforma', 'cod_page' => $uc_id);
+            $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $uc_id);
+
+        //La asignación de cuestionario sí existe
+        if ( ! is_null($row_uc) )
+        {
             $row_cuestionario = $this->Pcrn->registro_id('cuestionario', $row_uc->cuestionario_id);
 
-        //Calcular string para campo usuario_cuestionario.respuestas
-            $arr_respuestas = $this->arr_respuestas($pagina, $row_cuestionario->clave);
-            $arr_row['respuestas'] = implode('-', $arr_respuestas);
-        
-        //String para campo usuario_cuestionario.resultados
-            $arr_row['resultados'] = $this->str_resultados($arr_respuestas, $row_cuestionario->clave);
+            //Calcular string para campo usuario_cuestionario.respuestas
+                $arr_respuestas = $this->arr_respuestas($pagina, $row_cuestionario->clave);
+                $arr_row['respuestas'] = implode('-', $arr_respuestas);
+            
+            //String para campo usuario_cuestionario.resultados
+                $arr_row['resultados'] = $this->str_resultados($arr_respuestas, $row_cuestionario->clave);
 
-        $data = array('status' => 0, 'message' => 'No se cargó, ya fue respondido');    //Valor inicial del resultado
-        if ( $row_uc->estado == 1)  //Verificar que el cuestionario no haya sido ya respondido o cargado (1, sin responder)
-        {
-            //Guardar registro en la tabla usuario_cuestionario
-                $data = $this->guardar_uc($row_uc->id, $arr_row);
+            if ( $row_uc->estado == 1)  //Verificar que el cuestionario no haya sido ya respondido o cargado (1, sin responder)
+            {
+                //Guardar registro en la tabla usuario_cuestionario
+                    $data = $this->guardar_uc($row_uc->id, $arr_row);
 
-            //Generar respuestas y finalizar cuestionario
-                $this->Cuestionario_model->generar_respuestas($row_uc->id);
-                $this->Cuestionario_model->n_finalizar($row_uc->id);
+                //Generar respuestas y finalizar cuestionario
+                    $this->Cuestionario_model->generar_respuestas($row_uc->id);
+                    $this->Cuestionario_model->n_finalizar($row_uc->id);
+            } else {
+                $data['message'] = 'Respondido o cargado anteriormente';
+            }
         }
 
         return $data;

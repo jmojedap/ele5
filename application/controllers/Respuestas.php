@@ -166,7 +166,9 @@ class Respuestas extends CI_Controller{
         $imported = array(2077867, 2077861, 2078722, 2077864, 2077020, 2077859, 2075979, 2075980, 2075981);
 
         $data['importados'] = $this->Respuesta_model->query_importados($imported);
-        $data['not_imported'] = array(2077021);
+        $data['not_imported'] = array(
+            array('status' => 0, 'message' => 'No se cargó: respondido o cargado anteriormente', 'cod_page' => '20759831')
+        );
 
         $data['titulo_pagina'] = 'respuestas/cargue_json/resultado_v';
         $data['vista_a'] = 'respuestas/cargue_json/resultado_v';

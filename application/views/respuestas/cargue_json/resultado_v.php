@@ -85,7 +85,7 @@
 <table class="table table-default bg-white">
     <tbody>
         <thead>
-            <th>Cod Pag.</th>
+            <th>Cod Pág.</th>
             <th>Cuestionario</th>
             <th>Estudiante</th>
             <th>Correctas</th>
@@ -129,17 +129,19 @@
 
     <h2>Páginas NO cargadas</h2>
     <div class="alert alert-warning">
-        Las páginas con estos códigos no fueron importadas:
+        Las páginas con estos códigos no fueron cargadas:
     </div>
 
     <table class="table bg-white">
         <thead>
             <th>Cod Pág.</th>
+            <th>Resultado</th>
         </thead>        
         <tbody>
-            <?php foreach ( $not_imported as $uc_id ) { ?>
+            <?php foreach ( $not_imported as $pagina ) { ?>
                 <tr>
-                    <td><?php echo $uc_id ?></td>
+                    <td><?php echo $pagina['cod_page'] ?></td>
+                    <td><?php echo $pagina['message'] ?></td>
                 </tr>
             <?php } ?>
         </tbody>
