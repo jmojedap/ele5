@@ -136,22 +136,49 @@
         
         <div class="sep1">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <a class="btn btn-warning" title="Eliminar los elementos seleccionados" data-toggle="modal" data-target="#modal_eliminar">
                         <i class="fas fa-trash"></i>
                     </a>
                     <?php echo anchor("cuestionarios/grupos_exportar/{$cuestionario_id}/{$grupo_id}", '<i class="fa fa-file-excel"></i> Exportar', 'class="btn btn-success" title="Exportar resultados a MS-Excel" target="_blank"') ?>
 
-                    <?php if ( $this->session->userdata('rol_id') <= 1 && $row->num_preguntas <= 60 ) { ?>
-                        <a href="<?php echo base_url("respuestas/formatos/{$cuestionario_id}/{$grupo_id}") ?>" class="btn btn-primary" target="_blank">
-                            <i class="fa fa-download"></i>
-                            Hojas respuestas
-                        </a>
+                    <?php if ( $this->session->userdata('rol_id') <= 2 && $row->num_preguntas <= 60 ) { ?>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Imprimir páginas con formatos de respuestas">
+                                <i class="far fa-file"></i>
+                                Páginas de respuesta
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="<?php echo base_url("respuestas/formatos/{$cuestionario_id}/{$grupo_id}/carta") ?>" target="_blank">
+                                    Carta
+                                </a>
+                                <a class="dropdown-item" href="<?php echo base_url("respuestas/formatos/{$cuestionario_id}/{$grupo_id}/carta_datos") ?>" target="_blank">
+                                    Carta (solo datos)
+                                </a>
+                                <a class="dropdown-item" href="<?php echo URL_RECURSOS . 'formatos_respuestas/carta.pdf' ?>" target="_blank">
+                                    Carta (solo formato)
+                                </a>
+
+                                <?php if ( $row->num_preguntas <= 30 ) { ?>
+                                    <a class="dropdown-item" href="<?php echo base_url("respuestas/formatos/{$cuestionario_id}/{$grupo_id}/medio_oficio") ?>" target="_blank">
+                                        Medio oficio
+                                    </a>
+                                    <a class="dropdown-item" href="<?php echo base_url("respuestas/formatos/{$cuestionario_id}/{$grupo_id}/medio_oficio_datos") ?>" target="_blank">
+                                        Medio oficio (solo datos)
+                                    </a>
+                                    <a class="dropdown-item" href="<?php echo URL_RECURSOS . 'formatos_respuestas/medio_oficio.pdf' ?>" target="_blank">
+                                        Medio oficio (solo formato)
+                                    </a>
+                                <?php } ?>
+
+
+                            </div>
+                        </div>
                     <?php } ?>
 
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <p>
                         <span class="suave">Grupo</span>
                         <span class="resaltar"><?= $this->App_model->nombre_grupo($row_grupo->grupo_id) ?></span>

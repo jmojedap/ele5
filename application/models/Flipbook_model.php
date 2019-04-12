@@ -1330,36 +1330,22 @@ class Flipbook_model extends CI_Model {
     /**
      * Identifica la primera página de un flipbook
      * Se actualiza el campo flipbook.primera_pagina_id
+     * FUNCIÓN ELILIMINADA 2019-04-08
      * 
      * @param type $flipbook_id
      * @return int
      */
-    function primera_pagina($flipbook_id) {
-        $this->db->where('flipbook_id', $flipbook_id);
-        $this->db->order_by('num_pagina', 'ASC');
-        $query = $this->db->get('flipbook_contenido');
-
-        $modificado = 0;
-
-        if ($query->num_rows() > 0) 
-        {
-            $row = $query->row();
-            $registro['primera_pagina_id'] = $row->pagina_id;
-
-            $this->db->where('id', $flipbook_id);
-            $this->db->update('flipbook', $registro);
-
-            $modificado = 1;
-        }
-
-        return $modificado;
+    function primera_pagina($flipbook_id) 
+    {
+        return 1;
     }
 
     /* Devuelve un array con las opciones de la tabla flipbook, limitadas por una condición definida
      * en un formato ($formato) definido
      */
 
-    function opciones_flipbook($filtros, $formato = 1) {
+    function opciones_flipbook($filtros, $formato = 1) 
+    {
         $this->db->select("CONCAT('0', flipbook.id) as flipbook_id, nombre_flipbook, CONCAT(anio_generacion, ' - ', nombre_flipbook) AS anio_nombre", FALSE);
         $this->db->where($filtros);
         $this->db->order_by('anio_generacion', 'DESC');

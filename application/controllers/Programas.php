@@ -672,9 +672,6 @@ class Programas extends CI_Controller{
             $data['vista_a'] = 'comunes/resultado_importacion_v';
             $data['vista_menu'] = 'programas/explorar_menu_v';
             $this->load->view(PTL_ADMIN, $data);
-
-            $this->output->enable_profiler(TRUE);
-        
     }
 
 //GENERACIÓN DE CUESTIONARIOS

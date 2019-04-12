@@ -1,5 +1,14 @@
+<?php
+    $sizes = array(
+        'carta' => 'Letter',
+        'carta_datos' => 'Letter',
+        'medio_oficio' => '216mm 178mm',
+        'medio_oficio_datos' => '216mm 178mm',
+    );
+?>
+
 <style>
-    @page { sheet-size: Letter; }
+    @page { sheet-size: <?php echo $sizes[$formato] ?>; }
 
     table{
         border-collapse: collapse;

@@ -18,7 +18,7 @@ class Respuestas extends CI_Controller{
 // RESPUESTAS DE CUESTIONARIOS POR FORMATO
 //-----------------------------------------------------------------------------
 
-    function formatos($cuestionario_id, $grupo_id)
+    function formatos($cuestionario_id, $grupo_id, $formato = 'carta')
     {
         require 'vendor/autoload.php';
 
@@ -26,6 +26,7 @@ class Respuestas extends CI_Controller{
         $data['row_cuestionario'] = $this->Pcrn->registro_id('cuestionario', $cuestionario_id);
         $data['row_grupo'] = $this->Pcrn->registro_id('grupo', $grupo_id);
         $data['nombre_institucion'] = $this->Pcrn->campo_id('institucion', $data['row_grupo']->institucion_id, 'nombre_institucion');
+        $data['formato'] = $formato;
 
         $paginas = array();
 
@@ -39,10 +40,10 @@ class Respuestas extends CI_Controller{
 
         //Crear documento PDF
         $mpdf = new \Mpdf\Mpdf();
-
+        
         $mpdf->SetImportUse();
 
-        $pagecount = $mpdf->SetSourceFile('recursos/cuestionarios/template_respuestas.pdf');
+        $pagecount = $mpdf->SetSourceFile("recursos/formatos_respuestas/{$formato}.pdf");
         $tplId = $mpdf->ImportPage($pagecount);
         $mpdf->SetPageTemplate($tplId);
 
@@ -51,7 +52,6 @@ class Respuestas extends CI_Controller{
             $mpdf->WriteHTML($pagina);
         }
 
-        //$mpdf->Output('Formatos Respuestas.pdf', 'D');
         $mpdf->Output();
     }
 
