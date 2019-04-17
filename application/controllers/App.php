@@ -186,6 +186,13 @@ class App extends CI_Controller{
         $mpdf->WriteHTML('<h1>Hello world!</h1>');
         $mpdf->Output();
     }
+
+    function demo($page = 'biblioteca')
+    {
+        $data['titulo_pagina'] = 'Biblioteca Virtual';
+        $data['vista_a'] = 'app/demo/' . $page . '_v';
+        $this->load->view(PTL_ADMIN_2, $data);
+    }
     
 //AJAX GENERALES
 //---------------------------------------------------------------------------------------------------
