@@ -810,6 +810,32 @@ class Flipbooks extends CI_Controller{
         ->set_content_type('application/json')
         ->set_output(json_encode($resultado));
     }
+
+    /**
+     * Mostrar el flipbook para leer, vista completa para estudiantes
+     * 2018-10-23
+     * 
+     * @param type $flipbook_id
+     * @param type $num_pagina
+     */
+    function leer_demo($flipbook_id, $num_pagina = NULL)
+    {
+        if ( $this->input->get('profiler') == 1 ) { $this->output->enable_profiler(TRUE); }
+        
+        //Datos básicos
+            $data = $this->Flipbook_model->basico($flipbook_id);
+            
+        //Datos referencia
+            $data['bookmark'] = $this->Flipbook_model->bookmark($flipbook_id);
+            $data['num_pagina'] = $this->Pcrn->si_nulo($num_pagina, $data['bookmark']);
+            $data['carpeta_uploads'] = URL_UPLOADS;
+            $data['carpeta_iconos'] = URL_IMG . 'flipbook/';
+            $data['colores'] = $this->App_model->arr_color_area();
+            $data['elementos_fb'] = $this->Flipbook_model->elementos_fb($data['row']);
+            
+        //Cargar vista
+        $this->load->view('flipbooks/demo/leer_v', $data);
+    }
     
     
 //GESTIÓN DE PÁGINAS DE FLIPBOOK
