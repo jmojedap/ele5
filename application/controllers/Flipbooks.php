@@ -813,7 +813,7 @@ class Flipbooks extends CI_Controller{
 
     /**
      * Mostrar el flipbook para leer, vista completa para estudiantes
-     * 2018-10-23
+     * 2019-04-21
      * 
      * @param type $flipbook_id
      * @param type $num_pagina

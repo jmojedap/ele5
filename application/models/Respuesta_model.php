@@ -206,4 +206,30 @@ class Respuesta_model extends CI_Model
 
         return $html_resultado;
     }
+
+    /**
+     * Guarda en la tabla evento un registro sobre la ejecución de un  cargue remoto de respuestas
+     * con la herramienta Evaluator
+     */
+    function guardar_ev_importacion($data)
+    {
+        //Agregando información de IP
+            $data['ip_address'] = $this->input->ip_address();
+
+        //Construir registro
+            $arr_row['nombre_evento'] = $this->input->ip_address();
+            $arr_row['tipo_id'] = 23;
+            $arr_row['fecha_inicio'] = date('Y-m-d');
+            $arr_row['hora_inicio'] = date('H:i:s');
+            $arr_row['creado'] = date('Y-m-d H:i:s');
+            $arr_row['editado'] = date('Y-m-d H:i:s');
+            $arr_row['descripcion'] = json_encode($data);
+            $arr_row['estado'] = $data['status'];
+            $arr_row['entero_1'] = count($data['imported']);    //Cantidad de importados
+
+        //Guardar registro
+            $this->db->insert('evento', $arr_row);
+
+        return $this->db->insert_id();
+    }
 }

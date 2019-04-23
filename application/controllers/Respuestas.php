@@ -131,6 +131,7 @@ class Respuestas extends CI_Controller{
     }
 
     /**
+     * AJAX JSON
      * Ejecuta cargue con el archivo enviado desde un cliente externo.
      * Recibe el archivo JSON con las respuestas vía POST, y las carga a los usuarios
      * y asignaciones correspondientes.
@@ -148,6 +149,10 @@ class Respuestas extends CI_Controller{
 
         //Ejecutar importación
             $data = $this->Respuesta_model->importar_respuestas_json($obj_respuestas);
+
+        //Guardar evento de importación
+            $event_id = $this->Respuesta_model->guardar_ev_importacion($data);
+            $data['event_id'] = $event_id;
 
         //Generar string con HTML resultado del proceso
             $html_results = $this->Respuesta_model->html_resultado($data);
