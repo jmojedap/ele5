@@ -34,7 +34,7 @@ class Cuestionarios extends CI_Controller{
             $data = $this->Cuestionario_model->data_explorar($num_pagina);
         
         //Opciones de filtros de búsqueda
-            $data['arr_filtros'] = array('a', 'n', 'tp', 'i');
+            
             $data['opciones_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
             $data['opciones_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Nivel');
             $data['opciones_tipo'] = $this->Item_model->opciones('categoria_id = 15', 'Tipo');
