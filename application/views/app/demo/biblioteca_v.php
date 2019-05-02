@@ -8,7 +8,7 @@
 
     <div class="card-deck">
         <div class="card shadow" v-for="book in books">
-            <a href="#">
+            <a href="<?php echo base_url("flipbooks/leer_demo/1605") ?>" target="_blank">
                 <img class="card-img-top" v-bind:src="`<?php echo URL_IMG . 'demo/book_' ?>` + book.area_id + `.jpg`" alt="Card image cap">
             </a>
             <div class="card-body">
@@ -40,10 +40,8 @@
                 </li>
             </ul>
             <div class="card-footer">
-                <a href="#" class="btn btn-primary"><i class="fa fa-book"></i> Abrir</a>
+                <a href="<?php echo base_url("flipbooks/leer_demo/1605") ?>" target="_blank" class="btn btn-primary"><i class="fa fa-book"></i> Abrir</a>
                 <a href="#" class="btn btn-secondary">Mis notas</a>
-                
-                
             </div>
         </div>
     </div>

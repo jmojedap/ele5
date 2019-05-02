@@ -34,11 +34,10 @@ class Cuestionario_model extends CI_Model
             $data['el_singular'] = 'cuestionario';
                 
         //Otros
-            $data['cant_resultados'] = $this->Cuestionario_model->cant_resultados($data['busqueda']);
-            $data['subtitulo_pagina'] = $this->Cuestionario_model->cant_resultados($data['busqueda']);
-            $data['max_pagina'] = ceil($this->Pcrn->si_cero($data['cant_resultados'],1) / $data['per_page']);   //Cantidad de páginas
-
+            $data['arr_filtros'] = array('a', 'n', 'tp', 'i');
+            
         //Vistas
+            $data['subtitulo_pagina'] = $data['max_pagina'];
             $data['vista_a'] = $data['carpeta_vistas'] . 'explorar_v';
             $data['vista_menu'] = $data['carpeta_vistas'] . 'menu_v';
         

@@ -97,10 +97,10 @@
 
                         <!-- FIN DETonante DE CONOCIMIENTO -->
 
-                        <a id="btn_ova" href="#ova" data-toggle="collapse" aria-expanded="true" class="btn btn-default btn-block" style="margin-bottom: 5px;">
-                            O.V.A.
+                        <a id="btn_ova" href="https://www.plataformaenlinea.com/Enlaces/cs5-20-p17" class="btn btn-default btn-block" style="margin-bottom: 5px;" target="_blank">
+                            Recurso virtual
                         </a>
-                        <a id="btn_aprueba" href="#aprueba" data-toggle="collapse" aria-expanded="true" class="btn btn-default btn-block" style="margin-bottom: 5px;">
+                        <a id="btn_aprueba" href="https://www.plataformaenlinea.com/Enlaces/cs5-20-p16" class="btn btn-default btn-block" style="margin-bottom: 5px;" target="_blank">
                             Aprueba
                         </a>
 
