@@ -86,7 +86,7 @@
 </div>
 
 
-<link type="text/css" rel="stylesheet" href="<?php echo URL_RECURSOS ?>plantillas/apanel3/cuestionario.css">
+<link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/cuestionario.css">
 
 <script>
     

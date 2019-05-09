@@ -70,7 +70,7 @@
                         <!--QUICES-->
                     
                         <a id="btn_listado_quices" href="#listado_quices" data-toggle="collapse" aria-expanded="true" class="btn btn-default btn-block" style="margin-bottom: 5px;">
-                            <img id="mostrar_quices" src="<?php echo URL_RECURSOS . 'imagenes/flipbook/quices_banner_v4.png'; ?>">
+                            <img id="mostrar_quices" src="<?php echo URL_IMG . 'flipbook/quices_banner_v4.png'; ?>">
                         </a>
 
                         <div id="listado_quices" class="collapse sep2">
@@ -98,7 +98,7 @@
                         <!--ARCHIVOS-->
                     
                         <a id="btn_listado_archivos" href="#listado_archivos" data-toggle="collapse" aria-expanded="true" class="btn btn-default btn-block" style="margin-bottom: 5px;">
-                            <img src="<?php echo URL_RECURSOS ?>imagenes/flipbook/archivos_banner_v4.png" title="Archivos complementarios">
+                            <img src="<?php echo URL_IMG ?>flipbook/archivos_banner_v4.png" title="Archivos complementarios">
                         </a>
 
                         <div id="listado_archivos" class="collapse sep2">

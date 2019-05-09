@@ -1,1 +1,0 @@
-<script src="<?= URL_ASSETS ?>biggora_autocomplete/src/bootstrap-typeahead.js"></script>

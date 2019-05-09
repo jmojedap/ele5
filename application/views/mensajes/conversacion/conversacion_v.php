@@ -1,4 +1,4 @@
-<link type="text/css" rel="stylesheet" href="<?php echo URL_RECURSOS ?>plantillas/apanel2/mensajes.css">
+<link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel2/mensajes.css">
 
 <?php $this->load->view('assets/biggora_autocomplete');    //PlugIn, auto completar ?>
 <?php $this->load->view('mensajes/conversacion/js_v'); ?>

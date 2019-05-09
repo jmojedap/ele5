@@ -1,6 +1,6 @@
 <?php $this->load->view('eventos/noticias/noticias_js'); ?>
 
-<link rel="stylesheet" href="<?php echo URL_RECURSOS ?>plantillas/apanel2/noticias.css">
+<link rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel2/noticias.css">
 
 <div class="row">
     <div class="col-md-3 col-lg-2">

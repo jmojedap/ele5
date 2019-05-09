@@ -28,7 +28,7 @@
     );
 ?>
 
-<script type="text/javascript" src="<?php echo URL_RECURSOS ?>js/Math.uuid.js"></script>
+<script type="text/javascript" src="<?php echo URL_RESOURCES ?>js/Math.uuid.js"></script>
 
 <script>
     //Variables

@@ -57,7 +57,7 @@
     $num_pregunta_sig = $this->Pcrn->rotar_entre($num_pregunta + 1, 1, $num_preguntas);
 ?>
 
-<link type="text/css" rel="stylesheet" href="<?php echo URL_RECURSOS ?>plantillas/apanel2/cuestionario.css">
+<link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel2/cuestionario.css">
 
 <script>
     

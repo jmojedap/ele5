@@ -80,7 +80,7 @@
                 this.anotacion = this.anotaciones[this.num_pagina];
             },  
             cambiar_pagina: function() {
-                $('#img_pagina').attr('src', '<?php echo URL_RECURSOS . 'imagenes/flipbook/pagina_cargando.png' ?>');
+                $('#img_pagina').attr('src', '<?php echo URL_IMG . 'flipbook/pagina_cargando.png' ?>');
                 this.pagina = this.data.paginas[this.num_pagina];
                 this.anotacion = this.anotaciones[this.num_pagina];
             },

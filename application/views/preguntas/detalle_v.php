@@ -24,7 +24,7 @@
         }
 ?>
 
-<link type="text/css" rel="stylesheet" href="<?php echo URL_RECURSOS . 'plantillas/apanel2/cuestionario.css' ?>">
+<link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES . 'templates/apanel2/cuestionario.css' ?>">
 
 <div class="row">
     <div class="col col-md-8">

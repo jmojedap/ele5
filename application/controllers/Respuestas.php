@@ -105,7 +105,7 @@ class Respuestas extends CI_Controller{
             $data['vista_a'] = 'comunes/bs4/importar_json_v';
             $data['vista_menu'] = 'cuestionarios/explorar/menu_v';
         
-        $this->load->view(PTL_ADMIN_2, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**

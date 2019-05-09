@@ -1,7 +1,7 @@
 <?php $this->load->view('assets/vue'); ?>
 <?php $this->load->view('head_includes/countdown'); ?>
-<link type="text/css" rel="stylesheet" href="<?php echo URL_RECURSOS ?>plantillas/apanel2/cuestionario.css">
-<script src="<?php echo URL_RECURSOS . 'js/pcrn.js' ?>"></script>
+<link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel2/cuestionario.css">
+<script src="<?php echo URL_RESOURCES . 'js/pcrn.js' ?>"></script>
 
 <script>
     $(document).ready(function ()

@@ -1,8 +1,8 @@
 <!--    CUENTA REGRESIVA-->
     
-    <link rel="stylesheet" href="<?php echo URL_RECURSOS ?>js/jquery_countdown/jquery.countdown.css" type="text/css" media="screen" />
-    <script type="text/javascript" language="javascript" src="<?php echo URL_RECURSOS ?>js/jquery_countdown/jquery.countdown.min.js"></script>
-    <script type="text/javascript" language="javascript" src="<?php echo URL_RECURSOS ?>js/jquery_countdown/jquery.countdown-es.js"></script>
+    <link rel="stylesheet" href="<?php echo URL_RESOURCES ?>js/jquery_countdown/jquery.countdown.css" type="text/css" media="screen" />
+    <script type="text/javascript" language="javascript" src="<?php echo URL_RESOURCES ?>js/jquery_countdown/jquery.countdown.min.js"></script>
+    <script type="text/javascript" language="javascript" src="<?php echo URL_RESOURCES ?>js/jquery_countdown/jquery.countdown-es.js"></script>
     
     <style>
         #the_final_countdown{

@@ -23,7 +23,7 @@
         
         <link type="text/css" rel="stylesheet" href="<?= base_url() ?>css/apanel/style.css">
         <link type="text/css" rel="stylesheet" href="<?= base_url() ?>css/apanel/style_add.css">
-        <script type="text/javascript" src="<?= base_url() ?>js/apanel/actions.js"></script>
+        <script type="text/javascript" src="<?php echo URL_RESOURCES ?>js/apanel/actions.js"></script>
         
         <!--Google analytics-->
         <?php $this->load->view('head_includes/google_analytics'); ?>

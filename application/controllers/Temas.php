@@ -832,8 +832,6 @@ class Temas extends CI_Controller{
             $crud->field_type('editado', 'hidden', date('Y-m-d H:i:s'));
 
         $gc_output = $crud->render();
-        
-        //Fancybox para ventana modal
 
         //Solicitar vista
             $data['titulo_pagina'] = 'Recursos';
@@ -881,8 +879,6 @@ class Temas extends CI_Controller{
             $head_includes[] = 'grocery_crud';
         
             $data['head_includes'] = $head_includes;
-        
-        //Fancybox para ventana modal
 
         //Solicitar vista
         $data['titulo_pagina'] = 'Recursos';
@@ -931,8 +927,6 @@ class Temas extends CI_Controller{
             $head_includes[] = 'grocery_crud';
         
             $data['head_includes'] = $head_includes;
-        
-        //Fancybox para ventana modal
 
         //Solicitar vista
         $data['titulo_pagina'] = 'Recursos';

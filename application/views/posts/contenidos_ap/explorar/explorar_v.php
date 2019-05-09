@@ -2,7 +2,7 @@
 <?php $this->load->view('assets/toastr'); ?>
 <?php $this->load->view('assets/bs_checkboxes'); ?>
 
-<script src="<?php echo URL_RECURSOS . 'js/pcrn.js' ?>"></script>
+<script src="<?php echo URL_RESOURCES . 'js/pcrn.js' ?>"></script>
 
 <?php $this->load->view("{$carpeta_vistas}script_js");?>
 

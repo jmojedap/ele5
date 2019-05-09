@@ -91,16 +91,19 @@ define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 */
 
 
-define('RUTA_IMG', 'recursos/imagenes/');
+define('RUTA_IMG', 'resources/images/');
 define('RUTA_CONTENT', 'content/');
 define('RUTA_UPLOADS', '../v3/assets/uploads/');
 define('URL_ASSETS', 'http://www.plataformaenlinea.com/2017/assets/');
 define('URL_UPLOADS', 'http://www.plataformaenlinea.com/v3/assets/uploads/');
 define('URL_RECURSOS', 'http://www.plataformaenlinea.com/2017/recursos/');   //URL carpeta contenido
-define('URL_IMG', 'http://www.plataformaenlinea.com/2017/recursos/imagenes/');
+define('URL_IMG', 'http://www.plataformaenlinea.com/2017/resources/images/');
 define('PTL_ADMIN', 'templates/apanel2/plantilla_v');   //Vista plantilla de administración
-define('PTL_ADMIN_2', 'templates/apanel3/main_v');      //Vista plantilla de administración
 define('VER_LOCAL', FALSE);                             //No es una versión local
 define('MAX_REG_EXPORT', 2500);                         //Número máximo de registros para exportar en archivo MS-Excel
 define('NOMBRE_APP', 'Plataforma en Línea');            //Nombre de la aplicación
 define('LAT_CHAT', 5000);                               //Latencia del chat, milisegudos actualización de mensajes chat
+
+define('APP_NAME', 'Plataforma en Línea');    //Nombre de la aplicación
+define('URL_RESOURCES', 'http://www.plataformaenlinea.com/2017/resources/');   //URL carpeta contenido
+define('TPL_ADMIN', 'templates/apanel3/main_v');   //Vista plantilla de administración

@@ -45,7 +45,7 @@ class Cuestionarios extends CI_Controller{
             $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 15');
         
         //Cargar vista
-            $this->load->view(PTL_ADMIN_2, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
 
     /**
@@ -161,7 +161,7 @@ class Cuestionarios extends CI_Controller{
         
         $output = array_merge($data,(array)$gc_output);
         
-        $this->load->view(PTL_ADMIN_2, $output);
+        $this->load->view(TPL_ADMIN, $output);
     }
     
     /**
@@ -189,7 +189,7 @@ class Cuestionarios extends CI_Controller{
         //Solicitar vista
             $data['vista_b'] = 'comunes/gc_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN_2, $output);
+            $this->load->view(TPL_ADMIN, $output);
     }
     
 // CREAR COPIA DE UN CUESTIONARIO
@@ -209,7 +209,7 @@ class Cuestionarios extends CI_Controller{
         //Solicitar vista
             $data['subtitulo_pagina'] = 'Copiar';
             $data['vista_b'] = 'cuestionarios/copiar_cuestionario_v';
-            $this->load->view(PTL_ADMIN_2, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -304,7 +304,7 @@ class Cuestionarios extends CI_Controller{
         
         //Solicitar vista
             $data['vista_b'] = 'cuestionarios/grupos_v';
-            $this->load->view(PTL_ADMIN_2, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -334,7 +334,7 @@ class Cuestionarios extends CI_Controller{
             $data['subtitulo_pagina'] = 'Temas';
             $data['vista_b'] = 'cuestionarios/temas_v';
 
-            $this->load->view(PTL_ADMIN_2, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     //FUNCIÓN DESACTIVADA 2019-02-25
@@ -395,7 +395,7 @@ class Cuestionarios extends CI_Controller{
             $data['subtitulo_pagina'] = $data['cant_resultados'];
             $data['vista_a'] = 'cuestionarios/asignaciones/explorar_v';
             $data['vista_menu'] = 'cuestionarios/explorar/menu_v';
-            $this->load->view(PTL_ADMIN_2, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     function n_asignar($cuestionario_id)
@@ -491,7 +491,7 @@ class Cuestionarios extends CI_Controller{
         //Solicitar vista
             $data['vista_b'] = 'cuestionarios/asignar_v';
             $data['ayuda_id'] = 116;
-            $this->load->view(PTL_ADMIN_2, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -609,7 +609,7 @@ class Cuestionarios extends CI_Controller{
             $data['vista_a'] = 'comunes/bs4/importar_v';
             $data['vista_menu'] = 'cuestionarios/explorar/menu_v';
         
-        $this->load->view(PTL_ADMIN_2, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     function asignar_masivo_e()
@@ -857,7 +857,7 @@ class Cuestionarios extends CI_Controller{
             $data['vista_a'] = 'app/no_permitido_v';
         }
         
-        $this->load->view(PTL_ADMIN_2, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     function lista_preguntas($cuestionario_id)
@@ -1034,7 +1034,7 @@ class Cuestionarios extends CI_Controller{
         }
         
         //Cargar vista
-        $this->load->view(PTL_ADMIN_2, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     
@@ -1063,7 +1063,7 @@ class Cuestionarios extends CI_Controller{
         $data['vista_b'] = $arr_vistas[$tipo];
         
         //Cargar vista
-        $this->load->view('p_print/plantilla_v', $data);
+        $this->load->view('templates/print/plantilla_v', $data);
         
     }
     
@@ -1124,7 +1124,7 @@ class Cuestionarios extends CI_Controller{
         
         //Solicitar vista
             $data['vista_a'] = 'cuestionarios/resolver_lote_v';
-            $this->load->view(PTL_ADMIN_2, $data);
+            $this->load->view(TPL_ADMIN, $data);
         
     }
     
@@ -1236,7 +1236,7 @@ class Cuestionarios extends CI_Controller{
             $data['vista_menu'] = 'cuestionarios/explorar/menu_v';
             $data['ayuda_id'] = 143;
         
-        $this->load->view(PTL_ADMIN_2, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     function responder_masivo_e()
@@ -1298,7 +1298,7 @@ class Cuestionarios extends CI_Controller{
             $data['cuestionario_id'] = $cuestionario_id;
             $data['vista_b'] = 'cuestionarios/preguntas_v';
 
-        $this->load->view(PTL_ADMIN_2, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
 
     /**
@@ -1419,6 +1419,6 @@ class Cuestionarios extends CI_Controller{
         //Solicitar vista
             $data['subtitulo_pagina'] = 'Nueva pregunta';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN_2, $output);
+            $this->load->view(TPL_ADMIN, $output);
     }
 }

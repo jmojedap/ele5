@@ -6,7 +6,7 @@
 ?>
 
 <script type="text/javascript" language="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script type="text/javascript" language="javascript" src="<?php echo URL_RECURSOS ?>js/jquery.jkey.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo URL_RESOURCES ?>js/jquery.jkey.js"></script>
 <script type="text/javascript" language="javascript">
 
 	$(document).ready(function(){

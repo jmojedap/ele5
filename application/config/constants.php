@@ -91,17 +91,20 @@ define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 */
 
 
-define('RUTA_IMG', 'recursos/imagenes/');
+define('RUTA_IMG', 'resources/images/');
 define('RUTA_CONTENT', 'content/');
 define('RUTA_UPLOADS', 'content/uploads/');
 define('URL_ASSETS', 'http://localhost/ele/assets/');
 define('URL_CONTENT', 'http://localhost/ele/content/');   //URL carpeta contenido
 define('URL_UPLOADS', 'http://localhost/ele/content/uploads/');
-define('URL_RECURSOS', 'http://localhost/ele/recursos/');   //URL carpeta contenido
-define('URL_IMG', 'http://localhost/ele/recursos/imagenes/');
+define('URL_RECURSOS', 'http://localhost/ele/resources/');   //URL carpeta contenido
+define('URL_IMG', 'http://localhost/ele/resources/images/');
 define('PTL_ADMIN', 'templates/apanel2/plantilla_v');   //Vista plantilla de administración
-define('PTL_ADMIN_2', 'templates/apanel3/main_v');   //Vista plantilla de administración
 define('VER_LOCAL', TRUE);   //Es una versión local
 define('MAX_REG_EXPORT', 5000);                //Número máximo de registros para exportar en archivo MS-Excel
 define('NOMBRE_APP', 'Plataforma en Línea');    //Nombre de la aplicación
 define('LAT_CHAT', 5000);                       //Latencia del chat, milisegudos actualización de mensajes chat
+
+define('APP_NAME', 'Plataforma en Línea');    //Nombre de la aplicación
+define('URL_RESOURCES', 'http://localhost/ele/resources/');   //URL carpeta contenido
+define('TPL_ADMIN', 'templates/apanel3/main_v');   //Vista plantilla de administración

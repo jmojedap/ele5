@@ -1,1 +1,1 @@
-<link rel="stylesheet" href="<?= base_url('recursos/css/checkboxes.css') ?>">
+<link rel="stylesheet" href="<?php echo URL_RESOURCES . 'css/checkboxes.css'; ?>">

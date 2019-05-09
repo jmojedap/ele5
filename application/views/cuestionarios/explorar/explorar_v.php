@@ -1,7 +1,7 @@
 <?php $this->load->view('assets/chosen_jquery'); ?>
 <?php $this->load->view('assets/bootstrap_datepicker'); ?>
 
-<script src="<?php echo URL_RECURSOS . 'js/pcrn.js' ?>"></script>
+<script src="<?php echo URL_RESOURCES . 'js/pcrn.js' ?>"></script>
 
 <?php    
     //Clases botones acción

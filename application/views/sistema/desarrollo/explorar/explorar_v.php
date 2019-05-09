@@ -32,6 +32,6 @@
     <?php $this->load->view('comunes/modal_eliminar_v'); ?>
 </div>
 
-<script src="<?php echo URL_RECURSOS ?>js/pcrn.js"></script>
+<script src="<?php echo URL_RESOURCES ?>js/pcrn.js"></script>
 
 <?php $this->load->view("{$carpeta_vistas}vue_v"); ?>

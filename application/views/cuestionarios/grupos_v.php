@@ -142,7 +142,7 @@
                     </a>
                     <?php echo anchor("cuestionarios/grupos_exportar/{$cuestionario_id}/{$grupo_id}", '<i class="fa fa-file-excel"></i> Exportar', 'class="btn btn-success" title="Exportar resultados a MS-Excel" target="_blank"') ?>
 
-                    <?php if ( $this->session->userdata('rol_id') <= 2 && $row->num_preguntas <= 60 ) { ?>
+                    <?php if ( $this->session->userdata('rol_id') <= 5 && $row->num_preguntas <= 60 && $this->session->userdata('institucion_id') == 41) { ?>
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Imprimir páginas con formatos de respuestas">
                                 <i class="far fa-file"></i>
@@ -155,7 +155,7 @@
                                 <a class="dropdown-item" href="<?php echo base_url("respuestas/formatos/{$cuestionario_id}/{$grupo_id}/carta_datos") ?>" target="_blank">
                                     Carta (solo datos)
                                 </a>
-                                <a class="dropdown-item" href="<?php echo URL_RECURSOS . 'formatos_respuestas/carta.pdf' ?>" target="_blank">
+                                <a class="dropdown-item" href="<?php echo URL_RESOURCES . 'formatos_respuestas/carta.pdf' ?>" target="_blank">
                                     Carta (solo formato)
                                 </a>
 
@@ -166,7 +166,7 @@
                                     <a class="dropdown-item" href="<?php echo base_url("respuestas/formatos/{$cuestionario_id}/{$grupo_id}/medio_oficio_datos") ?>" target="_blank">
                                         Medio oficio (solo datos)
                                     </a>
-                                    <a class="dropdown-item" href="<?php echo URL_RECURSOS . 'formatos_respuestas/medio_oficio.pdf' ?>" target="_blank">
+                                    <a class="dropdown-item" href="<?php echo URL_RESOURCES . 'formatos_respuestas/medio_oficio.pdf' ?>" target="_blank">
                                         Medio oficio (solo formato)
                                     </a>
                                 <?php } ?>

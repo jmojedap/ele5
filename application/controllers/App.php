@@ -191,7 +191,7 @@ class App extends CI_Controller{
     {
         $data['titulo_pagina'] = 'Biblioteca Virtual';
         $data['vista_a'] = 'app/demo/' . $page . '_v';
-        $this->load->view(PTL_ADMIN_2, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
 //AJAX GENERALES

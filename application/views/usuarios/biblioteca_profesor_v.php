@@ -42,11 +42,11 @@
         if ( $att_cap['ancho'] > 700 ) { $att_cap['overflow_x'] = 'scroll'; }
 ?>
 
-<link rel="stylesheet" href="<?php echo URL_RECURSOS ?>plantillas/apanel2/biblioteca.css">
+<link rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel2/biblioteca.css">
 
 <?php $this->load->view('usuarios/biblioteca_menu_v'); ?>
 
-<article style="padding-top: 40px; width: 786px; height: 1017px; background:url(<?php echo URL_IMG ?>biblio/bookshelf.png) no-repeat;" class="module width_full">
+<article style="padding-top: 40px; width: 786px; height: 1017px; background:url(<?php echo URL_IMG ?>app/bookshelf.png) no-repeat;" class="module width_full">
     <h1 class="estante">
         Contenidos
     </h1>
