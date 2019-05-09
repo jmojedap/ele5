@@ -138,8 +138,8 @@ class App extends CI_Controller{
     
     function no_permitido()
     {
-        $data['titulo_pagina'] = "Acceso no permitido";
-        $this->load->view('app/no_permitido_v', $data);
+        $data['vista_a'] = 'app/no_permitido_v';
+        $this->load->view('templates/apanel3/start_v', $data);
     }
     
     function en_construccion()

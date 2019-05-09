@@ -1,18 +1,12 @@
-<html>
-    <head>
-        <?php $this->load->view('plantilla_apanel/head'); ?>
-    </head>
-    <body>
-        <div class="login">
-            <div style="text-align: center;">
-                <img src="<?php echo URL_IMG ?>/admin/logo_med.png" />
-                <h4 role="alert" class="alert alert-warning"><i class="fa fa-info-circle"></i> Acceso no permitido</h4>
-                <?= anchor('app', '<i class="fa fa-caret-left"></i> Volver', 'class="btn btn-info"') ?>
-                <?= anchor('app/login', '<i class="fa fa-user"></i> Login de usuario', 'class="btn btn-default"') ?>
-            </div>
-            
-        </div>
-        
-    </body>
 
-</html>
+<div style="text-align: center; max-width: 400px; margin: 0 auto;">
+    <h4 role="alert" class="alert alert-warning"><i class="fa fa-info-circle"></i> Acceso no permitido</h4>
+    <a href="<?php echo base_url('app/login') ?>" class="btn btn-info">
+        <i class="fa fa-chevron-left"></i>
+        Volver
+    </a>
+    <a href="<?php echo base_url('app/login') ?>" class="btn btn-secondary">
+        <i class="fa fa-user"></i>
+        Login de usuario
+    </a>
+</div>

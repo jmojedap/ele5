@@ -1,14 +1,6 @@
 <?php
 class Busqueda_model extends CI_Model{
     
-    function basico()
-    {
-        $basico['titulo_pagina'] = 'Búsquedas';
-        $basico['vista_a'] = 'busquedas/busquedas_v';
-        
-        return $basico;
-    }
-    
     /**
      * Array con las palabras del texto de una búsqueda
      * 
