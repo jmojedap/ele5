@@ -18,7 +18,6 @@
 ?>
 
 <?php $this->load->view('cuestionarios/explorar/script_js'); ?>
-<?php $this->load->view($vista_menu) ?>
 
 <div class="row">
     <div class="col-md-7">

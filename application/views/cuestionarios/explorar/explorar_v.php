@@ -14,7 +14,6 @@
 ?>
 
 <?php $this->load->view($carpeta_vistas . 'script_js'); ?>
-<?php $this->load->view($carpeta_vistas . 'menu_v') ?>
 
 <div class="row">
     <div class="col-md-6">

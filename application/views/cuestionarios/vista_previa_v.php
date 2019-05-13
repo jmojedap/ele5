@@ -81,8 +81,6 @@
     <?php if ( $convertible ) { ?>
         <?php echo $this->Pcrn->anchor_confirm("cuestionarios/convertir/{$row->id}", '<i class="fa fa-pencil-square-o"></i> Convertir en editable', 'class="btn btn-secondary" title="Convertir en un cuestionario simple, para editar preguntas."', '¿Confirma que quiere convertir este cuestionario en Editable?') ?>
     <?php } ?>
-    
-
 </div>
 
 

@@ -128,12 +128,12 @@ class Cuestionarios extends CI_Controller{
 
                 $this->load->view('app/descargar_phpexcel_v', $data);
             } else {
-                $data['titulo_pagina'] = 'Plataforma Enlace';
+                $data['head_title'] = APP_NAME;
                 $data['mensaje'] = "El número de registros es de {$resultados_total->num_rows()}. El máximo permitido es de " . MAX_REG_EXPORT . " registros. Puede filtrar los datos por algún criterio para poder exportarlos.";
                 $data['link_volver'] = "cuestionarios/explorar/?{$busqueda_str}";
-                $data['vista_a'] = 'app/mensaje_v';
+                $data['view_a'] = 'app/mensaje_v';
                 
-                $this->load->view(PTL_ADMIN, $data);
+                $this->load->view(TPL_ADMIN, $data);
             }
             
     }
@@ -154,10 +154,10 @@ class Cuestionarios extends CI_Controller{
             }
         
         //Array data espefícicas
-            $data['titulo_pagina'] = 'Cuestionarios';
-            $data['subtitulo_pagina'] = 'Nuevo';
-            $data['vista_a'] = 'app/gc_v';
-            $data['vista_menu'] = 'cuestionarios/explorar/menu_v';
+            $data['head_title'] = 'Cuestionarios';
+            $data['head_subtitle'] = 'Nuevo';
+            $data['nav_2'] = 'cuestionarios/explorar/menu_v';
+            $data['view_a'] = 'app/gc_v';
         
         $output = array_merge($data,(array)$gc_output);
         
@@ -184,10 +184,10 @@ class Cuestionarios extends CI_Controller{
             }
             
         //Verificar permiso de edición
-            if ( ! $this->Cuestionario_model->editable($cuestionario_id) ) { $data['vista_a'] = 'app/no_permitido_v'; }
+            if ( ! $this->Cuestionario_model->editable($cuestionario_id) ) { $data['view_a'] = 'app/no_permitido_v'; }
             
         //Solicitar vista
-            $data['vista_b'] = 'comunes/gc_v';
+            $data['view_a'] = 'comunes/gc_v';
             $output = array_merge($data,(array)$gc_output);
             $this->load->view(TPL_ADMIN, $output);
     }
@@ -207,8 +207,8 @@ class Cuestionarios extends CI_Controller{
             $data = $this->Cuestionario_model->basico($cuestionario_id);
         
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Copiar';
-            $data['vista_b'] = 'cuestionarios/copiar_cuestionario_v';
+            $data['head_subtitle'] = 'Copiar';
+            $data['view_a'] = 'cuestionarios/copiar_cuestionario_v';
             $this->load->view(TPL_ADMIN, $data);
     }
     
@@ -303,7 +303,7 @@ class Cuestionarios extends CI_Controller{
             $data['grupo_id'] = $grupo_id;
         
         //Solicitar vista
-            $data['vista_b'] = 'cuestionarios/grupos_v';
+            $data['view_a'] = 'cuestionarios/grupos_v';
             $this->load->view(TPL_ADMIN, $data);
     }
     
@@ -331,8 +331,8 @@ class Cuestionarios extends CI_Controller{
             $data['temas'] = $this->Cuestionario_model->temas($cuestionario_id);
 
         //Variables generales
-            $data['subtitulo_pagina'] = 'Temas';
-            $data['vista_b'] = 'cuestionarios/temas_v';
+            $data['head_subtitle'] = 'Temas';
+            $data['view_a'] = 'cuestionarios/temas_v';
 
             $this->load->view(TPL_ADMIN, $data);
     }
@@ -358,8 +358,8 @@ class Cuestionarios extends CI_Controller{
             $data['competencias'] = $this->Cuestionario_model->competencias($cuestionario_id, $area_id);
         
         //Solicitar vista
-            $data['vista_b'] = 'cuestionarios/sugerencias_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['view_a'] = 'cuestionarios/sugerencias_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
 //PROCESO DE ASIGNACIÓN
@@ -391,10 +391,10 @@ class Cuestionarios extends CI_Controller{
             $data['elemento_s'] = 'Cuestionario';
         
         //Solicitar vista
-            $data['titulo_pagina'] = 'Asignaciones';
-            $data['subtitulo_pagina'] = $data['cant_resultados'];
-            $data['vista_a'] = 'cuestionarios/asignaciones/explorar_v';
-            $data['vista_menu'] = 'cuestionarios/explorar/menu_v';
+            $data['head_title'] = 'Asignaciones';
+            $data['head_subtitle'] = $data['cant_resultados'];
+            $data['nav_2'] = 'cuestionarios/explorar/menu_v';
+            $data['view_a'] = 'cuestionarios/asignaciones/explorar_v';
             $this->load->view(TPL_ADMIN, $data);
     }
     
@@ -419,8 +419,8 @@ class Cuestionarios extends CI_Controller{
             $data['opciones_nivel'] = $this->Item_model->opciones('categoria_id = 03');
         
         //Solicitar vista
-            $data['vista_b'] = 'cuestionarios/asignar/asignar_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['view_a'] = 'cuestionarios/asignar/asignar_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     function lista_estudiantes($cuestionario_id, $grupo_id = NULL)
@@ -489,7 +489,7 @@ class Cuestionarios extends CI_Controller{
             $data['destino_form'] = "cuestionarios/crear_asignacion/{$cuestionario_id}";
         
         //Solicitar vista
-            $data['vista_b'] = 'cuestionarios/asignar_v';
+            $data['view_a'] = 'cuestionarios/asignar_v';
             $data['ayuda_id'] = 116;
             $this->load->view(TPL_ADMIN, $data);
     }
@@ -604,10 +604,10 @@ class Cuestionarios extends CI_Controller{
             $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
             
         //Variables generales
-            $data['titulo_pagina'] = 'Cuestionarios';
-            $data['subtitulo_pagina'] = 'Asignar masivamente';
-            $data['vista_a'] = 'comunes/bs4/importar_v';
-            $data['vista_menu'] = 'cuestionarios/explorar/menu_v';
+            $data['head_title'] = 'Cuestionarios';
+            $data['head_subtitle'] = 'Asignar masivamente';
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_2'] = 'cuestionarios/explorar/menu_v';
         
         $this->load->view(TPL_ADMIN, $data);
     }
@@ -641,12 +641,12 @@ class Cuestionarios extends CI_Controller{
             $data['no_cargados'] = $no_cargados;
         
         //Cargar vista
-            $data['titulo_pagina'] = 'Cuestionarios';
-            $data['subtitulo_pagina'] = 'Resultado asignación masiva';
-            $data['vista_menu'] = 'cuestionarios/menu_explorar_v';
-            $data['vista_a'] = 'app/resultado_cargue_v';
-            $data['subtitulo_pagina'] = 'Resultado cargue';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_title'] = 'Cuestionarios';
+            $data['head_subtitle'] = 'Resultado asignación masiva';
+            $data['nav_2'] = 'cuestionarios/menu_explorar_v';
+            $data['view_a'] = 'app/resultado_cargue_v';
+            $data['head_subtitle'] = 'Resultado cargue';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
 //RESOLVER CUESTIONARIO
@@ -678,11 +678,11 @@ class Cuestionarios extends CI_Controller{
                 $data['destino'] = "cuestionarios/n_resolver/";
 
             //Variables generales
-                $data['subtitulo_pagina'] = 'Iniciar un cuestionario';
-                $data['vista_a'] = 'cuestionarios/cuestionario_v';
-                $data['vista_b'] = 'cuestionarios/preliminar_v';
+                $data['head_subtitle'] = 'Iniciar un cuestionario';
+                $data['view_description'] = 'cuestionarios/cuestionario_v';
+                $data['view_a'] = 'cuestionarios/preliminar_v';
 
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
         }
         else
         {
@@ -773,6 +773,7 @@ class Cuestionarios extends CI_Controller{
      * $uc_id hace referencia a usuario_cuestionario.id
      * $num_pregunta, posición de la pregunta dentro del cuestionario
      * uc, hace referencia a lo relacionado con la tabla usuario_cuestionario
+     * DESACTIVADA 2019-05-13
      * 
      * @param type $uc_id
      * @param type $num_pregunta 
@@ -816,6 +817,7 @@ class Cuestionarios extends CI_Controller{
             $data['arr_respuestas'] = $this->Cuestionario_model->arr_respuestas($uc_id);
 
             //Tiempo
+                $data['titulo_pagina'] = $data['head_title'];
                 $data['hora_final'] = $hora_final;
                 $data['segundos_restantes'] = $segundos_restantes;
                 $data['tiempo_restante'] = $tiempo_restante;
@@ -851,10 +853,10 @@ class Cuestionarios extends CI_Controller{
 
             $data['row_uc'] = $row_uc;
             $data['segundos_restantes'] = $segundos_restantes;
-            $data['vista_a'] = 'cuestionarios/resolver/resolver_v';
+            $data['view_a'] = 'cuestionarios/resolver/resolver_v';
         } else {
-            $data['titulo_pagina'] = 'Cuestionario finalizado';
-            $data['vista_a'] = 'app/no_permitido_v';
+            $data['head_title'] = 'Cuestionario finalizado';
+            $data['view_a'] = 'app/no_permitido_v';
         }
         
         $this->load->view(TPL_ADMIN, $data);
@@ -958,11 +960,11 @@ class Cuestionarios extends CI_Controller{
             $this->Cuestionario_model->actualizar_acumuladores($data['row_uc']->usuario_id);
         
         $data['nombre_usuario'] = $this->App_model->nombre_usuario($data['row_uc']->usuario_id, 2);
-        $data['subtitulo_pagina'] = 'Cuestionario finalizado';
-        $data['vista_a'] = 'cuestionarios/cuestionario_v';
-        $data['vista_b'] = 'cuestionarios/finalizar_v';
+        $data['head_subtitle'] = 'Cuestionario finalizado';
+        $data['view_a'] = 'cuestionarios/cuestionario_v';
+        $data['view_a'] = 'cuestionarios/finalizar_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -1024,12 +1026,12 @@ class Cuestionarios extends CI_Controller{
                 $data['row_enunciado'] = $row_enunciado;
                 $data['arr_respuestas'] = $arr_respuestas;
                 $data['valor_opciones'] = array("","","","","");
-                $data['vista_b'] = 'cuestionarios/vista_previa_v';
+                $data['view_a'] = 'cuestionarios/vista_previa_v';
                 $data['convertible'] = $this->Cuestionario_model->convertible($cuestionario_id);
         }
         else    //No tiene preguntas asignadas
         {
-            $data['vista_b'] = 'app/mensaje_v';
+            $data['view_a'] = 'app/mensaje_v';
             $data['mensaje'] = '<i class="fa fa-info-circle"></i> El cuestionario no tiene preguntas';
         }
         
@@ -1059,8 +1061,8 @@ class Cuestionarios extends CI_Controller{
         //Variables
         $data['preguntas'] = $this->Cuestionario_model->preguntas($cuestionario_id);
         $data['enunciados'] = $this->Cuestionario_model->enunciados($cuestionario_id);
-        $data['vista_a'] = 'cuestionarios/imprimir/imprimir_v';
-        $data['vista_b'] = $arr_vistas[$tipo];
+        $data['view_a'] = 'cuestionarios/imprimir/imprimir_v';
+        $data['view_a'] = $arr_vistas[$tipo];
         
         //Cargar vista
         $this->load->view('templates/print/plantilla_v', $data);
@@ -1123,7 +1125,7 @@ class Cuestionarios extends CI_Controller{
             //$data['estado_cuestionario'] = $this->Cuestionario_model->estado_cuestionario($cuestionario_id, $usuario_id);
         
         //Solicitar vista
-            $data['vista_a'] = 'cuestionarios/resolver_lote_v';
+            $data['view_a'] = 'cuestionarios/resolver_lote_v';
             $this->load->view(TPL_ADMIN, $data);
         
     }
@@ -1230,10 +1232,10 @@ class Cuestionarios extends CI_Controller{
             $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
             
         //Variables generales
-            $data['titulo_pagina'] = 'Cuestionarios';
-            $data['subtitulo_pagina'] = 'Importar respuestas';
-            $data['vista_a'] = 'comunes/bs4/importar_v';
-            $data['vista_menu'] = 'cuestionarios/explorar/menu_v';
+            $data['head_title'] = 'Cuestionarios';
+            $data['head_subtitle'] = 'Importar respuestas';
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_2'] = 'cuestionarios/explorar/menu_v';
             $data['ayuda_id'] = 143;
         
         $this->load->view(TPL_ADMIN, $data);
@@ -1266,13 +1268,13 @@ class Cuestionarios extends CI_Controller{
             $data['no_cargados'] = $no_cargados;
         
         //Cargar vista
-            $data['titulo_pagina'] = 'Cuestionarios';
-            $data['subtitulo_pagina'] = 'Resultado respuestas masivas';
-            $data['vista_menu'] = 'cuestionarios/menu_explorar_v';
-            $data['vista_a'] = 'app/resultado_cargue_v';
-            $data['subtitulo_pagina'] = 'Resultado cargue';
+            $data['head_title'] = 'Cuestionarios';
+            $data['head_subtitle'] = 'Resultado respuestas masivas';
+            $data['nav_2'] = 'cuestionarios/menu_explorar_v';
+            $data['view_a'] = 'app/resultado_cargue_v';
+            $data['head_subtitle'] = 'Resultado cargue';
             $data['ayuda_id'] = 143;
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     
@@ -1288,15 +1290,14 @@ class Cuestionarios extends CI_Controller{
      * @param type $cuestionario_id 
      */
     function preguntas($cuestionario_id)
-    {
-        
+    {   
         //Variables data
             $data = $this->Cuestionario_model->basico($cuestionario_id);
             $data['preguntas'] = $this->Cuestionario_model->preguntas($cuestionario_id, 1000, 0);
         
         //Solicitar vista
             $data['cuestionario_id'] = $cuestionario_id;
-            $data['vista_b'] = 'cuestionarios/preguntas_v';
+            $data['view_a'] = 'cuestionarios/preguntas_v';
 
         $this->load->view(TPL_ADMIN, $data);
     }
@@ -1338,9 +1339,9 @@ class Cuestionarios extends CI_Controller{
             }
         
         //Cargando vista
-            $data['titulo_pagina'] = 'Reenumerar orden de preguntas';
+            $data['head_title'] = 'Reenumerar orden de preguntas';
             $data['mensaje'] = "Se actualizaron {$registros_modificados} registros";
-            $data['vista_a'] = "app/mensaje_v";
+            $data['view_a'] = "app/mensaje_v";
 
             $this->load->view(PTL_ADMIN, $data);
         
@@ -1383,11 +1384,11 @@ class Cuestionarios extends CI_Controller{
         
         //
         $data['mensaje'] = 'Cuestionarios actualizados';
-        $data['titulo_pagina'] = 'Áreas de cuestionarios';
+        $data['head_title'] = 'Áreas de cuestionarios';
         $data['link_volver'] = 'develop/procesos';
-        $data['vista_a'] = 'app/mensaje_v';
+        $data['view_a'] = 'app/mensaje_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
         
     }
     
@@ -1410,14 +1411,14 @@ class Cuestionarios extends CI_Controller{
             }
             
         //Variables
-            $data['vista_b'] = 'comunes/gc_v';
-            $data['vista_menu'] = 'cuestionarios/menu_agregar_pregunta_v';
+            $data['view_a'] = 'comunes/gc_v';
+            $data['nav_2'] = 'cuestionarios/menu_agregar_pregunta_v';
             $data['orden'] = $orden;
             $data['orden_mostrar'] = $orden + 1;
             $data['seccion'] = 'nueva';
         
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Nueva pregunta';
+            $data['head_subtitle'] = 'Nueva pregunta';
             $output = array_merge($data,(array)$gc_output);
             $this->load->view(TPL_ADMIN, $output);
     }

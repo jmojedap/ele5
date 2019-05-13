@@ -7,8 +7,9 @@ class Cuestionario_model extends CI_Model
         $basico['cuestionario_id'] = $cuestionario_id;
         $basico['row'] =  $this->Pcrn->registro_id('cuestionario', $cuestionario_id);
         $basico['row']->num_preguntas =  $this->num_preguntas($cuestionario_id);
-        $basico['titulo_pagina'] = $basico['row']->nombre_cuestionario;
-        $basico['vista_a'] = 'cuestionarios/cuestionario_v';
+        $basico['head_title'] = $basico['row']->nombre_cuestionario;
+        $basico['nav_2'] = 'cuestionarios/menu_v';
+        $basico['view_description'] = 'cuestionarios/cuestionario_v';
         
         return $basico;
     }
@@ -29,7 +30,7 @@ class Cuestionario_model extends CI_Model
         //Elemento de exploración
             $data['controlador'] = 'cuestionarios';                      //Nombre del controlador
             $data['carpeta_vistas'] = 'cuestionarios/explorar/';         //Carpeta donde están las vistas de exploración
-            $data['titulo_pagina'] = 'Cuestionarios';
+            $data['head_title'] = 'Cuestionarios';
             $data['el_plural'] = 'cuestionarios';
             $data['el_singular'] = 'cuestionario';
                 
@@ -37,9 +38,9 @@ class Cuestionario_model extends CI_Model
             $data['arr_filtros'] = array('a', 'n', 'tp', 'i');
             
         //Vistas
-            $data['subtitulo_pagina'] = $data['max_pagina'];
-            $data['vista_a'] = $data['carpeta_vistas'] . 'explorar_v';
-            $data['vista_menu'] = $data['carpeta_vistas'] . 'menu_v';
+            $data['head_subtitle'] = $data['max_pagina'];
+            $data['view_a'] = $data['carpeta_vistas'] . 'explorar_v';
+            $data['nav_2'] = $data['carpeta_vistas'] . 'menu_v';
         
         return $data;
     }
@@ -214,7 +215,7 @@ class Cuestionario_model extends CI_Model
         $basico['row'] = $this->datos_cuestionario($row_uc->cuestionario_id);
         $basico['row_uc'] = $row_uc;
         $basico['row_usuario'] = $this->Pcrn->registro_id('usuario', $row_uc->usuario_id);
-        $basico['titulo_pagina'] = $basico['row']->nombre_cuestionario;
+        $basico['head_title'] = $basico['row']->nombre_cuestionario;
         $basico['uc_id'] = $uc_id;
         $basico['cuestionario_id'] = $row_uc->cuestionario_id;
         

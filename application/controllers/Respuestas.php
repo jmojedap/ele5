@@ -100,10 +100,10 @@ class Respuestas extends CI_Controller{
             $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
             
         //Variables generales
-            $data['titulo_pagina'] = 'Cuestionarios';
-            $data['subtitulo_pagina'] = 'Importar respuestas';
-            $data['vista_a'] = 'comunes/bs4/importar_json_v';
-            $data['vista_menu'] = 'cuestionarios/explorar/menu_v';
+            $data['head_title'] = 'Cuestionarios';
+            $data['subhead_title'] = 'Importar respuestas';
+            $data['view_a'] = 'comunes/bs4/importar_json_v';
+            $data['nav_2'] = 'cuestionarios/explorar/menu_v';
         
         $this->load->view(TPL_ADMIN, $data);
     }
@@ -175,8 +175,8 @@ class Respuestas extends CI_Controller{
             array('status' => 0, 'message' => 'No se cargó: respondido o cargado anteriormente', 'cod_page' => '20759831')
         );
 
-        $data['titulo_pagina'] = 'respuestas/cargue_json/resultado_v';
-        $data['vista_a'] = 'respuestas/cargue_json/resultado_v';
+        $data['head_title'] = 'respuestas/cargue_json/resultado_v';
+        $data['view_a'] = 'respuestas/cargue_json/resultado_v';
 
         $this->load->view('templates/bs4_basic/main_v', $data);
     }

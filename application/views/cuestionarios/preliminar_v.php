@@ -96,11 +96,11 @@
             Al iniciar el cuestionario empezarán a contar los <strong class="resaltar"><?= $row_uc->tiempo_minutos ?></strong> minutos disponibles para resolverlo.
         </p>
         <p>
-            <a class="btn btn-default btn-lg" href="<?php echo base_url($destinos[$origen]) ?>" role="button">
+            <a class="btn btn-secondary btn-lg" href="<?php echo base_url($destinos[$origen]) ?>" role="button">
                 <i class="fa fa-chevron-left"></i>
                 Volver
             </a>
-            <a class="btn btn-primary btn-lg" role="button" id="btn_iniciar">Iniciar</a>
+            <a class="btn btn-primary btn-lg text-white" role="button" id="btn_iniciar">Iniciar</a>
         </p>
     </div>
 

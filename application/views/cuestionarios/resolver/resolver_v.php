@@ -23,11 +23,11 @@
                     </button>
                 </div>
                 <div class="col col-md-6">
-                    <button class="btn btn-default w3 float-right" v-on:click="siguiente_pregunta">
-                        Siguiente <i class="fa fa-caret-right"></i>
+                    <button class="btn btn-light w3 float-right" v-on:click="siguiente_pregunta">
+                        Siguiente <i class="fa fa-chevron-right"></i>
                     </button>
-                    <button class="btn btn-default w3 float-right" v-on:click="anterior_pregunta" style="margin-right: 3px;">
-                        <i class="fa fa-caret-left"></i> Anterior
+                    <button class="btn btn-light w3 float-right" v-on:click="anterior_pregunta" style="margin-right: 3px;">
+                        <i class="fa fa-chevron-left"></i> Anterior
                     </button>
 
                 </div>
