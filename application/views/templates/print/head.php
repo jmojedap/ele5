@@ -1,4 +1,4 @@
-<title><?php echo $titulo_pagina ?></title>
+<title><?php echo $head_title ?></title>
         <link rel="shortcut icon" href="<?php echo URL_IMG ?>admin/icono.png" type="image/ico" />
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
@@ -10,11 +10,11 @@
         
         <link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Ubuntu:500,300'>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-        <link type="text/css" rel="stylesheet" href="<?= base_url() ?>css/print.css">
-        <link type="text/css" rel="stylesheet" href="<?= base_url() ?>css/apanel2/style_add.css">
+        <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>css/print.css">
+        <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel2/style_add.css">
         
         <script>
-            //window.print();
+            window.print();
         </script>
 
         

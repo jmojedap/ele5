@@ -1062,11 +1062,10 @@ class Cuestionarios extends CI_Controller{
         $data['preguntas'] = $this->Cuestionario_model->preguntas($cuestionario_id);
         $data['enunciados'] = $this->Cuestionario_model->enunciados($cuestionario_id);
         $data['view_a'] = 'cuestionarios/imprimir/imprimir_v';
-        $data['view_a'] = $arr_vistas[$tipo];
+        $data['view_b'] = $arr_vistas[$tipo];
         
         //Cargar vista
-        $this->load->view('templates/print/plantilla_v', $data);
-        
+        $this->load->view('templates/print/main_v', $data);   
     }
     
     /**

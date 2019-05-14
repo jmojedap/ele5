@@ -201,9 +201,9 @@ class Eventos extends CI_Controller{
         $data['mes'] = $mes;
         
         
-        $data['titulo_pagina'] = 'Programación';
-        $data['vista_a'] = $vista_a;
-        $this->load->view('templates/print/plantilla_v', $data);
+        $data['head_title'] = 'Programación';
+        $data['view_a'] = $vista_a;
+        $this->load->view('templates/print/main_v', $data);
     }
     
     

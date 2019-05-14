@@ -1,3 +1,10 @@
+<?php
+    $show_print = FALSE;
+    if ( $this->session->userdata('institucion_id') == 41 ) { $show_print = TRUE; }
+    if ( $this->session->userdata('rol_id') <= 1 ) { $show_print = TRUE; }
+    if ( $row->num_preguntas > 60 ) { $show_print = FALSE; }
+?>
+
 <?php $this->load->view('assets/chosen_jquery'); ?>
 <?php $this->load->view('assets/icheck'); ?>
 
@@ -142,7 +149,7 @@
                     </a>
                     <?php echo anchor("cuestionarios/grupos_exportar/{$cuestionario_id}/{$grupo_id}", '<i class="fa fa-file-excel"></i> Exportar', 'class="btn btn-success" title="Exportar resultados a MS-Excel" target="_blank"') ?>
 
-                    <?php if ( $this->session->userdata('rol_id') <= 5 && $row->num_preguntas <= 60 && $this->session->userdata('institucion_id') == 41) { ?>
+                    <?php if ( $show_print ) { ?>
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Imprimir páginas con formatos de respuestas">
                                 <i class="far fa-file"></i>

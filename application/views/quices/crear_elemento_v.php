@@ -56,7 +56,7 @@
     );
 ?>
 
-<script type="text/javascript" src="<?= base_url() ?>js/Math.uuid.js"></script>
+<script type="text/javascript" src="<?php URL_RESOURCES ?>js/Math.uuid.js"></script>
 
 <script>
     $(document).ready(function(){
