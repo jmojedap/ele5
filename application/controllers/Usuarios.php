@@ -696,8 +696,8 @@ class Usuarios extends CI_Controller{
             
             $data['destino_form'] = 'usuarios/restaurar_e';
             
-            $data['titulo_pagina'] = 'Restauración de contraseña';
-            $data['vista_a'] = 'usuarios/restaurar_v';
+            $data['head_title'] = 'Restauración de contraseña';
+            $data['view_a'] = 'usuarios/restaurar_v';
             $data['resultado'] = $resultado;
             $this->load->view('templates/apanel3/start_v', $data);
         }
@@ -758,8 +758,8 @@ class Usuarios extends CI_Controller{
             $data['destino_form'] = 'usuarios/cambiar_dpw_e';
         
         //Solicitar vista
-            $data['titulo_pagina'] = 'Cambio de contraseña';
-            $data['vista_a'] = 'usuarios/cambio_dpw_v';
+            $data['head_title'] = 'Cambio de contraseña';
+            $data['view_a'] = 'usuarios/cambio_dpw_v';
             $this->load->view('templates/apanel3/start_v', $data);
     }
     

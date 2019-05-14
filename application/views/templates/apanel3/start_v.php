@@ -50,7 +50,7 @@
                 </div>
             </div>
             
-            <?php $this->load->view($vista_a); ?>
+            <?php $this->load->view($view_a); ?>
             
             <div class="fixed-bottom text-center pb-2">
                 <span style="color: #AAA">

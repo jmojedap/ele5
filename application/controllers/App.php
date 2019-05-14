@@ -62,8 +62,8 @@ class App extends CI_Controller{
         {
             redirect('app/index');
         } else {
-            $data['titulo_pagina'] = 'En Línea Editores :: Bienvenidos';
-            $data['vista_a'] = 'app/login_v';
+            $data['head_title'] = 'En Línea Editores :: Bienvenidos';
+            $data['view_a'] = 'app/login_v';
             $this->load->view('templates/apanel3/start_v', $data);
         }
     }
@@ -138,7 +138,8 @@ class App extends CI_Controller{
     
     function no_permitido()
     {
-        $data['vista_a'] = 'app/no_permitido_v';
+        $data['head_title'] = 'Acceso No Permitido';
+        $data['view_a'] = 'app/no_permitido_v';
         $this->load->view('templates/apanel3/start_v', $data);
     }
     
