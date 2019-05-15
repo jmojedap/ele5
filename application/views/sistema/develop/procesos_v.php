@@ -1,6 +1,46 @@
 <?php $this->load->view('sistema/develop/procesos_menu_v'); ?>
 <?php $this->load->view('comunes/resultado_proceso_v'); ?>
 
+<?php $this->load->view('assets/toastr') ?>
+
+<script>
+// Variables
+//-----------------------------------------------------------------------------
+    var base_url = '<?php echo base_url() ?>';
+    var cf = '';
+
+// Document ready
+//-----------------------------------------------------------------------------
+
+    $(document).ready(function(){
+        
+        $('.btn_proceso').click(function(){
+            cf = $(this).data('cf');
+            ejecutar_proceso();
+        });
+
+    });
+
+// Funciones
+//-----------------------------------------------------------------------------
+    function ejecutar_proceso()
+    {
+        $.ajax({        
+            type: 'GET',
+            url: base_url + cf,
+            success: function(response){
+                console.log(response.message);
+                var type = 'error';
+                if ( response.status == 1 ) { type = 'success'; }
+                toastr[type](response.message)
+            }
+    });
+}
+
+
+</script>
+
+
 <div class="row">
     <div class="col col-md-3">
         <div class="panel panel-default">
@@ -24,9 +64,13 @@
                     
                     <?php foreach($procesos->result() as $row_proceso) : ?>
                         <tr>
-                            <td><?= anchor($row_proceso->link_proceso, 'Ejecutar', 'class="btn btn-primary"') ?></td>
-                            <td><?= $row_proceso->nombre_proceso ?></td>
-                            <td><?= $row_proceso->contenido ?></td>
+                            <td>
+                                <button class="btn btn-primary btn_proceso" data-cf="<?php echo $row_proceso->link_proceso ?>">
+                                    Ejecutar
+                                </button>
+                            </td>
+                            <td><?php echo $row_proceso->nombre_proceso ?></td>
+                            <td><?php echo $row_proceso->contenido ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

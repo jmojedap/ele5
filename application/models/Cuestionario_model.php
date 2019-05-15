@@ -2198,18 +2198,19 @@ class Cuestionario_model extends CI_Model
         
         //Cargar datos
             $sql = 'INSERT INTO dw_usuario_pregunta (mes, cuestionario_id, institucion_id, grupo_id, area_id, competencia_id, cant_respondidas, cant_correctas) ';
-            $sql .= 'SELECT LEFT(fin_respuesta, 7), usuario_pregunta.cuestionario_id, grupo.institucion_id, usuario_cuestionario.grupo_id AS grupo_id, pregunta.area_id, pregunta.competencia_id, COUNT( usuario_pregunta.id ) AS cant_preguntas, SUM( usuario_pregunta.resultado ) AS cant_correctas ';
-            $sql .= 'FROM  usuario_pregunta ';
-            $sql .= 'JOIN usuario ON usuario_pregunta.usuario_id = usuario.id ';
-            $sql .= 'JOIN usuario_cuestionario ON usuario_pregunta.usuario_id = usuario_cuestionario.usuario_id ';
-            $sql .= 'JOIN grupo ON usuario_cuestionario.grupo_id = grupo.id AND usuario_pregunta.cuestionario_id = usuario_cuestionario.cuestionario_id ';
+            $sql .= 'SELECT LEFT(fin_respuesta, 7), usuario_pregunta.cuestionario_id, usuario_cuestionario.institucion_id, usuario_cuestionario.grupo_id AS grupo_id, pregunta.area_id, pregunta.competencia_id, COUNT(usuario_pregunta.id) AS cant_preguntas, SUM( usuario_pregunta.resultado ) AS cant_correctas ';
+            $sql .= 'FROM usuario_pregunta ';
+            $sql .= 'JOIN usuario_cuestionario ON usuario_pregunta.uc_id = usuario_cuestionario.id ';
             $sql .= 'JOIN pregunta ON usuario_pregunta.pregunta_id = pregunta.id ';
             $sql .= 'WHERE fin_respuesta >= "' . $mes . '" ';
-            $sql .= 'GROUP BY LEFT(fin_respuesta, 7), usuario_pregunta.cuestionario_id, usuario_cuestionario.grupo_id, grupo.institucion_id, area_id, competencia_id';
+            $sql .= 'GROUP BY LEFT(fin_respuesta, 7), usuario_pregunta.cuestionario_id, usuario_cuestionario.grupo_id, usuario_cuestionario.institucion_id, area_id, competencia_id';
             
             $this->db->query($sql);
+
+        $data['sql'] = $sql;
+        $data['status'] = 1;
         
-        return $sql;
+        return $data;
     }
     
     //Actualizar el contenido de la tabla dw_usuario_cuestionario

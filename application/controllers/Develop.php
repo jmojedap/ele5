@@ -333,22 +333,23 @@ class Develop extends CI_Controller {
     }
     
     /**
-     * Actualizar la tabla dw_usuario_pregunta
+     * Actualizar la tabla dw_usuario_pregunta, para un mes específico
+     * 2019-05-15
      */
     function actualizar_dw_up($mes = NULL)
     {
         set_time_limit(360);    //6 minutos
-        //Identificar mes
-            if ( is_null($mes) ) { $mes = date('Y-m'); }
+
+        //Identificar mes del día anterior
+            if ( is_null($mes) ) { $mes = date("Y-m",strtotime(date('Y-m-d')."- 1 days")); }
         
         $this->load->model('Cuestionario_model');
-        $sql = $this->Cuestionario_model->actualizar_dw_up($mes);
+        $data = $this->Cuestionario_model->actualizar_dw_up($mes);
+        $data['message'] = 'Se actualizaron los datos desde el mes: ' . $mes;
         
-        $data['mensaje'] = 'Se actualizaron los datos desde el mes: ' . $mes . '<br/>' . $sql;
-        $data['titulo_pagina'] = 'Tabla actualizada';
-        $data['vista_a'] = "app/mensaje_v";
-        
-        $this->load->view('plantilla_apanel/plantilla', $data);
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
     }
     
     /**
