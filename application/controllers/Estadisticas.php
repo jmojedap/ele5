@@ -326,7 +326,7 @@ class Estadisticas extends CI_Controller{
         //Datos para excel
             $datos['nombre_hoja'] = 'login_usuarios';
             $datos['campos'] = array('username', 'nombre_usuario', 'cant_login');
-            $datos['array'] = $filas;
+            $datos['arr_datos'] = $filas;
 
             $data['objWriter'] = $this->Pcrn_excel->archivo_array($datos);
             $data['nombre_archivo'] = date('Ymd_His'). '_login_usuarios'; //Nombre del archivo, sin extensión xlsx
