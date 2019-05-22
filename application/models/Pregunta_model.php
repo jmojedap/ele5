@@ -22,6 +22,137 @@ class Pregunta_model extends CI_Model{
         return $basico;
     }
     
+// EXPLORACIÓN
+//-----------------------------------------------------------------------------
+    
+    /**
+     * Array con los datos para la vista de exploración
+     * 
+     * @return string
+     */
+    function data_explorar($num_pagina)
+    {
+        //Data inicial, de la tabla
+            $data = $this->data_tabla_explorar($num_pagina);
+        
+        //Elemento de exploración
+            $data['controlador'] = 'preguntas';                      //Nombre del controlador
+            $data['carpeta_vistas'] = 'preguntas/explorar/';         //Carpeta donde están las vistas de exploración
+            $data['head_title'] = 'Preguntas';
+            $data['el_plural'] = 'preguntas';
+            $data['el_singular'] = 'pregunta';
+                
+        //Otros
+            $data['arr_filtros'] = array('a', 'n');
+            
+        //Vistas
+            $data['head_subtitle'] = number_format($data['cant_resultados'], 0, ',', '.');
+            $data['view_a'] = $data['carpeta_vistas'] . 'explorar_v';
+            $data['nav_2'] = $data['carpeta_vistas'] . 'menu_v';
+        
+        return $data;
+    }
+    
+    /**
+     * Array con los datos para la tabla de la vista de exploración
+     * 
+     * @param type $num_pagina
+     * @return string
+     */
+    function data_tabla_explorar($num_pagina)
+    {
+        //Elemento de exploración
+            $data['cf'] = 'preguntas/explorar/';     //CF Controlador Función
+        
+        //Paginación
+            $data['num_pagina'] = $num_pagina;                  //Número de la página de datos que se está consultado
+            $data['per_page'] = 10;                             //Cantidad de registros por página
+            $offset = ($num_pagina - 1) * $data['per_page'];    //Número de la página de datos que se está consultado
+        
+        //Búsqueda y Resultados
+            $this->load->model('Busqueda_model');
+            $data['busqueda'] = $this->Busqueda_model->busqueda_array();
+            $data['busqueda_str'] = $this->Busqueda_model->busqueda_str();
+            $data['resultados'] = $this->buscar($data['busqueda'], $data['per_page'], $offset);    //Resultados para página
+            
+        //Otros
+            $data['cant_resultados'] = $this->cant_resultados($data['busqueda']);
+            $data['max_pagina'] = ceil($this->Pcrn->si_cero($data['cant_resultados'],1) / $data['per_page']);   //Cantidad de páginas
+            $data['seleccionados_todos'] = '-'. $this->Pcrn->query_to_str($data['resultados'], 'id');           //Para selección masiva de todos los elementos de la página
+            
+        return $data;
+    }
+
+    /**
+     * Búsqueda de cuestionarios
+     * 
+     * @param type $busqueda
+     * @param type $per_page
+     * @param type $offset
+     * @return type
+     */
+    function buscar($busqueda, $per_page = NULL, $offset = NULL)
+    {
+        //Filtro según el rol de usuario que se tenga
+            $filtro_rol = $this->filtro_rol();
+
+        //Condición con palabras contenidas en el texto de búsqueda (q)
+            $words_condition = $this->Busqueda_model->words_condition($busqueda['q'], array('cod_pregunta', 'texto_pregunta'));
+            if ( $words_condition ) { $this->db->where($words_condition); }
+
+        //Construir consulta
+            $this->db->select('id, texto_pregunta, nivel, area_id, editado, editado_usuario_id');
+            
+        //Otros filtros
+            if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
+            if ( $busqueda['n'] != '' ) { $this->db->where('nivel', $busqueda['n']); }      //Nivel
+                
+        //Otros
+            $this->db->where($filtro_rol);  //Filtro por rol
+            $this->db->order_by('id', 'DESC');    
+            
+        //Obtener resultados
+        if ( is_null($per_page) ){
+            $query = $this->db->get('pregunta'); //Resultados totales
+        } else {
+            $query = $this->db->get('pregunta', $per_page, $offset); //Resultados por página
+        }
+        
+        return $query;
+    }
+    
+    /**
+     * Devuelve la cantidad de registros encontrados en la tabla con los filtros
+     * establecidos en la búsqueda
+     * 
+     * @param type $busqueda
+     * @return type
+     */
+    function cant_resultados($busqueda)
+    {
+        //Filtro según el rol de usuario que se tenga
+        $filtro_rol = $this->filtro_rol();
+
+        //Condición con palabras contenidas en el texto de búsqueda (q)
+            $words_condition = $this->Busqueda_model->words_condition($busqueda['q'], array('cod_pregunta', 'texto_pregunta'));
+            if ( $words_condition ) { $this->db->where($words_condition); }
+
+        //Construir consulta
+            $this->db->select('id');
+            
+        //Otros filtros
+            if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
+            if ( $busqueda['n'] != '' ) { $this->db->where('nivel', $busqueda['n']); }      //Nivel
+                
+        //Otros
+            $this->db->where($filtro_rol);  //Filtro por rol
+            
+        //Obtener resultados
+            $query = $this->db->get('pregunta'); //Resultados totales
+        
+        return $query->num_rows();
+    }
+
     /**
      * Búsqueda de preguntas
      * 
@@ -30,7 +161,7 @@ class Pregunta_model extends CI_Model{
      * @param type $offset
      * @return type
      */
-    function buscar($busqueda, $per_page = NULL, $offset = NULL)
+    function z_buscar($busqueda, $per_page = NULL, $offset = NULL)
     {
             
         //Filtro según el rol de usuario que se tenga
@@ -1074,12 +1205,11 @@ class Pregunta_model extends CI_Model{
             $this->eliminar_img_pregunta($row->archivo_imagen);
             
         
-        /* Modificar num_de Pregunta de las Preguntas de los libros en los que aparece
+        /* Modificar num_de Pregunta de las Preguntas de los cuestionarios en los que aparece
          * Al eliminarse una Pregunta, los números de Pregunta de las Preguntas siguientes deben disminuir
          * en uno.
          */
             $cuestionarios = $this->cuestionarios($pregunta_id);   //Identificar todos los cuestionario en los que aparece la Pregunta
-            echo $cuestionarios->num_rows();
 
             foreach ($cuestionarios->result() as $row_cuestionario)  //Recorrer cada cuestionario y hacer la actualización de números de Pregunta
             {
@@ -1109,10 +1239,8 @@ class Pregunta_model extends CI_Model{
                 $this->db->delete($tabla);
             }
             
-            
         //Reenumerar el campo pregunta.orden de las demás Preguntas del tema_id que la Pregunta eliminada tenía
             $this->Tema_model->numerar_preguntas($row->tema_id);
-            
     }
     
     /**

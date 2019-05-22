@@ -18,7 +18,7 @@
                     xAxis: {
                         categories: [
                             <?php foreach ($competencias->result() as $row_competencia) : ?>
-                                    '<?= $this->Item_model->nombre(1, $row_competencia->competencia_id) ?>',
+                                    '<?= $this->Item_model->nombre_id($row_competencia->competencia_id) ?>',
                             <?php endforeach ?>
                         ]
                     },

@@ -68,7 +68,13 @@
         if ( $this->uri->segment(2) == 'importar_grupos_e' ) { $seccion = 'grupos'; }
         
         if ( $this->uri->segment(2) == 'resctn_grupo' ) { $seccion = 'cuestionarios'; }
+        if ( $this->uri->segment(2) == 'cuestionarios_resumen01' ) { $seccion = 'cuestionarios'; }
+        if ( $this->uri->segment(2) == 'cuestionarios_resumen03' ) { $seccion = 'cuestionarios'; }
+        if ( $this->uri->segment(2) == 'cuestionarios_resumen03' ) { $seccion = 'cuestionarios'; }
         if ( $this->uri->segment(2) == 'resultados_grupo' ) { $seccion = 'cuestionarios'; }
+        if ( $this->uri->segment(2) == 'resultados_area' ) { $seccion = 'cuestionarios'; }
+        if ( $this->uri->segment(2) == 'resultados_competencia' ) { $seccion = 'cuestionarios'; }
+        if ( $this->uri->segment(2) == 'resultados_componente' ) { $seccion = 'cuestionarios'; }
 
         $clases[$seccion] = 'active';
     

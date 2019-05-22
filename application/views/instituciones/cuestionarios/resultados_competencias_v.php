@@ -12,48 +12,31 @@
     
 ?>
 
-<?= $this->load->view('instituciones/submenu_cuestionarios_v'); ?>
+<?php $this->load->view('instituciones/cuestionarios/submenu_cuestionarios_v'); ?>
 
-<div class="seccion group">
-    <div class="col col_box span_1_of_3">
-        <div class="info_container_body">      
-            <p>
-                <span class="suave">Cuestionario: </span> 
-                <span class="resaltar"><?= $row_cuestionario->cuestionario_n1 ?></span> |
-                <span class="suave">Preguntas: </span> 
-                <span class="resaltar"><?= $row_cuestionario->num_preguntas ?></span> |
-            </p>
-            <div>
-                <?php $this->load->view($menu_sub) ?>
-            </div>
+<div class="row">
+    <div class="col col-md-4">
+        <p>
+            <span class="suave">Cuestionario: </span> 
+            <span class="resaltar"><?= $row_cuestionario->cuestionario_n1 ?></span> |
+            <span class="suave">Preguntas: </span> 
+            <span class="resaltar"><?= $row_cuestionario->num_preguntas ?></span> |
+        </p>
+        <div>
+            <?php echo $this->load->view($menu_sub) ?>
         </div>
     </div>
-    
-    <div class="col col_box span_2_of_3">
-        <div class="info_container_body">
-            <?php foreach ($areas->result() as $row_area): ?>
-
-                <?php
-                    //Variables
-
-                    //Definir clase para el link
-                    if ( $area_id == $row_area->area_id ) :
-                        $att_link_area = 'class="a2 actual"';
-                    else:
-                        $att_link_area = 'class="a2"';
-                    endif;
-                ?>
-
-                <?= anchor("{$pre_link}/{$row_area->area_id}", $this->App_model->nombre_item($row_area->area_id, 1), $att_link_area) ?>
-            <?php endforeach ?>
+    <div class="col col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-body">
+              <div id="container_1" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+            </div>
         </div>
         
-        <div class="info_container_body">
-            <div id="container_1" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
-        </div>
-        
-        <div class="info_container_body">
-            <table class="tablesorter" cellspacing="0"> 
+        <br/>
+
+        <div>
+            <table class="table table-condensed bg-blanco" cellspacing="0">
                 <thead>
                     <tr>
                         <th>Competencia</th>
@@ -101,7 +84,5 @@
                     </tfoot>
             </table>
         </div>
-            
-        
     </div>
 </div>

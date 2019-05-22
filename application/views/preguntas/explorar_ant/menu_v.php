@@ -1,10 +1,9 @@
 <?php
-    //Clases menú
         $seccion = $this->uri->segment(2);
         if ( $seccion == 'importar_e' ) { $clases['importar'] = 'active'; }
 
         $clases[$seccion] = 'active';
-
+    
     //Atributos de los elementos del menú
         $arr_menus['explorar'] = array(
             'icono' => '<i class="fa fa-list-alt"></i>',
@@ -29,14 +28,15 @@
         $elementos_rol[4] = array('explorar');
         $elementos_rol[5] = array('explorar');
         
-    //Definiendo menú mostrar
+        
+    //Definiendo menú mostrar, según el rol del visitante
         $elementos = $elementos_rol[$this->session->userdata('rol_id')];
         
-    //Array data para la vista: app/menu_v
+    //Array data para la vista: comunes/menu_v
         $data_menu['elementos'] = $elementos;
         $data_menu['clases'] = $clases;
         $data_menu['arr_menus'] = $arr_menus;
         $data_menu['seccion'] = $seccion;
-        
-    //Cargar vista menú
-        $this->load->view('comunes/bs4/menu_v', $data_menu);
+    
+    //Cargue vista
+        $this->load->view('comunes/menu_v', $data_menu);

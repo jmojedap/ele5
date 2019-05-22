@@ -13,13 +13,13 @@
 <div class="float-right" style="max-width: 125px">
     <div class="input-group">
         <span class="input-group-prepend">
-            <button id="btn_explorar_ant" class="btn btn-default" type="button" title="Página anterior">
+            <button id="btn_explorar_ant" class="btn btn-secondary" type="button" title="Página anterior">
                 <i class="fa fa-caret-left"></i>
             </button>
         </span>
         <?php echo form_input($att_num_pagina) ?>
         <span class="input-group-append">
-            <button id="btn_explorar_sig" class="btn btn-default" type="button" title="Página siguiente">
+            <button id="btn_explorar_sig" class="btn btn-secondary" type="button" title="Página siguiente">
                 <i class="fa fa-caret-right"></i>
             </button>
         </span>

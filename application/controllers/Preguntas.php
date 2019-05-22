@@ -23,12 +23,71 @@ class Preguntas extends CI_Controller{
         }
         
     }
-    
-//CRUD
+
+//EXLPORACIÓN
 //------------------------------------------------------------------------------------------
 
-    function explorar()
+    /**
+     * Exploración y búsqueda
+     */
+    function explorar($num_pagina = 1)
     {
+        //Datos básicos de la exploración
+            $this->load->helper('text');
+            $data = $this->Pregunta_model->data_explorar($num_pagina);
+        
+        //Opciones de filtros de búsqueda
+            
+            $data['opciones_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
+            $data['opciones_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Nivel');
+            
+        //Arrays con valores para contenido en la tabla
+            //$data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 15');
+        
+        //Cargar vista
+            $this->load->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * AJAX
+     * 
+     * Devuelve JSON, que incluye string HTML de la tabla de exploración para la
+     * página $num_pagina, y los filtros enviados por post
+     * 
+     * @param type $num_pagina
+     */
+    function tabla_explorar($num_pagina = 1)
+    {
+        $this->load->helper('text');
+
+        //Datos básicos de la exploración
+            $data_pre = $this->Pregunta_model->data_tabla_explorar($num_pagina);
+        
+        //Arrays con valores para contenido en lista
+            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 15');
+        
+        //Preparar respuesta
+            $data['html'] = $this->load->view('preguntas/explorar/tabla_v', $data_pre, TRUE);
+            $data['seleccionados_todos'] = $data_pre['seleccionados_todos'];
+            $data['num_pagina'] = $num_pagina;
+            $data['busqueda_str'] = $data_pre['busqueda_str'];
+            $data['cant_resultados'] = $data_pre['cant_resultados'];
+            $data['max_pagina'] = $data_pre['max_pagina'];
+        
+        //Salida
+            $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
+
+            //$this->output->enable_profiler(TRUE);
+    }
+    
+//EXPLORAR_ANT
+//------------------------------------------------------------------------------------------
+
+    function explorar_ant()
+    {
+        $this->output->enable_profiler(TRUE);
         //Cargando
             $this->load->model('Busqueda_model');
             $this->load->helper('text');
@@ -112,7 +171,8 @@ class Preguntas extends CI_Controller{
         
         $seleccionados = explode('-', $str_seleccionados);
         
-        foreach ( $seleccionados as $elemento_id ) {
+        foreach ( $seleccionados as $elemento_id ) 
+        {
             $this->Pregunta_model->eliminar($elemento_id);
         }
         
@@ -166,7 +226,6 @@ class Preguntas extends CI_Controller{
      */
     function importar()
     {
-        
         //Iniciales
             $nombre_archivo = '16_formato_cargue_preguntas.xlsx';
             $parrafos_ayuda = array();
@@ -183,12 +242,12 @@ class Preguntas extends CI_Controller{
             $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
             
         //Variables generales
-            $data['titulo_pagina'] = 'Preguntas';
-            $data['subtitulo_pagina'] = 'Importar preguntas';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'preguntas/explorar/menu_v';
+            $data['head_title'] = 'Preguntas';
+            $data['head_subtitle'] = 'Importar preguntas';
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_2'] = 'preguntas/explorar/menu_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**

@@ -1,45 +1,51 @@
 <?php $this->load->view('assets/chosen_jquery'); ?>
-<?php $this->load->view('assets/icheck'); ?>
 <?php $this->load->view('assets/bootstrap_datepicker'); ?>
 
-<?php
+<script src="<?php echo URL_RESOURCES . 'js/pcrn.js' ?>"></script>
 
-    $elemento_s = 'pregunta';  //Elemento en singular
-    $elemento_p = 'preguntas'; //Elemento en plural
-    
-        
+<?php    
     //Clases botones acción
-        $clases_btn['eliminar_seleccionados'] = 'hidden';
+        /*$clases_btn['eliminar_seleccionados'] = '';
         if ( $this->session->userdata('rol_id') <= 1 ) { $clases_btn['eliminar_seleccionados'] = ''; }
+        if ( $this->input->get('f1') == 1 ) { $clases_btn['eliminar_seleccionados'] = ''; }*/
         
-        
-        $clases_btn['exportar'] = 'hidden';
+        $clases_btn['exportar'] = 'd-none';
         if ( $this->session->userdata('rol_id') <= 2 ) { $clases_btn['exportar'] = ''; }
 ?>
 
-<?php $this->load->view('preguntas/explorar/script_js'); ?>
-<?php $this->load->view($vista_menu) ?>
+<?php $this->load->view($carpeta_vistas . 'script_js'); ?>
 
 <div class="row">
-    <div class="col-md-7">
-        <?php $this->load->view('preguntas/explorar/form_busqueda_v'); ?>
+    <div class="col-md-6">
+        <?php $this->load->view($carpeta_vistas . 'form_busqueda_v'); ?>
     </div>
 
     <div class="col-md-3">
-        <a class="btn btn-warning <?= $clases_btn['eliminar_seleccionados'] ?>" title="Eliminar las <?= $elemento_p ?> seleccionadas" data-toggle="modal" data-target="#modal_eliminar">
-            <i class="fa fa-trash-o"></i>
+        <a class="btn btn-warning text-light <?php echo $clases_btn['eliminar_seleccionados'] ?>"
+            id="btn_eliminar_selecionados"
+            title="Eliminar los <?php echo $el_prural ?> seleccionados"
+            data-toggle="modal"
+            data-target="#modal_eliminar"
+            >
+            <i class="fa fa-trash"></i>
         </a>
         
-        <div class="btn-group hidden-xs <?= $clases_btn['exportar'] ?>" role="group">
-            <?= anchor("preguntas/exportar/?{$busqueda_str}", '<i class="fa fa-file-excel-o"></i> Exportar', 'class="btn btn-success" title="Exportar los ' . $cant_resultados . ' registros a archivo Excel"') ?>
+        <div class="btn-group hidden-xs <?php echo $clases_btn['exportar'] ?>" role="group">
+            <a href="<?php echo base_url("{$controlador}/exportar/?{$busqueda_str}") ?>" class="btn btn-success" title="Exportar registros encontrados a Excel">
+                <i class="fa fa-file-excel"></i> Exportar
+            </a>
         </div>
     </div>
     
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="pull-right sep1">
-            <?php $this->load->view('comunes/paginacion_v'); ?>
+            <?php $this->load->view('comunes/bs4/paginacion_ajax_v'); ?>
         </div>
     </div>
 </div>
 
-<?php $this->load->view('preguntas/explorar/tabla_v'); ?>
+<div id="tabla_resultados">
+    <?php $this->load->view($carpeta_vistas . 'tabla_v'); ?>
+</div>
+
+<?php $this->load->view('comunes/bs4/modal_eliminar_v'); ?>

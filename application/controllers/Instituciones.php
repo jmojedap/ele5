@@ -942,7 +942,6 @@ class Instituciones extends CI_Controller{
      */
     function resultados_grupo($institucion_id, $cuestionario_id = NULL)
     {
-        
         //Cargando datos básicos ($basico)
         $data = $this->Institucion_model->basico($institucion_id);
         $data['cuestionarios'] = $this->Institucion_model->cuestionarios($institucion_id);
@@ -1064,7 +1063,7 @@ class Instituciones extends CI_Controller{
         
         //Solicitar vista
         $data['subtitulo_pagina'] = 'Resultados por área';
-        $data['vista_b'] = 'instituciones/resultados_area_v';
+        $data['vista_b'] = 'instituciones/cuestionarios/resultados_area_v';
         $this->load->view(PTL_ADMIN, $data);
         
     }
@@ -1183,7 +1182,7 @@ class Instituciones extends CI_Controller{
         
         //Solicitar vista
         $data['titulo_pagina'] = "Resultados por componente | " . $data['titulo_pagina'];
-        $data['vista_b'] = 'instituciones/resultados_componentes_v';
+        $data['vista_b'] = 'instituciones/cuestionarios/resultados_componentes_v';
         if ( count($resultados) == 0 ){
             //Si las preguntas del cuestionario no tienen definidos los componentes
             $data = array();
@@ -1269,7 +1268,7 @@ class Instituciones extends CI_Controller{
         
         //Solicitar vista
         $data['titulo_pagina'] = $data['titulo_pagina'] . " - Resultados por competencia";
-        $data['vista_b'] = 'instituciones/resultados_competencias_v';
+        $data['vista_b'] = 'instituciones/cuestionarios/resultados_competencias_v';
         $this->load->view(PTL_ADMIN, $data);
         
     }
