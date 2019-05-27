@@ -1,4 +1,3 @@
-<?php $this->load->view('sistema/develop/procesos_menu_v'); ?>
 <?php $this->load->view('comunes/resultado_proceso_v'); ?>
 
 <?php $this->load->view('assets/toastr') ?>
@@ -42,17 +41,7 @@
 
 
 <div class="row">
-    <div class="col col-md-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Parámetros
-            </div>
-            <div class="panel-body">
-                Contenido
-            </div>
-        </div>
-    </div>
-    <div class="col col-md-9">
+    <div class="col col-md-12">
         <div class="">
             <table class="table table-hover bg-blanco" cellspacing="0">
                 <thead>

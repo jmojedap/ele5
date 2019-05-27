@@ -33,7 +33,7 @@ class Develop extends CI_Controller {
         
         $data['titulo_pagina'] = 'Procesos del sistema';
         $data['vista_a'] = "sistema/develop/procesos_v";
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     function tablas($nombre_tabla)
