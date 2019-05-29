@@ -60,8 +60,8 @@
                     //echo $imagen_flipbook;
                 ?>
                 <div class="flipbook_container">
-                    <a target="_blank" href="<?= base_url() . 'flipbooks/' . $funcion_flipbook . '/' . $contenido['flipbook_id']; ?>">
-                        <img width="100" src="<?= $imagen_flipbook ?>" onError="this.src='<?= $img_flipbook_general ?>'">
+                    <a target="_blank" href="<?php echo base_url() . 'flipbooks/' . $funcion_flipbook . '/' . $contenido['flipbook_id']; ?>">
+                        <img width="100" src="<?php echo $imagen_flipbook ?>" onError="this.src='<?= $img_flipbook_general ?>'">
                     </a>
                 </div>
             
