@@ -1487,7 +1487,7 @@ class Cuestionario_model extends CI_Model
     /**
      * A partir del string en usuario_cuestionario.respuestas, crea los registros
      * de respuesta en la tabla usuario_pregunta. Si ya existen los registros
-     * son actualizados. 2018-08-27
+     * son actualizados. 2019-05-09
      * 
      * @param type $uc_id
      * @return int
@@ -1506,6 +1506,7 @@ class Cuestionario_model extends CI_Model
             $preguntas = $this->preguntas($row_uc->cuestionario_id);
 
             $registro['usuario_id'] = $row_uc->usuario_id;
+            $registro['uc_id'] = $uc_id;
             $registro['cuestionario_id'] = $row_uc->cuestionario_id;
 
             foreach ( $preguntas->result() as $row_pregunta )
@@ -1553,7 +1554,8 @@ class Cuestionario_model extends CI_Model
         
         $query = $this->db->get('usuario_pregunta');
         
-        if ( $query->num_rows() > 0 ){
+        if ( $query->num_rows() > 0 )
+        {
             $row = $query->row();
             
             //Enriqueciendo $row
@@ -1577,6 +1579,7 @@ class Cuestionario_model extends CI_Model
         $registro = array(
             'usuario_id' => $this->input->post('usuario_id'),
             'pregunta_id' => $this->input->post('pregunta_id'),
+            'uc_id' => $this->input->post('uc_id'),
             'cuestionario_id' => $this->input->post('cuestionario_id'),
             'respuesta' => $this->input->post('respuesta')
         );
@@ -1632,26 +1635,24 @@ class Cuestionario_model extends CI_Model
     /**
      * Guardar los datos de las respuestas en la tabla
      * Y actualiza los datos del momento y el usuarios que carga la información
-     * en la tabla usuario_cuestionario
+     * en la tabla usuario_cuestionario. 2019-05-09.
      * 
-     * @param type $usuario_id
-     * @param type $cuestionario_id
+     * @param type $row_uc
      * @param type $respuestas 
      */
-    function guardar_lote($usuario_id, $cuestionario_id, $respuestas)
+    function guardar_lote($row_uc, $respuestas)
     {
-        $registro['usuario_id'] = $usuario_id;
-        $registro['cuestionario_id'] = $cuestionario_id;
+        $registro['usuario_id'] = $row_uc->usuario_id;
+        $registro['uc_id'] = $row_uc->id;
+        $registro['cuestionario_id'] = $row_uc->cuestionario_id;
         
         foreach ($respuestas as $key => $value)
         {
-            $condicion = "cuestionario_id = {$cuestionario_id} AND orden = {$key}";
+            $condicion = "cuestionario_id = {$row_uc->cuestionario_id} AND orden = {$key}";
             $registro['pregunta_id'] = $this->Pcrn->campo('cuestionario_pregunta', $condicion, 'pregunta_id');
             $registro['respuesta'] = $value;
             $this->guardar_respuesta($registro);
         }
-        
-        //Calcular datos de totales
     }
     
 // CARGUE MASIVO DE RESPUESTAS
@@ -1659,7 +1660,7 @@ class Cuestionario_model extends CI_Model
     
     /**
      * Inserta masivamente respuestas de cuestionarios
-     * tabla usuario_pregunta
+     * tabla usuario_pregunta. 2019-05-09.
      * 
      * @param type $array_hoja    Array con los datos de las respuestas
      */
@@ -1685,30 +1686,36 @@ class Cuestionario_model extends CI_Model
                 $cuestionario_id = $this->Pcrn->si_strlen($array_fila[0], 0);
                 
                 $row_uc = $this->Pcrn->registro('usuario_cuestionario', "usuario_id = {$usuario_id} AND cuestionario_id = {$cuestionario_id}");
-            
-            //Complementar registro
-                $registro['usuario_id'] = $usuario_id;
-                $registro['pregunta_id'] = $this->pregunta_id($cuestionario_id, $array_fila[2]);  //Columna C
-                $registro['cuestionario_id'] = $cuestionario_id;    //Columna A
-                $registro['respuesta'] = $respuesta;                //Columna D
+
+                if ( ! is_null($row_uc) )
+                {
+                    //Complementar registro
+                        $registro['usuario_id'] = $usuario_id;
+                        $registro['pregunta_id'] = $this->pregunta_id($cuestionario_id, $array_fila[2]);  //Columna C
+                        $registro['uc_id'] = $row_uc->id;
+                        $registro['cuestionario_id'] = $cuestionario_id;    //Columna A
+                        $registro['respuesta'] = $respuesta;                //Columna D
+                        
+                    //Validar
+                        $condiciones = 0;
+                        if ( $registro['usuario_id'] > 0 ) { $condiciones++; }      //Debe tener usuario identificado
+                        if ( $registro['pregunta_id'] > 0 ) { $condiciones++; }     //Debe tener pregunta identificada
+                        if ( $respuesta != 0 ) { $condiciones++; }                  //Tiene respuesta identificada
+                        if ( ! is_null($row_uc) ) { $condiciones++; }               //Existe la asignación de cuestionario
+                        
+                    //Si cumple las condiciones
+                    if ( $condiciones == 4 )
+                    {   
+                        $this->guardar_respuesta($registro);
+                        $this->actualizar_uc($row_uc->id);
+                    } else {
+                        $no_importados[] = $fila;
+                    }    
+                } else {
+                    $no_importados[] = $fila;
+                }
                 
-            //Validar
-                $condiciones = 0;
-                if ( $registro['usuario_id'] > 0 ) { $condiciones++; }      //Debe tener usuario identificado
-                if ( $registro['pregunta_id'] > 0 ) { $condiciones++; }     //Debe tener pregunta identificada
-                if ( $respuesta != 0 ) { $condiciones++; }                  //Tiene respuesta identificada
-                if ( ! is_null($row_uc) ) { $condiciones++; }               //Existe la asignación de cuestionario
-                
-            //Si cumple las condiciones
-            if ( $condiciones == 4 )
-            {   
-                $this->guardar_respuesta($registro);
-                $this->actualizar_uc($row_uc->id);
-            } else {
-                $no_importados[] = $fila;
-            }
-            
-            $fila++;    //Para siguiente fila
+                $fila++;    //Para siguiente fila
         }
         
         return $no_importados;
@@ -2020,8 +2027,7 @@ class Cuestionario_model extends CI_Model
         
         if ( $preguntas->num_rows() > 0 ) { $tema_evaluado = 1; }
         
-        return $tema_evaluado; 
-                
+        return $tema_evaluado;
     }
     
 
@@ -2094,11 +2100,8 @@ class Cuestionario_model extends CI_Model
      */
     function componentes_cuestionarios($condiciones)
     {
-        
         //Aplicando condiciones
-        foreach ( $condiciones as $condicion ) {
-            $this->db->where($condicion);
-        }
+        foreach ( $condiciones as $condicion ) { $this->db->where($condicion); }
         
         $this->db->select('componente_id');
         $this->db->where('componente_id IS NOT NULL');
@@ -2110,8 +2113,7 @@ class Cuestionario_model extends CI_Model
         
         $componentes_cuestionarios = $this->Pcrn->query_to_array($query, 'componente_id', 'componente_id');
                 
-        return $componentes_cuestionarios;
-        
+        return $componentes_cuestionarios;   
     }
     
     /**
@@ -2197,18 +2199,19 @@ class Cuestionario_model extends CI_Model
         
         //Cargar datos
             $sql = 'INSERT INTO dw_usuario_pregunta (mes, cuestionario_id, institucion_id, grupo_id, area_id, competencia_id, cant_respondidas, cant_correctas) ';
-            $sql .= 'SELECT LEFT(fin_respuesta, 7), usuario_pregunta.cuestionario_id, grupo.institucion_id, usuario_cuestionario.grupo_id AS grupo_id, pregunta.area_id, pregunta.competencia_id, COUNT( usuario_pregunta.id ) AS cant_preguntas, SUM( usuario_pregunta.resultado ) AS cant_correctas ';
-            $sql .= 'FROM  usuario_pregunta ';
-            $sql .= 'JOIN usuario ON usuario_pregunta.usuario_id = usuario.id ';
-            $sql .= 'JOIN usuario_cuestionario ON usuario_pregunta.usuario_id = usuario_cuestionario.usuario_id ';
-            $sql .= 'JOIN grupo ON usuario_cuestionario.grupo_id = grupo.id AND usuario_pregunta.cuestionario_id = usuario_cuestionario.cuestionario_id ';
+            $sql .= 'SELECT LEFT(fin_respuesta, 7), usuario_pregunta.cuestionario_id, usuario_cuestionario.institucion_id, usuario_cuestionario.grupo_id AS grupo_id, pregunta.area_id, pregunta.competencia_id, COUNT(usuario_pregunta.id) AS cant_preguntas, SUM( usuario_pregunta.resultado ) AS cant_correctas ';
+            $sql .= 'FROM usuario_pregunta ';
+            $sql .= 'JOIN usuario_cuestionario ON usuario_pregunta.uc_id = usuario_cuestionario.id ';
             $sql .= 'JOIN pregunta ON usuario_pregunta.pregunta_id = pregunta.id ';
             $sql .= 'WHERE fin_respuesta >= "' . $mes . '" ';
-            $sql .= 'GROUP BY LEFT(fin_respuesta, 7), usuario_pregunta.cuestionario_id, usuario_cuestionario.grupo_id, grupo.institucion_id, area_id, competencia_id';
+            $sql .= 'GROUP BY LEFT(fin_respuesta, 7), usuario_pregunta.cuestionario_id, usuario_cuestionario.grupo_id, usuario_cuestionario.institucion_id, area_id, competencia_id';
             
             $this->db->query($sql);
+
+        $data['sql'] = $sql;
+        $data['status'] = 1;
         
-        return $sql;
+        return $data;
     }
     
     //Actualizar el contenido de la tabla dw_usuario_cuestionario
@@ -2750,7 +2753,8 @@ class Cuestionario_model extends CI_Model
         $this->db->where($filtros);
         $respuestas = $this->db->get('usuario_pregunta');
         
-        if ( $respuestas->num_rows() > 0 ) {
+        if ( $respuestas->num_rows() > 0 ) 
+        {
             $row_respuesta = $respuestas->row();
             if ( ! is_null($row_respuesta->respuesta) ) { $resultado['respuesta'] = $row_respuesta->respuesta; }
             if ( ! is_null($row_respuesta->resultado) ) { $resultado['resultado'] = $row_respuesta->resultado; }

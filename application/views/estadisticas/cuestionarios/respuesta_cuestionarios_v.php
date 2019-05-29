@@ -71,6 +71,8 @@ $(function () {
     $promedio = $this->Pcrn->dividir($sum_cant_eventos, $serie->num_rows());
 ?>
 
+<?php $this->load->view($vista_submenu) ?>
+
 <div class="row">
     <div class="col col-md-9">
         

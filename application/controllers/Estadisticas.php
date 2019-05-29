@@ -421,36 +421,6 @@ class Estadisticas extends CI_Controller{
             $this->load->view('app/descargar_phpexcel_v', $data);
     }
     
-    //DESACTIVADA 2018-11-14
-    function z_abre_fb_dia()
-    {
-        
-        $data = $this->Estadistica_model->basico();
-        
-        //Construyendo el filtro
-            $filtro['institucion_id'] = NULL;
-            $filtro['nivel'] = NULL;
-            if ( $this->input->post() ){
-                $filtro['institucion_id'] = $this->input->post('institucion_id');
-                $filtro['nivel'] = $this->input->post('nivel');
-            }
-        
-        //Head includes específicos para esta función
-            $head_includes[] = 'highcharts';
-            
-        //Específico $data
-            $data['head_includes'] = $head_includes;
-            $data['serie'] = $this->Estadistica_model->abre_fb_dia($filtro);
-            $data['filtro'] = $filtro;
-        
-        //Cargar vista
-            $data['titulo_pagina'] = 'Estadísticas - Flipbooks abiertos';
-            $data['vista_b'] = 'estadisticas/abre_fb_dia_v';
-        
-        $this->load->view('plantilla_apanel/plantilla', $data);
-        
-    }
-    
 // FLIPBOOKS
 //-----------------------------------------------------------------------------
     
@@ -760,7 +730,34 @@ class Estadisticas extends CI_Controller{
         //Cargar vista
             $data['titulo_pagina'] = 'Estadísticas';
             $data['subtitulo_pagina'] = 'Respuesta de cuestionarios';
+            $data['vista_submenu'] = 'estadisticas/cuestionarios/submenu_v';
             $data['vista_b'] = 'estadisticas/cuestionarios/respuesta_cuestionarios_v';
+        
+        $this->load->view(PTL_ADMIN, $data);
+    }
+
+    function ctn_correctas_incorrectas()
+    {
+        $data = $this->Estadistica_model->basico();
+        
+        //Construyendo el filtro
+            $filtros = $this->Busqueda_model->busqueda_array();
+
+        //Array de campos disponibles para filtros
+            $campos_filtros = array('area');
+            if ( $this->session->userdata('srol') == 'interno' ) { $campos_filtros[] = 'institucion'; }
+            
+        //Específico $data
+            $data['serie'] = $this->Estadistica_model->ctn_correctas_incorrectas($filtros);
+            $data['filtros'] = $filtros;
+            $data['campos_filtros'] = $campos_filtros;
+            $data['destino_form'] = "estadisticas/redirect/ctn_correctas_incorrectas/";
+        
+        //Cargar vista
+            $data['titulo_pagina'] = 'Cuestionarios';
+            $data['subtitulo_pagina'] = 'Total correctas - incorrectas';
+            $data['vista_submenu'] = 'estadisticas/cuestionarios/submenu_v';
+            $data['vista_b'] = 'estadisticas/cuestionarios/ctn_correctas_incorrectas_v';
         
         $this->load->view(PTL_ADMIN, $data);
     }

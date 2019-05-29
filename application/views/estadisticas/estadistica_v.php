@@ -17,6 +17,7 @@
         if ( $this->uri->segment(2) == 'quices_area' ) { $seccion = 'quices'; }
         
         if ( $this->uri->segment(2) == 'respuesta_cuestionarios' ) { $seccion = 'cuestionarios'; }
+        if ( $this->uri->segment(2) == 'ctn_correctas_incorrectas' ) { $seccion = 'cuestionarios'; }
         
 
         $clases[$seccion] = 'active';

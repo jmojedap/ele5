@@ -135,7 +135,6 @@ class Cuestionarios extends CI_Controller{
                 
                 $this->load->view(TPL_ADMIN, $data);
             }
-            
     }
     
     /**
@@ -875,7 +874,7 @@ class Cuestionarios extends CI_Controller{
     }
     
     /**
-     * 
+     * AJAX JSON
      */
     function guardar_uc($uc_id) 
     {
@@ -1126,12 +1125,11 @@ class Cuestionarios extends CI_Controller{
         //Solicitar vista
             $data['view_a'] = 'cuestionarios/resolver_lote_v';
             $this->load->view(TPL_ADMIN, $data);
-        
     }
     
     /**
      * Recibe los datos del formulario cuestionarios/resolver_lote y los guarda en la tabla 
-     * usuario_pregunta.
+     * usuario_pregunta. 2019-05-09
      * @param type $uc_id 
      */
     function guardar_lote($uc_id)
@@ -1148,7 +1146,7 @@ class Cuestionarios extends CI_Controller{
             $respuestas[] = $this->input->post('pregunta_'.$i);
         }
         
-        $this->Cuestionario_model->guardar_lote($row_uc->usuario_id, $row_uc->cuestionario_id, $respuestas);
+        $this->Cuestionario_model->guardar_lote($row_uc, $respuestas);
         $this->Cuestionario_model->actualizar_uc($uc_id);
         $this->Cuestionario_model->actualizar_acumuladores($row_uc->usuario_id);
         $this->Cuestionario_model->finalizar($uc_id);
@@ -1240,6 +1238,10 @@ class Cuestionarios extends CI_Controller{
         $this->load->view(TPL_ADMIN, $data);
     }
     
+    /**
+     * Ejecuta el cargue masivo de respuestas de cuestionarios con archivo Excel.
+     * 2019-05-09
+     */
     function responder_masivo_e()
     {
         //Cargando datos básicos (basico)
@@ -1420,5 +1422,31 @@ class Cuestionarios extends CI_Controller{
             $data['head_subtitle'] = 'Nueva pregunta';
             $output = array_merge($data,(array)$gc_output);
             $this->load->view(TPL_ADMIN, $output);
+    }
+
+    /**
+     * Función Temporal. Actualiza masivamente el campo usuario_pregunta.uc_id
+     * 2019-05-09
+     */
+    function temporal_act_uc_id()
+    {
+        set_time_limit(360);    //360 segundos, 6 minutos por ciclo
+
+        $sql = 'UPDATE usuario_pregunta, usuario_cuestionario';
+        $sql .= ' SET usuario_pregunta.uc_id = usuario_cuestionario.id';
+        $sql .= ' WHERE';
+        $sql .= ' usuario_pregunta.usuario_id = usuario_cuestionario.usuario_id';
+        $sql .= ' AND usuario_pregunta.cuestionario_id = usuario_cuestionario.cuestionario_id';
+        $sql .= ' AND usuario_pregunta.uc_id = 0';
+        //$sql .= ' ';
+
+        $this->db->query($sql);
+
+        $data = array('status' => 1, 'message' => 'Proceso ejecutado');
+        $data['affected_rows'] = $this->db->affected_rows();
+        
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
     }
 }
