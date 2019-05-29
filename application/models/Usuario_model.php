@@ -1761,10 +1761,12 @@ class Usuario_model extends CI_Model{
         $this->db->update('usuario', $registro);
     }
     
+    /**
+     * Se marca un usuario como pagado, y su estado es activo.
+     */
     function marcar_pagado($usuario_id)
     {
-        $registro['inactivo'] = 0;  //Campo para la V3
-        $registro['activo'] = 1;
+        $registro['estado'] = 1;    //Agregado 2019-05-29
         $registro['pago'] = 1;
         $this->db->where('id', $usuario_id);
         $this->db->update('usuario', $registro);
