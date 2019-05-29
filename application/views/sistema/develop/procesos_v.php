@@ -82,30 +82,6 @@
                     </tr>
 
                     <tr>
-                        <td><?= anchor('develop/actualizar_dw_up', 'Ejecutar', 'class="btn btn-primary"') ?></td>
-                        <td>Actualizar DW Usuario Pregunta</td>
-                        <td>
-                            Actualiza la tabla [dw_usuario_pregunta]. Utilizada para generar los resúmenes estadísticos de los cuestionarios.
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td><?= anchor('develop/actualizar_dw_cp', 'Ejecutar', 'class="btn btn-primary"') ?></td>
-                        <td>Actualizar DW Cuestionario Pregunta</td>
-                        <td>
-                            Actualiza la tabla [dw_cuestionario_pregunta]. Utilizada para generar los resúmenes estadísticos de los cuestionarios y preguntas.
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td><?= anchor('develop/actualizar_dw_uc', 'Ejecutar', 'class="btn btn-primary"') ?></td>
-                        <td>Actualizar DW Usuario Cuestionario</td>
-                        <td>
-                            Actualiza la tabla [dw_usuario_cuestionario]. Utilizada para generar los resúmenes estadísticos de los cuestionarios y usuarios.
-                        </td>
-                    </tr>
-
-                    <tr>
                         <td><?= anchor('develop/eliminar_huerfanos', 'Ejecutar', 'class="btn btn-primary"') ?></td>
                         <td>Eliminar estudiantes huérfanos</td>
                         <td>

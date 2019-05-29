@@ -31,8 +31,8 @@ class Develop extends CI_Controller {
         //Variables
             $data['procesos'] = $procesos;
         
-        $data['titulo_pagina'] = 'Procesos del sistema';
-        $data['vista_a'] = "sistema/develop/procesos_v";
+        $data['head_title'] = 'Procesos del sistema';
+        $data['view_a'] = "sistema/develop/procesos_v";
         $this->load->view(TPL_ADMIN, $data);
     }
     
