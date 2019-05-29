@@ -23,10 +23,10 @@
                     </button>
                 </div>
                 <div class="col col-md-6">
-                    <button class="btn btn-default w3 float-right" v-on:click="siguiente_pregunta">
+                    <button class="btn btn-secondary w3 float-right" v-on:click="siguiente_pregunta">
                         Siguiente <i class="fa fa-caret-right"></i>
                     </button>
-                    <button class="btn btn-default w3 float-right" v-on:click="anterior_pregunta" style="margin-right: 3px;">
+                    <button class="btn btn-secondary w3 float-right" v-on:click="anterior_pregunta" style="margin-right: 3px;">
                         <i class="fa fa-caret-left"></i> Anterior
                     </button>
 

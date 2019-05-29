@@ -872,7 +872,7 @@ class Cuestionarios extends CI_Controller{
     }
     
     /**
-     * 
+     * AJAX JSON
      */
     function guardar_uc($uc_id) 
     {
