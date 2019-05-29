@@ -105,7 +105,7 @@
         $elementos_rol[3] = array('grupos', 'estudiantes', 'anotaciones', 'quices', 'cuestionarios_flipbooks', 'cuestionarios', 'profesores', 'promover', 'mensaje', 'editar');
         $elementos_rol[4] = array('grupos', 'estudiantes', 'anotaciones', 'quices', 'cuestionarios_flipbooks', 'cuestionarios', 'profesores', 'mensaje');
         $elementos_rol[5] = array('grupos', 'estudiantes', 'anotaciones', 'quices', 'cuestionarios_flipbooks', 'cuestionarios', 'mensaje');
-        $elementos_rol[8] = array('grupos', 'estudiantes', 'anotaciones', 'quices', 'cuestionarios_flipbooks', 'cuestionarios', 'profesores', 'promover', 'mensaje', 'editar');
+        $elementos_rol[8] = array('grupos', 'estudiantes', 'anotaciones', 'quices', 'cuestionarios_flipbooks', 'cuestionarios', 'profesores', 'mensaje', 'editar');
         
         
     //Definiendo menú mostrar, según el rol del visitante
