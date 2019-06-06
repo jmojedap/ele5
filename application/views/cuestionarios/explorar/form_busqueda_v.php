@@ -39,7 +39,7 @@
             </div>
         </div>
 
-        <?php if ( $this->session->userdata('srol') == 'institucional' ) { ?>
+        <?php if ( in_array($this->session->userdata('rol_id'), array(3,4)) ) { ?>
             <div class="form-group row <?php echo $clases_filtros['f1'] ?>">
                 <div class="col-md-9">
                     <?php echo form_dropdown('f1', $opciones_alcance, $busqueda['f1'], 'class="form-control" id="campo-alcance" title="Solo mis cuestionarios"'); ?>

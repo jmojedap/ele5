@@ -109,7 +109,7 @@
     function act_resultados(response)
     {
         $('#tabla_resultados').html(response.html);
-        $('#subtitulo_pagina').html(response.cant_resultados);
+        $('#head_subtitle').html(response.cant_resultados);
         $('#campo-num_pagina').val(parseInt(num_pagina));
         $('#campo-num_pagina').prop('title', parseInt(num_pagina) + ' páginas en total');
 

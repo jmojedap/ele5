@@ -38,7 +38,7 @@ class Cuestionario_model extends CI_Model
             $data['arr_filtros'] = array('a', 'n', 'tp', 'i');
             
         //Vistas
-            $data['head_subtitle'] = $data['max_pagina'];
+            $data['head_subtitle'] = $data['cant_resultados'];
             $data['view_a'] = $data['carpeta_vistas'] . 'explorar_v';
             $data['nav_2'] = $data['carpeta_vistas'] . 'menu_v';
         
@@ -86,7 +86,7 @@ class Cuestionario_model extends CI_Model
     function buscar($busqueda, $per_page = NULL, $offset = NULL)
     {
         //Filtro según el rol de usuario que se tenga
-            $filtro_rol = $this->filtro_cuestionarios();
+            $filtro_rol = $this->filtro_rol();
 
         //Condición con palabras contenidas en el texto de búsqueda (q)
             $words_condition = $this->Busqueda_model->words_condition($busqueda['q'], array('nombre_cuestionario', 'descripcion'));
@@ -98,7 +98,7 @@ class Cuestionario_model extends CI_Model
             if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_id', $busqueda['tp']); }  //Tipo
             if ( $busqueda['i'] != '' ) { $this->db->where('institucion_id', $busqueda['i']); }  //
             if ( $busqueda['condicion'] != '' ) { $this->db->where($busqueda['condicion']); }   //Condición especial
-            if ( $busqueda['f1'] == '1' ) { $this->db->where('creado_usuario_id', $this->session->userdata('usuario_id')); }   //Condición especial
+            //if ( $busqueda['f1'] == '1' ) { $this->db->where('creado_usuario_id', $this->session->userdata('usuario_id')); }   //Condición especial
                 
         //Otros
             $this->db->where($filtro_rol);  //Filtro por rol
@@ -127,12 +127,13 @@ class Cuestionario_model extends CI_Model
         return $resultados->num_rows();
     }
 
-    function filtro_cuestionarios($usuario_id = NULL)
+    /**
+     * Condición SQL Where, para filtrar resultados de cuestionarios en vista de exploración
+     * según el rol del usuario en sesión
+     */
+    function filtro_rol()
     {
-        
-        if ( is_null($usuario_id) ){ $usuario_id = $this->session->userdata('usuario_id'); }
-        
-        $row_usuario = $this->Pcrn->registro_id('usuario', $usuario_id);
+        $row_usuario = $this->Pcrn->registro_id('usuario', $this->session->userdata('usuario_id'));
         $condicion = "id = 0";  //Valor por defecto, ningún usuario, se obtendrían cero resultados.
         
         if ( $row_usuario->rol_id == 0 ) {          //Desarrollador
@@ -147,7 +148,7 @@ class Cuestionario_model extends CI_Model
         } elseif ( $row_usuario->rol_id == 4 ) {    //Directivo
             $condicion = "( tipo_id IN (3,4) AND (institucion_id = '{$this->session->userdata('institucion_id')}' ) )";
         } elseif ( $row_usuario->rol_id == 5 ) {    //Profesor
-            $condicion = "( tipo_id IN (3,4) AND ( institucion_id = ({$this->session->userdata('institucion_id')})) )";
+            $condicion = "( tipo_id IN (3,4) AND creado_usuario_id = {$this->session->userdata('usuario_id')} )";
         } elseif ( $row_usuario->rol_id == 7 ) {    //Digitador
             $condicion = "id > 0";
         } elseif ( $row_usuario->rol_id == 8 ) {    //Comercial
