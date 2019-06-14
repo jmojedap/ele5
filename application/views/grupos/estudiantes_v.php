@@ -1,4 +1,5 @@
 <?php $this->load->view('assets/icheck'); ?>
+<?php $this->load->view('assets/toastr') ?>
 
 <?php
 
@@ -39,12 +40,6 @@
         }
     }
     
-    //
-    
-    $att_submit = array(
-        'value' =>  'Aplicar',
-        'class' => 'btn btn-primary'
-    );
             
     $att_check_todos = array(
         'name' => 'check_todos',
@@ -85,6 +80,13 @@
 ?>
 
 <script>
+// Variables
+//-----------------------------------------------------------------------------
+    var app_url = '<?php echo base_url() ?>';
+    var grupo_id = <?php echo $row->id ?>;
+
+// Document Ready
+//-----------------------------------------------------------------------------
     $(document).ready(function(){
         
         $('#check_todos').change(function() {
@@ -112,104 +114,130 @@
             
             //$('#seleccionados').html(seleccionados.substring(1));
         });
+
+        $('#estudiantes_form').submit(function(){
+            ejecutar_proceso();
+            return false;
+        });
     });
+
+// FURNCIONES
+//-----------------------------------------------------------------------------
+    function ejecutar_proceso(){
+        $.ajax({        
+            type: 'POST',
+            url: app_url + 'grupos/ejecutar_proceso/' + grupo_id,
+            data: $('#estudiantes_form').serialize(),
+            success: function(response){
+                if ( response.quan_executed > 0 ) {
+                    var message = '<b>' + response.quan_executed + '</b> procesados<br/>Actualizando listado...';
+                    toastr['success'](message, response.process);
+                } else {
+                    toastr['info']('No se procesó ningún estudiante');
+                }
+                //Recargar página despues de 2500 milsegundos
+                setTimeout(() => {
+                    window.location = app_url + 'grupos/estudiantes/' + grupo_id;
+                }, 2500);
+            }
+        });
+    }
 </script>
 
 <?php $this->load->view('grupos/submenu_estudiantes_v') ?>
 
-<?php if ( $this->session->flashdata('resultado') != NULL ):?>
-    <?php $resultado = $this->session->flashdata('resultado') ?>
-    <div class="alert alert-info"><?= $resultado['proceso'] ?>: Se procesaron <?= $resultado['num_procesados'] ?> usuarios</div>
-<?php endif ?>
+<form accept-charset="utf-8" method="POST" id="estudiantes_form">
     
-<?= form_open("grupos/ejecutar_proceso/{$row->id}") ?>
-
-<div class="sep2" style="overflow: hidden">
-    <div class="casilla">
-        <?=  form_dropdown('proceso', $opciones_proceso, set_value('proceso'), 'class="form-control"') ?>
+    <div class="sep1">
+        <div class="row mb-2">
+            <div class="col-md-2">
+                <?php echo  form_dropdown('proceso', $opciones_proceso, set_value('proceso'), 'class="form-control"') ?>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary btn-block" type="submit">
+                    Aplicar
+                </button>
+            </div>
+            <div class="col-md-8">
+                A los estudiantes que se seleccionen se les ejecutará el proceso elegido. Al desactivar un usuario también se <span class="resaltar">restaurará su contraseña</span> al valor por defecto.
+            </div>
+        </div>
     </div>
-    <div class="casilla">
-        <?= form_submit($att_submit) ?>
-    </div>
-    <div class="casilla">
-        A los estudiantes que se seleccionen se les ejecutará el proceso elegido. Al desactivar un usuario también se <span class="resaltar">restaurará su contraseña</span> al valor por defecto.
-    </div>
-</div>
 
-<table class="table table-default bg-blanco" cellspacing="0">
-    <thead>
-        <tr>
-            <th width="10px"><?= form_checkbox($att_check_todos) ?></th>
-            <th>Estudiante</th>
-            <th>Cantidad login</th>
-            <th>Username</th>
-            <th class="w3">Pago</th>
-            <th class="w3">Estado</th>
-            <th>Sexo</th>
-        </tr>
-    </thead>
-    <tbody>
-
-        <?php foreach ($arr_cant_login as $usuario_id => $cant_login): ?>
-            <?php
-                $row_estudiante = $this->Pcrn->registro_id('usuario', $usuario_id);
-            
-                $nombre_estudiante = $row_estudiante->apellidos . ' ' . $row_estudiante->nombre;
-                    
-                //Activo
-                    $valor_activo = '<span class="w3 etiqueta exito">Activo</span>';
-                    if ( $row_estudiante->estado == 0 ) { $valor_activo = '<span class="w3 etiqueta alerta">Inactivo</span>'; }
-                    
-                //Checkbox
-                    $att_check['name'] = $row_estudiante->id;
-                    
-                //Mostrar fila
-                    $mostrar_estudiante = $this->Usuario_model->mostrar_estudiante($row_estudiante);
-                    $clase_fila = $this->Pcrn->si_cero($mostrar_estudiante, 'hidden', '');
-                    
-                //Complementar filtros
-                    $filtros_evento['u'] = $row_estudiante->id;
-                    //$cant_login = $arr_cant_login[$row_estudiante->id];
-                    
-                    $percent = $this->Pcrn->int_percent($cant_login, $max_login);
-                    $clase_barra = 'progress-bar';
-                    
-                    if ( $percent < 10 )
-                    {
-                        $percent = 5;
-                        $clase_barra = 'progress-bar-danger';
-                    }
-            ?>
-
-            <tr class="<?= $clase_fila ?>">
-                <td><?= form_checkbox($att_check) ?></td>
-                <td>
-                    <?= anchor("usuarios/actividad/{$row_estudiante->id}/1", $nombre_estudiante, 'class="" title=""') ?>
-                </td>
-                
-                <td>
-                    <div class="progress">
-                        <div class="progress-bar <?= $clase_barra ?>" role="progressbar" aria-valuenow="<?= $percent ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?= $percent ?>%;">
-                            <?= $cant_login ?>
-                        </div>
-                    </div>
-                </td>
-                
-                <td><?= $row_estudiante->username ?></td>
-                
-                <td>
-                    <span class="w1 etiqueta <?= $pago_clase[$row_estudiante->pago] ?>">
-                        <?= $pago_texto[$row_estudiante->pago] ?>
-                    </span>
-                    
-                </td>
-                <td><?php echo $valor_activo ?></td>
-                <td><?php echo $arr_sexo['0' . $row_estudiante->sexo]; ?></td>
+    <table class="table table-default bg-blanco" cellspacing="0">
+        <thead>
+            <tr>
+                <th width="10px"><?php echo form_checkbox($att_check_todos) ?></th>
+                <th>Estudiante</th>
+                <th>Cantidad login</th>
+                <th>Username</th>
+                <th class="w3">Pago</th>
+                <th class="w3">Estado</th>
+                <th>Sexo</th>
             </tr>
-        <?php endforeach ?>
+        </thead>
+        <tbody>
+
+            <?php foreach ($arr_cant_login as $usuario_id => $cant_login): ?>
+                <?php
+                    $row_estudiante = $this->Pcrn->registro_id('usuario', $usuario_id);
+                
+                    $nombre_estudiante = $row_estudiante->apellidos . ' ' . $row_estudiante->nombre;
+                        
+                    //Activo
+                        $valor_activo = '<span class="w3 etiqueta exito">Activo</span>';
+                        if ( $row_estudiante->estado == 0 ) { $valor_activo = '<span class="w3 etiqueta alerta">Inactivo</span>'; }
+                        
+                    //Checkbox
+                        $att_check['name'] = $row_estudiante->id;
+                        
+                    //Mostrar fila
+                        $mostrar_estudiante = $this->Usuario_model->mostrar_estudiante($row_estudiante);
+                        $clase_fila = $this->Pcrn->si_cero($mostrar_estudiante, 'hidden', '');
+                        
+                    //Complementar filtros
+                        $filtros_evento['u'] = $row_estudiante->id;
+                        //$cant_login = $arr_cant_login[$row_estudiante->id];
+                        
+                        $percent = $this->Pcrn->int_percent($cant_login, $max_login);
+                        $clase_barra = 'progress-bar';
+                        
+                        if ( $percent < 10 )
+                        {
+                            $percent = 5;
+                            $clase_barra = 'progress-bar-danger';
+                        }
+                ?>
+
+                <tr class="<?php echo $clase_fila ?>">
+                    <td><?php echo form_checkbox($att_check) ?></td>
+                    <td>
+                        <?php echo anchor("usuarios/actividad/{$row_estudiante->id}/1", $nombre_estudiante, 'class="" title=""') ?>
+                    </td>
+                    
+                    <td>
+                        <div class="progress">
+                            <div class="progress-bar <?php echo $clase_barra ?>" role="progressbar" aria-valuenow="<?php echo $percent ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $percent ?>%;">
+                                <?php echo $cant_login ?>
+                            </div>
+                        </div>
+                    </td>
+                    
+                    <td><?php echo $row_estudiante->username ?></td>
+                    
+                    <td>
+                        <span class="w1 etiqueta <?php echo $pago_clase[$row_estudiante->pago] ?>">
+                            <?php echo $pago_texto[$row_estudiante->pago] ?>
+                        </span>
+                        
+                    </td>
+                    <td><?php echo $valor_activo ?></td>
+                    <td><?php echo $arr_sexo['0' . $row_estudiante->sexo]; ?></td>
+                </tr>
+            <?php endforeach ?>
 
 
-    </tbody>
-</table>
+        </tbody>
+    </table>
 
-<?= form_close() ?>
+</form>

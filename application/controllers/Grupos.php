@@ -1099,17 +1099,19 @@ class Grupos extends CI_Controller{
             $data['menu_sub'] = 'grupos/submenu_estudiantes_v';
             $data['vista_b'] = 'grupos/estudiantes_v';
             $this->load->view(PTL_ADMIN, $data);
-            
     }
     
+    /**
+     * AJAX JSON
+     * 2019-06-11
+     * Ejecuta un proceso específico a un conjunto de usuarios estudiantes seleccionados en la sección
+     * grupos/estudiantes.
+     */
     function ejecutar_proceso($grupo_id)
     {
-        //$this->output->enable_profiler(TRUE);
         $this->load->model('Usuario_model');
         
-        $resultado['num_procesados'] = 0;
-        
-        //Creando registro
+        $data['quan_executed'] = 0;
         
         //Se carga la lista de estudiantes que pertenecen un grupo
         $estudiantes = $this->Grupo_model->estudiantes($grupo_id);
@@ -1122,41 +1124,40 @@ class Grupos extends CI_Controller{
                 $proceso_id = substr($this->input->post('proceso'), 1, 1);
                 
                 if ( $proceso_id == 1 ){
-                    $resultado['proceso'] = 'Activar';
+                    $data['process'] = 'Activar';
                     $this->Usuario_model->cambiar_activacion($row_estudiante->usuario_id, 1);
                 } elseif ( $proceso_id == 2 ) {
-                    $resultado['proceso'] = 'Desactivar';
+                    $data['process'] = 'Desactivar';
                     $this->Usuario_model->cambiar_activacion($row_estudiante->usuario_id, 0);
                 } elseif ( $proceso_id == 3 ) {
                     $this->Usuario_model->restaurar_contrasena($row_estudiante->usuario_id);
-                    $resultado['proceso'] = 'Restaurar contraseña';
+                    $data['process'] = 'Restaurar contraseña';
                 } elseif ( $proceso_id == 4 ) {
                     $this->Usuario_model->eliminar($row_estudiante->usuario_id);
-                    $resultado['proceso'] = 'Eliminar';
+                    $data['process'] = 'Eliminar';
                 } elseif ( $proceso_id == 5 ) {
                     $this->Usuario_model->marcar_pagado($row_estudiante->usuario_id);
-                    $resultado['proceso'] = 'Marcar como pagado';
+                    $data['process'] = 'Marcar como pagado';
                 } elseif ( $proceso_id == 6 ) {
                     $this->Usuario_model->marcar_no_pagado($row_estudiante->usuario_id);
-                    $resultado['proceso'] = 'Marcar como NO pagado';
+                    $data['process'] = 'Marcar como NO pagado';
                 } elseif ( $proceso_id == 7 ) {
                     $grupo_destino_id = substr($this->input->post('proceso'), -6, 6);
                     $row_grupo = $this->Pcrn->registro_id('grupo', $grupo_destino_id);
                     $this->Usuario_model->cambiar_grupo($row_estudiante->usuario_id, $grupo_id, $grupo_destino_id);
-                    $resultado['proceso'] = "Mover al grupo {$row_grupo->nivel}-{$row_grupo->grupo}" ;
+                    $data['process'] = "Mover al grupo {$row_grupo->nivel}-{$row_grupo->grupo}" ;
                 } elseif ( $proceso_id == 8 ) {
-                    $resultado['proceso'] = 'Retirar (Sin eliminar)';
+                    $data['process'] = 'Retirar (Sin eliminar)';
                     $this->Grupo_model->eliminar_ug($grupo_id, $row_estudiante->usuario_id);
                 }
                 
-                $resultado['num_procesados'] += 1;
+                $data['quan_executed'] += 1;
             }
         }
         
-        $this->session->set_flashdata('resultado', $resultado);
-        
-        redirect("grupos/estudiantes/{$grupo_id}");
-        
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
     }
     
 // GESTIÓN DE CUESTIONARIOS PARA GRUPOS

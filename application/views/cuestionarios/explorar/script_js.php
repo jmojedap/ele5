@@ -79,7 +79,7 @@
         });
 
         //Mostrar u ocultar botón de eliminar seleccionados
-        mostrar_eliminar();
+        //mostrar_eliminar();   //Desactivada 2019-06-11
     });
 
 // Funciones
@@ -147,7 +147,7 @@
         }
     }
 
-    //Muestra u oculta el botón de eliminar seleccionados
+    //Muestra u oculta el botón de eliminar seleccionados, desactivada 2019-06-11
     function mostrar_eliminar()
     {
         if ( srol == 'institucional' )

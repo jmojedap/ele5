@@ -346,6 +346,8 @@ class Datos extends CI_Controller {
     
     function report_usuarios_01()
     {
+        ini_set('memory_limit','-1');
+
         //Render del grocery crud
             $gc_output = $this->Datos_model->crud_report_usuarios_01();
         
