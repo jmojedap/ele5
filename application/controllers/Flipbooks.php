@@ -19,8 +19,60 @@ class Flipbooks extends CI_Controller{
     
 //---------------------------------------------------------------------------------------------------
 //
-    
-    function explorar()
+    /**
+     * Exploración y búsqueda de cuestionarios
+     */
+    function explorar($num_pagina = 1)
+    {
+        //Datos básicos de la exploración
+            $this->load->helper('text');
+            $data = $this->Flipbook_model->data_explorar($num_pagina);
+        
+        //Opciones de filtros de búsqueda
+            
+            $data['opciones_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
+            $data['opciones_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Nivel');
+            $data['opciones_tipo'] = $this->Item_model->opciones('categoria_id = 11', 'Tipo');
+            
+        //Arrays con valores para contenido en la tabla
+            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 11');
+        
+        //Cargar vista
+            $this->load->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * AJAX
+     * 
+     * Devuelve JSON, que incluye string HTML de la tabla de exploración para la
+     * página $num_pagina, y los filtros enviados por post
+     * 
+     * @param type $num_pagina
+     */
+    function tabla_explorar($num_pagina = 1)
+    {
+        //Datos básicos de la exploración
+            $this->load->helper('text');
+            $data = $this->Flipbook_model->data_tabla_explorar($num_pagina);
+        
+        //Arrays con valores para contenido en lista
+            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 11');
+        
+        //Preparar respuesta
+            $respuesta['html'] = $this->load->view('flipbooks/explorar/tabla_v', $data, TRUE);
+            $respuesta['seleccionados_todos'] = $data['seleccionados_todos'];
+            $respuesta['num_pagina'] = $num_pagina;
+            $respuesta['busqueda_str'] = $data['busqueda_str'];
+            $respuesta['cant_resultados'] = $data['cant_resultados'];
+            $respuesta['max_pagina'] = $data['max_pagina'];
+        
+        //Salida
+            $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($respuesta));
+    }
+
+    function z_explorar()
     {
         $this->load->helper('text');
         $this->load->model('Busqueda_model');
@@ -101,14 +153,18 @@ class Flipbooks extends CI_Controller{
     function eliminar_seleccionados()
     {
         $str_seleccionados = $this->input->post('seleccionados');
-        
         $seleccionados = explode('-', $str_seleccionados);
         
-        foreach ( $seleccionados as $elemento_id ) {
+        foreach ( $seleccionados as $elemento_id ) 
+        {
             $this->Flipbook_model->eliminar($elemento_id);
         }
         
-        echo count($seleccionados);
+        $data = array('status' => 1, 'message' =>  count($seleccionados) . ' contenidos eliminados');
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
     }  
     
     function nuevo()
@@ -120,14 +176,14 @@ class Flipbooks extends CI_Controller{
         //Head includes específicos para la página
         
         //Array data espefícicas
-            $data['titulo_pagina'] = 'Contenidos';
-            $data['subtitulo_pagina'] = 'Nuevo';
-            $data['vista_a'] = 'comunes/gc_v';
-            $data['vista_menu'] = 'flipbooks/explorar_menu_v';
+            $data['head_title'] = 'Contenidos';
+            $data['head_subtitle'] = 'Nuevo';
+            $data['view_a'] = 'comunes/gc_v';
+            $data['nav_2'] = 'flipbooks/explorar/menu_v';
         
         $output = array_merge($data,(array)$gc_output);
         
-        $this->load->view(PTL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN, $output);
     }
     
     function editar()
@@ -173,13 +229,13 @@ class Flipbooks extends CI_Controller{
             $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
             
         //Variables generales
-            $data['titulo_pagina'] = 'Contenidos';
-            $data['subtitulo_pagina'] = 'Asignar talleres';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'flipbooks/explorar_menu_v';
+            $data['head_title'] = 'Contenidos';
+            $data['head_subtitle'] = 'Asignar talleres';
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_2'] = 'flipbooks/explorar/menu_v';
             $data['ayuda_id'] = 127;
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -801,14 +857,14 @@ class Flipbooks extends CI_Controller{
      */
     function crear_json($flipbook_id)
     {
-        $resultado['ejecutado'] = 0;
+        $data['status'] = 0;
         
         $data_str = $this->Flipbook_model->crear_json($flipbook_id);
-        if ( strlen($data_str) > 0 ) { $resultado['ejecutado'] = 1; }
+        if ( strlen($data_str) > 0 ) { $data['status'] = 1; }
         
         $this->output
         ->set_content_type('application/json')
-        ->set_output(json_encode($resultado));
+        ->set_output(json_encode($data));
     }
 
     /**

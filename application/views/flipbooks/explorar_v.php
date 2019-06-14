@@ -126,7 +126,7 @@
             url: base_url + 'flipbooks/crear_json/' + flipbook_id,
             success: function(data){
                 if ( data.ejecutado == 1 ) {
-                    $('#crear_json_' + flipbook_id).toggleClass('btn-default');
+                    $('#crear_json_' + flipbook_id).toggleClass('btn-light');
                     $('#crear_json_' + flipbook_id).toggleClass('btn-success');
                     console.log('Archivo actualizado: ' + flipbook_id);
                 }

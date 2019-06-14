@@ -19,5 +19,8 @@
         <!-- Vue.js -->
         <?php $this->load->view('assets/vue') ?>
 
+        <!-- Alerts Toastr -->
+        <?php $this->load->view('assets/toastr') ?>
+
         <!-- Google Analytics -->
-        <?php $this->load->view('head_includes/google_analytics'); ?>
+        <?php //$this->load->view('head_includes/google_analytics'); ?>
