@@ -18,6 +18,7 @@ class Flipbook_model extends CI_Model {
     
     /**
      * Array con los datos para la vista de exploración
+     * 2019-06-17
      * 
      * @return string
      */
@@ -52,8 +53,8 @@ class Flipbook_model extends CI_Model {
     function data_tabla_explorar($num_pagina)
     {
         //Elemento de exploración
-            $data['controlador'] = 'flipbooks';                      //Nombre del controlador
-            $data['cf'] = 'flipbooks/explorar/';     //CF Controlador Función
+            $data['controlador'] = 'flipbooks';         //Nombre del controlador
+            $data['cf'] = 'flipbooks/explorar/';        //CF Controlador Función
         
         //Paginación
             $data['num_pagina'] = $num_pagina;                  //Número de la página de datos que se está consultado
@@ -123,58 +124,6 @@ class Flipbook_model extends CI_Model {
         return $resultados->num_rows();
     }
 
-    /**
-     * Búsqueda de flipbooks
-     * 
-     * @param type $busqueda
-     * @param type $per_page
-     * @param type $offset
-     * @return type
-     */
-    function z_buscar($busqueda, $per_page = NULL, $offset = NULL) {
-
-        //Filtro según el rol de usuario que se tenga
-        $filtro_rol = $this->filtro_rol($this->session->userdata('usuario_id'));
-
-        //Construir búsqueda
-        //Texto búsqueda
-        //Crear array con términos de búsqueda
-        if (strlen($busqueda['q']) > 2) {
-            $concat_campos = $this->Busqueda_model->concat_campos(array('id', 'nombre_flipbook', 'descripcion', 'anio_generacion'));
-            $palabras = $this->Busqueda_model->palabras($busqueda['q']);
-
-            foreach ($palabras as $palabra_busqueda) {
-                $this->db->like("CONCAT({$concat_campos})", $palabra_busqueda);
-            }
-        }
-
-        //Otros filtros
-        if ($busqueda['a'] != '') {
-            $this->db->where('area_id', $busqueda['a']);
-        }            //Área
-        if ($busqueda['n'] != '') {
-            $this->db->where('nivel', $busqueda['n']);
-        }              //Nivel
-        if ($busqueda['tp'] != '') {
-            $this->db->where('tipo_flipbook_id', $busqueda['tp']);
-        } //Tipo
-        if ($busqueda['condicion'] != '') {
-            $this->db->where($busqueda['condicion']);
-        }       //Condición especial
-        //Otros
-        $this->db->where($filtro_rol);  //Filtro por rol
-        $this->db->order_by('nombre_flipbook', 'ASC');
-
-        //Obtener resultados
-        if (is_null($per_page)) {
-            $query = $this->db->get('flipbook'); //Resultados totales
-        } else {
-            $query = $this->db->get('flipbook', $per_page, $offset); //Resultados por página
-        }
-
-        return $query;
-    }
-
     function filtro_rol() {
 
         $usuario_id = $this->session->userdata('usuario_id');
@@ -194,6 +143,9 @@ class Flipbook_model extends CI_Model {
 
         return $condicion;
     }
+
+// DATOS DEL FLIPBOOK
+//-----------------------------------------------------------------------------
 
     /**
      * Devuelve objeto registro con los datos básicos de un flipbook
@@ -256,7 +208,8 @@ class Flipbook_model extends CI_Model {
      * 
      * @param type $array_hoja    Array con los datos de los contenidos y talleres
      */
-    function asignar_taller($array_hoja) {
+    function asignar_taller($array_hoja) 
+    {
         $this->load->model('Esp');
 
         $no_importados = array();

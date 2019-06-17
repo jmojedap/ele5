@@ -71,41 +71,6 @@ class Flipbooks extends CI_Controller{
             ->set_content_type('application/json')
             ->set_output(json_encode($respuesta));
     }
-
-    function z_explorar()
-    {
-        $this->load->helper('text');
-        $this->load->model('Busqueda_model');
-        
-        //Datos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
-            $resultados_total = $this->Flipbook_model->buscar($busqueda); //Para calcular el total de resultados
-        
-        //Paginación
-            $this->load->library('pagination');
-            $config = $this->App_model->config_paginacion(2);
-            $config['base_url'] = base_url("flipbooks/explorar/?{$busqueda_str}");
-            $config['total_rows'] = $resultados_total->num_rows();
-            $this->pagination->initialize($config);
-            
-        //Generar resultados para mostrar
-            $offset = $this->input->get('per_page');
-            $resultados = $this->Flipbook_model->buscar($busqueda, $config['per_page'], $offset);
-        
-        //Variables para vista
-            $data['vista_menu'] = 'flipbooks/explorar_menu_v';
-            $data['cant_resultados'] = $config['total_rows'];
-            $data['busqueda'] = $busqueda;
-            $data['busqueda_str'] = $busqueda_str;
-            $data['resultados'] = $resultados;
-        
-        //Solicitar vista
-            $data['titulo_pagina'] = 'Contenidos';
-            $data['subtitulo_pagina'] = $config['total_rows'];
-            $data['vista_a'] = 'flipbooks/explorar_v';
-            $this->load->view(PTL_ADMIN, $data);
-    }
     
     /**
      * Exporta el resultado de la búsqueda a un archivo de Excel

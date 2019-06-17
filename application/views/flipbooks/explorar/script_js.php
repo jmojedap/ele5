@@ -78,7 +78,7 @@
             tabla_explorar();
         });
 
-        $('.crear_json').click(function(){
+        $('#tabla_resultados').on("click", ".crear_json", function(){
             registro_id = $(this).data('flipbook_id');
             crear_json(registro_id);
         }); 
