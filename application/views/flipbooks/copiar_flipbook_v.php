@@ -1,53 +1,46 @@
-<?php
+<div class="card m-auto" style="max-width: 750px;">
+    <div class="card-body">
+        <form action="<?php echo base_url('flipbooks/generar_copia') ?>" accept-charset="utf-8" method="POST">
+            <input type="hidden" name="flipbook_id" value="<?php echo $row->id ?>">
 
-    $att_nombre_flipbook = array(
-        'name' => 'nombre_flipbook',
-        'class' => 'i-texto1',
-        'value' => "{$row->nombre_flipbook} - Copia"
-    );
-        
-    $att_descripcion = array(
-        'name' => 'descripcion',
-        'class' => 'textarea1',
-        'value' => "Copia de {$row->nombre_flipbook} | {$row->descripcion}"
-    );
-        
-    $att_submit = array(
-        'class' =>  'button orange',
-        'value' =>  'Crear'
-    );
-    
-
-?>
-
-<?= form_open('flipbooks/generar_copia') ?>
-    <?= form_hidden('flipbook_id', $row->id) ?>
-
-    <div class="seccion group">
-        <div class="col col_box span_2_of_2">
-            <div class="info_container_body">
-                <div class="div1">
-                    <label for="nombre_flipbook" class="label1">Nombre del flipbook</label><br/>
-                    <p class="descripcion">Nombre del nuevo flipbook</p>
-                    <?= form_input($att_nombre_flipbook) ?>
-                </div>
-                <div class="div1">
-                    <label for="descripcion" class="label1">Descripción</label><br/>
-                    <p class="descripcion">Descripción del flipbook nuevo</p>
-                    <?= form_textarea($att_descripcion) ?>
-                </div>
-                <div class="div1">
-                    <?= form_submit($att_submit) ?>
+            <div class="form-group row">
+                <label for="nombre_flipbook" class="col-md-4">Nombre del flipbook</label><br/>
+                <div class="col-md-8">
+                    <input
+                        type="text"
+                        name="nombre_flipbook"
+                        required
+                        class="form-control"
+                        value="<?php echo $row->nombre_flipbook ?> - Copia"
+                        placeholder="Nombre del nuevo contenido"
+                        title="Nombre del nuevo contenido"
+                        >
                 </div>
             </div>
-        </div>
-    </div>
-        
 
-<?= form_close() ?>
+            <div class="form-group row">
+                <label for="descripcion" class="col-md-4">Descripción</label>
+                <div class="col-md-8">
+                    <textarea
+                        name="descripcion"
+                        required
+                        id="field-descripcion"
+                        class="form-control"
+                        rows="5"><?php echo "Copia de {$row->nombre_flipbook} - {$row->descripcion}" ?></textarea>
+                </div>
+            </div>
 
-<?php if ( validation_errors() ):?>
-    <div class="modulo2 width_full">
-        <?= validation_errors('<h4 class="alert_error">', '</h4>') ?>
+            <div class="form-group row">
+                <div class="col-md-8 offset-md-4">
+                    <button class="btn btn-primary btn-block">
+                        Crear
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <?php if ( validation_errors() ):?>
+            <?php echo validation_errors('<div class="alert alert-danger">', '</div>') ?>
+        <?php endif ?>
     </div>
-<?php endif ?>
+</div>

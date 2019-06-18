@@ -1,15 +1,7 @@
 <?php $this->load->view('assets/bootstrap_datepicker'); ?>
 
 <?php
-    
-    $att_fecha = array(
-        'class'  => 'form-control casilla_fecha_inicio bs_datepicker',
-        'value'  => 'valor',
-        'title'   => 'Seleccione la fecha para programar el tema'
-    );
-    
-    $marca_programado = '<i class="fa fa-check text-success"></i>';
-    
+    $marca_programado = '<i class="fa fa-check text-success"></i>';    
 ?>
 
 <script>
@@ -83,17 +75,15 @@
     
     function programado()
     {
-        $('#fila_' + tema_id).addClass('info');
+        $('#fila_' + tema_id).addClass('table-info');
     }
     
     function desprogramado()
     {
-        $('#fila_' + tema_id).removeClass('info');
+        $('#fila_' + tema_id).removeClass('table-info');
         $('#tema_' + tema_id).val('');
     }
 </script>
-
-<?php $this->load->view($vista_submenu); ?>
 
 <?php if ( $grupos->num_rows() > 0 ){ ?>
 
@@ -124,7 +114,7 @@
                         $texto_programado = '';
                         $clase_fila = '';
                         if ( ! is_null($row_evento) ) {
-                            $clase_fila = 'info';
+                            $clase_fila = 'table-info';
                             $texto_programado = '<i class="fa fa-check text-success"></i>';
                         }
 
@@ -134,19 +124,26 @@
                         $att_fecha['value'] = $fecha_programado;
                         $att_fecha['data-tema_id'] = $row_tema->id;
                         $att_fecha['data-num_pagina'] = $row_tema->min_num_pagina;
-
-
                 ?>
-                    <tr class="<?= $clase_fila ?>" id="fila_<?= $row_tema->id ?>">
+                    <tr>
                         <td><?= $row_tema->id ?></td>
                         <td><?= $row_tema->cod_tema ?></td>
                         <td><?= anchor("temas/archivos/$row_tema->id", $row_tema->nombre_tema) ?></td>
                         
-                        <td>
-                            <?= form_input($att_fecha) ?>
+                        <td class="<?= $clase_fila ?>" id="fila_<?= $row_tema->id ?>">
+                            <input
+                                id="tema_<?php echo $row_tema->id ?>"
+                                name="fecha_inicio_<?php echo $row_tema->id ?>"
+                                value="<?php echo $fecha_programado ?>"
+                                data-tema_id="<?php echo $row_tema->id ?>"
+                                data-num_pagina="<?php echo $row_tema->min_num_pagina ?>"
+                                type="text"
+                                title="Seleccione la fecha para programar el tema"
+                                class="form-control casilla_fecha_inicio bs_datepicker"
+                                >
                         </td>
                         <td>
-                            <button class="btn btn-default desprogramar_tema" data-evento_id="<?= $row_evento->id ?>" data-tema_id="<?= $row_tema->id ?>">
+                            <button class="btn btn-light desprogramar_tema" data-evento_id="<?= $row_evento->id ?>" data-tema_id="<?= $row_tema->id ?>">
                                 <i class="fa fa-times"></i>
                             </button>
                         </td>

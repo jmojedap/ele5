@@ -365,7 +365,10 @@ class Eventos extends CI_Controller{
         $datos['num_pagina'] = $this->input->post('num_pagina');   //Página en la que está el tema dentro del flipbook
         
         $evento_id = $this->Evento_model->programar_tema($datos);
-        echo $evento_id;
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output($evento_id);
     }
     
 }

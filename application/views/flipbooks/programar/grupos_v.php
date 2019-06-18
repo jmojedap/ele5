@@ -27,16 +27,24 @@
     });
 </script>
 
-<div class="sep2">
+<div class="mb-2">
     <div class="row">
         <div class="col-md-3">
             <?php if ( $this->session->userdata('srol') == 'interno' ) { ?>
-                <?= form_dropdown('i', $opciones_institucion, $institucion_id, 'id="i" class="form-control chosen-select"') ?>
+                <?php if ( $instituciones->num_rows() > 0 ) { ?>
+                    <?php echo form_dropdown('i', $opciones_institucion, $institucion_id, 'id="i" class="form-control chosen-select"') ?>
+                <?php } else { ?>
+                    <div class="alert alert-info">
+                        <i class="fa fa-info-circle"></i>
+                        Este contenido no ha sido a ninguna institución.
+                    </div>
+                <?php } ?>
+
             <?php } ?>
         </div>
         <div class="col-md-9">
             <div class="btn-group" role="group" aria-label="...">
-                <a class="w3 btn btn-default">Grupo:</a>
+                <a class="btn btn-secondary text-light">Grupo:</a>
                 <?php foreach ($grupos->result() as $row_grupo) : ?>
                     <?php
                         $clase_grupo = 'w3 btn btn-default';

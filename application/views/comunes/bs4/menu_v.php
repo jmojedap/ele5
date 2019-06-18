@@ -24,12 +24,12 @@
 
 <!--Menú pequeño-->
 <div class="d-sm-block d-md-none mb-1">
-    <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#lista-menu-sm" aria-expanded="false" aria-controls="lista-menu-sm">
+    <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#lista-menu" aria-expanded="false" aria-controls="lista-menu">
         </i> &nbsp; <?php echo $arr_menus[$seccion]['texto'] ?>
-        <i class="fa fa-bars float-right"></i>
+        <i class="fa fa-chevron-down float-right"></i>
     </button>
     
-    <ul class="list-group collapse" id="lista-menu-sm" style="margin: 10px 0;">
+    <ul class="list-group collapse" id="lista-menu" style="margin: 10px 0;">
         <?php foreach ($elementos as $elemento) : ?>
             <?php $arr_menu = $arr_menus[$elemento]; ?>
             <a href="<?php echo base_url($arr_menu['link']) ?>" class="list-group-item list-group-item-action <?php echo $clases[$elemento] ?>" <?php echo $arr_menu['atributos'] ?>>

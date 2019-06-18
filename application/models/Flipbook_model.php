@@ -7,8 +7,9 @@ class Flipbook_model extends CI_Model {
 
         $basico['flipbook_id'] = $flipbook_id;
         $basico['row'] = $row;
-        $basico['titulo_pagina'] = $row->nombre_flipbook;
-        $basico['vista_a'] = 'flipbooks/flipbook_v';
+        $basico['head_title'] = $row->nombre_flipbook;
+        $basico['nav_2'] = 'flipbooks/menu_v';
+        $basico['view_description'] = 'flipbooks/flipbook_v';
 
         return $basico;
     }
@@ -1221,11 +1222,12 @@ class Flipbook_model extends CI_Model {
     function aperturas($flipbook_id) {
 
         //Si es usuario institucional, se limita a sus grupos
-        if (in_array($this->session->userdata('rol_id'), array(3, 4, 5))) {
+        if (in_array($this->session->userdata('rol_id'), array(3, 4, 5)))
+        {
             //Identificar grupos del profesor
-            $grupos_profesor_array = $this->App_model->grupos_profesor($this->session->userdata('usuario_id'));
+            $grupos_profesor_array = $this->session->userdata('arr_grupos');
             $grupos_profesor = implode(', ', $grupos_profesor_array);
-            $this->db->where("usuario_grupo.grupo_id IN ({$grupos_profesor})");
+            $this->db->where("grupo_id IN ({$grupos_profesor})");
         }
 
         $this->db->select('evento.id, evento.usuario_id, fecha_inicio, institucion_id');

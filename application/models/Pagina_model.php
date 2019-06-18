@@ -366,6 +366,15 @@ class Pagina_model extends CI_Model{
      */
     function img_pf($row_pf, $formato = 1)
     {
+        return img($this->att_img_pf($row_pf, $formato));
+    }
+
+    /**
+     * Array Atributos imagen página flipbook
+     * 2019-06-18
+     */
+    function att_img_pf($row_pf, $formato = 1)
+    {
         $src_alt = URL_IMG . "app/pf_nd_{$formato}.png";   //Imagen alternativa
         $carpetas = array('', 'pf_mini', 'pf', 'pf_zoom');
         
@@ -376,11 +385,10 @@ class Pagina_model extends CI_Model{
             'alt'   =>  $row_pf->titulo_pagina,
             'src'   =>  $src,
             'class' =>  'pf',
-            'onError' => "this.src='" . $src_alt . "'" //Imagen alternativa
+            'onError' => "this.src='{$src_alt}'" //Imagen alternativa
         );
         
-        return img($att_img);
-        
+        return $att_img;
     }
     
     /**

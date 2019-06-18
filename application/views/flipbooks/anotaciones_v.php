@@ -19,11 +19,11 @@
     });
 </script>
 
-<div class="sep1">
+<div class="mb-2">
     <?= form_dropdown('tema_id', $opciones_temas, $tema_id, 'class="form-control chosen-select" id="campo-temas"') ?>
 </div>
 
-<table class="table table-default bg-blanco">
+<table class="table table-default bg-white">
     <thead>
         <th></th>
         <th width="70%">Anotación</th>

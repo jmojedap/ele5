@@ -38,5 +38,5 @@
         $data_menu['seccion_sm'] = $seccion_sm;
     
     //Cargue vista
-        $this->load->view('comunes/submenu_v', $data_menu);
+        $this->load->view('comunes/bs4/submenu_v', $data_menu);
         $this->load->view('flipbooks/programar/grupos_v');

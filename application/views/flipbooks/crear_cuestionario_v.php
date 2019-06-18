@@ -1,18 +1,7 @@
 <?php $this->load->view('assets/icheck'); ?>
 
 <?php
-
     //Variables para construcción del formulario
-        $att_form = array(
-            'class' =>  'form-inline'
-        );
-
-        $att_submit = array(
-            'id' =>  'boton-submit',
-            'value' =>  'Crear',
-            'class' => 'btn btn-primary'
-        );
-
         $att_check_todos = array(
             'name' => 'check_todos',
             'id'    => 'check_todos',
@@ -24,24 +13,11 @@
             'checked' => FALSE,
             'value' => 1
         );
-        
-        $att_nombre_cuestionario = array(
-            'name' =>   'nombre_cuestionario',
-            'id'    =>  'nombre_cuestionario',
-            'class' =>  'form-control',
-            'placeholder'  =>  'Nombre cuestionario',
-            'value'  =>  'Cuest. ' . date('Ymd'),
-            'required' =>   TRUE,
-            'autofocus' =>   TRUE
-        );
-
 ?>
 
 <script>
-    
 // VARIABLES
 //-----------------------------------------------------------------------------
-
     var cantcb = 0; //Cantidad de temas activos, CheckBox
 
 // DOCUMENT READY
@@ -97,53 +73,64 @@
     }
 </script>
 
-<?= form_open($destino_form, $att_form) ?>
+<form action="<?php echo base_url($destino_form) ?>" accept-charset="utf-8" method="POST" class="form-inline">
 
-    <div class="sep1">
-        <?= form_input($att_nombre_cuestionario) ?>
-        <?= form_submit($att_submit) ?>
+    <div class="mb-2">
+        <input
+            type="text"
+            id="nombre_cuestionario"
+            name="nombre_cuestionario"
+            required
+            class="form-control"
+            placeholder="titulo"
+            title="titulo"
+            value="<?php echo 'Cuestionario ' . date('Ymd') ?>"
+            style="width: 300px;"
+            >
+        <button class="btn btn-primary" id="boton-submit" style="width: 100px;">
+            Crear
+        </button>
     </div>
 
-    <div class="bs-caja-no-padding">
-        <table class="table table-default" cellspacing="0">
-            <thead>
-                <tr class="tr1">
-                    <th width="10px"><?= form_checkbox($att_check_todos) ?></th>
-                    <th width="10px">Evaluado</th>
-                    <th>Tema</th>
-                    <th>Preguntas</th>
+    <table class="table table-default bg-white" cellspacing="0">
+        <thead>
+            <tr class="">
+                <th width="10px"><?= form_checkbox($att_check_todos) ?></th>
+                <th width="10px">Evaluado</th>
+                <th>Tema</th>
+                <th>Preguntas</th>
+                <th width="100px">Cód. tema</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($temas->result() as $row_tema){ ?>
+                <?php
+                    $preguntas = $this->Tema_model->preguntas($row_tema->id);
+                    $clase = '';
+                    if ( $preguntas->num_rows() ) {  $clase = 'table-info'; }
 
-                    <th width="100px">Cód. tema</th>
+                    //Evaluado
+                        $tema_evaluado = $this->Cuestionario_model->tema_evaluado($row_tema->id);
+                        $clase_evaluado = $this->Pcrn->si_cero($tema_evaluado, 'table-danger', 'table-info');
+                        $texto_evaluado = $this->Pcrn->si_cero($tema_evaluado, 'No', 'Sí');
+                        $icono_evaluado = $this->Pcrn->si_cero($tema_evaluado, 'fa-times', 'fa-check');
+
+                    //Checkbox
+                        $att_check['name'] = $row_tema->id;
+                ?>
+                <tr>
+                    <td><?= form_checkbox($att_check) ?></td>
+                    <td class="text-center <?= $clase_evaluado ?>"><i class="fa <?= $icono_evaluado ?>"></i></td>
+                    <td><?= $row_tema->nombre_tema ?></td>
+                    <td class="<?php echo $clase ?>">
+                        <?= $preguntas->num_rows(); ?>
+                    </td>
+
+                    <td><?= $row_tema->cod_tema ?></td>
                 </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($temas->result() as $row_tema){ ?>
-                    <?php
-                        $preguntas = $this->Tema_model->preguntas($row_tema->id);
-                        $clase = 'neutro';
-                        if ( $preguntas->num_rows() ) {  $clase = 'informacion'; }
 
-                        //Evaluado
-                            $tema_evaluado = $this->Cuestionario_model->tema_evaluado($row_tema->id);
-                            $clase_evaluado = $this->Pcrn->si_cero($tema_evaluado, 'danger', 'info');
-                            $texto_evaluado = $this->Pcrn->si_cero($tema_evaluado, 'No', 'Sí');
-                            $icono_evaluado = $this->Pcrn->si_cero($tema_evaluado, 'fa-times', 'fa-check');
+            <?php } //foreach ?>
+        </tbody>
+    </table>      
 
-                        //Checkbox
-                            $att_check['name'] = $row_tema->id;
-                    ?>
-                    <tr>
-                        <td><?= form_checkbox($att_check) ?></td>
-                        <td class="text-center <?= $clase_evaluado ?>"><i class="fa <?= $icono_evaluado ?>"></i></td>
-                        <td><?= $row_tema->nombre_tema ?></td>
-                        <td><span class="w1 etiqueta <?= $clase ?>"><?= $preguntas->num_rows(); ?></span></td>
-
-                        <td><?= $row_tema->cod_tema ?></td>
-                    </tr>
-
-                <?php } //foreach ?>
-            </tbody>
-        </table>      
-    </div>
-
-<?= form_close() ?>
+</form>

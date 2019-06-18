@@ -24,16 +24,6 @@
             'checked' => FALSE,
             'value' => 1
         );
-        
-        $att_nombre_cuestionario = array(
-            'name' =>   'nombre_cuestionario',
-            'id'    =>  'nombre_cuestionario',
-            'class' =>  'form-control',
-            'placeholder'  =>  'Nombre cuestionario',
-            'value'  =>  'Cuest. ' . date('Ymd'),
-            'required' =>   TRUE,
-            'autofocus' =>   TRUE
-        );
 
     //Checkbox temas relacionados
         $att_prv_todos = array(
@@ -71,17 +61,13 @@
 
 ?>
 
-
-<script>
-    
+<script>    
 // VARIABLES
 //-----------------------------------------------------------------------------
-
     var cantcb = 0;
 
 // DOCUMENT READY
 //-----------------------------------------------------------------------------
-    
     $(document).ready(function(){
         
         $('#boton-submit').hide();
@@ -166,87 +152,97 @@
     
 </script>
 
-<?= form_open($destino_form, $att_form) ?>
+<form action="<?php echo base_url($destino_form) ?>" accept-charset="utf-8" method="POST" class="form-inline">
 
-    <div class="sep1">
-        <?= form_input($att_nombre_cuestionario) ?>
-        <?= form_submit($att_submit) ?>
+    <div class="mb-2">
+        <input
+            type="text"
+            id="nombre_cuestionario"
+            name="nombre_cuestionario"
+            required
+            class="form-control"
+            placeholder="titulo"
+            title="titulo"
+            value="<?php echo 'Cuestionario ' . date('Ymd') ?>"
+            style="width: 300px;"
+            >
+        <button class="btn btn-primary" id="boton-submit" style="width: 100px;">
+            Crear
+        </button>
     </div>
 
-    <div class="bs-caja-no-padding">
-        <table class="table table-default" cellspacing="0">
-            <thead>
-                <tr class="tr1">
-                    <th width="10px"><?= form_checkbox($att_check_todos) ?></th>
-                    <th width="10px">Evaluado</th>
-                    <th>Tema</th>
-                    <th>
-                        <?= form_checkbox($att_prv_todos) ?>
-                        Saberes previos
-                    </th>
-                    <th>
-                        <?= form_checkbox($att_cpt_todos) ?>
-                        Complementa
-                    </th>
-                    <th>
-                        <?= form_checkbox($att_prf_todos) ?>
-                        Profundiza
-                    </th>
-                    <th>Preguntas</th>
+    <table class="table table-default bg-white" cellspacing="0">
+        <thead>
+            <tr>
+                <th width="10px"><?= form_checkbox($att_check_todos) ?></th>
+                <th width="10px">Evaluado</th>
+                <th>Tema</th>
+                <th>
+                    <?= form_checkbox($att_prv_todos) ?>
+                    Saberes previos
+                </th>
+                <th>
+                    <?= form_checkbox($att_cpt_todos) ?>
+                    Complementa
+                </th>
+                <th>
+                    <?= form_checkbox($att_prf_todos) ?>
+                    Profundiza
+                </th>
+                <th>Preguntas</th>
 
-                    <th width="100px">Cód. tema</th>
+                <th width="100px">Cód. tema</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($temas->result() as $row_tema){ ?>
+                <?php
+                    $preguntas = $this->Tema_model->preguntas($row_tema->id);
+                    $clase = 'neutro';
+                    if ( $preguntas->num_rows() ) {  $clase = 'informacion'; }
+
+                    //Evaluado
+                        $tema_evaluado = $this->Cuestionario_model->tema_evaluado($row_tema->id);
+                        $clase_evaluado = $this->Pcrn->si_cero($tema_evaluado, 'table-danger', 'table-info');
+                        $texto_evaluado = $this->Pcrn->si_cero($tema_evaluado, 'No', 'Sí');
+                        $icono_evaluado = $this->Pcrn->si_cero($tema_evaluado, 'fa-times', 'fa-check');
+
+                    //Checkbox
+                        $att_check['name'] = $row_tema->id;
+                        
+                    //Checkbox relacionadas
+                        $att_prv['name'] = 'prv_' . $row_tema->id;
+                        $att_prv['value'] = $this->Tema_model->str_relacionados($row_tema->id, 1);
+                        
+                        $att_cpt['name'] = 'cpt_' . $row_tema->id;
+                        $att_cpt['value'] = $this->Tema_model->str_relacionados($row_tema->id, 2);
+                        
+                        $att_prf['name'] = 'prf_' . $row_tema->id;
+                        $att_prf['value'] = $this->Tema_model->str_relacionados($row_tema->id, 3);
+                ?>
+                <tr>
+                    <td><?= form_checkbox($att_check) ?></td>
+                    <td class="text-center <?= $clase_evaluado ?>"><i class="fa <?= $icono_evaluado ?>"></i></td>
+                    <td><?= $row_tema->nombre_tema ?></td>
+                    <td>
+                        <?= form_checkbox($att_prv) ?>
+                    </td>
+                    <td>
+                        <?= form_checkbox($att_cpt) ?>
+                    </td>
+                    <td>
+                        <?= form_checkbox($att_prf) ?>
+                    </td>
+                    <td>
+                        <span class="w1 etiqueta <?= $clase ?>"><?= $preguntas->num_rows(); ?></span>
+                    </td>
+                    <td>
+                        <?= $row_tema->cod_tema ?>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($temas->result() as $row_tema){ ?>
-                    <?php
-                        $preguntas = $this->Tema_model->preguntas($row_tema->id);
-                        $clase = 'neutro';
-                        if ( $preguntas->num_rows() ) {  $clase = 'informacion'; }
 
-                        //Evaluado
-                            $tema_evaluado = $this->Cuestionario_model->tema_evaluado($row_tema->id);
-                            $clase_evaluado = $this->Pcrn->si_cero($tema_evaluado, 'danger', 'info');
-                            $texto_evaluado = $this->Pcrn->si_cero($tema_evaluado, 'No', 'Sí');
-                            $icono_evaluado = $this->Pcrn->si_cero($tema_evaluado, 'fa-times', 'fa-check');
+            <?php } //foreach ?>
+        </tbody>
+    </table>      
 
-                        //Checkbox
-                            $att_check['name'] = $row_tema->id;
-                            
-                        //Checkbox relacionadas
-                            $att_prv['name'] = 'prv_' . $row_tema->id;
-                            $att_prv['value'] = $this->Tema_model->str_relacionados($row_tema->id, 1);
-                            
-                            $att_cpt['name'] = 'cpt_' . $row_tema->id;
-                            $att_cpt['value'] = $this->Tema_model->str_relacionados($row_tema->id, 2);
-                            
-                            $att_prf['name'] = 'prf_' . $row_tema->id;
-                            $att_prf['value'] = $this->Tema_model->str_relacionados($row_tema->id, 3);
-                    ?>
-                    <tr>
-                        <td><?= form_checkbox($att_check) ?></td>
-                        <td class="text-center <?= $clase_evaluado ?>"><i class="fa <?= $icono_evaluado ?>"></i></td>
-                        <td><?= $row_tema->nombre_tema ?></td>
-                        <td>
-                            <?= form_checkbox($att_prv) ?>
-                        </td>
-                        <td>
-                            <?= form_checkbox($att_cpt) ?>
-                        </td>
-                        <td>
-                            <?= form_checkbox($att_prf) ?>
-                        </td>
-                        <td>
-                            <span class="w1 etiqueta <?= $clase ?>"><?= $preguntas->num_rows(); ?></span>
-                        </td>
-                        <td>
-                            <?= $row_tema->cod_tema ?>
-                        </td>
-                    </tr>
-
-                <?php } //foreach ?>
-            </tbody>
-        </table>      
-    </div>
-
-<?= form_close() ?>
+</form>

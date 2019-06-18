@@ -104,9 +104,9 @@ class Flipbooks extends CI_Controller{
                 $data['titulo_pagina'] = 'Plataforma Enlace';
                 $data['mensaje'] = "El número de registros es de {$resultados_total->num_rows()}. El máximo permitido es de " . MAX_REG_EXPORT . " registros. Puede filtrar los datos por algún criterio para poder exportarlos.";
                 $data['link_volver'] = "flipbooks/explorar/?{$busqueda_str}";
-                $data['vista_a'] = 'app/mensaje_v';
+                $data['view_a'] = 'app/mensaje_v';
                 
-                $this->load->view(PTL_ADMIN, $data);
+                $this->load->view(TPL_ADMIN, $data);
             }
             
     }
@@ -162,9 +162,9 @@ class Flipbooks extends CI_Controller{
             
         //Solicitar vista
             $data['subtitulo_pagina'] = 'Editar';
-            $data['vista_b'] = 'comunes/gc_v';
+            $data['view_a'] = 'comunes/gc_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN, $output);
     }
     
 //IMPORTAR
@@ -233,10 +233,10 @@ class Flipbooks extends CI_Controller{
         //Cargar vista
             $data['titulo_pagina'] = 'Contenidos';
             $data['subtitulo_pagina'] = 'Resultado asignación';
-            $data['vista_a'] = 'comunes/resultado_importacion_v';
+            $data['view_a'] = 'comunes/resultado_importacion_v';
             $data['vista_menu'] = 'flipbooks/explorar_menu_v';
             $data['ayuda_id'] = 127;
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
 // SECCIONES
@@ -251,11 +251,11 @@ class Flipbooks extends CI_Controller{
         //Variables data
             $data['seccion'] = 'Temas';
             $data['temas'] = $this->Flipbook_model->temas($flipbook_id);
-            $data['subtitulo_pagina'] = "{$data['temas']->num_rows()} temas";
+            $data['head_subtitle'] = $data['temas']->num_rows() . ' temas';
         
         //Solicitar vista
-            $data['vista_b'] = 'flipbooks/temas_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['view_a'] = 'flipbooks/temas_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
 // CREACIÓN DE CUESTIONARIOS DESDE FLIPBOOK
@@ -278,7 +278,7 @@ class Flipbooks extends CI_Controller{
         //Variables data
             $data['destino_form'] = "flipbooks/crear_cuestionario_e/{$flipbook_id}";
             $data['temas'] = $this->Flipbook_model->temas($flipbook_id);
-            $data['subtitulo_pagina'] = "{$data['temas']->num_rows()} temas";
+            $data['head_subtitle'] = "{$data['temas']->num_rows()} temas";
             
         //Vistas
             $arr_vistas = array(
@@ -288,8 +288,8 @@ class Flipbooks extends CI_Controller{
             );
         
         //Solicitar vista
-            $data['vista_b'] = $arr_vistas[$data['row']->tipo_flipbook_id];
-            $this->load->view(PTL_ADMIN, $data);
+            $data['view_a'] = $arr_vistas[$data['row']->tipo_flipbook_id];
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -348,8 +348,8 @@ class Flipbooks extends CI_Controller{
         
         //Solicitar vista
             //$data['cargado'] = FALSE;
-            $data['vista_b'] = 'flipbooks/paginas_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['view_a'] = 'flipbooks/paginas_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -376,8 +376,8 @@ class Flipbooks extends CI_Controller{
             $data['tema_id'] = $tema_id;
         
         //Solicitar vista
-            $data['vista_b'] = 'flipbooks/anotaciones_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['view_a'] = 'flipbooks/anotaciones_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     
@@ -393,8 +393,8 @@ class Flipbooks extends CI_Controller{
             $data['aperturas'] = $this->Flipbook_model->aperturas($flipbook_id);
         
         //Solicitar vista
-            $data['vista_b'] = 'flipbooks/aperturas_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['view_a'] = 'flipbooks/aperturas_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     function asignados($flipbook_id, $institucion_id = NULL)
@@ -419,8 +419,8 @@ class Flipbooks extends CI_Controller{
             $data['asignados'] = $this->Flipbook_model->asignados($flipbook_id, $institucion_id);
         
         //Solicitar vista
-            $data['vista_b'] = 'flipbooks/asignados_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['view_a'] = 'flipbooks/asignados_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -438,8 +438,8 @@ class Flipbooks extends CI_Controller{
         
         //Solicitar vista
             $data['subtitulo_pagina'] = 'Crecar copia';
-            $data['vista_b'] = 'flipbooks/copiar_flipbook_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['view_a'] = 'flipbooks/copiar_flipbook_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -498,7 +498,8 @@ class Flipbooks extends CI_Controller{
         //Institución
             $instituciones = $this->Flipbook_model->instituciones($flipbook_id);
             $institucion_id = $this->session->userdata('institucion_id');
-            if ( $this->session->userdata('srol') == 'interno' ) {
+            if ( $this->session->userdata('srol') == 'interno' )
+            {
                 $institucion_id = $this->input->get('i');
                 if ( $institucion_id == NULL && $instituciones->num_rows() > 0 ) { $institucion_id = $instituciones->row()->institucion_id; }
             }
@@ -516,10 +517,10 @@ class Flipbooks extends CI_Controller{
             $data['temas'] = $this->Flipbook_model->temas($flipbook_id);
         
         //Solicitar vista
-            $data['subtitulo_pagina'] = "{$data['temas']->num_rows()} temas";
-            $data['vista_b'] = 'flipbooks/programar/programar_temas_v';
-            $data['vista_submenu'] = 'flipbooks/programar/submenu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = "{$data['temas']->num_rows()} temas";
+            $data['view_a'] = 'flipbooks/programar/programar_temas_v';
+            $data['nav_3'] = 'flipbooks/programar/submenu_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     function importar_programacion($flipbook_id)
@@ -562,13 +563,12 @@ class Flipbooks extends CI_Controller{
             $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
             
         //Variables generales
-            //$data['titulo_pagina'] = 'Temas';
-            $data['subtitulo_pagina'] = 'Importar programación de temas';
-            $data['vista_b'] = 'comunes/importar_v';
-            $data['vista_submenu'] = 'flipbooks/programar/submenu_v';
+            $data['head_subtitle'] = 'Importar programación de temas';
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_3'] = 'flipbooks/programar/submenu_v';
             $data['ayuda_id'] = 108;
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -613,9 +613,9 @@ class Flipbooks extends CI_Controller{
         
         //Cargar vista
             $data['subtitulo_pagina'] = 'Resultado importación de programación';
-            $data['vista_b'] = 'comunes/resultado_importacion_v';
+            $data['view_a'] = 'comunes/resultado_importacion_v';
             $data['vista_submenu'] = 'flipbooks/programar/submenu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
 // LECTURA
@@ -722,9 +722,9 @@ class Flipbooks extends CI_Controller{
             $data['quices'] = $this->Flipbook_model->quices_total($flipbook_id);
         
         //Cargar vista
-            $data['vista_b'] = 'flipbooks/subquices_v';
+            $data['view_a'] = 'flipbooks/subquices_v';
             
-            $this->load->view(PTL_ADMIN, $data);       
+            $this->load->view(TPL_ADMIN, $data);       
     }
     
     function animacion($recurso_id)
@@ -995,8 +995,8 @@ class Flipbooks extends CI_Controller{
         //Solicitar vista
         $data['cargado'] = FALSE;
         $data['titulo_pagina'] = "Estudiantes | " . $data['titulo_pagina'];
-        $data['vista_b'] = 'flipbooks/resultado_carga_v';
-        $this->load->view(PTL_ADMIN, $data);
+        $data['view_a'] = 'flipbooks/resultado_carga_v';
+        $this->load->view(TPL_ADMIN, $data);
 
     }
     
@@ -1171,9 +1171,9 @@ class Flipbooks extends CI_Controller{
         //Cargando vista
             $data['titulo_pagina'] = 'Reenumerar números de páginas';
             $data['mensaje'] = "Se actualizaron {$registros_modificados} registros";
-            $data['vista_a'] = "app/mensaje_v";
+            $data['view_a'] = "app/mensaje_v";
 
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
         
     }
     
@@ -1202,8 +1202,8 @@ class Flipbooks extends CI_Controller{
             $data['titulo_pagina'] = 'Primeras páginas';
             $data['mensaje'] = "Se actualizaron {$registros_modificados} registros para el campo primera_pagina_id";
             $data['link_volver'] = 'develop/procesos';
-            $data['vista_a'] = "app/mensaje_v";
+            $data['view_a'] = "app/mensaje_v";
 
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }   
 }

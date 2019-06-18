@@ -138,12 +138,14 @@
         $opciones_menus['flipbooks/asignar_taller_e'] = array('recursos', 'flipbooks', 'contenidos');
         $opciones_menus['flipbooks/nuevo'] = array('recursos', 'flipbooks', 'contenidos');
         $opciones_menus['flipbooks/temas'] = array('recursos', 'flipbooks', 'flipbooks');
+        $opciones_menus['flipbooks/programar_temas'] = array('recursos', 'flipbooks', 'flipbooks');
+        $opciones_menus['flipbooks/crear_cuestionario'] = array('recursos', 'flipbooks', 'flipbooks');
         $opciones_menus['flipbooks/nuevo_cuestionario'] = array('recursos', 'flipbooks', 'flipbooks');
         $opciones_menus['flipbooks/paginas'] = array('recursos', 'flipbooks', 'flipbooks');
         $opciones_menus['flipbooks/aperturas'] = array('recursos', 'flipbooks', 'flipbooks');
         $opciones_menus['flipbooks/asignados'] = array('recursos', 'flipbooks', 'flipbooks');
         $opciones_menus['flipbooks/anotaciones'] = array('recursos', 'flipbooks', 'flipbooks');
-        $opciones_menus['flipbooks/copiar_flipbook'] = array('recursos', 'flipbooks', 'flipbooks');
+        $opciones_menus['flipbooks/copiar'] = array('recursos', 'flipbooks', 'flipbooks');
         $opciones_menus['flipbooks/editar'] = array('recursos', 'flipbooks', 'flipbooks');
         
         $opciones_menus['posts/ap_explorar'] = array('recursos', 'contenidos_ap', 'contenidos ap');

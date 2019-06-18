@@ -78,9 +78,8 @@
     $m_current['submenu'] = $current_menu[1];
     $m_current['submenu_show'] = $current_menu[2];
         
-    $clase_m[$m_current['menu']] = 'current';    //Clase menú
-    $clase_sm[$m_current['submenu']] = 'current';    //Clase submenú
-
+    $clase_m[$m_current['menu']] = 'current';       //Clase menú
+    $clase_sm[$m_current['submenu']] = 'current';   //Clase submenú
 ?>
 
 
