@@ -501,5 +501,66 @@ class Develop_model extends CI_Model{
         return $estado_tabla;
         
     }
+
+// CRON JOBS: PROCESOS AUTOMÁTICOS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Ejecución de un proceso automático de la herramienta.
+     * 2019-06-26
+     */
+    function cron($cron_code)
+    {
+        //Valores por defecto
+            $data = array('status' => 0, 'message' => 'Cron NO ejecutado', 'event_id' => 0);
+            $arr_row = null;
+            $event_id = 0;
+
+        //Ejecutar proceso
+        if ( $cron_code == 12537 )
+        {
+            $date = date('Y-m-d');
+            $condition = "tipo_id = 210 AND referente_id = {$cron_code} AND fecha_inicio = '{$date}'";
+            $row_event = $this->Pcrn->registro('evento', $condition);
+
+            if ( is_null($row_event) )  //No existe, se ejecuta
+            {
+                $mes = date("Y-m",strtotime(date('Y-m-d')."- 1 days"));
+                $arr_row['nombre_evento'] = 'actualizar_dw_up/' . $mes;
+                $arr_row['referente_id'] = $cron_code;
+                $this->load->model('Cuestionario_model');
+                $cron_data = $this->Cuestionario_model->actualizar_dw_up($mes);
+            }
+        }
+
+        //Registro del proceso en la tabla evento
+            if ( ! is_null($arr_row) )
+            {
+                $event_id = $this->save_cron_event($arr_row);
+                $data = array('status' => 1, 'message' => 'Cron ejecutado: ' . $event_id, 'event_id' => $event_id);
+            }
+
+        return $data;
+    }
+
+    /**
+     * Guarda registro en la tabla evento, sobre la ejecución de un proceso cron job
+     * 2019-06-26
+     */
+    function save_cron_event($arr_row)
+    {
+        $arr_row['tipo_id'] = 210;     //Ejecución de cron job
+        $arr_row['fecha_inicio'] = date('Y-m-d');
+        $arr_row['hora_inicio'] = date('H:i:s');
+        $arr_row['fecha_fin'] = date('Y-m-d');
+        $arr_row['hora_fin'] = date('H:i:s');
+        $arr_row['usuario_id'] = 0;
+        $arr_row['creado'] = date('Y-m-d H:i:s');
+        $arr_row['c_usuario_id'] = 0;
+        
+        $this->db->insert('evento', $arr_row);
+
+        return $this->db->insert_id();
+    }
     
 }

@@ -78,26 +78,28 @@ class App extends CI_Controller{
             $userlogin = $this->input->post('username');
             $password = $this->input->post('password');
             
-            $resultado = $this->Login_model->validar_login($userlogin, $password);
+            $data = $this->Login_model->validar_login($userlogin, $password);
             
-            if ( $resultado['ejecutado'] )
+            if ( $data['status'] )
             {
                 $this->Login_model->crear_sesion($userlogin, TRUE);
 
                 //Verificar si tiene contraseña por defecto
                 $default_password = $this->App_model->valor_opcion(10);
-                $resultado['tiene_dpw'] = 0;
+                $data['tiene_dpw'] = 0;
                 if ( $password == $default_password  )
                 {
-                    $resultado['tiene_dpw'] = 1;
+                    $data['tiene_dpw'] = 1;
                 }
-            }
 
+                // ** EJECUCIÓN DE CRON JOBS 2019-06-19 **
+                $data['cron_id'] = $this->App_model->cron_jobs();
+            }
             
         //Respuesta
             $this->output
             ->set_content_type('application/json')
-            ->set_output(json_encode($resultado));  
+            ->set_output(json_encode($data));  
     }
 
     function inicio()
@@ -178,15 +180,6 @@ class App extends CI_Controller{
     
 //---------------------------------------------------------------------------------------------------
 //FUNCIONES DE PRUEBAS
-    
-    function pruebas()
-    {
-        require 'vendor/autoload.php';
-
-        $mpdf = new \Mpdf\Mpdf();
-        $mpdf->WriteHTML('<h1>Hello world!</h1>');
-        $mpdf->Output();
-    }
 
     function demo($page = 'biblioteca')
     {

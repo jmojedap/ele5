@@ -11,29 +11,25 @@ class Login_model extends CI_Model{
      */
     function validar_login($userlogin, $password)
     {
-        $resultado['ejecutado'] = 0;
+        $resultado['status'] = 0;
         $resultado['mensajes'] = array();
         
         $condiciones = 0;   //Valor inicial
         
-        //Validación de password (Condición 1)
+        //Condición 1: Validación de password
             $validar_password = $this->validar_password($userlogin, $password);
             $resultado['mensajes'][] = $validar_password['mensaje'];
 
             if ( $validar_password['ejecutado'] ) { $condiciones++; }
             
-        //Verificar que el usuario esté activo (Condición 2)
+        //Condición 2: Verificar que el usuario esté activo
             $estado_usuario = $this->estado_usuario($userlogin);
             if ( $estado_usuario['estado'] != 1 ) { $resultado['mensajes'][] = $estado_usuario['mensaje']; }
-            
             
             if ( $estado_usuario['estado'] == 1 ) { $condiciones++; }   //Usuario activo
             
         //Se valida el login si se cumplen las condiciones
-        if ( $condiciones == 2 ) 
-        {
-            $resultado['ejecutado'] = 1;
-        }
+        if ( $condiciones == 2 ) { $resultado['status'] = 1; }
             
         return $resultado;
     }

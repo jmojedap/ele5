@@ -51,6 +51,26 @@ class App_model extends CI_Model {
             $this->load->view($vista, $data);
         }
     }
+
+    /**
+     * Ejecución de procesos automáticos al inició de sesión en un rango de horas
+     * determinado: antes de las 5:59am.
+     * 2019-06-26
+     */
+    function cron_jobs()
+    {
+        $cron_id = 0;
+
+        //Si la hora (G) es menor o igual a las 5 (am)
+        if ( date('G') <= 12 )
+        {
+            $this->load->model('Develop_model');
+            $data_cron = $this->Develop_model->cron(12537);
+            if ( $data_cron['status'] ) { $cron_id = $data_cron['event_id']; }
+        }
+
+        return $cron_id;
+    }
     
     function menu_current($controlador, $funcion)
     {
@@ -1419,51 +1439,4 @@ class App_model extends CI_Model {
 
         return $style;
     }
-    
-    //DESACTIVADA 2018-11-14
-    function z_opciones_ref($condicion, $campo, $texto_vacio = 'Vacío')
-    {
-
-        $this->db->select('id, CONCAT("0", (id)) AS id_str, ' . $campo);
-        $this->db->where($condicion);
-        $this->db->order_by('id', 'ASC');
-        $query = $this->db->get('sis_ref_byte');
-
-        //Valor del índice por defecto
-        $campo_indice = "id_str";
-
-        $campo_valor = $campo;
-
-        /* Primero se crea el elemento para valores vacíos, cuando el campo no tiene valor
-         * Luego se mezcla con el array con las opciones
-         */
-
-        $opciones_vacio = array("" => "[ {$texto_vacio} ]");
-        $opciones = array_merge($opciones_vacio, $this->Pcrn->query_to_array($query, $campo_valor, $campo_indice));
-
-        return $opciones;
-    }
-    
-    /**
-     * Devuelve el valor de la tabla de referencias
-     * sis_ref_byte, para un campo determinado
-     * DESACTIVADA 2018-11-14
-     * 
-     * @param type $ref_id
-     * @param type $nombre_campo
-     * @return string
-     */
-    function z_nombre_ref($ref_id, $nombre_campo)
-    {
-
-        $nombre_ref = 'ND';
-        if (!is_null($ref_id))
-        {
-            $nombre_ref = $this->Pcrn->campo('sis_ref_byte', "id = {$ref_id}", $nombre_campo);
-            if (empty($nombre_ref)) { $nombre_ref = 'ND'; }
-        }
-
-        return $nombre_ref;
-    }
-
 }

@@ -52,6 +52,7 @@ class Acceso {
         $funciones_publicas[] = 'app/logout';
         
         $funciones_publicas[] = 'develop/sl';
+        $funciones_publicas[] = 'develop/cron';
         
         $funciones_publicas[] = 'usuarios/registrado';
         $funciones_publicas[] = 'usuarios/activar';

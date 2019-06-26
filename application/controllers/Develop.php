@@ -556,7 +556,24 @@ class Develop extends CI_Controller {
         }
         
         echo 'Fin';
-        
     }
-        
+    
+    /**
+     * Ejecución de un proceso automático y recurrente de la aplicación
+     * Actualizaciones y similares
+     * 2019-06-26
+     */
+    function cron($cron_code = NULL)
+    {
+        $data = array('status' => 0);
+
+        if ( ! is_null($cron_code) )
+        {
+            $data = $this->Develop_model->cron($cron_code);
+        }
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
+    }
 }
