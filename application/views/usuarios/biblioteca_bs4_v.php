@@ -35,10 +35,8 @@
 
 <link rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/biblioteca.css">
 
-<?php $this->load->view('usuarios/biblioteca_menu_v'); ?>
-
 <div style="width: 100%;">
-    <div style="margin: 0 auto; padding-top: 40px; width: 786px; height: 1017px; background:url(<?php echo URL_IMG ?>app/bookshelf.png) no-repeat;">
+    <div class="library" style="background:url(<?php echo URL_IMG ?>app/bookshelf.png) no-repeat;">
 
         <h1 class="estante" style="background-color: #DD5044">Contenidos</h1>
 
@@ -93,7 +91,6 @@
                         </a>
                     </div>
                 <?php endforeach ?>
-
             </div>
         </div>
     </div>

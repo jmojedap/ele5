@@ -116,9 +116,7 @@ class Eventos extends CI_Controller{
     
     function calendario()
     {
-        if ($this->input->get('profiler'))         {
-            $this->output->enable_profiler(TRUE);
-        }
+        if ($this->input->get('profiler')){ $this->output->enable_profiler(TRUE); }
         
         $this->load->model('Usuario_model');
         $this->load->model('Busqueda_model');
@@ -135,7 +133,7 @@ class Eventos extends CI_Controller{
             $eventos[3] = $this->Evento_model->evs_quices($busqueda);               //Programación de quices
             $eventos[4] = $this->Evento_model->evs_links($busqueda);                //Programación de links
             //$eventos[22] = $this->Evento_model->evs_cuestionarios($busqueda);       //Asignación de cuestionarios
-            $vista_a = 'eventos/calendario/calendario_v';
+            $view_a = 'eventos/calendario/calendario_v';
         } else {
             //Los demás usuarios
             $tipos_evento = '2,4,22';
@@ -143,7 +141,7 @@ class Eventos extends CI_Controller{
             $eventos[2] = $this->Evento_model->evs_temas($busqueda);                 //Programación de temas
             $eventos[4] = $this->Evento_model->evs_links($busqueda);                 //Programación de links
             $eventos[22] = $this->Evento_model->evs_cuestionarios_prf($busqueda);     //Asignación de cuestionarios
-            $vista_a = 'eventos/calendario/calendario_prf_v';
+            $view_a = 'eventos/calendario/calendario_prf_v';
         }
         
         $data['eventos'] = $eventos;
@@ -158,8 +156,12 @@ class Eventos extends CI_Controller{
             $this->output->enable_profiler(TRUE);
         }
         
+        /*$data['head_title'] = 'Programador';
+        $data['view_a'] = $view_a;
+        $data['nav_2'] = 'usuarios/biblioteca_menu_v';*/
+
         $data['titulo_pagina'] = 'Programador';
-        $data['vista_a'] = $vista_a;
+        $data['vista_a'] = $view_a;
         $this->load->view(PTL_ADMIN, $data);
     }
     

@@ -1,3 +1,13 @@
+.library{
+    margin: 0 auto;
+    padding-top: 40px;
+    width: 786px;
+    height: 1017px;
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.35);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.35);
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.35);
+}
+
 h1.estante{
     font-size: 13px;
     color: #FFF;
@@ -18,14 +28,20 @@ h1.estante{
     padding: 1px;
     border: 1px solid #EEE;
     text-align: center;
-    margin-right: 15px;
-    margin-left: 15px;
+    margin-right: 10px;
+    margin-left: 10px;
     width: 106px;
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.35);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.35);
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.35);
 }
 
 .flipbook_container:hover{
-    background: #DD4F43;
-    border: 1px solid #DD4F43;
+    background: #ffeb3b;
+    border: 1px solid #ffeb3b;
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.55);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.55);
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.55);
 }
 
 

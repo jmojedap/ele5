@@ -6,7 +6,7 @@
         'id'     => 'campo_evento_id',
         'name'   => 'evento_id',
         'required'   => TRUE,
-        'class'  => 'hidden',
+        'class'  => 'd-none',
         'value'  => 0
     );
 
@@ -30,11 +30,6 @@
         'required' => TRUE
     );
     
-    $att_submit = array(
-        'class' =>  'btn btn-primary',
-        'value' =>  'Guardar'
-    );
-    
     //Selección de grupos
         $str_grupos = '0';
         $arr_grupos = $this->session->userdata('arr_grupos');
@@ -48,8 +43,6 @@
     //Get para link print
         $get_print = $this->Pcrn->get_str();
 ?>
-
-
 
 <script>
     
@@ -76,6 +69,7 @@
         });
 
         $('#calendar').fullCalendar({
+            themeSystem: 'bootstrap4',
             header: {
                 left: 'prev,next today',
                 center: 'title',
@@ -151,8 +145,8 @@
                 $('#campo_url').val('');
                 $('#campo_grupo_id').val('');
                 $('#campo_fecha_inicio').val(date.format());
-                $('#eliminar_link').addClass('hidden');
-                $('.evento_link').addClass('hidden');
+                $('#eliminar_link').addClass('d-none');
+                $('.evento_link').addClass('d-none');
                 
             }
         });
@@ -219,32 +213,32 @@
 
 </script>
 
-<?php $this->load->view('usuarios/biblioteca_menu_bs3_v'); ?>
-
 <div class="row">
     <div class="col-md-3">
-        <div class="sep1">
+        <div class="mb-2">
             <?php $this->load->view('eventos/filtro_grupos_v'); ?>
         </div>
-        <div class="sep2">
+        <div class="mb-2">
             <?php $this->load->view('eventos/filtro_areas_v'); ?>
         </div>
-        <div class="sep2">
+        <div class="mb-2">
             <?php $this->load->view('eventos/filtro_tipos_v'); ?>
         </div>
         
-        <div class="sep2">
-            <?= anchor("eventos/imprimir_calendario/?{$get_print}", '<i class="fa fa-print"></i> Imprimir', 'id="boton_print" class="btn btn-info btn-block" title="" target="_blank"') ?>
+        <div class="mb-2">
+            <a href="<?php echo base_url("eventos/imprimir_calendario/?{$get_print}") ?>" class="btn btn-info btn-block" id="boton_print" target="_blank">
+                <i class="fa fa-print"></i> Imprimir
+            </a>
         </div>
         
         <?= form_open("eventos/crear_ev_link", $att_form) ?>
             <?= form_input($att_evento_id) ?>
             
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="card card-default">
+                <div class="card-header">
                     Asignar link a una fecha
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     <p>Haga clic en la fecha donde programará el link</p>
                     <div class="form-group">
                         <label for="url">Fecha</label>
@@ -259,7 +253,9 @@
                         <?= form_dropdown('grupo_id', $opciones_grupo, '', 'id="campo_grupo_id" class="form-control" required title="Elija el grupo al cual le asigna el link"') ?>
                     </div>
                     
-                    <?= form_submit($att_submit) ?>
+                    <button class="btn btn-primary" type="submit">
+                        Guardar
+                    </button>
                     
                     <div id="eliminar_link" class="btn btn-warning hidden">
                         <i class="fa fa-trash"></i>
@@ -267,7 +263,7 @@
                     
                     <?php foreach ($eventos[4]->result() as $row_evento) : ?>
                         <a id="link_<?= $row_evento->id ?>" href="<?= $row_evento->url ?>" target="_blank" class="evento_link hidden btn btn-info" data-url="<?= $row_evento->url ?>" data-fecha_inicio="<?= $row_evento->fecha_inicio ?>" data-grupo_id="0<?= $row_evento->grupo_id ?>" title="Abrir el link">
-                            <i class="fa fa-external-link"></i>
+                            <i class="fa fa-external-link-alt"></i>
                         </a>
                     <?php endforeach; ?>
                     
@@ -277,8 +273,8 @@
 
     </div>
     <div class="col-md-9">
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card card-default">
+            <div class="card-body">
                 <div id='calendar'></div>
             </div>
         </div>

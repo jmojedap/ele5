@@ -94,21 +94,19 @@
 
 </script>
 
-<?php $this->load->view('usuarios/biblioteca_menu_bs3_v'); ?>
-
 <div class="row">
-    <div class="col-md-2">
-        <div class="sep1">
+    <div class="col-md-3">
+        <div class="mb-2">
             <?php $this->load->view('eventos/filtro_areas_v'); ?>
         </div>
         
-        <div class="sep1">
+        <div class="mb-2">
             <?php $this->load->view('eventos/filtro_tipos_v'); ?>
         </div>
     </div>
-    <div class="col-md-10">
-        <div class="panel panel-default">
-            <div class="panel-body">
+    <div class="col-md-9">
+        <div class="card">
+            <div class="card-body">
                 <div id='calendar'></div>
             </div>
         </div>

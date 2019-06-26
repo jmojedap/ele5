@@ -839,18 +839,19 @@ class Usuarios extends CI_Controller{
         //Contenidos Acompañamiento Pedagógico
             //$data['contenidos_ap'] = $this->Usuario_model->contenidos_ap();
             
-        //$vista_a = 'usuarios/biblioteca_v5_v';
-        $vista_a = 'usuarios/biblioteca_v';
+        $view_a = 'usuarios/biblioteca_bs4_v';
+        //$vista_a = 'usuarios/biblioteca_v';
         if ( $this->session->userdata('rol_id') != 6 )
         {
-            $vista_a = 'usuarios/biblioteca_profesor_v';
+            $view_a = 'usuarios/biblioteca_profesor_v';
         }
         
         //Array data
-        $data['titulo_pagina'] = 'Biblioteca virtual';
-        $data['vista_a'] = $vista_a;
+        $data['head_title'] = 'Biblioteca virtual';
+        $data['view_a'] = $view_a;
+        $data['nav_2'] = 'usuarios/biblioteca_menu_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     

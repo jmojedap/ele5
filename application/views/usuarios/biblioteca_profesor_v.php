@@ -10,7 +10,7 @@
     
         $img_flipbook_general = $url_resources . 'flipbook_general.png';
 
-        $att_flipbooks['ancho'] = 170 * count($contenidos);
+        $att_flipbooks['ancho'] = 132 * count($contenidos);
         $att_flipbooks['overflow_x'] = 'hidden';
 
         if ( $att_flipbooks['ancho'] > 700 ) { $att_flipbooks['overflow_x'] = 'scroll'; }
@@ -24,7 +24,7 @@
         
         $img_flipbook_general = $url_resources . 'flipbook_general.png';
 
-        $att_talleres['ancho'] = 170 * count($talleres);
+        $att_talleres['ancho'] = 132 * count($talleres);
         $att_talleres['overflow_x'] = 'hidden';
 
         if ( $att_talleres['ancho'] > 700 ) { $att_flibooks['overflow_x'] = 'scroll'; }
@@ -36,18 +36,16 @@
     //Contenidos Acompañamiento Pedagógico
         $img_cap_general = $url_resources . 'cap_general.jpg';
         
-        $att_cap['ancho'] = 170 * 4;
+        $att_cap['ancho'] = 132 * 4;
         $att_cap['overflow_x'] = 'hidden';
 
         if ( $att_cap['ancho'] > 700 ) { $att_cap['overflow_x'] = 'scroll'; }
 ?>
 
-<link rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel2/biblioteca.css">
+<link rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/biblioteca.css">
 
-<?php $this->load->view('usuarios/biblioteca_menu_v'); ?>
-
-<article style="padding-top: 40px; width: 786px; height: 1017px; background:url(<?php echo URL_IMG ?>app/bookshelf.png) no-repeat;" class="module width_full">
-    <h1 class="estante">
+<article style="background:url(<?php echo URL_IMG ?>app/bookshelf.png) no-repeat;" class="library">
+    <h1 class="estante" style="background-color: #DD5044">
         Contenidos
     </h1>
 
@@ -69,7 +67,7 @@
         </div>
     </div>
     
-    <h1 class="estante">
+    <h1 class="estante" style="background-color: #4B8BF4">
         Actividades resueltas
     </h1>
 
@@ -88,7 +86,7 @@
         </div>
     </div>
 
-    <h1 class="estante">
+    <h1 class="estante" style="background-color: #1BA160">
         Anotaciones
     </h1>
 
@@ -109,7 +107,7 @@
         </div>
     </div>
     
-    <h1 class="estante">
+    <h1 class="estante" style="background-color: #ffd600; color: #333;">
         Acompañamiento Pedagógico
     </h1>
     <div class="flipbooks_wrapper" style="height: 150px; overflow-x: <?= $att_cap['overflow_x'] ?>; overflow-y: hidden; width: 715px; margin: 0px auto;">
