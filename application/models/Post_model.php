@@ -7,8 +7,7 @@ class Post_Model extends CI_Model{
         
         $basico['row'] = $row;
         $basico['nombre_post'] = $this->Pcrn->si_strlen($row->nombre_post, 'Post ' . $row->id);
-        $basico['titulo_pagina'] = $basico['nombre_post'];
-        $basico['vista_a'] = $this->vista_a($row);
+        $basico['head_title'] = $basico['nombre_post'];
         
         return $basico;
     }
@@ -26,6 +25,7 @@ class Post_Model extends CI_Model{
         
         $vistas = array(
             22 => 'posts/listas/editar_v',
+            30 => 'posts/bitacora/edit_v',
             4401 => 'posts/enunciados/editar_v',
             4311 => 'posts/contenidos_ap/editar_v'
         );
@@ -48,6 +48,7 @@ class Post_Model extends CI_Model{
         $vista_leer = 'posts/contenidos_ap/leer_v';
         
         $vistas = array(
+            30 => 'posts/bitacora/leer_v',
             4401 => 'posts/contenidos_ap/leer_v',
         );
         
@@ -313,6 +314,10 @@ class Post_Model extends CI_Model{
         return $query;
     }
     
+    /**
+     * Actualizar un registro en la tabla post
+     * 2019-07-02
+     */
     function actualizar($post_id, $registro = NULL)
     {
         if ( is_null($registro) ) { $registro = $this->input->post(); }
@@ -323,12 +328,10 @@ class Post_Model extends CI_Model{
         $this->db->where('id', $post_id);
         $this->db->update('post', $registro);
         
-        $resultado['ejecutado'] = 1;
-        $resultado['mensaje'] = 'Los datos fueron actualizados exitosamente';
-        $resultado['type'] = 'success';
-        $resultado['icono'] = 'fa-check';
+        $data['status'] = 1;
+        $data['message'] = 'Los datos fueron actualizados exitosamente';
         
-        return $resultado;
+        return $data;
     }
     
     function eliminable($post_id)

@@ -61,8 +61,8 @@ class App_model extends CI_Model {
     {
         $cron_id = 0;
 
-        //Si la hora (G) es menor o igual a las 5 (am)
-        if ( date('G') <= 12 )
+        //Si la hora (G) es menor o igual a las 6 (am)
+        if ( date('G') <= 6 )
         {
             $this->load->model('Develop_model');
             $data_cron = $this->Develop_model->cron(12537);

@@ -158,8 +158,8 @@
             type: 'POST',
             url: base_url + controlador + '/ap_crud/actualizar/' + post_id,
             data: $('#formulario').serialize(),
-            success: function(resultado){
-                if ( resultado.ejecutado )
+            success: function(response){
+                if ( response.status == 1 )
                 {
                     toastr["success"]('Los cambios fueron guardados');    
                 }

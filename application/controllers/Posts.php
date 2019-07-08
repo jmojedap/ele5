@@ -182,15 +182,23 @@ class Posts extends CI_Controller{
             $data = $this->Post_model->basico($post_id);
         
         //Array data espefícicas
-            $data['vista_b'] = $this->Post_model->vista_editar($data['row']);
+            $data['view_description'] = 'posts/post_v';
+            $data['nav_2'] = 'posts/menu_v';
+            $data['view_a'] = $this->Post_model->vista_editar($data['row']);
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
+    /**
+     * Actualiza un registro en la tabla post
+     */
     function actualizar($post_id)
     {
-        $this->Post_model->actualizar($post_id);
-        redirect("posts/editar/{$post_id}/actualizado");
+        $data = $this->Post_model->actualizar($post_id);
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
     }
     
     function cargar_archivo($post_id, $funcion = 'editar')
@@ -245,8 +253,10 @@ class Posts extends CI_Controller{
             }
         
         //Solicitar vista
-            $data['vista_b'] = $this->Post_model->vista_leer($data['row']);
-            $this->load->view(PTL_ADMIN, $data);
+            $data['view_description'] = 'posts/post_v';
+            $data['nav_2'] = 'posts/menu_v';
+            $data['view_a'] = $this->Post_model->vista_leer($data['row']);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
 //LISTAS - TIPO 22
@@ -294,6 +304,23 @@ class Posts extends CI_Controller{
         ->set_content_type('application/json')
         ->set_output(json_encode($cant_elementos));
     }
+
+//BITÁCORA DE ACTIVIDAD - TIPO 30
+//-----------------------------------------------------------------------------
+    function bitacora($date_1 = '2019-07-01')
+    {
+        $this->db->select('id, nombre_post, fecha, contenido, texto_1 AS modulo, texto_2 AS elemento, referente_1_id AS prioridad');
+        $this->db->order_by('texto_1', 'DESC');
+        $this->db->order_by('fecha', 'ASC');
+        $this->db->where('tipo_id', 30);
+        $this->db->where('fecha >=', $date_1);
+        $data['bitacora'] = $this->db->get('post');
+
+        $data['view_a'] = 'posts/bitacora/bitacora_v';
+        $data['head_title'] = 'Bitacora';
+        $this->load->view(TPL_ADMIN, $data);
+    }
+
     
 // ENUNCIADOS - TIPO 4401
 //-----------------------------------------------------------------------------
