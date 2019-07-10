@@ -202,8 +202,6 @@
     }
 </script>
 
-<?= $this->load->view($vista_menu) ?>
-
 <div class="">
     <div class="row">
         <div class="col-md-6 sep2">

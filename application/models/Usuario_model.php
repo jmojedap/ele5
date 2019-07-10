@@ -15,15 +15,20 @@ class Usuario_model extends CI_Model{
         $basico['usuario_id'] = $usuario_id;
         $basico['row'] = $row;
         $basico['editable'] = $this->editable($row);
-        $basico['titulo_pagina'] = "{$row->nombre} {$row->apellidos}";
-        $basico['vista_a'] = 'usuarios/' . $this->vista_a($row->rol_id);
+        $basico['head_title'] = "{$row->nombre} {$row->apellidos}";
+        $basico['view_description'] = 'usuarios/description/' . $this->view_role($row->rol_id);
+        $basico['nav_2'] = 'usuarios/menu/' . $this->view_role($row->rol_id);
         
         return $basico;
     }
     
-    function vista_a($rol_id)
+    /**
+     * Nombre de una vista asignada dependiendo del rol del usuario cuyo perfil se está visitando.
+     * 2019-07-08
+     */
+    function view_role($rol_id)
     {
-        $vistas = array(
+        $views = array(
             0 => 'usuario_v',
             1 => 'usuario_v',
             2 => 'usuario_v',
@@ -36,8 +41,9 @@ class Usuario_model extends CI_Model{
             9 => 'usuario_v',
         );
         
-        return $vistas[$rol_id];
+        return $views[$rol_id];
     }
+
     
     /**
      * Define si un usuario en sesión puede editar el perfil de otro usuario

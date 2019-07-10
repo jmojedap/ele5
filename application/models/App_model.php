@@ -1310,16 +1310,16 @@ class App_model extends CI_Model {
      */
     function bs_clase_pct($pct)
     {
-        $bs_clase = 'danger';
+        $bs_clase = 'danger bg-danger';
         if ( $pct > 5 && $pct <= 20 )
         {
-            $bs_clase = 'warning';
+            $bs_clase = 'warning bg-warning';
         } elseif ( $pct > 20 && $pct <= 50) {
-            $bs_clase = 'primary';
+            $bs_clase = 'info bg-info';
         } elseif ( $pct > 50 && $pct <= 90) {
-            $bs_clase = 'info';
+            $bs_clase = 'primary bg-primary';
         } elseif ( $pct > 90) {
-            $bs_clase = 'success';
+            $bs_clase = 'success bg-success';
         }
         
         return $bs_clase;

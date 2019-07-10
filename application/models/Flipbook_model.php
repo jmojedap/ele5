@@ -714,7 +714,9 @@ class Flipbook_model extends CI_Model {
         return $quices;
     }
 
-    function anotaciones($flipbook_id, $usuario_id = NULL) {
+
+    function anotaciones($flipbook_id, $usuario_id = NULL) 
+    {
         if (is_null($usuario_id)) {
             $usuario_id = $this->session->userdata('usuario_id');
         }

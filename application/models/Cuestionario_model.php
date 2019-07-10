@@ -2083,7 +2083,7 @@ class Cuestionario_model extends CI_Model
     function resumen_usuario($usuario_id)
     {
         //Consulta
-        $this->db->select('usuario_cuestionario.id AS uc_id, usuario_cuestionario.cuestionario_id, nombre_cuestionario, fin_respuesta, COUNT(usuario_pregunta.id) AS respondidas,SUM(resultado) AS correctas');
+        $this->db->select('usuario_cuestionario.id AS uc_id, usuario_cuestionario.cuestionario_id, nombre_cuestionario, cuestionario.area_id, fin_respuesta, COUNT(usuario_pregunta.id) AS respondidas,SUM(resultado) AS correctas');
         $this->db->where('usuario_cuestionario.usuario_id', $usuario_id);
         $this->db->join('usuario_cuestionario', 'cuestionario.id = usuario_cuestionario.cuestionario_id');
         $this->db->join('usuario_pregunta', 'usuario_pregunta.cuestionario_id = usuario_cuestionario.cuestionario_id AND usuario_pregunta.usuario_id = usuario_cuestionario.usuario_id');

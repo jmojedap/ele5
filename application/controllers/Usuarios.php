@@ -53,11 +53,11 @@ class Usuarios extends CI_Controller{
             $data['instituciones'] = $instituciones;
         
         //Solicitar vista
-            $data['titulo_pagina'] = 'Usuarios';
-            $data['subtitulo_pagina'] = number_format($data['cant_resultados'],0,',', '.');
-            $data['vista_a'] = 'usuarios/explorar_v';
-            $data['vista_menu'] = 'usuarios/explorar_menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_title'] = 'Usuarios';
+            $data['head_subtitle'] = number_format($data['cant_resultados'],0,',', '.');
+            $data['view_a'] = 'usuarios/explorar_v';
+            $data['nav_2'] = 'usuarios/explorar_menu_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -94,7 +94,7 @@ class Usuarios extends CI_Controller{
                 $data['link_volver'] = "usuarios/explorar/?{$busqueda_str}";
                 $data['vista_a'] = 'app/mensaje_v';
                 
-                $this->load->view(PTL_ADMIN, $data);
+                $this->load->view(TPL_ADMIN, $data);
             }
     }
     
@@ -137,13 +137,13 @@ class Usuarios extends CI_Controller{
         //Array data espefícicas
             $data['tipo'] = $tipo;
             $data['titulo_pagina'] = 'Usuarios';
-            $data['subtitulo_pagina'] = 'Nuevo';
+            $data['head_subtitle'] = 'Nuevo';
             $data['vista_a'] = 'usuarios/nuevo_v';
             //$data['vista_a'] = 'app/gc_v';
         
         $output = array_merge($data,(array)$output);
         
-        $this->load->view(PTL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN, $output);
     }
     
     function editar()
@@ -168,10 +168,10 @@ class Usuarios extends CI_Controller{
             if ( ! $data['editable'] ) { $vista_b = 'app/no_permitido_v'; }
             
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Editar';
-            $data['vista_b'] = $vista_b;
+            $data['head_subtitle'] = 'Editar';
+            $data['view_a'] = $vista_b;
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN, $output);
     }
     
     /**
@@ -191,10 +191,10 @@ class Usuarios extends CI_Controller{
             if ( $data['editable'] ) 
             {
                 //Solicitar vista
-                    $data['subtitulo_pagina'] = 'Editar mi perfil';
-                    $data['vista_b'] = $vista_b;
+                    $data['head_subtitle'] = 'Editar mi perfil';
+                    $data['view_a'] = $vista_b;
                     $output = array_merge($data,(array)$gc_output);
-                    $this->load->view(PTL_ADMIN, $output);
+                    $this->load->view(TPL_ADMIN, $output);
             } else {
                 //No se puede editar, se redirige
                 redirect("usuarios/contrasena/");
@@ -244,12 +244,12 @@ class Usuarios extends CI_Controller{
         //Variables generales
             //$data['ayuda_id'] = 97;
             $data['titulo_pagina'] = 'Usuarios';
-            $data['subtitulo_pagina'] = 'Importar estudiantes';
+            $data['head_subtitle'] = 'Importar estudiantes';
             $data['vista_a'] = 'comunes/importar_v';
             $data['vista_menu'] = 'usuarios/explorar_menu_v';
             $data['vista_submenu'] = 'usuarios/importar_menu_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -282,11 +282,11 @@ class Usuarios extends CI_Controller{
         
         //Cargar vista
             $data['titulo_pagina'] = 'Usuarios';
-            $data['subtitulo_pagina'] = 'Resultado importación';
+            $data['head_subtitle'] = 'Resultado importación';
             $data['vista_a'] = 'comunes/resultado_importacion_v';
             $data['vista_menu'] = 'usuarios/explorar_menu_v';
             $data['vista_submenu'] = 'usuarios/importar_menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     
@@ -307,9 +307,9 @@ class Usuarios extends CI_Controller{
         
         //Solicitar vista
             $data['titulo_pagina'] = 'Usuario registrado';
-            $data['subtitulo_pagina'] = $row_usuario->nombre . ' ' . $row_usuario->apellidos;
+            $data['head_subtitle'] = $row_usuario->nombre . ' ' . $row_usuario->apellidos;
             $data['vista_a'] = 'app/mensaje_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     function enviar_email($usuario_id = 2)
@@ -393,6 +393,11 @@ class Usuarios extends CI_Controller{
 //ACTIVIDAD Y NOTICIAS
 //---------------------------------------------------------------------------------------------------
     
+    /**
+     * Muro de noticias de la actividad del usuario en la plataforma. Muestra un número de noticias determinado.
+     * Y carga por ajax noticias más antiguas mediante la función usuarios/mas_activiadad.
+     * 2019-07-08.
+     */
     function actividad($usuario_id)
     {
         //Cargue
@@ -412,13 +417,10 @@ class Usuarios extends CI_Controller{
             $srol = $this->session->userdata('srol');
         
             $condicion_eventos = 'categoria_id = 13 AND filtro LIKE "%-' . $filtros[$srol] . '-%"';
-            
-        //Cantidad de noticias para mostrar
-            $limit = 20;
         
         //Variables
-            $data['limit'] = $limit;
-            $data['noticias'] = $this->Evento_model->noticias_usuario($usuario_id, $busqueda, $limit);
+            $data['limit'] = 20;    //Cantidad de noticias para mostrar
+            $data['noticias'] = $this->Evento_model->noticias_usuario($usuario_id, $busqueda, $data['limit']);
             $data['busqueda'] = $busqueda;
             $data['busqueda_str'] = $busqueda_str;
             //$data['config_form'] = $this->Evento_model->config_form_publicacion();
@@ -427,17 +429,18 @@ class Usuarios extends CI_Controller{
             $data['grupos'] = $this->Usuario_model->grupos_usuario($this->session->userdata('usuario_id'));
             $data['destino_form'] = 'eventos/crear_publicacion';
             $data['destino_filtros'] = "usuarios/actividad/{$usuario_id}/";
-            $data['url_mas'] = base_url() . 'usuarios/mas_actividad/' . $usuario_id . '/';
+            $data['url_mas'] = base_url("usuarios/mas_actividad/{$usuario_id}/");
         
         //Variables vista
-        $data['vista_b'] = 'eventos/noticias/noticias_usuario_v';
-        $this->load->view(PTL_ADMIN, $data);
+        $data['view_a'] = 'eventos/noticias/noticias_usuario_v';
+        $this->load->view(TPL_ADMIN, $data);
         
     }
     
     /**
-     * AJAX, envía un objeto JSON con el html de activida adicionales para mostrarse
-     * al final de la vista de actividad cuando el usuario hace clic en el botón [Más]
+     * AJAX, envía un objeto JSON con el html de actividad adicionales para mostrarse
+     * al final de la vista usuarios/actividad cuando el usuario hace clic en el botón [Más]
+     * 2019-07-08
      * 
      * @param type $limit
      * @param type $offset
@@ -455,6 +458,8 @@ class Usuarios extends CI_Controller{
         $data['noticias'] = $noticias;
         
         $html = $this->load->view('eventos/noticias/listado_noticias_p_v', $data, TRUE);
+
+        //$this->load->view('eventos/noticias/listado_noticias_p_v', $data);
         
         $respuesta['html'] = $html;
         $respuesta['cant_noticias'] = $noticias->num_rows();
@@ -477,9 +482,9 @@ class Usuarios extends CI_Controller{
             $data['destino_form'] = 'usuarios/contrasena_e';
         
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Cambio de contraseña';
-            $data['vista_b'] = 'usuarios/contrasena_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Cambio de contraseña';
+            $data['view_a'] = 'usuarios/contrasena_v';
+            $this->load->view(TPL_ADMIN, $data);
         
     }
     
@@ -867,9 +872,9 @@ class Usuarios extends CI_Controller{
         $data['grupos'] = $this->Usuario_model->grupos_usuario($usuario_id);
         
         //Solicitar vista
-        $data['subtitulo_pagina'] = 'Grupos';
-        $data['vista_b'] = 'usuarios/grupos_v';
-        $this->load->view(PTL_ADMIN, $data);
+        $data['head_subtitle'] = 'Grupos';
+        $data['view_a'] = 'usuarios/grupos_v';
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -887,9 +892,9 @@ class Usuarios extends CI_Controller{
             $data['grupos'] = $this->Usuario_model->grupos_profesor($usuario_id);
         
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Grupos asignados';
-            $data['vista_b'] = 'usuarios/grupos_profesor_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Grupos asignados';
+            $data['view_a'] = 'usuarios/grupos_profesor_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
 //---------------------------------------------------------------------------------------------------
@@ -932,9 +937,9 @@ class Usuarios extends CI_Controller{
             //$data['subquices'] = $this->Flipbook_model->subquices($relacionados);
         
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Evidencias';
-            $data['vista_b'] = 'usuarios/quices_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Evidencias';
+            $data['view_a'] = 'usuarios/quices_v';
+            $this->load->view(TPL_ADMIN, $data);
             //print_r($data['quices']);
     }
     
@@ -959,9 +964,9 @@ class Usuarios extends CI_Controller{
         }
         
         //Solicitar vista
-        $data['subtitulo_pagina'] = 'Contenidos';
-        $data['vista_b'] = 'usuarios/flipbooks_v';
-        $this->load->view(PTL_ADMIN, $data);
+        $data['head_subtitle'] = 'Contenidos';
+        $data['view_a'] = 'usuarios/flipbooks_v';
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     function quitar_flipbook($usuario_id, $flipbook_id)
@@ -993,11 +998,10 @@ class Usuarios extends CI_Controller{
             $data['anotaciones'] = $this->Flipbook_model->anotaciones($flipbook_id, $usuario_id);
             $data['flipbooks'] = $flipbooks;
         
-        
-        //Solicitar vista
-        $data['subtitulo_pagina'] = 'Anotaciones';
-        $data['vista_b'] = 'usuarios/anotaciones_v';
-        $this->load->view(PTL_ADMIN, $data);
+        //Cargar vista
+            $data['head_subtitle'] = 'Anotaciones';
+            $data['view_a'] = 'usuarios/anotaciones_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
 //CUESTIONARIOS
@@ -1018,25 +1022,23 @@ class Usuarios extends CI_Controller{
         //Cuestionarios
             /*$fecha_hoy = date('Y-m-d H:i:s');
             $condicion = "('" . $fecha_hoy . "') > fecha_inicio AND ('" . $fecha_hoy . "') < fecha_fin";*/
-            $data['cuestionarios'] = $this->Usuario_model->cuestionarios($usuario_id);
+            $condition = "tipo_id IN (2,3,4)";
+            $data['cuestionarios'] = $this->Usuario_model->cuestionarios($usuario_id, $condition);
             
         
         //Solicitar vista
-            $data['vista_b'] = 'usuarios/cuestionarios_n_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['view_a'] = 'usuarios/cuestionarios_n_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
-    function cuestionarios($usuario_id, $pestana = 0)
-    {
-        
-        //$this->output->enable_profiler(TRUE);
-        $this->load->model('Cuestionario_model');
-        
+    function cuestionarios($usuario_id, $seccion = 'respondidos')
+    {   
         //Cargando datos básicos (_basico)
         if ( $this->session->userdata('rol_id') == 6 ) { $usuario_id = $this->session->userdata('usuario_id'); }
         $data = $this->Usuario_model->basico($usuario_id);
             
         //Variables
+            $this->load->model('Cuestionario_model');
             $cuestionarios_resp = $this->Cuestionario_model->resumen_usuario($usuario_id);
         
         //Condición
@@ -1044,15 +1046,16 @@ class Usuarios extends CI_Controller{
             $condicion = 'tipo_id IN (2,3,4) AND estado < 3 AND fecha_fin > "' . $fecha_hoy  . '"';  //Sin responder y con fecha límite para responder
         
         //Variables $data
-            $data['subseccion'] = 'listado';
-            $data['pestana'] = $pestana;
+            $data['seccion'] = $seccion;
             $data['cuestionarios'] = $this->Usuario_model->cuestionarios($usuario_id, $condicion);
             $data['cuestionarios_resp'] = $cuestionarios_resp;
             $data['externos'] = $this->Usuario_model->cuestionarios($usuario_id, 'estado >= 3 AND tipo_id = 4');
+            $data['areas'] = $this->App_model->areas('filtro LIKE "%-g1%"');
         
         //Solicitar vista
-            $data['vista_b'] = 'usuarios/cuestionarios_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['view_a'] = 'usuarios/cuestionarios/cuestionarios_v';
+            $data['nav_3'] = 'usuarios/cuestionarios/menu_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
 //---------------------------------------------------------------------------------------------------
@@ -1098,10 +1101,10 @@ class Usuarios extends CI_Controller{
             $data['rango_usuario'] = $this->App_model->rango_cuestionarios($porcentaje);
         
         //Solicitar vista
-            $data['vista_b'] = 'usuarios/resultados/resultados_v';
+            $data['view_a'] = 'usuarios/resultados/resultados_v';
             $data['vista_c'] = 'usuarios/resultados/comparativos_v';
             $data['vista_menu'] = 'usuarios/resultados/submenu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
         
     }
     
@@ -1140,10 +1143,10 @@ class Usuarios extends CI_Controller{
             $data['rango_usuario'] = $this->App_model->rango_cuestionarios($porcentaje);
         
         //Solicitar vista
-            $data['vista_b'] = 'usuarios/resultados/resultados_v';
+            $data['view_a'] = 'usuarios/resultados/resultados_v';
             $data['vista_c'] = 'usuarios/resultados/detalle_v';
             $data['vista_menu'] = 'usuarios/resultados/submenu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
         
     }
     
@@ -1198,13 +1201,13 @@ class Usuarios extends CI_Controller{
             $porcentaje = $data['res_usuario']['porcentaje']/100;
             $data['rango_usuario'] = $this->App_model->rango_cuestionarios($porcentaje);
             
-            $data['vista_b'] = 'usuarios/resultados_v';
+            $data['view_a'] = 'usuarios/resultados_v';
         
         //Solicitar vista
-            $data['vista_b'] = 'usuarios/resultados/resultados_v';
+            $data['view_a'] = 'usuarios/resultados/resultados_v';
             $data['vista_c'] = 'usuarios/resultados/area_v';
             $data['vista_menu'] = 'usuarios/resultados/submenu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
         
     }
     
@@ -1260,11 +1263,11 @@ class Usuarios extends CI_Controller{
             
         
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Resultados por competencias';
-            $data['vista_b'] = 'usuarios/resultados/resultados_v';
+            $data['head_subtitle'] = 'Resultados por competencias';
+            $data['view_a'] = 'usuarios/resultados/resultados_v';
             $data['vista_c'] = 'usuarios/resultados/competencias_v';
             $data['vista_menu'] = 'usuarios/resultados/submenu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
         
     }
     
@@ -1323,28 +1326,28 @@ class Usuarios extends CI_Controller{
             $data['rango_usuario'] = $this->App_model->rango_cuestionarios($porcentaje);
         
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Resultados por componentes';
-            $data['vista_b'] = 'usuarios/resultados/resultados_v';
+            $data['head_subtitle'] = 'Resultados por componentes';
+            $data['view_a'] = 'usuarios/resultados/resultados_v';
             $data['vista_c'] = 'usuarios/resultados/componentes_v';
             $data['vista_menu'] = 'usuarios/resultados/submenu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
         
     }
     
+    /**
+     * Gráfico estadístico del resultaoo de cuestionarios del usuario clasificado por área y
+     * compentencia.
+     * 2019-07-10
+     */
     function cuestionarios_resumen01($usuario_id, $area_id = 50)
     {
-        $this->load->model('Cuestionario_model');
-        
-        //Cargando datos básicos (_basico)
+        //Cargando datos básicos del usuario
             $data = $this->Usuario_model->basico($usuario_id);
-        
-        //Head includes específicos para esta función
-            $head_includes[] = 'highcharts';
             
         //Cuestionarios
             $this->db->join('usuario_cuestionario', 'cuestionario.id = usuario_cuestionario.cuestionario_id');
             $this->db->where('usuario_id', $usuario_id);
-            $this->db->where('tipo_id IN (1, 2, 3)'); //Solo cuestionarios internos de Enlace
+            $this->db->where('tipo_id IN (1, 2, 3)'); //Solo cuestionarios internos de En línea
             $this->db->like('areas', $area_id);
             $cuestionarios = $this->db->get('cuestionario');
         
@@ -1352,14 +1355,15 @@ class Usuarios extends CI_Controller{
             $data['areas'] = $this->db->get_where('item', "id IN (50, 51, 52, 53)");
             $data['usuario_id'] = $usuario_id;
             $data['area_id'] = $area_id;
-            $data['subseccion'] = 'resumen01';
-            $data['head_includes'] = $head_includes;
             $data['cuestionarios'] = $cuestionarios;
+
+            $this->load->model('Cuestionario_model');
             $data['competencias'] = $this->Cuestionario_model->competencias_area($area_id); //Query competencias
-            $data['vista_b'] = 'usuarios/resultados/res01_v';
-        
+            
         //Solicitar vista
-            $this->load->view(PTL_ADMIN, $data);
+            $data['nav_3'] = 'usuarios/cuestionarios/menu_v';
+            $data['view_a'] = 'usuarios/resultados/res01_v';
+            $this->load->view(TPL_ADMIN, $data);
         
     }
     
@@ -1404,11 +1408,11 @@ class Usuarios extends CI_Controller{
             $data['subseccion'] = 'resumen02';
             $data['head_includes'] = $head_includes;
             $data['nombres_competencias'] = $nombres_competencias;
-            $data['vista_b'] = 'usuarios/resultados/res02_v';
+            $data['view_a'] = 'usuarios/resultados/res02_v';
         
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Desempeño por competencias';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Desempeño por competencias';
+            $this->load->view(TPL_ADMIN, $data);
         
     }
     
@@ -1440,11 +1444,11 @@ class Usuarios extends CI_Controller{
             $data['subseccion'] = 'resumen03';
             $data['head_includes'] = $head_includes;
             $data['competencias'] = $this->Cuestionario_model->competencias_area($area_id); //Query competencias
-            $data['vista_b'] = 'usuarios/resultados/res03_v';
+            $data['view_a'] = 'usuarios/resultados/res03_v';
         
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Desempeño por competencias';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Desempeño por competencias';
+            $this->load->view(TPL_ADMIN, $data);
         
     }
     
@@ -1479,12 +1483,12 @@ class Usuarios extends CI_Controller{
         //Variables generales
             //$data['ayuda_id'] = 97;
             $data['titulo_pagina'] = 'Usuarios';
-            $data['subtitulo_pagina'] = 'Eliminar por username';
+            $data['head_subtitle'] = 'Eliminar por username';
             $data['vista_a'] = 'comunes/importar_v';
             $data['vista_menu'] = 'usuarios/explorar_menu_v';
             $data['vista_submenu'] = 'usuarios/importar_menu_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -1514,11 +1518,11 @@ class Usuarios extends CI_Controller{
         
         //Cargar vista
             $data['titulo_pagina'] = 'Usuarios';
-            $data['subtitulo_pagina'] = 'Resultado eliminación por username';
+            $data['head_subtitle'] = 'Resultado eliminación por username';
             $data['vista_a'] = 'comunes/resultado_importacion_v';
             $data['vista_menu'] = 'usuarios/explorar_menu_v';
             $data['vista_submenu'] = 'usuarios/importar_menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
 // FUNCIONES MASIVAS

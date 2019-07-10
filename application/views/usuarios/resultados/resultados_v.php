@@ -31,10 +31,10 @@
 ?>
 
 <p>
-    <?= anchor("usuarios/cuestionarios/{$row->id}/1", '<i class="fa fa-arrow-left"></i> Respondidos', 'class="btn btn-default" title=""') ?>
+    <?= anchor("usuarios/cuestionarios/{$row->id}/", '<i class="fa fa-arrow-left"></i> Respondidos', 'class="btn btn-secondary" title=""') ?>
     
     <?php if ( $this->session->userdata('rol_id') <= 5 ) : ?>                
-        <?= anchor("cuestionarios/grupos/{$row_cuestionario->id}/{$row->institucion_id}/{$row->grupo_id}", '<i class="fa fa-users"></i> Estudiantes Grupo', 'class="btn btn-default" title=""') ?>
+        <?= anchor("cuestionarios/grupos/{$row_cuestionario->id}/{$row->institucion_id}/{$row->grupo_id}", '<i class="fa fa-users"></i> Estudiantes Grupo', 'class="btn btn-secondary" title=""') ?>
     <?php endif ?>
 </p>
 
