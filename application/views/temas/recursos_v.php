@@ -36,9 +36,9 @@
         );
         
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('recursos_archivos', 'recursos_links', 'recursos_quices', 'recursos_preguntas');
-        $elementos_rol[1] = array('recursos_archivos', 'recursos_links', 'recursos_quices', 'recursos_preguntas');
-        $elementos_rol[2] = array('recursos_archivos', 'recursos_links', 'recursos_quices', 'recursos_preguntas');
+        $elementos_rol[0] = array('recursos_archivos', 'recursos_links', 'recursos_quices');
+        $elementos_rol[1] = array('recursos_archivos', 'recursos_links', 'recursos_quices');
+        $elementos_rol[2] = array('recursos_archivos', 'recursos_links', 'recursos_quices');
         
     //Definiendo menú mostrar, según el rol del visitante
         $elementos = $elementos_rol[$this->session->userdata('rol_id')];
@@ -52,15 +52,8 @@
     //Cargue vista
         $this->load->view('comunes/submenu_v', $data_menu);
         
-?>
-        
-<?php
+
     $clase_menu[$this->uri->segment(2)] = 'a3 actual';
     $nombre_tabla = $this->uri->segment(2);
-?>
 
-<div class="row">
-    <div class="col col-md-12">
-        <?= $output; ?>
-    </div>
-</div>
+    $this->load->view('comunes/gc_v');
