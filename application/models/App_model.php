@@ -1335,7 +1335,7 @@ class App_model extends CI_Model {
     function bs_progress_bar($pct, $valor, $clase = '')
     {
         //Definir atributos
-            $clase_plus = $this->Pcrn->si_strlen($clase, '', "progress-bar-{$clase}");
+            $clase_plus = $this->Pcrn->si_strlen($clase, '', "progress-bar-{$clase} bg-{$clase}");
             $valor_plus = '';
             if ( ! is_null($valor) ) { $valor_plus = $valor; }
         

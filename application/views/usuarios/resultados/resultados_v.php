@@ -31,25 +31,29 @@
 ?>
 
 <p>
-    <?= anchor("usuarios/cuestionarios/{$row->id}/", '<i class="fa fa-arrow-left"></i> Respondidos', 'class="btn btn-secondary" title=""') ?>
+    <a href="<?php echo base_url("usuarios/cuestionarios/{$row->id}/") ?>" class="btn btn-outline-secondary">
+        <i class="fa fa-arrow-left"></i> Respondidos
+    </a>
     
-    <?php if ( $this->session->userdata('rol_id') <= 5 ) : ?>                
-        <?= anchor("cuestionarios/grupos/{$row_cuestionario->id}/{$row->institucion_id}/{$row->grupo_id}", '<i class="fa fa-users"></i> Estudiantes Grupo', 'class="btn btn-secondary" title=""') ?>
+    <?php if ( $this->session->userdata('rol_id') <= 5 ) : ?>
+        <a href="<?php echo base_url("cuestionarios/grupos/{$row_cuestionario->id}/{$row->institucion_id}/{$row->grupo_id}") ?>" class="btn btn-outline-secondary">
+            <i class="fa fa-users"></i> Estudiantes Grupo
+        </a>
     <?php endif ?>
 </p>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        Cuestionario: <?= $row_cuestionario->nombre_cuestionario ?>
-    </div>
-    <div class="panel-body">
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">
+            Cuestionario: <?= $row_cuestionario->nombre_cuestionario ?>
+        </h5>
         <p>
-            Fecha de respuesta: <span class="resaltar"><?= $fecha_editado ?></span> |
-            Hace: <span class="resaltar"><?= $tiempo_hace ?></span> |
+            Fecha de respuesta: <span class="text-danger"><?= $fecha_editado ?></span> |
+            Hace: <span class="text-danger"><?= $tiempo_hace ?></span> |
             <?php if ( $this->session->userdata('rol_id') <= 2 ) { ?>
 
-                Puntaje: <span class="resaltar"><?= $res_usuario['porcentaje'] ?>%</span> | 
-                Rango: <span class="resaltar"><?= $texto_rango[$rango_usuario] ?></span>
+                Puntaje: <span class="text-danger"><?= $res_usuario['porcentaje'] ?>%</span> | 
+                Rango: <span class="text-danger"><?= $texto_rango[$rango_usuario] ?></span>
 
             <?php } ?>
         </p>

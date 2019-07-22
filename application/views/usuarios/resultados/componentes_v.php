@@ -1,3 +1,6 @@
+<?php $this->load->view('head_includes/highcharts') ?>
+<?php $this->load->view('head_includes/grafico_componentes') ?>
+
 <?php
     $fecha_fin = $this->Pcrn->fecha_formato($row_uc->fecha_fin);
     $tiempo_hace = $this->Pcrn->tiempo_hace($row_uc->fecha_fin);
@@ -18,7 +21,7 @@
     
 ?>
 
-<table class="table bg-blanco" cellspacing="0"> 
+<table class="table bg-white" cellspacing="0"> 
     <thead>
         <tr>
             <th>Componente</th>

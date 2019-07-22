@@ -1,3 +1,6 @@
+<?php $this->load->view('head_includes/highcharts') ?>
+<?php $this->load->view('head_includes/grafico_competencias') ?>
+
 <?php
     $fecha_fin = $this->Pcrn->fecha_formato($row_uc->fecha_fin);
     $tiempo_hace = $this->Pcrn->tiempo_hace($row_uc->fecha_fin);
@@ -17,13 +20,13 @@
     );
 ?>
 
-<table class="table bg-blanco" cellspacing="0"> 
+<table class="table bg-white" cellspacing="0"> 
     <thead>
         <tr>
             <th width="300px">Competencia</th>
             <th><i class="fa fa-question"></i></th>
-            <th><i class="fa fa-check"></i></th>
-            <th><i class="fa fa-times"></i></th>
+            <th><i class="fa fa-check text-success"></i></th>
+            <th><i class="fa fa-times text-danger"></i></th>
             <th>%</th>
             <th width="150px">Resultado</th>
             <th>Estrategia</th>
@@ -61,11 +64,11 @@
             <tr>
                 <td><?php echo $this->App_model->nombre_item($row_2->competencia_id, 1) ?></td>
                 <td><?php echo $resultados_competencia['num_preguntas'] ?></td>
-                <td class="success"><?php echo $resultados_competencia['correctas'] ?></td>
+                <td class="table-success"><?php echo $resultados_competencia['correctas'] ?></td>
                 <td><?php echo $resultados_competencia['incorrectas'] ?></td>
                 <td><?php echo $porcentaje ?></td>
                 <td>
-                    <div class="<?php echo $clase_rango ?>">
+                    <div class="table-<?php echo $clase_rango ?>">
                         <?php echo $this->Item_model->nombre(154, $rango) ?>
                     </div>
                 </td>
@@ -81,7 +84,7 @@
         <tr class="total">
             <td>Total</td>
             <td><?php echo $total_preguntas ?></td>
-            <td class="success"><?php echo number_format($total_correctas, 0) ?></td>
+            <td class="table-success"><?php echo number_format($total_correctas, 0) ?></td>
             <td><?php echo number_format($total_incorrectas, 0) ?></td>
             <td><span class="resaltar"><?php echo number_format(100 * ($total_correctas) / $this->Pcrn->no_cero($total_correctas + $total_incorrectas), 0) . "%" ?></span></td>
             <td colspan="3"></td>
@@ -89,11 +92,11 @@
     </tfoot>
 </table>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
+<div class="card">
+    <div class="card-header">
         Comparativo de competencias
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         <div id="container_1" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
     </div>
 </div>

@@ -1211,15 +1211,14 @@ class Usuarios extends CI_Controller{
         
     }
     
+    /**
+     * Resultados de un cuestionario de un usuario por competencias
+     * 2019-07-18
+     */
     function resultados_competencias($usuario_id, $uc_id, $area_id){
         
         //Cargando datos básicos (_basico)
             $data = $this->Usuario_model->basico($usuario_id);
-        
-        //Head includes específicos para la página
-            $head_includes[] = 'highcharts';
-            $head_includes[] = 'grafico_competencias';
-            $data['head_includes'] = $head_includes;
             
         //Variables
             $data['row_uc'] = $this->Pcrn->registro('usuario_cuestionario', "id = {$uc_id}");
@@ -1259,16 +1258,13 @@ class Usuarios extends CI_Controller{
         //Rango del estudiante
             $porcentaje = $data['res_usuario']['porcentaje']/100;
             $data['rango_usuario'] = $this->App_model->rango_cuestionarios($porcentaje);
-            
-            
         
         //Solicitar vista
             $data['head_subtitle'] = 'Resultados por competencias';
             $data['view_a'] = 'usuarios/resultados/resultados_v';
             $data['vista_c'] = 'usuarios/resultados/competencias_v';
             $data['vista_menu'] = 'usuarios/resultados/submenu_v';
-            $this->load->view(TPL_ADMIN, $data);
-        
+            $this->load->view(TPL_ADMIN, $data);   
     }
     
     function resultados_componentes($usuario_id, $uc_id, $area_id){
@@ -1278,12 +1274,6 @@ class Usuarios extends CI_Controller{
             
         //Variables
             $correctas = array();
-            //$num_preguntas_componente = array();
-        
-        //Head includes específicos para la página
-            $head_includes[] = 'highcharts';
-            $head_includes[] = 'grafico_componentes';
-            $data['head_includes'] = $head_includes;
             
         //Variables
             $data['row_uc'] = $this->Pcrn->registro('usuario_cuestionario', "id = {$uc_id}");
@@ -1330,8 +1320,7 @@ class Usuarios extends CI_Controller{
             $data['view_a'] = 'usuarios/resultados/resultados_v';
             $data['vista_c'] = 'usuarios/resultados/componentes_v';
             $data['vista_menu'] = 'usuarios/resultados/submenu_v';
-            $this->load->view(TPL_ADMIN, $data);
-        
+            $this->load->view(TPL_ADMIN, $data);   
     }
     
     /**
