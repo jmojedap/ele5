@@ -17,10 +17,61 @@ class Usuarios extends CI_Controller{
         $this->explorar();
     }
     
-//---------------------------------------------------------------------------------------------------
-//GROCERY CRUD PARA USUARIOS
+// EXPLORACIÓN DE USUARIOS
+//-----------------------------------------------------------------------------
     
-    function explorar()
+    /**
+     * Exploración y búsqueda de usuarios
+     */
+    function explorar($num_pagina = 1)
+    {
+        //Datos básicos de la exploración
+            $this->load->helper('text');
+            $data = $this->Usuario_model->data_explorar($num_pagina);
+        
+        //Opciones de filtros de búsqueda
+            $data['opciones_rol'] = $this->Item_model->opciones_id('categoria_id = 58', 'Todos');
+            $data['opciones_institucion'] = $this->App_model->opciones_institucion();
+            
+        //Arrays con valores para contenido en la tabla
+            $data['arr_roles'] = $this->Item_model->arr_interno('categoria_id = 58');
+        
+        //Cargar vista
+            $this->load->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * AJAX
+     * 
+     * Devuelve JSON, que incluye string HTML de la tabla de exploración para la
+     * página $num_pagina, y los filtros enviados por post
+     * 
+     * @param type $num_pagina
+     */
+    function tabla_explorar($num_pagina = 1)
+    {
+        //Datos básicos de la exploración
+            $this->load->helper('text');
+            $data = $this->Usuario_model->data_tabla_explorar($num_pagina);
+        
+        //Arrays con valores para contenido en lista
+        $data['arr_roles'] = $this->Item_model->arr_interno('categoria_id = 58');
+        
+        //Preparar respuesta
+            $respuesta['html'] = $this->load->view('usuarios/explorar/tabla_v', $data, TRUE);
+            $respuesta['seleccionados_todos'] = $data['seleccionados_todos'];
+            $respuesta['num_pagina'] = $num_pagina;
+            $respuesta['busqueda_str'] = $data['busqueda_str'];
+            $respuesta['cant_resultados'] = $data['cant_resultados'];
+            $respuesta['max_pagina'] = $data['max_pagina'];
+        
+        //Salida
+            $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($respuesta));
+    }
+
+    function ant_explorar()
     {   
         $this->load->model('Busqueda_model');
         $this->load->helper('text');
@@ -101,18 +152,23 @@ class Usuarios extends CI_Controller{
     /**
      * AJAX
      * Eliminar un grupo de registros seleccionados
+     * 2019-08-05
      */
     function eliminar_seleccionados()
     {
         $str_seleccionados = $this->input->post('seleccionados');
-        
         $seleccionados = explode('-', $str_seleccionados);
         
-        foreach ( $seleccionados as $elemento_id ) {
+        foreach ( $seleccionados as $elemento_id ) 
+        {
             $this->Usuario_model->eliminar($elemento_id);
         }
         
-        echo count($seleccionados);
+        $data = array('status' => 1, 'message' =>  count($seleccionados) . ' usuarios eliminados');
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
     }
     
     function nuevo()
