@@ -717,9 +717,9 @@ class Cuestionarios extends CI_Controller{
             
         //Registrar el inicio respuesta del cuestionario en la tabla evento, tipo 11
             $this->Evento_model->guardar_inicia_ctn($row_uc);
-        
-        //Resultado
-        $resultado['ejecutado'] = 1;
+
+        //Respuesta
+            $resultado['status'] = 1;
         
         $this->output
         ->set_content_type('application/json')
@@ -875,26 +875,37 @@ class Cuestionarios extends CI_Controller{
     
     /**
      * AJAX JSON
+     * Guarda los datos de respuesta en la tabla usuario_cuestionario
+     * Los datos provienen de cuestionarios/n_resolver
+     * Se agrega la condición de verificar que el cuestionario no haya sido
+     * finalizado anteriormente
+     * 2019-08-09
      */
     function guardar_uc($uc_id) 
     {
-        //Construir registro
-            $registro['editado'] = date('Y-m-d H:i:s');
-            $registro['respuestas'] = $this->input->post('respuestas');
-            $registro['resultados'] = $this->input->post('resultados');
-            $registro['num_con_respuesta'] = $this->input->post('cant_respondidas');
+        $data = array('status' => 0, 'message' => 'El cuestionario ya fue finalizado anteriormente');
 
-        //Actualizar
-            $this->db->where('id', $uc_id);
-            $this->db->update('usuario_cuestionario', $registro);
-        
-        //Cargar resultado
-            $resultado['ejecutado'] = 1;
-            $resultado['mensaje'] = 'Respuestas guardadas';
+        $row_uc = $this->Pcrn->registro_id('usuario_cuestionario', $uc_id);
+
+        if ( $row_uc->estado <= 2 )
+        {
+            //Construir registro
+                $registro['editado'] = date('Y-m-d H:i:s');
+                $registro['respuestas'] = $this->input->post('respuestas');
+                $registro['resultados'] = $this->input->post('resultados');
+                $registro['num_con_respuesta'] = $this->input->post('cant_respondidas');
+    
+            //Actualizar
+                $this->db->where('id', $uc_id);
+                $this->db->update('usuario_cuestionario', $registro);
+            
+            //Cargar resultado
+                $data = array('status' => 1, 'message' => 'Respuestas guardadas');
+        }
         
         $this->output
         ->set_content_type('application/json')
-        ->set_output(json_encode($resultado));
+        ->set_output(json_encode($data));
     }
     
     function n_finalizar($uc_id)

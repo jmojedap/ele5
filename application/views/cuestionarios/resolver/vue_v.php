@@ -1,5 +1,4 @@
 <script>
-    //var letras = ['A', 'B', 'C', 'D'];
     var hora_max = new Date('<?php echo $row_uc->inicio_respuesta ?>');
     hora_max.setMinutes(hora_max.getMinutes() + <?php echo $row_uc->tiempo_minutos ?>);
     
@@ -64,8 +63,8 @@
                     this.clave_opciones[j] = temp;
                 }
             },
+            //Cargar respuestas ya guardadas en row_uc
             cargar_respuestas: function() {
-                //Cargar respuestas ya guardadas en row_uc
                 this.respuestas = '<?php echo $row_uc->respuestas ?>';
                 arr_respuestas = this.respuestas.split('-');
                 for ( i in arr_respuestas ) {
@@ -74,8 +73,8 @@
                 }
                 this.act_totales();
             },
+            //Cargar respuestas ya guardadas en row_uc
             cargar_resultados: function() {
-                //Cargar respuestas ya guardadas en row_uc
                 this.resultados = '<?php echo $row_uc->resultados ?>';
                 arr_resultados = this.resultados.split('-');
                 for ( i in arr_resultados ) {
@@ -164,13 +163,6 @@
             },
             //Guardar respuestas en usuario_cuestionario (row_uc)
             guardar_uc: function() {
-                //const params = new URLSearchParams();
-                /*var params = new URLSearchParams();
-                params.append('respuestas', this.respuestas);
-                params.append('resultados', this.resultados);
-                params.append('cant_respondidas', this.cant_respondidas);*/
-        
-                //const params = new URLSearchParams();
                 var params = new FormData();
                 params.append('respuestas', this.respuestas);
                 params.append('resultados', this.resultados);
@@ -178,7 +170,7 @@
                 
                 axios.post(this.app_url + 'cuestionarios/guardar_uc/' + this.uc_id, params)
                 .then(response => {
-                    console.log(response.data.mensaje);
+                    console.log(response.data.message);
                 })
                 .catch(function (error) {
                      console.log(error);
@@ -203,7 +195,10 @@
 
                     axios.post(this.app_url + 'cuestionarios/guardar_uc/' + this.uc_id, params)
                     .then(response => {
-                        if ( response.data.ejecutado == 1 ) { this.finalizar(); }
+                        if ( response.data.status == 1 ) { this.finalizar(); }
+                        if ( response.data.status == 0 ) {
+                            toastr['error'](response.data.message);
+                        }
                     })
                     .catch(function (error) {
                          console.log(error);

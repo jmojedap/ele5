@@ -71,15 +71,19 @@
         $.ajax({        
             type: 'POST',
             url: base_url + 'cuestionarios/iniciar/' + uc_id,
-            success: function(rta){
-                if ( rta.ejecutado === 1 ) {
+            success: function(response){
+                if ( response.status === 1 ) {
                     window.location = base_url + destino;
-                    //console.log('INICIADO REDIRECCIONAR');
                 }
             }
         });
     }
 </script>
+
+<div class="alert alert-warning" id="alert_1" style="display: none;">
+    <i class="fa fa-info-circle"></i>
+    Este cuestionario ya fue iniciado anteriormente.
+</div>
 
 <?php foreach($mensajes as $mensaje) : ?>
     <div class="alert alert-warning">

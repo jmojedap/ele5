@@ -1386,9 +1386,9 @@ class Cuestionario_model extends CI_Model
         
     }
     
-    /** Actualiza el campo usuario_cuestionario.inicio_respuesta, 
-     *
-     *  Con la fecha y hora en la que se empieza a resolver el cuestionario por parte del alumno.
+    /**
+     * Actualiza el campo usuario_cuestionario.inicio_respuesta, 
+     * Con la fecha y hora en la que se empieza a resolver el cuestionario por parte del alumno.
      */
     function iniciar($row_uc)
     {
@@ -1399,6 +1399,8 @@ class Cuestionario_model extends CI_Model
             $registro['estado'] = 2;    //Iniciado
             $this->db->where('id', $row_uc->id);
             $this->db->update('usuario_cuestionario', $registro);
+
+            $data = array('status' => 1, 'message' => 'El cuestionario se inició correctamente');
         }
     }
     
