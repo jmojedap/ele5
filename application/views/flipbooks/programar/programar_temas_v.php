@@ -67,8 +67,12 @@
             data: {
                 seleccionados : evento_id
             },
-            success: function(){
-                desprogramado();
+            success: function(response){
+                if ( response.status == 1) {
+                    desprogramado();
+                } else {
+                    toastr['error']('No se eliminó asignación de fecha, es posible que otro usuario la haya realizado');
+                }
             }
         });
     }
@@ -137,9 +141,9 @@
                                 value="<?php echo $fecha_programado ?>"
                                 data-tema_id="<?php echo $row_tema->id ?>"
                                 data-num_pagina="<?php echo $row_tema->min_num_pagina ?>"
-                                type="text"
+                                type="date"
                                 title="Seleccione la fecha para programar el tema"
-                                class="form-control casilla_fecha_inicio bs_datepicker"
+                                class="form-control casilla_fecha_inicio bs_datepicker_no"
                                 >
                         </td>
                         <td>

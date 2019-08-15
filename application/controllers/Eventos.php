@@ -57,18 +57,28 @@ class Eventos extends CI_Controller{
     /**
      * AJAX
      * Eliminar un grupo de registros seleccionados
+     * 2019-08-01
      */
     function eliminar_seleccionados()
     {
+        $data = array('status' => 0, 'message' => 'No se eliminaron registros');
+
         $str_seleccionados = $this->input->post('seleccionados');
-        
         $seleccionados = explode('-', $str_seleccionados);
+        $cant_eliminados = 0;
         
-        foreach ( $seleccionados as $elemento_id ) {
-            $this->Evento_model->eliminar($elemento_id);
+        foreach ( $seleccionados as $elemento_id )
+        {
+            $cant_eliminados += $this->Evento_model->eliminar($elemento_id);
         }
-        
-        echo count($seleccionados);
+
+        if ( $cant_eliminados > 0) {
+            $data = array('status' => 1, 'message' => 'Registros eliminados: ' . $cant_eliminados);
+        }
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
     }
     
     function nuevo()

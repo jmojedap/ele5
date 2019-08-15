@@ -1,4 +1,4 @@
-<link href="<?= base_url() ?>assets/bootstrap_datepicker/css/bootstrap-datepicker.css" rel='stylesheet' />
+<link href="<?php echo URL_ASSETS ?>bootstrap_datepicker/css/bootstrap-datepicker.css" rel='stylesheet' />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/locales/bootstrap-datepicker.es.min.js"></script>
 
