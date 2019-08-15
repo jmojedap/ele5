@@ -12,7 +12,7 @@
         <div class="form-group row">
             
             <div class="col-md-9">
-                <div class="input-group">
+                <div class="input-group mb-1">
                     <input
                         type="text"
                         name="q"

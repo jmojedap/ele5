@@ -78,10 +78,23 @@
             tabla_explorar();
         });
 
-        $('#tabla_resultados').on("click", ".crear_json", function(){
-            registro_id = $(this).data('flipbook_id');
-            crear_json(registro_id);
-        }); 
+        //Específicas para Usuarios
+
+        //Botón, se alterna el valor del campo usuario.activo
+        $('.alternar_activacion').click(function(){
+            registro_id = $(this).data('usuario_id');
+            alternar_activacion();
+        });
+
+        $('.alternar_pago').click(function(){
+            registro_id = $(this).data('usuario_id');
+            alternar_pago();
+        });
+
+        $('.restaurar_contrasena').click(function(){
+            registro_id = $(this).data('usuario_id');
+            restaurar_contrasena();
+        });
     });
 
 // Funciones
@@ -123,7 +136,8 @@
     }
 
     //AJAX - Eliminar elementos seleccionados.
-    function eliminar(){
+    function eliminar()
+    {
         $.ajax({        
             type: 'POST',
             url: base_url + '/' + controlador + '/eliminar_seleccionados/',
@@ -148,19 +162,78 @@
         }
     }
 
-    //Ajax
-    function crear_json(flipbook_id){
-        $.ajax({        
+    //Cambia el valor del campo usuario.activo
+    function alternar_activacion()
+    {
+       $.ajax({        
+            type: 'POST',
+            url: base_url + 'usuarios/alternar_activacion/' + registro_id,
+            success: function(respuesta){
+                estado = respuesta;
+                act_btn_activacion(estado);
+            }
+       });
+    }
+
+    //Cambia el botón de activación según el resultado del cambio
+    function act_btn_activacion(estado)
+    {
+        console.log('MODIFICANDO');
+        var elemento = '#alternar_' + registro_id;
+        if ( estado == 0 )
+        {
+            $(elemento).html('Inactivo');
+            $(elemento).removeClass('btn-success');
+            $(elemento).addClass('btn-warning');
+        } else {
+            $(elemento).html('Activo');
+            $(elemento).addClass('btn-success');
+            $(elemento).removeClass('btn-warning');
+        }
+    }
+
+    //Cambia el valor del campo usuario.pago
+    function alternar_pago()
+    {
+        $.ajax({        
             type: 'POST',
-            url: base_url + 'flipbooks/crear_json/' + flipbook_id,
-            success: function(data){
-                if ( data.status == 1 ) {
-                    $('#crear_json_' + flipbook_id).toggleClass('btn-light');
-                    $('#crear_json_' + flipbook_id).toggleClass('btn-success');
-                    toastr['success']("Archivo actualizado ID: " + flipbook_id);
-                    console.log('Archivo actualizado: ' + flipbook_id);
-                }
+            url: base_url + 'usuarios/alternar_pago/' + registro_id,
+            success: function(respuesta){
+                act_btn_pago(respuesta.pago);
+                act_btn_activacion(respuesta.estado);
             }
         });
     }
+
+    //Cambia el botón de pago según el resultado del cambio
+    function act_btn_pago(pago)
+    {
+        var elemento = '#pago_' + registro_id;
+        if ( pago == 0 )
+        {
+            $(elemento).html('Sin pago');
+            $(elemento).removeClass('btn-success');
+            $(elemento).addClass('btn-warning');
+        } else {
+            $(elemento).html('Pagado');
+            $(elemento).addClass('btn-success');
+            $(elemento).removeClass('btn-warning');
+        }
+    }
+
+    //Ajax, restaurar la contraseña al valor por defecto
+    function restaurar_contrasena()
+    {
+        $.ajax({        
+            type: 'POST',
+            url: base_url + 'usuarios/restaurar_contrasena/' + registro_id,
+            success: function(){
+                var elemento = '#restaurar_' + registro_id;
+                $(elemento).html('<i class="fa fa-check"></i> Restaurada');
+                $(elemento).removeClass('btn-light');
+                $(elemento).addClass('btn-info');
+            }
+        });
+    }
+    
 </script>

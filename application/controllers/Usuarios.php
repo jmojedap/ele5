@@ -31,7 +31,7 @@ class Usuarios extends CI_Controller{
         
         //Opciones de filtros de búsqueda
             $data['opciones_rol'] = $this->Item_model->opciones_id('categoria_id = 58', 'Todos');
-            $data['opciones_institucion'] = $this->App_model->opciones_institucion();
+            $data['opciones_institucion'] = $this->App_model->opciones_institucion('id > 0', 'Todas');
             
         //Arrays con valores para contenido en la tabla
             $data['arr_roles'] = $this->Item_model->arr_interno('categoria_id = 58');
@@ -192,10 +192,10 @@ class Usuarios extends CI_Controller{
             
         //Array data espefícicas
             $data['tipo'] = $tipo;
-            $data['titulo_pagina'] = 'Usuarios';
+            $data['head_title'] = 'Usuarios';
             $data['head_subtitle'] = 'Nuevo';
-            $data['vista_a'] = 'usuarios/nuevo_v';
-            //$data['vista_a'] = 'app/gc_v';
+            $data['view_a'] = 'usuarios/nuevo_v';
+            $data['nav_2'] = 'usuarios/explorar/menu_v';
         
         $output = array_merge($data,(array)$output);
         
@@ -299,11 +299,11 @@ class Usuarios extends CI_Controller{
             
         //Variables generales
             //$data['ayuda_id'] = 97;
-            $data['titulo_pagina'] = 'Usuarios';
+            $data['head_title'] = 'Usuarios';
             $data['head_subtitle'] = 'Importar estudiantes';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'usuarios/explorar_menu_v';
-            $data['vista_submenu'] = 'usuarios/importar_menu_v';
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_2'] = 'usuarios/explorar/menu_v';
+            $data['nav_3'] = 'usuarios/importar_menu_v';
         
         $this->load->view(TPL_ADMIN, $data);
     }
@@ -1527,11 +1527,11 @@ class Usuarios extends CI_Controller{
             
         //Variables generales
             //$data['ayuda_id'] = 97;
-            $data['titulo_pagina'] = 'Usuarios';
+            $data['head_title'] = 'Usuarios';
             $data['head_subtitle'] = 'Eliminar por username';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'usuarios/explorar_menu_v';
-            $data['vista_submenu'] = 'usuarios/importar_menu_v';
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_2'] = 'usuarios/explorar/menu_v';
+            $data['nav_3'] = 'usuarios/importar_menu_v';
         
         $this->load->view(TPL_ADMIN, $data);
     }

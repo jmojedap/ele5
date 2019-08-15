@@ -2,15 +2,17 @@
     //Clases menú
         $seccion = $this->uri->segment(2);
 
-        if ( $seccion == 'asignar_taller' ) { $seccion = 'importar'; }
-        if ( $seccion == 'asignar_taller_e' ) { $seccion = 'importar'; }
+        if ( $seccion == 'importar_estudiantes' ) { $seccion = 'importar'; }
+        if ( $seccion == 'importar_estudiantes_e' ) { $seccion = 'importar'; }
+        if ( $seccion == 'eliminar_por_username' ) { $seccion = 'importar'; }
+        if ( $seccion == 'eliminar_por_username_e' ) { $seccion = 'importar'; }
     
         $clases[$seccion] = 'active';
 
     
     //Atributos de los elementos del menú
         $arr_menus['explorar'] = array(
-            'icono' => '<i class="fa fa-list-alt"></i>',
+            'icono' => '<i class="fa fa-search"></i>',
             'texto' => 'Explorar',
             'link' => "usuarios/explorar/",
             'atributos' => 'title="Explorar contenidos"'
