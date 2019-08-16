@@ -30,7 +30,7 @@ class Usuarios extends CI_Controller{
             $data = $this->Usuario_model->data_explorar($num_pagina);
         
         //Opciones de filtros de búsqueda
-            $data['opciones_rol'] = $this->Item_model->opciones_id('categoria_id = 58', 'Todos');
+            $data['opciones_rol'] = $this->Item_model->opciones('categoria_id = 58', 'Todos');
             $data['opciones_institucion'] = $this->App_model->opciones_institucion('id > 0', 'Todas');
             
         //Arrays con valores para contenido en la tabla

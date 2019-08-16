@@ -37,7 +37,7 @@
         );
         
         $arr_menus['editar'] = array(
-            'icono' => '<i class="fa fa-pencil"></i>',
+            'icono' => '<i class="fa fa-pencil-alt"></i>',
             'texto' => 'Editar',
             'link' => "usuarios/editar/edit/{$usuario_id}",
             'atributos' => ''
@@ -50,13 +50,6 @@
             'atributos' => ''
         );
             
-        $arr_menus['master_login'] = array(
-            'icono' => '<i class="fa fa-sign-in"></i>',
-            'texto' => '',
-            'link' => "develop/ml/{$usuario_id}",
-            'atributos' => 'title="Ingresar como este usuario"'
-        );
-            
         $arr_menus['contrasena'] = array(
             'icono' => '<i class="fa fa-lock"></i>',
             'texto' => 'Contraseña',
@@ -65,7 +58,7 @@
         );
         
         $arr_menus['editarme'] = array(
-            'icono' => '<i class="fa fa-pencil"></i>',
+            'icono' => '<i class="fa fa-pencil-alt"></i>',
             'texto' => 'Editar',
             'link' => "usuarios/editarme/edit/{$usuario_id}",
             'atributos' => ''
@@ -86,7 +79,8 @@
         $elementos = $elementos_rol[$this->session->userdata('rol_id')];
         
     //Elementos especiales
-        if ( $this->session->userdata('usuario_id') == $row->id ) {
+        if ( $this->session->userdata('usuario_id') == $row->id ) 
+        {
             //Si es él mismo perfil del usuario
             $elementos[] = 'editarme';
             $elementos[] = 'contrasena';
@@ -100,18 +94,5 @@
     
 ?>
 
-<?php
-    $nombre_institucion = $this->App_model->nombre_institucion($row->institucion_id, 1);
-?>
-
-<p>
-    <span class="resaltar"><?= $this->Item_model->nombre(6, $row->rol_id); ?></span> | 
-    <span class="suave">Username:</span>
-    <span class="resaltar"><?= $row->username ?></span> | 
-    <span class="suave"><i class="fa fa-bank"></i></span>
-    <span class="resaltar"><?= $nombre_institucion ?></span> | 
-</p>
-
-<?= $this->load->view('app/menu_v', $data_menu)?>
-<?= $this->load->view($vista_b)?>
+<?php $this->load->view('comunes/bs4/menu_v', $data_menu)?>
             

@@ -1,3 +1,5 @@
+<?php $this->load->view('assets/chosen_jquery') ?>
+
 <?php    
     //Clases filtros
         foreach ( $arr_filtros as $filtro )
@@ -48,7 +50,7 @@
 
         <div class="form-group row <?php echo $cl_filtros['i'] ?>">
             <div class="col-md-9">
-                <?php echo form_dropdown('i', $opciones_institucion, $busqueda['i'], 'class="form-control" title="Filtrar por institución"'); ?>
+                <?php echo form_dropdown('i', $opciones_institucion, $busqueda['i'], 'class="form-control chosen-select" title="Filtrar por institución"'); ?>
             </div>
             <label for="n" class="col-md-3 control-label">Institución</label>
         </div>

@@ -133,7 +133,7 @@
                     </button>
 
                     <?php if ( $this->session->userdata('rol_id') <= 1 ) { ?>
-                        <a href="<?php echo base_url("develop/ml/{$row->resultado}") ?>" class="btn btn-sm btn-light" title="Ingresar como este usuario">
+                        <a href="<?php echo base_url("develop/ml/{$row_resultado->id}") ?>" class="btn btn-sm btn-light" title="Ingresar como este usuario">
                             <i class="fa fa-sign-in-alt"></i>
                         </a>
                     <?php } ?>

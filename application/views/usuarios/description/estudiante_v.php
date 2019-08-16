@@ -12,7 +12,7 @@
     <b class="text-danger"><?= $nombre_institucion ?></b> | 
     <span class="text-muted">Grupo actual:</span>
     <b class="text-danger"><?= $nombre_grupo ?></b> | 
-    <?php if ( ciuser ) { ?>
+    <?php if ( $this->session->userdata('rol_id') <= 1 ) { ?>
         <span class="text-muted">
             Acceder como 
         </span>
