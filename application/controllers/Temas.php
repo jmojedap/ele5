@@ -69,11 +69,11 @@ class Temas extends CI_Controller{
         
         //Solicitar vista
             $data['ayuda_id'] = 141;
-            $data['titulo_pagina'] = 'Temas';
-            $data['subtitulo_pagina'] = number_format($config['total_rows'], 0, ',', '.');
-            $data['vista_a'] = 'temas/explorar_v';
-            $data['vista_menu'] = 'temas/menu_explorar_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = number_format($config['total_rows'], 0, ',', '.');
+            $data['view_a'] = 'temas/explorar_v';
+            $data['nav_2'] = 'temas/menu_explorar_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -104,12 +104,12 @@ class Temas extends CI_Controller{
 
                 $this->load->view('app/descargar_phpexcel_v', $data);
             } else {
-                $data['titulo_pagina'] = 'Plataforma Enlace';
+                $data['head_title'] = 'Plataforma Enlace';
                 $data['mensaje'] = "El número de registros es de {$resultados_total->num_rows()}. El máximo permitido es de " . MAX_REG_EXPORT . " registros. Puede filtrar los datos por algún criterio para poder exportarlos.";
                 $data['link_volver'] = "temas/explorar/?{$busqueda_str}";
-                $data['vista_a'] = 'app/mensaje_v';
+                $data['view_a'] = 'app/mensaje_v';
                 
-                $this->load->view(PTL_ADMIN, $data);
+                $this->load->view(TPL_ADMIN, $data);
             }
     }
     
@@ -138,12 +138,12 @@ class Temas extends CI_Controller{
             $gc_output = $this->Tema_model->crud_basico();
             
         //Solicitar vista
-            $data['titulo_pagina'] = 'Temas';
-            $data['subtitulo_pagina'] = 'Nuevo';
-            $data['vista_a'] = 'comunes/gc_v';
-            $data['vista_menu'] = 'temas/menu_explorar_v';
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Nuevo';
+            $data['view_a'] = 'comunes/gc_v';
+            $data['nav_2'] = 'temas/menu_explorar_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN, $output);
     }
     
     function editar()
@@ -156,10 +156,10 @@ class Temas extends CI_Controller{
             $gc_output = $this->Tema_model->crud_basico();
             
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Editar';
-            $data['vista_b'] = 'comunes/gc_v';
+            $data['head_subtitle'] = 'Editar';
+            $data['view_a'] = 'comunes/gc_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN, $output);
     }
     
 // SECCIONES DATOS
@@ -219,9 +219,9 @@ class Temas extends CI_Controller{
             $data['email'] = $email;
         
         //Solicitar vista
-            $data['titulo_pagina'] .= ' - Información';
-            //$data['vista_b'] = 'temas/info_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_title'] .= ' - Información';
+            //$data['view_a'] = 'temas/info_v';
+            $this->load->view(TPL_ADMIN, $data);
         
     }
     
@@ -234,10 +234,10 @@ class Temas extends CI_Controller{
             $gc_output = $this->Tema_model->crud_relacionados($data['row']);
             
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Temas relacionados';
-            $data['vista_b'] = 'comunes/gc_v';
+            $data['head_subtitle'] = 'Temas relacionados';
+            $data['view_a'] = 'comunes/gc_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN, $output);
     }
     
     function quices($tema_id)
@@ -252,9 +252,9 @@ class Temas extends CI_Controller{
             $data['arr_tipo_quiz'] = $this->Item_model->arr_item(9);
             
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Evidencias de aprendizaje';
-            $data['vista_b'] = 'temas/quices_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Evidencias de aprendizaje';
+            $data['view_a'] = 'temas/quices_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -306,9 +306,9 @@ class Temas extends CI_Controller{
             $data['preguntas'] = $this->Tema_model->preguntas($tema_id);
             
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Preguntas';
-            $data['vista_b'] = 'temas/preguntas_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Preguntas';
+            $data['view_a'] = 'temas/preguntas_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     function programas($tema_id)
@@ -325,9 +325,9 @@ class Temas extends CI_Controller{
             $data['programas'] = $programas;
             
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Programas';
-            $data['vista_b'] = 'temas/programas_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Programas';
+            $data['view_a'] = 'temas/programas_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     function paginas($tema_id)
@@ -348,9 +348,9 @@ class Temas extends CI_Controller{
             
             
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Páginas';
-            $data['vista_b'] = 'temas/paginas_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Páginas';
+            $data['view_a'] = 'temas/paginas_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     function archivos($tema_id)
@@ -365,10 +365,10 @@ class Temas extends CI_Controller{
             $data['archivos'] = $this->Tema_model->archivos($tema_id);
             
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Archivos';
-            $data['vista_b'] = 'comunes/gc_v';
+            $data['head_subtitle'] = 'Archivos';
+            $data['view_a'] = 'comunes/gc_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN, $output);
     }
     
     function links($tema_id)
@@ -383,10 +383,10 @@ class Temas extends CI_Controller{
             $data['archivos'] = $this->Tema_model->archivos($tema_id);
             
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Links';
-            $data['vista_b'] = 'comunes/gc_v';
+            $data['head_subtitle'] = 'Links';
+            $data['view_a'] = 'comunes/gc_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN, $output);
     }
     
     
@@ -418,13 +418,13 @@ class Temas extends CI_Controller{
             $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
             
         //Variables generales
-            $data['titulo_pagina'] = 'Temas';
-            $data['subtitulo_pagina'] = 'Importar temas';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'temas/menu_importar_v';
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Importar temas';
+            $data['view_a'] = 'comunes/importar_v';
+            $data['nav_2'] = 'temas/menu_importar_v';
             $data['ayuda_id'] = 104;
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -455,12 +455,12 @@ class Temas extends CI_Controller{
             $data['destino_volver'] = 'temas/explorar/';
         
         //Cargar vista
-            $data['titulo_pagina'] = 'Temas';
-            $data['subtitulo_pagina'] = 'Resultado cargue';
-            $data['vista_a'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'temas/menu_explorar_v';
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Resultado cargue';
+            $data['view_a'] = 'comunes/resultado_importacion_v';
+            $data['nav_2'] = 'temas/menu_explorar_v';
             $data['ayuda_id'] = 104;
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
 // COPIAR MASIVAMENTE PREGUNTAS DE UN TEMA A OTRO
@@ -492,13 +492,13 @@ class Temas extends CI_Controller{
             
         //Variables generales
             //$data['ayuda_id'] = 97;
-            $data['titulo_pagina'] = 'Temas';
-            $data['subtitulo_pagina'] = 'Copiar preguntas de temas';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'temas/menu_importar_v';
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Copiar preguntas de temas';
+            $data['view_a'] = 'comunes/importar_v';
+            $data['nav_2'] = 'temas/menu_importar_v';
             //$data['vista_submenu'] = '';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -527,12 +527,12 @@ class Temas extends CI_Controller{
             $data['destino_volver'] = "temas/explorar/";
         
         //Cargar vista
-            $data['titulo_pagina'] = 'Temas';
-            $data['subtitulo_pagina'] = 'Resultado copia de preguntas';
-            $data['vista_a'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'temas/menu_importar_v';
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Resultado copia de preguntas';
+            $data['view_a'] = 'comunes/resultado_importacion_v';
+            $data['nav_2'] = 'temas/menu_importar_v';
             //$data['vista_submenu'] = 'usuarios/importar_menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
 // ASIGNAR MASIVAMENTE QUICES DE UN TEMA A OTRO
@@ -565,13 +565,13 @@ class Temas extends CI_Controller{
             
         //Variables generales
             //$data['ayuda_id'] = 97;
-            $data['titulo_pagina'] = 'Temas';
-            $data['subtitulo_pagina'] = 'Asignar evidencias';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'temas/menu_importar_v';
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Asignar evidencias';
+            $data['view_a'] = 'comunes/importar_v';
+            $data['nav_2'] = 'temas/menu_importar_v';
             //$data['vista_submenu'] = '';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -600,12 +600,12 @@ class Temas extends CI_Controller{
             $data['destino_volver'] = "temas/asignar_quices/";
         
         //Cargar vista
-            $data['titulo_pagina'] = 'Temas';
-            $data['subtitulo_pagina'] = 'Resultado asignar quices';
-            $data['vista_a'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'temas/menu_importar_v';
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Resultado asignar quices';
+            $data['view_a'] = 'comunes/resultado_importacion_v';
+            $data['nav_2'] = 'temas/menu_importar_v';
             //$data['vista_submenu'] = 'usuarios/importar_menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -623,9 +623,9 @@ class Temas extends CI_Controller{
             $data['destino_form'] = 'temas/generar_copia';
         
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Crear copia';
-            $data['vista_b'] = 'temas/copiar_tema_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Crear copia';
+            $data['view_a'] = 'temas/copiar_tema_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -759,8 +759,8 @@ class Temas extends CI_Controller{
             $gc_output = $this->Pregunta_model->crud_add_tema($tema_id, $registro_tema, $orden);
             
         //Establecer vista
-            $data['vista_b'] = 'temas/agregar_pregunta_v';
-            if ( $proceso == 'add' ){ $data['vista_b'] = 'temas/agregar_pregunta_add_v'; }
+            $data['view_a'] = 'temas/agregar_pregunta_v';
+            if ( $proceso == 'add' ){ $data['view_a'] = 'temas/agregar_pregunta_add_v'; }
             
         //Variables
             $data['busqueda'] = $busqueda;
@@ -770,9 +770,9 @@ class Temas extends CI_Controller{
             $data['preguntas'] = $resultados;
         
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Agregar pregunta';
+            $data['head_subtitle'] = 'Agregar pregunta';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN, $output);
         
     }
     
@@ -834,12 +834,12 @@ class Temas extends CI_Controller{
         $gc_output = $crud->render();
 
         //Solicitar vista
-            $data['titulo_pagina'] = 'Recursos';
-            $data['subtitulo_pagina'] = 'Archivos';
-            $data['vista_a'] = 'temas/recursos_v';
+            $data['head_title'] = 'Recursos';
+            $data['head_subtitle'] = 'Archivos';
+            $data['view_a'] = 'temas/recursos_v';
 
         $output = array_merge($data,(array)$gc_output);
-        $this->load->view(PTL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN, $output);
     }
     
     function recursos_links()
@@ -881,12 +881,12 @@ class Temas extends CI_Controller{
             $data['head_includes'] = $head_includes;
 
         //Solicitar vista
-        $data['titulo_pagina'] = 'Recursos';
-        $data['subtitulo_pagina'] = 'Archivos';
-        $data['vista_a'] = 'temas/recursos_v';
+        $data['head_title'] = 'Recursos';
+        $data['head_subtitle'] = 'Archivos';
+        $data['view_a'] = 'temas/recursos_v';
 
         $output = array_merge($data,(array)$output);
-        $this->load->view(PTL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN, $output);
     }
     
     function recursos_quices()
@@ -929,12 +929,12 @@ class Temas extends CI_Controller{
             $data['head_includes'] = $head_includes;
 
         //Solicitar vista
-        $data['titulo_pagina'] = 'Recursos';
-        $data['subtitulo_pagina'] = 'Archivos';
-        $data['vista_a'] = 'temas/recursos_v';
+        $data['head_title'] = 'Recursos';
+        $data['head_subtitle'] = 'Archivos';
+        $data['view_a'] = 'temas/recursos_v';
 
         $output = array_merge($data,(array)$output);
-        $this->load->view(PTL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN, $output);
     }
 
 // UNIDADES TEMÁTICAS
@@ -958,13 +958,13 @@ class Temas extends CI_Controller{
             $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
             
         //Variables generales
-            $data['titulo_pagina'] = 'Temas';
-            $data['subtitulo_pagina'] = 'Importar elementos UT';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'temas/menu_importar_v';
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Importar elementos UT';
+            $data['view_a'] = 'comunes/importar_v';
+            $data['nav_2'] = 'temas/menu_importar_v';
             $data['ayuda_id'] = 100;
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -996,12 +996,12 @@ class Temas extends CI_Controller{
             $data['destino_volver'] = 'temas/explorar/';
         
         //Cargar vista
-            $data['titulo_pagina'] = 'Temas';
-            $data['subtitulo_pagina'] = 'Resultado asignación UT';
-            $data['vista_a'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'temas/menu_importar_v';
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Resultado asignación UT';
+            $data['view_a'] = 'comunes/resultado_importacion_v';
+            $data['nav_2'] = 'temas/menu_importar_v';
             $data['ayuda_id'] = 100;
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
 }
