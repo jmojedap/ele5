@@ -78,20 +78,20 @@
             tabla_explorar();
         });
 
-        //Específicas para Usuarios
+        //Específicas para Exploración de Usuarios
 
         //Botón, se alterna el valor del campo usuario.activo
-        $('.alternar_activacion').click(function(){
+        $('#tabla_resultados').on('click', '.alternar_activacion', function(){
             registro_id = $(this).data('usuario_id');
             alternar_activacion();
         });
 
-        $('.alternar_pago').click(function(){
+        $('#tabla_resultados').on('click', '.alternar_pago', function(){
             registro_id = $(this).data('usuario_id');
             alternar_pago();
         });
 
-        $('.restaurar_contrasena').click(function(){
+        $('#tabla_resultados').on('click', '.restaurar_contrasena', function(){
             registro_id = $(this).data('usuario_id');
             restaurar_contrasena();
         });
