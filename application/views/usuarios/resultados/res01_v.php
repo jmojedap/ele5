@@ -1,3 +1,5 @@
+<?php $this->load->view('head_includes/highcharts') ?>
+
 <?php
    $condiciones[0] = "usuario_id = {$usuario_id}";
 ?>
@@ -63,53 +65,21 @@ $(function () {
     });
 </script>
 
-<?= $this->load->view('usuarios/cuestionarios_submenu_v'); ?>
-
-<div class="btn-group sep1">
+<div class="nav nav-pills nav-justified mb-2">
     <?php foreach ($areas->result() as $row_area) : ?>
         <?php
-            $clase_area = 'w3 btn btn-default';
-            if ( $row_area->id == $area_id ) { $clase_area = 'w3 btn btn-primary'; }
+            $clase_area = ( $row_area->id == $area_id ) ? 'active' : 'b' ;
         ?>
-        <?= anchor("usuarios/cuestionarios_resumen01/{$usuario_id}/{$row_area->id}", $row_area->item_corto, 'class="' . $clase_area . '"' )  ?>
+        <li class="nav-item">
+            <a href="<?php echo base_url("usuarios/cuestionarios_resumen01/{$usuario_id}/{$row_area->id}") ?>" class="nav-link <?php echo $clase_area ?>">
+                <?php echo $row_area->item_corto ?>
+            </a>
+        </li>
     <?php endforeach ?>
 </div>
 
-<div class="seccion group">
-    <div class="col col_box span_2_of_2">
-        <div class="info_container_body">
-            <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-        </div>
-    </div>
-</div>
-
-<div class="section group" style="display: none">
-    <div class="col col_box span_3_of_3">
-        <div class="info_container_body">
-            <h2>Cuestionarios</h2>
-            <?php $condiciones = array() ?>
-            <?php $condiciones[0] = "usuario_id = {$usuario_id}"; ?>
-            <?php foreach ($cuestionarios->result() as $row_cuestionario) : ?>
-                <?php
-                    $condiciones[1] = "cuestionario_id = {$row_cuestionario->cuestionario_id}";
-                ?>
-                <h3><?= $row_cuestionario->nombre_cuestionario ?></h3>
-                <?php foreach ($nombres_competencias as $key => $competencia_id) : ?>
-                    <?php
-                        $condiciones[2] = "competencia_id = {$key}";
-
-                        //$resultado = $this->Cuestionario_model->resultado_detalle($condiciones);
-                        $resultado = $this->App_model->res_cuestionario($row_cuestionario->cuestionario_id, $condiciones[0], $condiciones[2]);
-                    ?>
-                        <?= str_repeat('||', $resultado['porcentaje']) . " - " . $resultado['porcentaje'] ?>
-                        ::>
-                        <?= $competencia_id ?>
-                        <br/>
-                        
-                <?php endforeach //Componentes ?> 
-            <?php endforeach // Cuestionarios ?>
-            
-            
-        </div>
+<div class="card">
+    <div class="card-body">
+        <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
     </div>
 </div>

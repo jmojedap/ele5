@@ -15,15 +15,20 @@ class Usuario_model extends CI_Model{
         $basico['usuario_id'] = $usuario_id;
         $basico['row'] = $row;
         $basico['editable'] = $this->editable($row);
-        $basico['titulo_pagina'] = "{$row->nombre} {$row->apellidos}";
-        $basico['vista_a'] = 'usuarios/' . $this->vista_a($row->rol_id);
+        $basico['head_title'] = "{$row->nombre} {$row->apellidos}";
+        $basico['view_description'] = 'usuarios/description/' . $this->view_role($row->rol_id);
+        $basico['nav_2'] = 'usuarios/menu/' . $this->view_role($row->rol_id);
         
         return $basico;
     }
     
-    function vista_a($rol_id)
+    /**
+     * Nombre de una vista asignada dependiendo del rol del usuario cuyo perfil se está visitando.
+     * 2019-07-08
+     */
+    function view_role($rol_id)
     {
-        $vistas = array(
+        $views = array(
             0 => 'usuario_v',
             1 => 'usuario_v',
             2 => 'usuario_v',
@@ -36,8 +41,9 @@ class Usuario_model extends CI_Model{
             9 => 'usuario_v',
         );
         
-        return $vistas[$rol_id];
+        return $views[$rol_id];
     }
+
     
     /**
      * Define si un usuario en sesión puede editar el perfil de otro usuario
@@ -81,13 +87,73 @@ class Usuario_model extends CI_Model{
         return $mostrar;
     }
     
-// Búsquedas
+// Exploraración
 //-----------------------------------------------------------------------------
     
+    /**
+     * Array con los datos para la vista de exploración
+     * 2019-08-05
+     * 
+     * @return string
+     */
+    function data_explorar($num_pagina)
+    {
+        //Data inicial, de la tabla
+            $data = $this->data_tabla_explorar($num_pagina);
+        
+        //Elemento de exploración
+            $data['carpeta_vistas'] = 'usuarios/explorar/';         //Carpeta donde están las vistas de exploración
+            $data['head_title'] = 'Usuarios';
+            $data['el_plural'] = 'usuarios';
+            $data['el_singular'] = 'usuario';
+                
+        //Otros
+            $data['arr_filtros'] = array('i', 'rol');
+            
+        //Vistas
+            $data['head_subtitle'] = $data['cant_resultados'];
+            $data['view_a'] = $data['carpeta_vistas'] . 'explorar_v';
+            $data['nav_2'] = $data['carpeta_vistas'] . 'menu_v';
+        
+        return $data;
+    }
+    
+    /**
+     * Array con los datos para la tabla de la vista de exploración
+     * 
+     * @param type $num_pagina
+     * @return string
+     */
+    function data_tabla_explorar($num_pagina)
+    {
+        //Elemento de exploración
+            $data['controlador'] = 'usuarios';         //Nombre del controlador
+            $data['cf'] = 'usuarios/explorar/';        //CF Controlador Función
+        
+        //Paginación
+            $data['num_pagina'] = $num_pagina;                  //Número de la página de datos que se está consultado
+            $data['per_page'] = 10;                             //Cantidad de registros por página
+            $offset = ($num_pagina - 1) * $data['per_page'];    //Número de la página de datos que se está consultado
+        
+        //Búsqueda y Resultados
+            $this->load->model('Busqueda_model');
+            $data['busqueda'] = $this->Busqueda_model->busqueda_array();
+            $data['busqueda_str'] = $this->Busqueda_model->busqueda_str();
+            $data['resultados'] = $this->buscar($data['busqueda'], $data['per_page'], $offset);    //Resultados para página
+            
+        //Otros
+            $data['cant_resultados'] = $this->cant_resultados($data['busqueda']);
+            $data['max_pagina'] = ceil($this->Pcrn->si_cero($data['cant_resultados'],1) / $data['per_page']);   //Cantidad de páginas
+            $data['seleccionados_todos'] = '-'. $this->Pcrn->query_to_str($data['resultados'], 'id');           //Para selección masiva de todos los elementos de la página
+            
+        return $data;
+    }
+
+
     function buscar($busqueda, $per_page = NULL, $offset = NULL)
     {
         
-        $filtro_rol = $this->filtro_usuarios($this->session->userdata('usuario_id'));
+        $filtro_rol = $this->filtro_rol();
 
         //Construir búsqueda
         //Crear array con términos de búsqueda
@@ -105,7 +171,7 @@ class Usuario_model extends CI_Model{
         //Especificaciones de consulta
             $this->db->select('*, CONCAT((nombre), " ", (apellidos), " | ",(username)) AS name');
             $this->db->where($filtro_rol); //Filtro según el rol de usuario que se tenga
-            $this->db->order_by('creado', 'DESC');
+            $this->db->order_by('ultimo_login', 'DESC');
             
         //Otros filtros
             if ( $busqueda['rol'] != '' ) { $this->db->where('rol_id', $busqueda['rol']); }    //Rol de usuario
@@ -121,35 +187,20 @@ class Usuario_model extends CI_Model{
         return $query;
         
     }
-    
-    function autocompletar($busqueda, $limit = 15)
+
+    /**
+     * Devuelve la cantidad de registros encontrados en la tabla con los filtros
+     * establecidos en la búsqueda
+     * 
+     * @param type $busqueda
+     * @return type
+     */
+    function cant_resultados($busqueda)
     {
-        $filtro_rol = $this->filtro_usuarios($this->session->userdata('usuario_id'));
-
-        //Construir búsqueda
-        //Crear array con términos de búsqueda
-            if ( strlen($busqueda['q']) > 2 )
-            {
-                $palabras = $this->Busqueda_model->palabras($busqueda['q']);
-
-                foreach ($palabras as $palabra) {
-                    $this->db->like('CONCAT(nombre, apellidos, username)', $palabra);
-                }
-            }
-        
-        //Especificaciones de consulta
-            $this->db->select('id, CONCAT((nombre), " ", (apellidos), " | ",(username)) AS name');
-            $this->db->where($filtro_rol); //Filtro según el rol de usuario que se tenga
-            $this->db->order_by('apellidos', 'ASC');
-            
-        //Otros filtros
-            if ( $busqueda['condicion'] != '' ) { $this->db->where($busqueda['condicion']); }    //Condición adicional
-            
-        $query = $this->db->get('usuario', $limit); //Resultados por página
-        
-        return $query;
+        $resultados = $this->buscar($busqueda); //Para calcular el total de resultados
+        return $resultados->num_rows();
     }
-    
+
     /**
      * Condición tipo WHERE SQL, para filtrar el resultado de las búsquedas
      * según el rol de usuario de sesión.
@@ -157,15 +208,11 @@ class Usuario_model extends CI_Model{
      * @param type $usuario_id
      * @return type 
      */
-    function filtro_usuarios($usuario_id = NULL)
+    function filtro_rol()
     {
-        
-        if ( is_null($usuario_id) ){
-            //Si es nulo, es el usuario de la sesión actual
-            $usuario_id = $this->session->userdata('usuario_id');
-        }
-        
+        $usuario_id = $this->session->userdata('usuario_id');
         $row_usuario = $this->Pcrn->registro_id('usuario', $usuario_id);
+
         $condicion = 'id = 0';  //Valor por defecto, ningún usuario, se obtendrían cero usuarios.
         
         if ( $row_usuario->rol_id == 0 ) {
@@ -200,6 +247,36 @@ class Usuario_model extends CI_Model{
         return $condicion;
         
     }
+    
+    function autocompletar($busqueda, $limit = 15)
+    {
+        $filtro_rol = $this->filtro_usuarios($this->session->userdata('usuario_id'));
+
+        //Construir búsqueda
+        //Crear array con términos de búsqueda
+            if ( strlen($busqueda['q']) > 2 )
+            {
+                $palabras = $this->Busqueda_model->palabras($busqueda['q']);
+
+                foreach ($palabras as $palabra) {
+                    $this->db->like('CONCAT(nombre, apellidos, username)', $palabra);
+                }
+            }
+        
+        //Especificaciones de consulta
+            $this->db->select('id, CONCAT((nombre), " ", (apellidos), " | ",(username)) AS name');
+            $this->db->where($filtro_rol); //Filtro según el rol de usuario que se tenga
+            $this->db->order_by('apellidos', 'ASC');
+            
+        //Otros filtros
+            if ( $busqueda['condicion'] != '' ) { $this->db->where($busqueda['condicion']); }    //Condición adicional
+            
+        $query = $this->db->get('usuario', $limit); //Resultados por página
+        
+        return $query;
+    }
+    
+    
     
 //GROCERY CRUD PARA USUARIOS
 //---------------------------------------------------------------------------------------------------

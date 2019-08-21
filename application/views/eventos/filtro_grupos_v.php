@@ -3,7 +3,7 @@
     //Filtro áreas
         $texto_grupo = 'Grupo';
         $clase_todos = 'active';
-        $clase_boton = 'btn-default';
+        $clase_boton = 'btn-secondary';
         $get_str = $this->Pcrn->get_str('g');
         if ( $busqueda['g'] != '' ) {
             $texto_grupo = 'Grupo ' . $this->App_model->nombre_grupo($busqueda['g']);
@@ -17,18 +17,18 @@
         <?= $texto_grupo ?> <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" style="width: 100%">
-        <li class="<?= $clase_todos ?>">
-            <?= anchor("{$destino_filtros}?{$get_str}", 'Todos los grupos') ?>
-        </li>
-        <li role="separator" class="divider"></li>
+        <a class="dropdown-item <?= $clase_todos ?>" href="<?php echo base_url("{$destino_filtros}?{$get_str}") ?>">
+            Todos los grupos
+        </a>
+        <div class="dropdown-divider"></div>
         <?php foreach ($grupos->result() as $row_grupo) : ?>
             <?php
                 $clase_grupo = '';
                 if ( $row_grupo->id == $busqueda[''] ) { $clase_grupo = 'active'; }
             ?>
-            <li class="<?= $clase_grupo ?>">
-                <?= anchor("{$destino_filtros}?{$get_str}g={$row_grupo->id}", $row_grupo->nivel . '-' . $row_grupo->grupo, 'class="" title=""') ?>
-            </li>
+            <a class="dropdown-item <?= $clase_grupo ?>" href="<?php echo base_url("{$destino_filtros}?{$get_str}g={$row_grupo->id}") ?>">
+                <?php echo $row_grupo->nivel . '-' . $row_grupo->grupo ?>
+            </a>
         <?php endforeach ?>
     </ul>
 </div>

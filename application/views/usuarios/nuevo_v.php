@@ -72,26 +72,26 @@
     }
 </script>
 
-<?php $this->load->view('usuarios/explorar_menu_v') ?>
+<ul class="nav nav-pills">
+    <li role="" class="nav-item">
+        <a href="<?php echo base_url("usuarios/nuevo/estudiante/0/add") ?>" class="nav-link <?= $clases['estudiante'] ?>">
+            Estudiante
+        </a>
+    </li>
+    <li role="" class="nav-item">
+        <a href="<?php echo base_url("usuarios/nuevo/institucional/0/add") ?>" class="nav-link <?= $clases['institucional'] ?>">
+            Institucional
+        </a>
+    </li>
+    <li role="" class="nav-item">
+        <a href="<?php echo base_url("usuarios/nuevo/interno/0/add") ?>" class="nav-link <?= $clases['interno'] ?>">
+            Interno
+        </a>
+    </li>
+</ul>  
 
-<div class="sep2">
-    <ul class="nav nav-pills">
-        <li role="" class="<?= $clases['estudiante'] ?>">
-            <?= anchor("usuarios/nuevo/estudiante/0/add", 'Estudiante') ?>
-        </li>
-
-        <li role="" class="<?= $clases['institucional'] ?>">
-            <?= anchor("usuarios/nuevo/institucional/0/add", 'Institucional') ?>
-        </li>
-
-        <li role="" class="<?= $clases['interno'] ?>">
-            <?= anchor("usuarios/nuevo/interno/0/add", 'Interno') ?>
-        </li>
-    </ul>      
-</div>
-
-<div class="sep3">
-    <span class="btn btn-default" id="generar_username">Generar username</span>
+<div class="my-2">
+    <span class="btn btn-secondary" id="generar_username">Generar username</span>
 </div>
 
 <?php echo $output; ?>

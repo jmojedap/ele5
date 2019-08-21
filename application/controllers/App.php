@@ -183,8 +183,8 @@ class App extends CI_Controller{
 
     function demo($page = 'biblioteca')
     {
-        $data['titulo_pagina'] = 'Biblioteca Virtual';
-        $data['vista_a'] = 'app/demo/' . $page . '_v';
+        $data['head_title'] = 'Demo: ' . $page;
+        $data['view_a'] = 'app/demo/' . $page . '_v';
         $this->load->view(TPL_ADMIN, $data);
     }
     

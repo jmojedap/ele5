@@ -5,7 +5,7 @@
     
     //Atributos de los elementos del menú
         $arr_menus['actividad'] = array(
-            'icono' => '',
+            'icono' => '<i class="far fa-calendar"></i>',
             'texto' => 'Actividad',
             'link' => "usuarios/actividad/{$row->id}/{$row->username}",
             'atributos' => 'title="Actividad del usuario en la Plataforma"'
@@ -13,21 +13,21 @@
         
         $arr_menus['contrasena'] = array(
             'icono' => '<i class="fa fa-lock"></i>',
-            'texto' => '',
+            'texto' => 'Contraseña',
             'link' => "usuarios/contrasena",
             'atributos' => 'title="Cambio de contraseña de usuario"'
         );
         
         $arr_menus['editar'] = array(
-            'icono' => '<i class="fa fa-pencil"></i>',
+            'icono' => '<i class="fa fa-pencil-alt"></i>',
             'texto' => 'Editar',
             'link' => "usuarios/editar/edit/{$row->id}",
             'atributos' => 'title="Editar datos de usuario"'
         );
         
     //Elementos de menú para cada rol
-        $elementos_rol[0] = array('actividad', 'editar', 'master_login');
-        $elementos_rol[1] = array('actividad', 'editar', 'master_login');
+        $elementos_rol[0] = array('actividad', 'editar');
+        $elementos_rol[1] = array('actividad', 'editar');
         $elementos_rol[2] = array('actividad', 'editar');
         $elementos_rol[3] = array();
         $elementos_rol[4] = array();
@@ -51,15 +51,5 @@
         $data_menu['seccion'] = $seccion;
     
 ?>
-    
-<p>
-    <span class="resaltar"><?= $this->Item_model->nombre(6, $row->rol_id); ?></span> 
-    
-     
-    <span class="suave">| Username:</span>
-    <span class="resaltar"><?= $row->username ?></span>
-</p>
 
-<?= $this->load->view('app/menu_v', $data_menu)?>
-<?= $this->load->view($vista_b)?>
-            
+<?php $this->load->view('comunes/bs4/menu_v', $data_menu)?>

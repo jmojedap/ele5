@@ -37,40 +37,39 @@
 
 ?>
 
-<div class="">
-        <div class="panel panel-default" style="max-width: 500px; margin: 0px auto;">
-            <div class="panel-heading">
-                Cambio de contraseña
-            </div>
-            <div class="panel-body">
-                <form accept-charset="utf-8" id="password_form" method="post">
-                    <?= form_hidden('id', $usuario_id_cambio); ?>
-                    <div class="form-group">
-                        <?= form_password($password_actual); ?>    
-                    </div>
+<div>
+    <div class="card" style="max-width: 500px; margin: 0px auto;">
+        <div class="card-header">
+            Cambio de contraseña
+        </div>
+        <div class="card-body">
+            <form accept-charset="utf-8" id="password_form" method="post">
+                <?= form_hidden('id', $usuario_id_cambio); ?>
+                <div class="form-group">
+                    <?= form_password($password_actual); ?>    
+                </div>
 
-                    <div class="form-group">
-                        <?= form_password($password); ?>
-                    </div>
+                <div class="form-group">
+                    <?= form_password($password); ?>
+                </div>
 
-                    <div class="form-group">
-                        <?= form_password($passconf); ?>
-                    </div>
+                <div class="form-group">
+                    <?= form_password($passconf); ?>
+                </div>
 
-                    <div class="form-group">
-                        <?= form_submit($submit) ?>        
-                    </div>
+                <div class="form-group">
+                    <?= form_submit($submit) ?>        
+                </div>
 
-                    <div class="alert alert-success" role="alert" id="mensaje_exito" style="display: none;">
-                        <i class="fa fa-check"></i>
-                        La contraseña fue cambiada exitosamente.
-                    </div>
-                    <div class="alert alert-danger" role="alert" id="mensaje_error" style="display: none;">
-                        <i class="fa fa-exclamation-triangle"></i>
-                        <span id="texto_error"></span>
-                    </div>
-                </form>
-            </div>
+                <div class="alert alert-success" role="alert" id="mensaje_exito" style="display: none;">
+                    <i class="fa fa-check"></i>
+                    La contraseña fue cambiada exitosamente.
+                </div>
+                <div class="alert alert-danger" role="alert" id="mensaje_error" style="display: none;">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <span id="texto_error"></span>
+                </div>
+            </form>
         </div>
     </div>
 </div>

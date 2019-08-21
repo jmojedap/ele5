@@ -4,13 +4,13 @@
 
    
     //Clases
-        $clase_resultados_detalle = 'btn btn-default';
+        $clase_resultados_detalle = 'btn btn-secondary';
         if ( $this->uri->segment(2) == 'resultados_detalle' ) { $clase_resultados_detalle = 'btn btn-primary'; }
     
-        $clase_resultados = 'btn btn-default';
+        $clase_resultados = 'btn btn-secondary';
         if ( $this->uri->segment(2) == 'resultados' ) { $clase_resultados = 'btn btn-primary'; }
         
-        $clase_resultados_area = 'btn btn-default';
+        $clase_resultados_area = 'btn btn-secondary';
         if ( $this->uri->segment(2) == 'resultados_area' ) { $clase_resultados_area = 'btn btn-primary'; }
         
     
@@ -20,7 +20,7 @@
     $link_pre_competencias = "usuarios/resultados_competencias/{$row->id}/{$uc_id}";
 ?>
 
-<table class="tabla-transparente sep1">
+<table class="tabla-transparente mb-2">
     <tbody>
         <tr>
             <td>
@@ -30,13 +30,11 @@
             </td>
             <td>
                 <div class="dropdown">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                         Por competencia
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li><a>Resultados por competencia</a></li>
-                        <li role="separator" class="divider"></li>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
                         <?php foreach ($areas->result() as $row_area) : ?>
                             <?php
                                 //Variables
@@ -49,22 +47,20 @@
                                 }
                             ?>
 
-                            <li class="<?= $clase ?>">
-                                <?= anchor($link, $texto) ?>
-                            </li>
+                            <a class="dropdown-item <?= $clase ?>" href="<?php echo base_url($link) ?>">
+                                <?php echo $texto ?>
+                            </a>
                         <?php endforeach; ?>
-                    </ul>
+                    </div>
                 </div>
             </td>
             <td>
                 <div class="dropdown">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                         Por componentes
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li><a>Resultados por componentes</a></li>
-                        <li role="separator" class="divider"></li>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
                         <?php foreach ($areas->result() as $row_area) : ?>
                             <?php
                                 //Variables
@@ -76,11 +72,11 @@
                                     if ( $row_area->area_id == $area_id ) { $clase = 'active'; }
                                 }
                             ?>
-                            <li class="<?= $clase ?>"> 
-                                <?= anchor($link, $texto) ?>
-                            </li>
+                            <a href="<?php echo base_url($link) ?>" class="dropdown-item <?= $clase ?>"> 
+                                <?php echo $texto ?>
+                            </a>
                         <?php endforeach; ?>
-                    </ul>
+                    </div>
                 </div>
             </td>
             <?php if ( $row_uc->estado == 2 ) { ?>

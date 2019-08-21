@@ -1,20 +1,20 @@
 <?php $this->load->view('eventos/noticias/noticias_js'); ?>
 
-<link rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel2/noticias.css">
+<link rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/noticias.css">
 
 <div class="row">
-    <div class="col-md-3 col-lg-2">
-        <div class="sep1">
+    <div class="col-md-3">
+        <div class="mb-2">
             <?php $this->load->view('eventos/filtro_areas_v'); ?>
         </div>
         
-        <div class="sep2">
+        <div class="mb-2">
             <?php $this->load->view('eventos/filtro_tipos_v'); ?>
         </div>
         
         
     </div>
-    <div class="col-md-9 col-lg-10">
+    <div class="col-md-9">
         
         <div id="listado_noticias">
             <?php $this->load->view('eventos/noticias/listado_noticias_v'); ?>
@@ -25,11 +25,9 @@
             No hay más noticias para mostrar
         </div>
         
-        <div style="max-width: 600px;">
-            <div class="btn btn-default btn-block" id="mas_noticias">
-                Más
-            </div>
-        </div>
+        <button class="btn btn-secondary btn-block" id="mas_noticias" style="max-width: 600px;">
+            Más
+        </button>
     </div>
 </div>
 

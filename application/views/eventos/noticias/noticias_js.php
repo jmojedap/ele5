@@ -43,7 +43,7 @@
     {
         $.ajax({        
             type: 'POST',
-            url: url_mas + '/' + limit + '/' + offset + '/?' + busqueda_str,
+            url: url_mas + limit + '/' + offset + '/?' + busqueda_str,
             success: function(respuesta){
                 offset += limit;
                 mostrar_mas_noticias(respuesta);

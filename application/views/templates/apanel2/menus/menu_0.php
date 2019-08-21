@@ -395,7 +395,12 @@
                 
                 <li><a href="<?= base_url() ?>develop/procesos" class="<?= $clase_sm['ajustes/procesos'] ?>"><i class="fa fa-tasks"></i><span>procesos</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url('develop/tablas/item') ?>" class="<?= $clase_sm['ajustes/database'] ?>"><i class="fa fa-database"></i><span>base de datos</span></a></li>
-                <li><a href="<?= base_url() ?>estadisticas/login_instituciones" class="<?= $clase_sm['estadisticas'] ?>"><i class="fa fa-bar-chart-o"></i><span>estadísticas</span></a></li> <!-- subitem -->
+                <li>
+                    <a href="<?= base_url('estadisticas/ctn_correctas_incorrectas') ?>" class="<?= $clase_sm['estadisticas'] ?>">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <span>estadísticas</span>
+                    </a>
+                </li>
                 <li>
                     <a href="<?= base_url('lugares/explorar') ?>" class="<?= $clase_sm['ajustes-lugares'] ?>">
                         <i class="fa fa-map-marker"></i>
