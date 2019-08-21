@@ -22,58 +22,80 @@ class Temas extends CI_Controller{
         redirect($destino);
     }
 
-//INFORMACIÓN DE TEMAS
-//---------------------------------------------------------------------------------------------------
+// EXPLORACIÓN DE TEMAS
+//-----------------------------------------------------------------------------
     
     /**
-     * Para evitar error de reenvío de formulario en búsquedas
+     * Exploración y búsqueda de usuarios
      */
-    function explorar_post()
+    function explorar($num_pagina = 1)
     {
+        //Datos básicos de la exploración
+            $this->load->helper('text');
+            $data = $this->Tema_model->data_explorar($num_pagina);
         
-        $this->load->model('Busqueda_model');
-        $busqueda_str = $this->Busqueda_model->busqueda_str();
-        redirect("temas/explorar/?{$busqueda_str}");
+        //Opciones de filtros de búsqueda
+            $data['opciones_rol'] = $this->Item_model->opciones('categoria_id = 58', 'Todos');
+            $data['opciones_institucion'] = $this->App_model->opciones_institucion('id > 0', 'Todas');
+            
+        //Arrays con valores para contenido en la tabla
+            $data['arr_roles'] = $this->Item_model->arr_interno('categoria_id = 58');
+        
+        //Cargar vista
+            $this->load->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * AJAX
+     * 
+     * Devuelve JSON, que incluye string HTML de la tabla de exploración para la
+     * página $num_pagina, y los filtros enviados por post
+     * 
+     * @param type $num_pagina
+     */
+    function tabla_explorar($num_pagina = 1)
+    {
+        //Datos básicos de la exploración
+            $this->load->helper('text');
+            $data = $this->Tema_model->data_tabla_explorar($num_pagina);
+        
+        //Arrays con valores para contenido en lista
+        $data['arr_roles'] = $this->Item_model->arr_interno('categoria_id = 58');
+        
+        //Preparar respuesta
+            $respuesta['html'] = $this->load->view('usuarios/explorar/tabla_v', $data, TRUE);
+            $respuesta['seleccionados_todos'] = $data['seleccionados_todos'];
+            $respuesta['num_pagina'] = $num_pagina;
+            $respuesta['busqueda_str'] = $data['busqueda_str'];
+            $respuesta['cant_resultados'] = $data['cant_resultados'];
+            $respuesta['max_pagina'] = $data['max_pagina'];
+        
+        //Salida
+            $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($respuesta));
     }
     
-    function explorar()
+    /**
+     * AJAX
+     * Eliminar un grupo de registros seleccionados
+     * 2019-08-05
+     */
+    function eliminar_seleccionados()
     {
-        //$this->output->enable_profiler(TRUE);
+        $str_seleccionados = $this->input->post('seleccionados');
+        $seleccionados = explode('-', $str_seleccionados);
         
-        $this->load->model('Esp');
-        $this->load->model('Busqueda_model');
+        foreach ( $seleccionados as $elemento_id ) 
+        {
+            $this->Tema_model->eliminar($elemento_id);
+        }
         
-        //Datos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
-            $resultados_total = $this->Tema_model->buscar($busqueda); //Para calcular el total de resultados
-        
-        //Paginación
-            $this->load->library('pagination');
-            $config = $this->App_model->config_paginacion(2);
-            $config['base_url'] = base_url("temas/explorar/?{$busqueda_str}");
-            $config['total_rows'] = $resultados_total->num_rows();
-            $this->pagination->initialize($config);
-            
-        //Generar resultados para mostrar
-            $offset = $this->input->get('per_page');
-            $resultados = $this->Tema_model->buscar($busqueda, $config['per_page'], $offset);
-        
-        //Variables para vista
-            $data['cant_resultados'] = $config['total_rows'];
-            $data['busqueda'] = $busqueda;
-            $data['busqueda_str'] = $busqueda_str;
-            $data['resultados'] = $resultados;
-            $data['arr_nivel'] = $this->App_model->arr_nivel();
-            $data['arr_tipo_quiz'] = $this->Item_model->arr_item(9);   //Tipos de quices
-        
-        //Solicitar vista
-            $data['ayuda_id'] = 141;
-            $data['head_title'] = 'Temas';
-            $data['head_subtitle'] = number_format($config['total_rows'], 0, ',', '.');
-            $data['view_a'] = 'temas/explorar_v';
-            $data['nav_2'] = 'temas/menu_explorar_v';
-            $this->load->view(TPL_ADMIN, $data);
+        $data = array('status' => 1, 'message' =>  count($seleccionados) . ' usuarios eliminados');
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
     }
     
     /**
@@ -111,23 +133,6 @@ class Temas extends CI_Controller{
                 
                 $this->load->view(TPL_ADMIN, $data);
             }
-    }
-    
-    /**
-     * AJAX
-     * Eliminar un grupo de registros seleccionados
-     */
-    function eliminar_seleccionados()
-    {
-        $str_seleccionados = $this->input->post('seleccionados');
-        
-        $seleccionados = explode('-', $str_seleccionados);
-        
-        foreach ( $seleccionados as $elemento_id ) {
-            $this->Tema_model->eliminar($elemento_id);
-        }
-        
-        echo count($seleccionados);
     }    
     
     function nuevo()
@@ -420,9 +425,9 @@ class Temas extends CI_Controller{
         //Variables generales
             $data['head_title'] = 'Temas';
             $data['head_subtitle'] = 'Importar temas';
-            $data['view_a'] = 'comunes/importar_v';
-            $data['nav_2'] = 'temas/menu_importar_v';
-            $data['ayuda_id'] = 104;
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_2'] = 'temas/explorar/menu_v';
+            $data['nav_3'] = 'temas/menu_importar_v';
         
         $this->load->view(TPL_ADMIN, $data);
     }
@@ -494,9 +499,9 @@ class Temas extends CI_Controller{
             //$data['ayuda_id'] = 97;
             $data['head_title'] = 'Temas';
             $data['head_subtitle'] = 'Copiar preguntas de temas';
-            $data['view_a'] = 'comunes/importar_v';
-            $data['nav_2'] = 'temas/menu_importar_v';
-            //$data['vista_submenu'] = '';
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_2'] = 'temas/explorar/menu_v';
+            $data['nav_3'] = 'temas/menu_importar_v';
         
         $this->load->view(TPL_ADMIN, $data);
     }
@@ -530,7 +535,7 @@ class Temas extends CI_Controller{
             $data['head_title'] = 'Temas';
             $data['head_subtitle'] = 'Resultado copia de preguntas';
             $data['view_a'] = 'comunes/resultado_importacion_v';
-            $data['nav_2'] = 'temas/menu_importar_v';
+            $data['nav_2'] = 'temas/explorar/menu_v';
             //$data['vista_submenu'] = 'usuarios/importar_menu_v';
             $this->load->view(TPL_ADMIN, $data);
     }
@@ -567,9 +572,9 @@ class Temas extends CI_Controller{
             //$data['ayuda_id'] = 97;
             $data['head_title'] = 'Temas';
             $data['head_subtitle'] = 'Asignar evidencias';
-            $data['view_a'] = 'comunes/importar_v';
-            $data['nav_2'] = 'temas/menu_importar_v';
-            //$data['vista_submenu'] = '';
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_2'] = 'temas/explorar/menu_v';
+            $data['nav_3'] = 'temas/menu_importar_v';
         
         $this->load->view(TPL_ADMIN, $data);
     }
@@ -603,8 +608,8 @@ class Temas extends CI_Controller{
             $data['head_title'] = 'Temas';
             $data['head_subtitle'] = 'Resultado asignar quices';
             $data['view_a'] = 'comunes/resultado_importacion_v';
-            $data['nav_2'] = 'temas/menu_importar_v';
-            //$data['vista_submenu'] = 'usuarios/importar_menu_v';
+            $data['nav_2'] = 'temas/explorar/menu_v';
+            $data['nav_3'] = 'usuarios/importar_menu_v';
             $this->load->view(TPL_ADMIN, $data);
     }
     
@@ -836,6 +841,7 @@ class Temas extends CI_Controller{
         //Solicitar vista
             $data['head_title'] = 'Recursos';
             $data['head_subtitle'] = 'Archivos';
+            $data['nav_2'] = 'temas/explorar/menu_v';
             $data['view_a'] = 'temas/recursos_v';
 
         $output = array_merge($data,(array)$gc_output);
@@ -881,9 +887,10 @@ class Temas extends CI_Controller{
             $data['head_includes'] = $head_includes;
 
         //Solicitar vista
-        $data['head_title'] = 'Recursos';
-        $data['head_subtitle'] = 'Archivos';
-        $data['view_a'] = 'temas/recursos_v';
+            $data['head_title'] = 'Recursos';
+            $data['head_subtitle'] = 'Archivos';
+            $data['nav_2'] = 'temas/explorar/menu_v';
+            $data['view_a'] = 'temas/recursos_v';
 
         $output = array_merge($data,(array)$output);
         $this->load->view(TPL_ADMIN, $output);
@@ -932,6 +939,7 @@ class Temas extends CI_Controller{
         $data['head_title'] = 'Recursos';
         $data['head_subtitle'] = 'Archivos';
         $data['view_a'] = 'temas/recursos_v';
+        $data['nav_2'] = 'temas/explorar/menu_v';
 
         $output = array_merge($data,(array)$output);
         $this->load->view(TPL_ADMIN, $output);
@@ -960,8 +968,9 @@ class Temas extends CI_Controller{
         //Variables generales
             $data['head_title'] = 'Temas';
             $data['head_subtitle'] = 'Importar elementos UT';
-            $data['view_a'] = 'comunes/importar_v';
-            $data['nav_2'] = 'temas/menu_importar_v';
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_2'] = 'temas/explorar/menu_v';
+            $data['nav_3'] = 'temas/menu_importar_v';
             $data['ayuda_id'] = 100;
         
         $this->load->view(TPL_ADMIN, $data);
@@ -999,7 +1008,7 @@ class Temas extends CI_Controller{
             $data['head_title'] = 'Temas';
             $data['head_subtitle'] = 'Resultado asignación UT';
             $data['view_a'] = 'comunes/resultado_importacion_v';
-            $data['nav_2'] = 'temas/menu_importar_v';
+            $data['nav_2'] = 'temas/explorar/menu_v';
             $data['ayuda_id'] = 100;
             $this->load->view(TPL_ADMIN, $data);
     }
