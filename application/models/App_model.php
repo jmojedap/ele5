@@ -209,6 +209,7 @@ class App_model extends CI_Model {
      */
     function arr_color_area() 
     {
+        $colores[0] = '#666666';
         $colores[50] = '#006bab';
         $colores[51] = '#a678c3';
         $colores[52] = '#04bdbf';
@@ -504,7 +505,7 @@ class App_model extends CI_Model {
     function color_area($area_id) 
     {
         $color_area = '#d5d5d5';
-        if (!is_null($area_id)) {
+        if ( ! is_null($area_id) ) {
             $colores = $this->arr_color_area();
             $color_area = $colores[$area_id];
         }
@@ -514,7 +515,8 @@ class App_model extends CI_Model {
 
     function etiqueta_area($area_id, $texto = NULL)
     {
-        if (is_null($texto)) {
+        if (is_null($texto)) 
+        {
             $texto = $this->nombre_item($area_id, 3);
         }
         $color = $this->color_area($area_id);
@@ -524,7 +526,8 @@ class App_model extends CI_Model {
         return $etiqueta;
     }
 
-    function etiqueta_nivel($nivel) {
+    function etiqueta_nivel($nivel) 
+    {
         $etiqueta = '<span class="etiqueta nivel">' . $nivel . '</span>';
         return $etiqueta;
     }

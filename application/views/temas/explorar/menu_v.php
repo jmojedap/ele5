@@ -15,7 +15,7 @@
     
     //Atributos de los elementos del menú
         $arr_menus['explorar'] = array(
-            'icono' => '<i class="fa fa-list-alt"></i>',
+            'icono' => '<i class="fa fa-search"></i>',
             'texto' => 'Explorar',
             'link' => "temas/explorar/",
             'atributos' => 'title="Explorar temas"'

@@ -41,18 +41,25 @@
             </div>
         </div>
 
-        <div class="form-group row <?php echo $cl_filtros['rol'] ?>">
+        <div class="form-group row <?php echo $cl_filtros['a'] ?>">
             <div class="col-md-9">
-                <?php echo form_dropdown('rol', $opciones_rol, $busqueda['rol'], 'class="form-control" title="Filtrar por rol de usuario"'); ?>
+                <?php echo form_dropdown('a', $opciones_area, $busqueda['a'], 'class="form-control" title="Filtrar por área"'); ?>
             </div>
-            <label for="a" class="col-md-3 control-label">Rol</label>
+            <label for="a" class="col-md-3 control-label">Área</label>
         </div>
 
-        <div class="form-group row <?php echo $cl_filtros['i'] ?>">
+        <div class="form-group row <?php echo $cl_filtros['n'] ?>">
             <div class="col-md-9">
-                <?php echo form_dropdown('i', $opciones_institucion, $busqueda['i'], 'class="form-control chosen-select" title="Filtrar por institución"'); ?>
+                <?php echo form_dropdown('n', $opciones_nivel, $busqueda['n'], 'class="form-control" title="Filtrar por nivel"'); ?>
             </div>
-            <label for="n" class="col-md-3 control-label">Institución</label>
+            <label for="n" class="col-md-3 control-label">Nivel</label>
+        </div>
+
+        <div class="form-group row <?php echo $cl_filtros['tp'] ?>">
+            <div class="col-md-9">
+                <?php echo form_dropdown('tp', $opciones_tipo, $busqueda['tp'], 'class="form-control" title="Filtrar por tipo"'); ?>
+            </div>
+            <label for="tp" class="col-md-3 control-label">Tipo</label>
         </div>
     </div>
 </form>

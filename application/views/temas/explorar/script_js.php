@@ -77,24 +77,6 @@
             num_pagina = Pcrn.limitar_entre(parseInt(num_pagina) - 1, 1, max_pagina);
             tabla_explorar();
         });
-
-        //Específicas para Usuarios
-
-        //Botón, se alterna el valor del campo usuario.activo
-        $('.alternar_activacion').click(function(){
-            registro_id = $(this).data('usuario_id');
-            alternar_activacion();
-        });
-
-        $('.alternar_pago').click(function(){
-            registro_id = $(this).data('usuario_id');
-            alternar_pago();
-        });
-
-        $('.restaurar_contrasena').click(function(){
-            registro_id = $(this).data('usuario_id');
-            restaurar_contrasena();
-        });
     });
 
 // Funciones

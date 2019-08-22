@@ -35,33 +35,27 @@
                     </label>
                 </div>
             </div>
-            <div class="col">
+            <div class="col-md-1">
                 ID
             </div>
+            <div class="col-md-4">Tema</div>
+            <div class="col-md-2">Tipo</div>
+            <div class="col-md-3">Nivel | Área</div>
+            <div class="col-md-1">Evidencias</div>
         </div>
         <?php foreach ($resultados->result() as $row_resultado){ ?>
         <?php
             //Variables
-                $nombre_elemento = character_limiter($row_resultado->apellidos. ' ' . $row_resultado->nombre, 70);
-                $link_elemento = anchor("{$controlador}/actividad/{$row_resultado->id}", $nombre_elemento);
+                $nombre_elemento = character_limiter($row_resultado->nombre_tema, 70);
+                $link_elemento = anchor("{$controlador}/index/{$row_resultado->id}", $nombre_elemento);
 
-            //Botón activo/inactivo
-                $activacion['clase'] = 'btn-success';
-                $activacion['contenido'] = 'Activo';
-                if ( $row_resultado->estado == 0)
-                {
-                    $activacion['clase'] = 'btn-warning';
-                    $activacion['contenido'] = 'Inactivo';
-                }
-
-            //Botón pago
-                $pago['clase'] = 'btn-success';
-                $pago['contenido'] = 'Pagado';
-                if ( $row_resultado->pago == 0)
-                {
-                    $pago['clase'] = 'btn-warning';
-                    $pago['contenido'] = 'Sin pago';
-                }
+            //Otros datos
+                $cant_quices = $this->Tema_model->quices($row_resultado->id)->num_rows();
+                $clase_cant = 'badge badge-secondary';
+                if ( $cant_quices > 0 ) { $clase_cant = 'badge badge-success'; }
+                
+                $clase_tipo = '';
+                if ( $row_resultado->tipo_id ) { $clase_tipo = 'info'; }
         ?>
             <div class="row explore_row" id="fila_<?php echo $row_resultado->id ?>">
 
@@ -79,64 +73,20 @@
                 </div>
                 
                 <div class="col-md-4 col-sm-12">
-                    <div class="media">
-                        <a href="<?php echo base_url("usuarios/actividad/{$row_resultado->id}") ?>">
-                            <img src="<?php echo URL_IMG . "users/sm_user_{$row_resultado->rol_id}.png" ?>" alt="Rol usuario" class="mr-3 rounded-circle" width="30px">
-                        </a>
-                        <div class="media-body">
-                            <?php echo $link_elemento ?>
-                            <br>
-                            <span class="text-muted"><?php echo $this->Item_model->nombre(58, $row_resultado->rol_id) ?></span>
-                            &middot;
-                            <span class="text-muted"><?php echo $row_resultado->username ?></span>
-                        </div>
-                    </div>
+                    <?php echo $link_elemento ?>
                 </div>
 
-                <div class="col-md-3 col-sm-12">
-                    <span class="text-muted">
-                        <i class="fa fa-university"></i>
-                    </span>
-                    <?= $this->App_model->nombre_institucion($row_resultado->institucion_id) ?>
+                <div class="col-md-2 col-sm-12">
+                    <?php echo $arr_tipos[$row_resultado->tipo_id] ?>
                 </div>
 
                 <div class="col-md-3 col-xs-12">
-                    <button
-                        id="alternar_<?php echo $row_resultado->id ?>"
-                        class="btn btn-sm alternar_activacion <?php echo $activacion['clase'] ?>"
-                        data-usuario_id="<?= $row_resultado->id ?>"
-                        title="Activar/Desactivar"
-                        style="width: 70px;"
-                        >
-                        <?php echo $activacion['contenido'] ?>
-                    </button>
+                    <span class="etiqueta nivel w2"><?php echo $arr_nivel[$row_resultado->nivel] ?></span>
+                    <?php echo $this->App_model->etiqueta_area($row_resultado->area_id) ?>
+                </div>
 
-                    <button
-                        id="pago_<?php echo $row_resultado->id ?>"
-                        class="btn btn-sm alternar_pago <?php echo $pago['clase'] ?>"
-                        data-usuario_id="<?= $row_resultado->id ?>"
-                        title="Pagado Sí/No"
-                        style="width: 70px;"
-                        >
-                        <?php echo $pago['contenido'] ?>
-                    </button>
-
-                    <button 
-                        id="restaurar_<?php echo $row_resultado->id ?>"
-                        class="btn btn-light btn-sm restaurar_contrasena"
-                        data-usuario_id="<?= $row_resultado->id ?>"
-                        title="Restaurar contraseña del usuario"
-                        style="width: 90px;"
-                        >
-                        <i class="fa fa-sync-alt"></i>
-                        Contraseña
-                    </button>
-
-                    <?php if ( $this->session->userdata('rol_id') <= 1 ) { ?>
-                        <a href="<?php echo base_url("develop/ml/{$row_resultado->id}") ?>" class="btn btn-sm btn-light" title="Ingresar como este usuario">
-                            <i class="fa fa-sign-in-alt"></i>
-                        </a>
-                    <?php } ?>
+                <div class="col-md-1 col-xs-12">
+                    <span class="<?= $clase_cant ?>"><?= $cant_quices ?></span>
                 </div>
             </div>
 

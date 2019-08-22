@@ -30,7 +30,8 @@ class Tema_Model extends CI_Model{
         $basico['tema_id'] = $tema_id;
         $basico['row'] = $row_tema;
         $basico['head_title'] = $row_tema->nombre_tema;
-        $basico['view_a'] = 'temas/tema_v';
+        $basico['view_description'] = 'temas/tema_v';
+        $basico['nav_2'] = 'temas/menu_v';
         
         return $basico;
     }
@@ -56,7 +57,7 @@ class Tema_Model extends CI_Model{
             $data['el_singular'] = 'tema';
                 
         //Otros
-            $data['arr_filtros'] = array('i', 'rol');
+            $data['arr_filtros'] = array('a', 'n', 'tp');
             
         //Vistas
             $data['head_subtitle'] = $data['cant_resultados'];
@@ -80,7 +81,7 @@ class Tema_Model extends CI_Model{
         
         //Paginación
             $data['num_pagina'] = $num_pagina;                  //Número de la página de datos que se está consultado
-            $data['per_page'] = 10;                             //Cantidad de registros por página
+            $data['per_page'] = 15;                             //Cantidad de registros por página
             $offset = ($num_pagina - 1) * $data['per_page'];    //Número de la página de datos que se está consultado
         
         //Búsqueda y Resultados
@@ -121,7 +122,9 @@ class Tema_Model extends CI_Model{
             $this->db->order_by('editado', 'DESC');
             
         //Otros filtros
-            if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Rol de usuario
+            if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
+            if ( $busqueda['n'] != '' ) { $this->db->where('nivel', $busqueda['n']); }      //Nivel
+            if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_id', $busqueda['tp']); }  //Tipo tema
             
         //Obtener resultados
         if ( is_null($per_page) ){

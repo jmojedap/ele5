@@ -35,11 +35,14 @@ class Temas extends CI_Controller{
             $data = $this->Tema_model->data_explorar($num_pagina);
         
         //Opciones de filtros de búsqueda
-            $data['opciones_rol'] = $this->Item_model->opciones('categoria_id = 58', 'Todos');
-            $data['opciones_institucion'] = $this->App_model->opciones_institucion('id > 0', 'Todas');
+            $data['opciones_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
+            $data['opciones_nivel'] = $this->Item_model->opciones('categoria_id = 3', 'Todos');
+            $data['opciones_tipo'] = $this->Item_model->opciones('categoria_id = 17', 'Todos');
+            
             
         //Arrays con valores para contenido en la tabla
-            $data['arr_roles'] = $this->Item_model->arr_interno('categoria_id = 58');
+            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 17');
+            $data['arr_nivel'] = $this->App_model->arr_nivel();
         
         //Cargar vista
             $this->load->view(TPL_ADMIN, $data);
@@ -60,10 +63,11 @@ class Temas extends CI_Controller{
             $data = $this->Tema_model->data_tabla_explorar($num_pagina);
         
         //Arrays con valores para contenido en lista
-        $data['arr_roles'] = $this->Item_model->arr_interno('categoria_id = 58');
+            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 17');
+            $data['arr_nivel'] = $this->App_model->arr_nivel();
         
         //Preparar respuesta
-            $respuesta['html'] = $this->load->view('usuarios/explorar/tabla_v', $data, TRUE);
+            $respuesta['html'] = $this->load->view('temas/explorar/tabla_v', $data, TRUE);
             $respuesta['seleccionados_todos'] = $data['seleccionados_todos'];
             $respuesta['num_pagina'] = $num_pagina;
             $respuesta['busqueda_str'] = $data['busqueda_str'];
@@ -146,7 +150,7 @@ class Temas extends CI_Controller{
             $data['head_title'] = 'Temas';
             $data['head_subtitle'] = 'Nuevo';
             $data['view_a'] = 'comunes/gc_v';
-            $data['nav_2'] = 'temas/menu_explorar_v';
+            $data['nav_2'] = 'temas/explorar/menu_v';
             $output = array_merge($data,(array)$gc_output);
             $this->load->view(TPL_ADMIN, $output);
     }
@@ -230,6 +234,9 @@ class Temas extends CI_Controller{
         
     }
     
+    /**
+     * Temas relacionados
+     */
     function relacionados($tema_id)
     {
         //Cargando datos básicos
@@ -240,7 +247,7 @@ class Temas extends CI_Controller{
             
         //Solicitar vista
             $data['head_subtitle'] = 'Temas relacionados';
-            $data['view_a'] = 'comunes/gc_v';
+            $data['view_a'] = 'comunes/bs4/gc_v';
             $output = array_merge($data,(array)$gc_output);
             $this->load->view(TPL_ADMIN, $output);
     }
