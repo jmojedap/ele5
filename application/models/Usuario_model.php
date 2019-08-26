@@ -248,9 +248,13 @@ class Usuario_model extends CI_Model{
         
     }
     
+    /**
+     * Opciones de usuario en campos de autollenado, como agregar usuarios a una conversación
+     * 2019-08-26
+     */
     function autocompletar($busqueda, $limit = 15)
     {
-        $filtro_rol = $this->filtro_usuarios($this->session->userdata('usuario_id'));
+        $filtro_rol = $this->filtro_rol();
 
         //Construir búsqueda
         //Crear array con términos de búsqueda
@@ -276,6 +280,7 @@ class Usuario_model extends CI_Model{
         return $query;
     }
     
+
     
     
 //GROCERY CRUD PARA USUARIOS
