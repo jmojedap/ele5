@@ -255,10 +255,11 @@ class Temas extends CI_Controller{
     function quices($tema_id)
     {
         $this->load->model('Esp');
+
         //Cargando datos básicos
-            $data = $this->Tema_model->basico($tema_id);
+        $data = $this->Tema_model->basico($tema_id);
             
-            $data['quices'] = $this->Tema_model->quices($tema_id);
+        $data['quices'] = $this->Tema_model->quices($tema_id);
             
         //Tipos de quices
             $data['arr_tipo_quiz'] = $this->Item_model->arr_item(9);
@@ -378,7 +379,7 @@ class Temas extends CI_Controller{
             
         //Solicitar vista
             $data['head_subtitle'] = 'Archivos';
-            $data['view_a'] = 'comunes/gc_v';
+            $data['view_a'] = 'comunes/bs4/gc_v';
             $output = array_merge($data,(array)$gc_output);
             $this->load->view(TPL_ADMIN, $output);
     }
@@ -396,7 +397,7 @@ class Temas extends CI_Controller{
             
         //Solicitar vista
             $data['head_subtitle'] = 'Links';
-            $data['view_a'] = 'comunes/gc_v';
+            $data['view_a'] = 'comunes/bs4/gc_v';
             $output = array_merge($data,(array)$gc_output);
             $this->load->view(TPL_ADMIN, $output);
     }

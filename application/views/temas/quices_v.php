@@ -1,35 +1,33 @@
 <?php $this->load->view('comunes/resultado_proceso_v'); ?>
 
-<div class="sep2">
-    <div class="casilla">
-        <h3>Nuevo quiz tipo <i class="fa fa-caret-right"></i> </h3>
+<div class="row">
+    <div class="col-md-4">
+        <p class="">Nuevo quiz tipo <i class="fa fa-chevron-right"></i> </p>
     </div>
-    <?php foreach ($arr_tipo_quiz as $key => $letra) : ?>
-        <?php echo anchor("quices/crear/{$row->id}/{$key}", $letra, 'class="btn btn-default w2" title="Nuevo quiz tipo ' . $letra . '"') ?>
-    <?php endforeach ?>
+    <div class="col-md-8">
+        <?php foreach ($arr_tipo_quiz as $key => $letra) : ?>
+            <?php echo anchor("quices/crear/{$row->id}/{$key}", $letra, 'class="btn btn-secondary" title="Nueva evidencia tipo ' . $letra . '"') ?>
+        <?php endforeach ?>
+    </div>
 </div>
     
 <!-- Lista de quices   -->
-<table class="table table-default bg-blanco" cellspacing="0">
+<table class="table table-default bg-white" cellspacing="0">
     <thead>
-        <tr>
+        <th width="45px" class="warning">Id</th>
+        <th width="100px">Cód. quiz</th>
+        <th>Nombre quiz</th>
+        <th>Tipo</th>
 
-            <th width="45px" class="warning">Id</th>
-            <th width="100px">Cód. quiz</th>
-            <th>Nombre quiz</th>
-            <th>Tipo</th>
-
-
-            <?php if ( $this->session->userdata('rol_id') <= 1 ) : ?>                
-                <th width="100px"></th>
-            <?php endif ?>
-        </tr>
+        <?php if ( $this->session->userdata('rol_id') <= 1 ) : ?>                
+            <th width="120px"></th>
+        <?php endif ?>
     </thead>
-    <tbody>
 
+    <tbody>
         <?php foreach ($quices->result() as $row_quiz){ ?>
             <tr>
-                <td class="warning"><?php echo $row_quiz->id ?></td>
+                <td class="table-warning"><?php echo $row_quiz->id ?></td>
                 <td><?php echo $row_quiz->cod_quiz ?></td>
                 <td><?php echo anchor("quices/ver/$row_quiz->id", $row_quiz->nombre_quiz) ?></td>
 
@@ -37,14 +35,12 @@
 
                 <?php if ( $this->session->userdata('rol_id') <= 1 ) : ?>                
                     <td>
-                        <?php echo anchor("quices/editar/edit/{$row_quiz->id}", '<i class="fa fa-pencil"></i>', 'class="a4"') ?>
-                        <?php echo $this->Pcrn->anchor_confirm("temas/quitar_quiz/{$row->id}/{$row_quiz->id}", '<i class="fa fa-times"></i>', 'class="a4" title="Quitar evidencia de este tema"', 'Se retirará el quiz de este tema. No se elimina. ¿Desea continuar?') ?>
-                        <?php echo $this->Pcrn->anchor_confirm("quices/eliminar/{$row_quiz->id}/{$row->id}", '<i class="fa fa-trash"></i>', 'class="a4" title="Eliminar evidencia"') ?>
+                        <?php echo anchor("quices/editar/edit/{$row_quiz->id}", '<i class="fa fa-pencil-alt"></i>', 'class="btn btn-sm btn-light"') ?>
+                        <?php echo $this->Pcrn->anchor_confirm("temas/quitar_quiz/{$row->id}/{$row_quiz->id}", '<i class="fa fa-times"></i>', 'class="btn btn-sm btn-light" title="Quitar evidencia de este tema"', 'Se retirará el quiz de este tema. No se elimina. ¿Desea continuar?') ?>
+                        <?php echo $this->Pcrn->anchor_confirm("quices/eliminar/{$row_quiz->id}/{$row->id}", '<i class="fa fa-trash"></i>', 'class="btn btn-sm btn-light" title="Eliminar evidencia"') ?>
                     </td>
                 <?php endif ?>
-
             </tr>
-
         <?php } //foreach ?>
     </tbody>
 </table>

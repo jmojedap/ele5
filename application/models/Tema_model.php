@@ -27,6 +27,7 @@ class Tema_Model extends CI_Model{
         $basico['preguntas'] = $preguntas;
         $basico['programas'] = $programas;
         $basico['pf'] = $pf;
+        
         $basico['tema_id'] = $tema_id;
         $basico['row'] = $row_tema;
         $basico['head_title'] = $row_tema->nombre_tema;

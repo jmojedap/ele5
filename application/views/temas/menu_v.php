@@ -14,7 +14,7 @@
         );
             
         $arr_menus['archivos'] = array(
-            'icono' => '<i class="fa fa-file-text-o"></i>',
+            'icono' => '<i class="far fa-file"></i>',
             'texto' => 'Archivos',
             'link' => "temas/archivos/{$row->id}",
             'atributos' => 'title="Archivos"'
@@ -56,21 +56,21 @@
         );
             
         $arr_menus['paginas'] = array(
-            'icono' => '<i class="fa fa-file-o"></i>',
+            'icono' => '<i class="far fa-file"></i>',
             'texto' => 'Páginas',
             'link' => "temas/paginas/{$row->id}",
             'atributos' => 'title="Páginas"'
         );
             
         $arr_menus['copiar'] = array(
-            'icono' => '<i class="fa fa-files-o"></i>',
+            'icono' => '<i class="far fa-copy"></i>',
             'texto' => 'Clonar',
             'link' => "temas/copiar/{$row->id}",
             'atributos' => 'title="Crear una copia del programa"'
         );
             
         $arr_menus['editar'] = array(
-            'icono' => '<i class="fa fa-pencil"></i>',
+            'icono' => '<i class="fa fa-pencil-alt"></i>',
             'texto' => 'Editar',
             'link' => "temas/editar/edit/{$row->id}",
             'atributos' => 'title="Editar tema"'
@@ -92,4 +92,3 @@
     
     //Cargue vista
         $this->load->view('comunes/bs4/menu_v', $data_menu);
-
