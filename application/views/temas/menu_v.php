@@ -2,6 +2,7 @@
         $seccion = $this->uri->segment(2);
         if ( $this->uri->segment(2) == 'cargar' ) { $seccion = 'paginas'; }
         if ( $this->uri->segment(2) == 'agregar_pregunta' ) { $seccion = 'preguntas'; }
+        if ( $this->uri->segment(2) == 'generar_copia' ) { $seccion = 'copiar'; }
 
         $clases[$seccion] = 'active';
     
