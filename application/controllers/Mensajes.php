@@ -292,11 +292,9 @@ class Mensajes extends CI_Controller{
     /**
      * Elimina a un usuario de una conversación
      * tabla usuario_asignacion
-     * 
-     * @param type $conversacion_id
-     * @param type $usuario_id
+     * 2019-08-28
      */
-    function quitar_usuario($conversacion_id, $usuario_id)
+    function quitar_usuario()
     {
         $conversacion_id = $this->input->post('conversacion_id');
         $usuario_id = $this->input->post('usuario_id');

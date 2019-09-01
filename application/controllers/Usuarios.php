@@ -337,11 +337,11 @@ class Usuarios extends CI_Controller{
             $data['vista_importados'] = 'instituciones/importar_estudiantes_r_v';
         
         //Cargar vista
-            $data['titulo_pagina'] = 'Usuarios';
+            $data['head_title'] = 'Usuarios';
             $data['head_subtitle'] = 'Resultado importación';
-            $data['vista_a'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'usuarios/explorar_menu_v';
-            $data['vista_submenu'] = 'usuarios/importar_menu_v';
+            $data['view_a'] = 'comunes/resultado_importacion_v';
+            $data['nav_2'] = 'usuarios/explorar/menu_v';
+            $data['nav_3'] = 'usuarios/importar_menu_v';
             $this->load->view(TPL_ADMIN, $data);
     }
     
@@ -901,7 +901,6 @@ class Usuarios extends CI_Controller{
             //$data['contenidos_ap'] = $this->Usuario_model->contenidos_ap();
             
         $view_a = 'usuarios/biblioteca_bs4_v';
-        //$vista_a = 'usuarios/biblioteca_v';
         if ( $this->session->userdata('rol_id') != 6 )
         {
             $view_a = 'usuarios/biblioteca_profesor_v';
@@ -1562,11 +1561,11 @@ class Usuarios extends CI_Controller{
             $data['destino_volver'] = "usuarios/explorar/";
         
         //Cargar vista
-            $data['titulo_pagina'] = 'Usuarios';
+            $data['head_title'] = 'Usuarios';
             $data['head_subtitle'] = 'Resultado eliminación por username';
-            $data['vista_a'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'usuarios/explorar_menu_v';
-            $data['vista_submenu'] = 'usuarios/importar_menu_v';
+            $data['view_a'] = 'comunes/resultado_importacion_v';
+            $data['nav_2'] = 'usuarios/explorar/menu_v';
+            $data['nav_3'] = 'usuarios/importar_menu_v';
             $this->load->view(TPL_ADMIN, $data);
     }
     
