@@ -1,7 +1,7 @@
 <div style="float: right; margin: 0px 0px 0 0; margin: 5px 5px 0 0;">
     <div class="btn-group d-none d-xs-none d-sm-none d-md-block d-lg-block" role="group" aria-label="...">
         <?php if ( ! is_null($ayuda_id) ){ ?>
-            <?php $link_ayuda = 'http://www.plataformaenlinea.com/ayuda/?p=' . $ayuda_id; ?>
+            <?php $link_ayuda = 'https://www.plataformaenlinea.com/ayuda/?p=' . $ayuda_id; ?>
             <?php echo anchor($link_ayuda,  '<i class="fa fa-question-circle"></i>', 'class="btn btn-success" target="_blank" title="Ir a la ayuda de esta sección"') ?>
         <?php } ?>
         <a href="<?php echo base_url('usuarios/contrasena') ?>" class="btn btn-light" style="min-width: 120px;">

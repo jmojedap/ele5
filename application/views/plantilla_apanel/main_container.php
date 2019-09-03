@@ -2,7 +2,7 @@
     <div style="float: right;">
         <p>
             <?php if ( ! is_null($ayuda_id) ){ ?>
-                <?php $link_ayuda = 'http://plataformaenlinea.com/ayuda/?p=' . $ayuda_id; ?>
+                <?php $link_ayuda = 'https://www.plataformaenlinea.com/ayuda/?p=' . $ayuda_id; ?>
                 <?= anchor($link_ayuda,  '<i class="fa fa-question-circle"></i>', 'class="a2 w1" target="_blank" title="Ir a la ayuda de esta sección"') ?>
             <?php } ?>
             <a class="a2"><?= $this->session->userdata('nombre_completo') ?></a>

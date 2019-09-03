@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
 
-    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Ubuntu:500,300'>
+    <link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Ubuntu:500,300'>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/style.css">
     <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/style_add.css">
     
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
     <script type="text/javascript" language="javascript" src="<?php echo URL_RESOURCES ?>js/Math.uuid.js"></script>
     

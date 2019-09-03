@@ -26,7 +26,7 @@
         <?php $this->load->view('head_includes/bootstrap') ?>
 
         <!-- Style adicionales PCRN-->
-        <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Ubuntu:500,300'>
+        <link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Ubuntu:500,300'>
     </head>
     <body>
         <div class="container">

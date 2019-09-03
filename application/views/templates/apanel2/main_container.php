@@ -5,7 +5,7 @@
 
                 <div class="btn-group hidden-xs" role="group" aria-label="...">
                     <?php if ( ! is_null($ayuda_id) ){ ?>
-                        <?php $link_ayuda = 'http://www.plataformaenlinea.com/ayuda/?p=' . $ayuda_id; ?>
+                        <?php $link_ayuda = 'https://www.plataformaenlinea.com/ayuda/?p=' . $ayuda_id; ?>
                         <?php echo anchor($link_ayuda,  '<i class="fa fa-question-circle"></i>', 'class="btn btn-success" target="_blank" title="Ir a la ayuda de esta sección"') ?>
                     <?php } ?>
                     <?php echo anchor("usuarios/contrasena", $this->session->userdata('nombre_corto'), 'class="btn btn-default" style="min-width: 120px;"') ?>

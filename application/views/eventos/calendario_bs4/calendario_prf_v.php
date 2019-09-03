@@ -17,7 +17,7 @@
         'type'  => 'url',
         'value'  => '',
         'placeholder'   => 'Escriba la url',
-        'title'   => 'Escriba la URL del evento, no olvide el http:// al inicio',
+        'title'   => 'Escriba la URL del evento',
         'required' => TRUE
     );
     

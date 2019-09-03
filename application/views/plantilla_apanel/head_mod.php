@@ -5,13 +5,13 @@
         <meta name="viewport" content="width=device-width">
         
         <!--JQuery-->
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         
         <!--Bootstrap-->
         <link rel="stylesheet" href="<?= base_url() ?>assets/bootstrap/css/bootstrap.min.css">
         <script type="text/javascript" src="<?= base_url() ?>assets/bootstrap/js/bootstrap.min.js"></script>
 
-        <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Ubuntu:500,300'>
+        <link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Ubuntu:500,300'>
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
         
         <link rel="stylesheet" href="<?= base_url() ?>css/responsivegridsystem/col.css" media="all">

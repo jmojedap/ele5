@@ -165,7 +165,7 @@
                 <?php
                     //Variables
                         $nombre_elemento = "{$row_resultado->item_largo}";
-                        $link_elemento = anchor("http://www.plataformaenlinea.com/ayuda/?p={$row_resultado->abreviatura}", $nombre_elemento, 'target="_blank"');
+                        $link_elemento = anchor("https://www.plataformaenlinea.com/ayuda/?p={$row_resultado->abreviatura}", $nombre_elemento, 'target="_blank"');
 
                     //Checkbox
                         $att_check['data-id'] = $row_resultado->id;

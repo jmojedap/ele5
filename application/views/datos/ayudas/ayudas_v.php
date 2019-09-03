@@ -57,7 +57,7 @@
             <tr>
                 <td>
                     <b>
-                        <a href="http://plataformaenlinea.com/ayuda/?p=<?= $row_resultado->abreviatura ?>" target="_blank">
+                        <a href="https://www.plataformaenlinea.com/ayuda/?p=<?= $row_resultado->abreviatura ?>" target="_blank">
                             <?= $row_resultado->item_largo ?>
                         </a>                        
                     </b>
