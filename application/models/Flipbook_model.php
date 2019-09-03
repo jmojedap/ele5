@@ -2,7 +2,8 @@
 
 class Flipbook_model extends CI_Model {
 
-    function basico($flipbook_id) {
+    function basico($flipbook_id)
+    {
         $row = $this->datos_flipbook($flipbook_id);
 
         $basico['flipbook_id'] = $flipbook_id;
@@ -163,7 +164,8 @@ class Flipbook_model extends CI_Model {
 
         $datos_flipbook = FALSE;
 
-        if ($query->num_rows() > 0) {
+        if ($query->num_rows() > 0)
+        {
             $row = $query->row();
 
             //Calculando el número de páginas
@@ -540,9 +542,9 @@ class Flipbook_model extends CI_Model {
         $this->db->join('item', 'recurso.tipo_archivo_id = item.id');
         $this->db->where('flipbook_id', $flipbook_id);
         $this->db->where('tipo_recurso_id', 2);
-        $archivos = $this->db->get('recurso');
+        $links = $this->db->get('recurso');
 
-        return $archivos;
+        return $links;
     }
 
     /**
@@ -781,7 +783,8 @@ class Flipbook_model extends CI_Model {
     /**
      * Listado de quices de un flipbook sin definir página en la que aparece
      */
-    function quices_no_pag($flipbook_id) {
+    function quices_no_pag($flipbook_id)
+    {
         $this->db->select('recurso.referente_id AS quiz_id, recurso.tema_id');
         $this->db->join('pagina_flipbook', 'recurso.tema_id = pagina_flipbook.tema_id');
         $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');

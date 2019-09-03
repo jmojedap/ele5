@@ -8,7 +8,7 @@
     <h4 class="alert_success"><?= $resultado['mensaje'] ?></h4>
 <?php endif ?>
 
-<?= anchor("paginas/cargar/{$row->id}/0/tema", 'Insertar página al inicio', 'class="btn btn-default sep1"') ?>
+<?= anchor("paginas/cargar/{$row->id}/0/tema", 'Insertar página al inicio', 'class="btn btn-secondary mb-1"') ?>
     
 <?php foreach ($paginas->result() as $row_pagina): ?>
     <?php   
@@ -19,8 +19,8 @@
         $row_tema = $this->Pcrn->registro_id('tema', $row_pagina->tema_id);
     ?>
     
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="card card-default">
+        <div class="card-body">
             <div class="pf_img_mini">
                 <?= anchor("paginas/ver/{$row_pagina->id}", $img_pagina) ?>
             </div>
@@ -39,16 +39,16 @@
 
 
                 <p>
-                    <?= anchor("temas/mover_pagina/{$row->id}/{$row_pagina->id}/{$num_subir}", '<i class="fa fa-caret-up"></i>', 'class="btn btn-default btn-sm"') ?>
-                    <?= anchor("temas/mover_pagina/{$row->id}/{$row_pagina->id}/{$num_bajar}", '<i class="fa fa-caret-down"></i>', 'class="btn btn-default btn-sm"') ?>
-                    <?= $this->Pcrn->anchor_confirm("temas/quitar_pf/{$row->id}/{$row_pagina->id}", '<i class="fa fa-times"></i>', 'class="btn btn-default btn-sm" title="Quitar página de este libro"', '¿Desea quitar esta página del libro?') ?>
+                    <?= anchor("temas/mover_pagina/{$row->id}/{$row_pagina->id}/{$num_subir}", '<i class="fa fa-caret-up"></i>', 'class="btn btn-light btn-sm"') ?>
+                    <?= anchor("temas/mover_pagina/{$row->id}/{$row_pagina->id}/{$num_bajar}", '<i class="fa fa-caret-down"></i>', 'class="btn btn-light btn-sm"') ?>
+                    <?= $this->Pcrn->anchor_confirm("temas/quitar_pf/{$row->id}/{$row_pagina->id}", '<i class="fa fa-times"></i>', 'class="btn btn-light btn-sm" title="Quitar página de este libro"', '¿Desea quitar esta página del libro?') ?>
                 </p>
             </div>
         </div>
     </div>
 
-    <div class="sep2">
-        <?= anchor("paginas/cargar/{$row->id}/{$num_pagina_mostrar}/tema", 'Insertar página aquí', 'class="btn btn-default"') ?>
+    <div class="my-1">
+        <?= anchor("paginas/cargar/{$row->id}/{$num_pagina_mostrar}/tema", 'Insertar página aquí', 'class="btn btn-secondary"') ?>
     </div>
 
 <?php endforeach ?>

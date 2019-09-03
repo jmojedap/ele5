@@ -1,6 +1,4 @@
 <?php
-    $this->load->view('temas/menu_explorar_v');
-    
     //Submenú
         $seccion = $this->uri->segment(2);
         if ( $seccion == 'importar_ut_e' ) { $clases_sm['importar_ut'] = 'active'; }
@@ -53,4 +51,4 @@
         $data_menu['seccion_sm'] = $seccion;
     
     //Cargue vista
-        $this->load->view('comunes/submenu_v', $data_menu);
+        $this->load->view('comunes/bs4/submenu_v', $data_menu);

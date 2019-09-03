@@ -1,5 +1,4 @@
 <?php $this->load->view('assets/grocery_crud'); ?>
-<?php $this->load->view('temas/menu_explorar_v'); ?>
 
 <?php
         $seccion_sm = $this->uri->segment(2);
@@ -50,7 +49,7 @@
         $data_menu['seccion_sm'] = $seccion_sm;
     
     //Cargue vista
-        $this->load->view('comunes/submenu_v', $data_menu);
+        $this->load->view('comunes/bs4/submenu_v', $data_menu);
         
 
     $clase_menu[$this->uri->segment(2)] = 'a3 actual';

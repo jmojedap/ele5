@@ -11,7 +11,9 @@
             max_num_pag: <?php echo $row->num_paginas - 1 ?>,
             bookmark: '<?php echo $bookmark ?>',
             flipbook_id: '<?php echo $row->id ?>',
-            pagina: [],
+            pagina: {
+                archivo_imagen: ''
+            },
             data: {
                 relacionados: {
                     1: {},

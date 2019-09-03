@@ -27,48 +27,105 @@ class Tema_Model extends CI_Model{
         $basico['preguntas'] = $preguntas;
         $basico['programas'] = $programas;
         $basico['pf'] = $pf;
+        
         $basico['tema_id'] = $tema_id;
         $basico['row'] = $row_tema;
-        $basico['titulo_pagina'] = $row_tema->nombre_tema;
-        $basico['vista_a'] = 'temas/tema_v';
+        $basico['head_title'] = $row_tema->nombre_tema;
+        $basico['view_description'] = 'temas/tema_v';
+        $basico['nav_2'] = 'temas/menu_v';
         
         return $basico;
     }
-    
-// GENERAL
+
+// Exploraración
 //-----------------------------------------------------------------------------
     
     /**
-     * Búsqueda de temas
+     * Array con los datos para la vista de exploración
+     * 2019-08-05
      * 
-     * @param type $busqueda
-     * @param type $per_page
-     * @param type $offset
-     * @return type
+     * @return string
      */
+    function data_explorar($num_pagina)
+    {
+        //Data inicial, de la tabla
+            $data = $this->data_tabla_explorar($num_pagina);
+        
+        //Elemento de exploración
+            $data['carpeta_vistas'] = 'temas/explorar/';         //Carpeta donde están las vistas de exploración
+            $data['head_title'] = 'Temas';
+            $data['el_plural'] = 'temas';
+            $data['el_singular'] = 'tema';
+                
+        //Otros
+            $data['arr_filtros'] = array('a', 'n', 'tp');
+            
+        //Vistas
+            $data['head_subtitle'] = $data['cant_resultados'];
+            $data['view_a'] = $data['carpeta_vistas'] . 'explorar_v';
+            $data['nav_2'] = $data['carpeta_vistas'] . 'menu_v';
+        
+        return $data;
+    }
+    
+    /**
+     * Array con los datos para la tabla de la vista de exploración
+     * 
+     * @param type $num_pagina
+     * @return string
+     */
+    function data_tabla_explorar($num_pagina)
+    {
+        //Elemento de exploración
+            $data['controlador'] = 'temas';         //Nombre del controlador
+            $data['cf'] = 'temas/explorar/';        //CF Controlador Función
+        
+        //Paginación
+            $data['num_pagina'] = $num_pagina;                  //Número de la página de datos que se está consultado
+            $data['per_page'] = 15;                             //Cantidad de registros por página
+            $offset = ($num_pagina - 1) * $data['per_page'];    //Número de la página de datos que se está consultado
+        
+        //Búsqueda y Resultados
+            $this->load->model('Busqueda_model');
+            $data['busqueda'] = $this->Busqueda_model->busqueda_array();
+            $data['busqueda_str'] = $this->Busqueda_model->busqueda_str();
+            $data['resultados'] = $this->buscar($data['busqueda'], $data['per_page'], $offset);    //Resultados para página
+            
+        //Otros
+            $data['cant_resultados'] = $this->cant_resultados($data['busqueda']);
+            $data['max_pagina'] = ceil($this->Pcrn->si_cero($data['cant_resultados'],1) / $data['per_page']);   //Cantidad de páginas
+            $data['seleccionados_todos'] = '-'. $this->Pcrn->query_to_str($data['resultados'], 'id');           //Para selección masiva de todos los elementos de la página
+            
+        return $data;
+    }
+
+
     function buscar($busqueda, $per_page = NULL, $offset = NULL)
     {
+        
+        $filtro_rol = $this->filtro_rol();
 
         //Construir búsqueda
-        
-            //Texto búsqueda
-                //Crear array con términos de búsqueda
-                if ( strlen($busqueda['q']) > 2 ){
-                    $palabras = $this->Busqueda_model->palabras($busqueda['q']);
+        //Crear array con términos de búsqueda
+            if ( strlen($busqueda['q']) > 2 )
+            {
+                $palabras = $this->Busqueda_model->palabras($busqueda['q']);
 
-                    foreach ($palabras as $palabra_busqueda) {
-                        $this->db->like('CONCAT(cod_tema, nombre_tema)', $palabra_busqueda);
-                    }
+                foreach ($palabras as $palabra_busqueda)
+                {
+                    $concat_campos = $this->Busqueda_model->concat_campos(array('cod_tema', 'nombre_tema', 'titulo_tema'));
+                    $this->db->like("CONCAT({$concat_campos})", $palabra_busqueda);
                 }
+            }
+        
+        //Especificaciones de consulta
+            $this->db->where($filtro_rol); //Filtro según el rol de usuario que se tenga
+            $this->db->order_by('editado', 'DESC');
             
-            //Otros filtros
-                if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
-                if ( $busqueda['n'] != '' ) { $this->db->where('nivel', $busqueda['n']); }      //Nivel
-                if ( $busqueda['tp'] > -1 ) { $this->db->where('tipo_id', $busqueda['tp']); }   //Tipo
-                if ( $busqueda['e'] != '' ) { $this->db->where('editado', $busqueda['e']); }    //Editado
-                
-            //Otros
-                $this->db->order_by('cod_tema', 'ASC');
+        //Otros filtros
+            if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
+            if ( $busqueda['n'] != '' ) { $this->db->where('nivel', $busqueda['n']); }      //Nivel
+            if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_id', $busqueda['tp']); }  //Tipo tema
             
         //Obtener resultados
         if ( is_null($per_page) ){
@@ -78,7 +135,71 @@ class Tema_Model extends CI_Model{
         }
         
         return $query;
+        
     }
+
+    /**
+     * Devuelve la cantidad de registros encontrados en la tabla con los filtros
+     * establecidos en la búsqueda
+     * 
+     * @param type $busqueda
+     * @return type
+     */
+    function cant_resultados($busqueda)
+    {
+        $resultados = $this->buscar($busqueda); //Para calcular el total de resultados
+        return $resultados->num_rows();
+    }
+
+    /**
+     * Condición tipo WHERE SQL, para filtrar el resultado de las búsquedas
+     * según el rol de usuario de sesión.
+     * 
+     * @param type $usuario_id
+     * @return type 
+     */
+    function filtro_rol()
+    {
+        $usuario_id = $this->session->userdata('usuario_id');
+        $row_usuario = $this->Pcrn->registro_id('usuario', $usuario_id);
+
+        $condicion = 'id = 0';  //Valor por defecto, ningún usuario, se obtendrían cero temas.
+        
+        if ( $row_usuario->rol_id == 0 ) {
+            //Desarrollador, todos los temas
+            $condicion = 'id > 0';
+        } elseif ( $row_usuario->rol_id == 1 ) {
+            //Administrador, todos los temas
+            $condicion = 'id > 0';
+        } elseif ( $row_usuario->rol_id == 2 ) {
+            $condicion = 'id > 0';
+        } elseif ( $row_usuario->rol_id == 3 ) {
+            //Administrador institucional, todos los temas de su institución
+            $condicion = "institucion_id = {$row_usuario->institucion_id} ";
+            //$condicion .= " OR rol_id < 3 ORDER BY rol_id, apellidos";
+        } elseif ( $row_usuario->rol_id == 4 ) {
+            //Directivo, todos los temas de su institución
+            $condicion = "institucion_id = {$row_usuario->institucion_id} ";
+            //$condicion .= " OR rol_id < 3 ORDER BY rol_id, apellidos";
+        } elseif ( $row_usuario->rol_id == 5 ) {
+            //Profesor, todos los estudiantes de sus grupos asignados
+            $sql = "SELECT grupo_id FROM grupo_profesor WHERE (profesor_id) = {$usuario_id}";
+            $condicion = "grupo_id IN ({$sql})";
+        } elseif ( $row_usuario->rol_id == 6 ) {
+            //Estudiante, todos los estudianes de su grupo
+            $condicion = "( grupo_id = ({$row_usuario->grupo_id})";
+            $condicion .= " OR id IN (SELECT profesor_id FROM grupo_profesor WHERE (grupo_id) = ({$row_usuario->grupo_id})) )";
+        } elseif ( $row_usuario->rol_id == 8 ) {
+            //Comercial
+            $condicion = "institucion_id IN (SELECT id FROM institucion WHERE ejecutivo_id = {$this->session->userdata('usuario_id')})";
+        }
+        
+        return $condicion;
+        
+    }
+    
+// GENERAL
+//-----------------------------------------------------------------------------
     
     function eliminar($tema_id)
     {
@@ -103,7 +224,7 @@ class Tema_Model extends CI_Model{
     
     function autocompletar($busqueda, $limit = 15)
     {
-        //$filtro_rol = $this->filtro_usuarios($this->session->userdata('usuario_id'));
+        //$filtro_rol = $this->filtro_temas($this->session->userdata('usuario_id'));
 
         //Construir búsqueda
         //Crear array con términos de búsqueda
@@ -499,17 +620,6 @@ class Tema_Model extends CI_Model{
         $this->db->join('item', 'recurso.tipo_archivo_id = item.id');
         $this->db->where('tipo_recurso_id', 1);
         $this->db->where('disponible', 1);
-        $archivos = $this->db->get('recurso');
-        
-        return $archivos;
-    }
-    
-    function links($tema_id)
-    {
-        $this->db->select('url, 0 AS num_pagina');
-        $this->db->join('item', 'recurso.tipo_archivo_id = item.id');
-        $this->db->where('tema_id', $tema_id);
-        $this->db->where('tipo_recurso_id', 2);
         $archivos = $this->db->get('recurso');
         
         return $archivos;
@@ -1215,11 +1325,74 @@ class Tema_Model extends CI_Model{
             $this->Pagina_model->asignar_tema($pagina_id, $registro);
         
         return $pagina_id;
-        
     }
-    
-// FUNCIONES SIN USO
+
+// GESTIÓN DE LINKS
 //-----------------------------------------------------------------------------
+
+    /**
+     * Listado de links asociados a un tema
+     * 2019-09-02
+     */
+    function links($tema_id)
+    {
+        $this->db->select('id, titulo, url');
+        $this->db->where('tema_id', $tema_id);
+        $this->db->where('tipo_recurso_id', 2);
+        $links = $this->db->get('recurso');
+        
+        return $links;
+    }
+
+    /**
+     * Guardar link asociado a un tema en la tabla recurso
+     * 2019-09-03
+     */
+    function save_link($tema_id, $link_id)
+    {
+        //Resultado inicial por defecto
+            $data = array('status' => 0, 'message' => 'El link no fue guardado');
+
+        //Construir registro
+            $arr_row['titulo'] = $this->input->post('titulo');
+            $arr_row['url'] = $this->input->post('url');
+            $arr_row['tema_id'] = $tema_id;
+            $arr_row['tipo_recurso_id'] = 2;    //Link
+            $arr_row['editado'] = date('Y-m-d H:i:s');
+            $arr_row['usuario_id'] = $this->session->userdata('user_id');
+
+        //Guardar
+            $condition = "tema_id = {$tema_id} AND id = {$link_id}";
+            $saved_id = $this->Pcrn->guardar('recurso', $condition, $arr_row);
+        
+            if ( $saved_id > 0 )
+            {
+                $data = array('status' => 1, 'message' => 'Los datos del link fueron guardados', 'link_id' => $saved_id);
+            }
     
+        return $data;
+    }
+
+    /**
+     * Elimina un link de la tabla recurso, asociado a un $tema_id.
+     * 2019-09-03
+     */
+    function delete_link($tema_id, $link_id)
+    {
+        $data = array('status' => 0, 'message' => 'No se pudo eliminar el link');
     
+        $this->db->where('id', $link_id);
+        $this->db->where('tema_id', $tema_id);
+        $this->db->delete('recurso');
+        
+        $quan_deleted = $this->db->affected_rows();
+    
+        if ( $quan_deleted > 0 )
+        {
+            $data = array('status' => 1, 'message' => 'Link eliminado');
+        }
+    
+        return $data;
+    }
+
 }
