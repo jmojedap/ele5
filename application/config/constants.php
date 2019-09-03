@@ -95,7 +95,8 @@ define('RUTA_IMG', 'resources/images/');
 define('RUTA_CONTENT', 'content/');
 define('RUTA_UPLOADS', 'content/uploads/');
 define('URL_ASSETS', 'http://localhost/ele/assets/');
-define('URL_CONTENT', 'http://localhost/ele/content/');   //URL carpeta contenido
+//define('URL_CONTENT', 'http://localhost/ele/content/');   //URL carpeta contenido
+define('URL_CONTENT', 'https://www.plataformaenlinea.com/2017/content/');   //URL carpeta contenido
 define('URL_UPLOADS', 'http://localhost/ele/content/uploads/');
 define('URL_RECURSOS', 'http://localhost/ele/resources/');   //URL carpeta contenido
 define('URL_IMG', 'http://localhost/ele/resources/images/');

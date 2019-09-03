@@ -625,17 +625,6 @@ class Tema_Model extends CI_Model{
         return $archivos;
     }
     
-    function links($tema_id)
-    {
-        $this->db->select('url, 0 AS num_pagina');
-        $this->db->join('item', 'recurso.tipo_archivo_id = item.id');
-        $this->db->where('tema_id', $tema_id);
-        $this->db->where('tipo_recurso_id', 2);
-        $archivos = $this->db->get('recurso');
-        
-        return $archivos;
-    }
-    
     function preguntas($tema_id)
     {
         $this->db->where('tema_id', $tema_id);
@@ -1336,11 +1325,74 @@ class Tema_Model extends CI_Model{
             $this->Pagina_model->asignar_tema($pagina_id, $registro);
         
         return $pagina_id;
-        
     }
-    
-// FUNCIONES SIN USO
+
+// GESTIÓN DE LINKS
 //-----------------------------------------------------------------------------
+
+    /**
+     * Listado de links asociados a un tema
+     * 2019-09-02
+     */
+    function links($tema_id)
+    {
+        $this->db->select('id, titulo, url');
+        $this->db->where('tema_id', $tema_id);
+        $this->db->where('tipo_recurso_id', 2);
+        $links = $this->db->get('recurso');
+        
+        return $links;
+    }
+
+    /**
+     * Guardar link asociado a un tema en la tabla recurso
+     * 2019-09-03
+     */
+    function save_link($tema_id, $link_id)
+    {
+        //Resultado inicial por defecto
+            $data = array('status' => 0, 'message' => 'El link no fue guardado');
+
+        //Construir registro
+            $arr_row['titulo'] = $this->input->post('titulo');
+            $arr_row['url'] = $this->input->post('url');
+            $arr_row['tema_id'] = $tema_id;
+            $arr_row['tipo_recurso_id'] = 2;    //Link
+            $arr_row['editado'] = date('Y-m-d H:i:s');
+            $arr_row['usuario_id'] = $this->session->userdata('user_id');
+
+        //Guardar
+            $condition = "tema_id = {$tema_id} AND id = {$link_id}";
+            $saved_id = $this->Pcrn->guardar('recurso', $condition, $arr_row);
+        
+            if ( $saved_id > 0 )
+            {
+                $data = array('status' => 1, 'message' => 'Los datos del link fueron guardados', 'link_id' => $saved_id);
+            }
     
+        return $data;
+    }
+
+    /**
+     * Elimina un link de la tabla recurso, asociado a un $tema_id.
+     * 2019-09-03
+     */
+    function delete_link($tema_id, $link_id)
+    {
+        $data = array('status' => 0, 'message' => 'No se pudo eliminar el link');
     
+        $this->db->where('id', $link_id);
+        $this->db->where('tema_id', $tema_id);
+        $this->db->delete('recurso');
+        
+        $quan_deleted = $this->db->affected_rows();
+    
+        if ( $quan_deleted > 0 )
+        {
+            $data = array('status' => 1, 'message' => 'Link eliminado');
+        }
+    
+        return $data;
+    }
+
 }

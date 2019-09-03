@@ -383,23 +383,64 @@ class Temas extends CI_Controller{
             $output = array_merge($data,(array)$gc_output);
             $this->load->view(TPL_ADMIN, $output);
     }
+
+// GESTIÓN DE LINKS ASOCIADOS A TEMAS
+//-----------------------------------------------------------------------------
     
     function links($tema_id)
     {       
         //Cargando datos básicos
             $data = $this->Tema_model->basico($tema_id);
-            
-        //Render del grocery crud
-            $gc_output = $this->Tema_model->crud_links($tema_id);
         
         //Archivos
-            $data['archivos'] = $this->Tema_model->archivos($tema_id);
+            $data['links'] = $this->Tema_model->links($tema_id);
             
         //Solicitar vista
             $data['head_subtitle'] = 'Links';
-            $data['view_a'] = 'comunes/bs4/gc_v';
-            $output = array_merge($data,(array)$gc_output);
-            $this->load->view(TPL_ADMIN, $output);
+            $data['view_a'] = 'temas/links_v';
+            $this->load->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * AJAX JSON
+     * Listado de links asociados a un tema
+     * 2019-09-02
+     */
+    function get_links($tema_id)
+    {
+        $links = $this->Tema_model->links($tema_id);
+
+        $data['links'] = $links->result();
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
+    }
+
+    /**
+     * Guarda un link asociado a un tema
+     * 2019-09-02
+     */
+    function save_link($tema_id, $link_id = 0)
+    {
+        $data = $this->Tema_model->save_link($tema_id, $link_id);
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
+    }
+
+    /**
+     * Elimina el un link asociado a un tema
+     * 2019-09-02
+     */
+    function delete_link($tema_id, $link_id)
+    {
+        $data = $this->Tema_model->delete_link($tema_id, $link_id);
+        
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
     }
     
     
