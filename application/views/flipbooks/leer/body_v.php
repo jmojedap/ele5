@@ -269,6 +269,3 @@
 
     <?php $this->load->view('flipbooks/leer/vue_v'); ?>
 </body>
-
-
-    
