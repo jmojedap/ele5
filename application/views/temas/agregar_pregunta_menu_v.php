@@ -23,7 +23,7 @@
                 Nueva pregunta
             </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item d-none">
             <a 
                 class="nav-link <?= $clases['existente'] ?>"
                 href="<?php echo base_url("temas/agregar_pregunta/{$row->id}/{$orden}") ?>"
