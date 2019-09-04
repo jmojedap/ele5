@@ -1841,6 +1841,21 @@ class Usuario_model extends CI_Model{
         $registro['estado'] = $valor;   //Agregado 2018-11-16
         $this->db->where('id', $usuario_id);
         $this->db->update('usuario', $registro);
+
+        //Función temporal
+            //Al desactivar un usuario se crea un evento, tipo 109
+            $row_usuario = $this->Pcrn->registro_id('usuario', $usuario_id);
+            if ( $valor == 0 )
+            {
+                $this->load->model('Evento_model');
+                $arr_row['tipo_id'] = 109; //Desactivación de usuario
+                $arr_row['referente_id'] = $usuario_id;
+                $arr_row['grupo_id'] = $row_usuario->grupo_id;
+                $arr_row['institucion_id'] = $row_usuario->institucion_id;
+                $arr_row['usuario_id'] = $usuario_id;
+
+                $this->Evento_model->guardar_evento($arr_row);
+            }
     }
     
     /**

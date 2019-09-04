@@ -313,7 +313,6 @@ class Tema_Model extends CI_Model{
             
         //Tipo
             $crud->field_type('tipo_id', 'dropdown', $arr_tipos);
-            
 
         //Funciones
             //$crud->callback_after_update(array($this, 'gc_after_insert'));
