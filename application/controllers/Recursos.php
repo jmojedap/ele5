@@ -398,7 +398,7 @@ class Recursos extends CI_Controller{
         //Proceso
             $this->load->model('Pcrn_excel');
             $no_importados = array();
-            $letra_columna = 'B';   //Última columna con datos
+            $letra_columna = 'C';   //Última columna con datos
             
             $resultado = $this->Pcrn_excel->array_hoja_default($letra_columna);
 
@@ -423,78 +423,4 @@ class Recursos extends CI_Controller{
             $data['vista_menu'] = 'recursos/links/explorar_menu_v';
             $this->load->view(PTL_ADMIN, $data);
     }
-    
-    function cargar_links()
-    {
-        //Solicitar vista
-            $data['titulo_pagina'] = 'Cargar links';
-            $data['subtitulo_pagina'] = 'Cargar links a los temas';
-            $data['vista_a'] = 'recursos/links/menu_v';
-            $data['vista_b'] = 'recursos/links/cargar_v';
-            $this->load->view(PTL_ADMIN, $data);
-    }
-    
-    function procesar_cargar_links()
-    {
-        $this->load->library('form_validation');
-        
-        //Reglas
-            $this->form_validation->set_rules('nombre_hoja', 'Nombre hoja', 'required');
-        
-        //Mensajes de validación
-            $this->form_validation->set_message('required', "%s no puede quedar vacío");
-        
-        //Comprobar validación
-            if ( $this->form_validation->run() == FALSE ){
-                //No se cumple la validación, se regresa al cuestionario
-                $this->cargar_links();
-            } else {
-                //Se cumple la validación, 
-                $this->resultado_cargar_links();
-            }    
-    }
-    
-    function resultado_cargar_links()
-    {
-        //Variables
-        $links_cargados = array();
-        $filtro_fecha = 0;
-        
-        $archivo = $_FILES['file']['tmp_name'];    //Se crea un archivo temporal, no se sube al servidor, se toma el nombre temporal
-        $nombre_hoja = $this->input->post('nombre_hoja');   //Nombre de hoja digitada por el usuario en el formulario
-        
-        $this->load->model('Pcrn_excel');
-        $resultado = $this->Pcrn_excel->array_hoja($archivo, $nombre_hoja, 'B');
-        $links = $resultado['array_hoja'];
-        
-        if ( $resultado['cargado'] ) {
-            $links_cargados = $this->Recurso_model->insert_links($links);
-        }
-        
-        $this->session->set_userdata('entero', count($links_cargados));
-        
-        if ( count($links_cargados) > 0 ) {
-            $filtro_fecha = $this->Pcrn->campo('recurso', "id =  {$links_cargados[0]}", 'editado');    //Fecha de uno de los links cargados
-            $filtro_fecha = str_replace(' ', '', $filtro_fecha);
-            $filtro_fecha = str_replace('-', '', $filtro_fecha);
-            $filtro_fecha = str_replace(':', '', $filtro_fecha);
-        }
-
-        $destino = "recursos/links/?e={$filtro_fecha}";
-        redirect($destino);
-    }
-    
-    /**
-     * Eliminar todos los links
-     */
-    function eliminar_links()
-    {
-        $this->db->where('tipo_recurso_id', 2); //Tipo link
-        $this->db->delete('recurso');
-        
-        $resultado['mensaje'] = 'Registros ejecutados: ' . $this->db->affected_rows();
-        $this->session->set_flashdata('resultado', $resultado);
-        
-        redirect('develop/procesos');
-    }    
 }

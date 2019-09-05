@@ -155,7 +155,7 @@ class Recurso_Model extends CI_Model{
     function links($busqueda, $per_page = NULL, $offset = NULL)
     {
         
-        $this->db->select("recurso.id, url, tema_id, nombre_tema, nivel, area_id, tipo_archivo_id, disponible, recurso.editado, recurso.usuario_id");
+        $this->db->select("recurso.id, recurso.titulo, url, tema_id, nombre_tema, nivel, area_id, tipo_archivo_id, disponible, recurso.editado, recurso.usuario_id");
         $this->db->where('tipo_recurso_id', 2); //Tipo link
         $this->db->join('tema', 'recurso.tema_id = tema.id');
         
@@ -309,7 +309,8 @@ class Recurso_Model extends CI_Model{
             
             //Complementar registro
                 $registro['tema_id'] = $tema_id;
-                $registro['url'] = $array_fila[1];
+                $registro['titulo'] = $array_fila[1];
+                $registro['url'] = $array_fila[2];
                 
             //Validar
                 $condiciones = 0;

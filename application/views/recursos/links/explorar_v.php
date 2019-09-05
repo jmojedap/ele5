@@ -52,6 +52,7 @@
         $clases_col['usuario'] = 'hidden-xs hidden-sm';
         $clases_col['editado_hace'] = 'hidden-xs hidden-sm';
         $clases_col['botones'] = 'hidden-xs hidden-sm';
+        $clases_col['titulo'] = 'hidden-xs hidden-sm';
         
 ?>
 
@@ -162,6 +163,7 @@
                 <th width="60px;">ID</th>
 
                 <th width="60px" class="<?= $clases_col['enlace_externo'] ?>">Ir</th>
+                <th class="<?= $clases_col['titulo'] ?>">Título</th>
                 <th class="<?= $clases_col['link'] ?>">Tema</th>
                 <th class="<?= $clases_col['nivel_area'] ?>">Nivel - Área</th>
                 <th class="<?= $clases_col['usuario'] ?>">Usuario</th>
@@ -191,10 +193,21 @@
                     <td class="<?= $clases_col['enlace_externo'] ?>">
                         <?= anchor($row_resultado->url, '<i class="fa fa-external-link"></i>', 'class="btn btn-info"') ?>
                     </td>
+
+                    <td class="<?php echo $clases_col['titulo'] ?>">
+                        <?php if ( $row_resultado->titulo ) { ?>    
+                            <a href="<?php echo $row_resultado->url ?>" target="_blank">
+                                <?php echo $row_resultado->titulo ?>
+                            </a>
+                        <?php } else {?>
+                            <span class="text-muted">ND</span>
+                        <?php } ?>
+                    </td>
                     
                     <td>
                         <?= $link_elemento ?>
                     </td>
+
                     
                     <td class="<?= $clases_col['nivel_area'] ?>">
                         <span class="etiqueta nivel w1"><?= $row_resultado->nivel ?></span>
