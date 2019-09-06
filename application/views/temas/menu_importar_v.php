@@ -4,6 +4,7 @@
         if ( $seccion == 'importar_ut_e' ) { $clases_sm['importar_ut'] = 'active'; }
         if ( $seccion == 'copiar_preguntas_e' ) { $clases_sm['copiar_preguntas'] = 'active'; }
         if ( $seccion == 'asignar_quices_e' ) { $clases_sm['asignar_quices'] = 'active'; }
+        if ( $seccion == 'importar_pa_e' ) { $clases_sm['importar_pa'] = 'active'; }
 
         $clases_sm[$seccion] = 'active';
     
@@ -35,10 +36,17 @@
             'link' => 'temas/asignar_quices/',
             'atributos' => 'title="Asingar las evidencias de un tema a otro"'
         );
+
+        $arr_menus['importar_pa'] = array(
+            'icono' => '<i class="fas fa-feather-alt"></i>',
+            'texto' => 'Preguntas abiertas',
+            'link' => 'temas/importar_pa/',
+            'atributos' => 'title="Importar preguntas abiertas a los temas"'
+        );
         
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('importar', 'importar_ut', 'copiar_preguntas', 'asignar_quices');
-        $elementos_rol[1] = array('importar', 'importar_ut', 'copiar_preguntas', 'asignar_quices');
+        $elementos_rol[0] = array('importar', 'importar_ut', 'copiar_preguntas', 'asignar_quices', 'importar_pa');
+        $elementos_rol[1] = array('importar', 'importar_ut', 'copiar_preguntas', 'asignar_quices', 'importar_pa');
         $elementos_rol[2] = array('importar', 'importar_ut');
         
     //Definiendo menú mostrar, según el rol del visitante

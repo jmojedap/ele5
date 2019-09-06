@@ -1394,4 +1394,116 @@ class Tema_Model extends CI_Model{
         return $data;
     }
 
+// GESTIÓN DE PREGUNTAS ABIERTAS (pa)
+//-----------------------------------------------------------------------------
+
+    /**
+     * Listado de preguntas abiertas asociadas a un tema
+     * 2019-09-02
+     */
+    function preguntas_abiertas($tema_id)
+    {
+        $this->db->select('id, contenido');
+        $this->db->where('referente_1_id', $tema_id);
+        $this->db->where('tipo_id', 121);   //Post tipo 121
+        $preguntas_abiertas = $this->db->get('post');
+        
+        return $preguntas_abiertas;
+    }
+
+    /**
+     * Guardar link asociado a un tema en la tabla recurso
+     * 2019-09-03
+     */
+    function save_pa($tema_id, $pa_id)
+    {
+        //Resultado inicial por defecto
+            $data = array('status' => 0, 'message' => 'La pregunta no fue guardada');
+
+        //Construir registro
+            $arr_row['tipo_id'] = 121;  //Pregunta abierta
+            $arr_row['referente_1_id'] = $tema_id;  //Tema asociado
+            $arr_row['contenido'] = $this->input->post('contenido');
+
+        //Guardar
+            $this->load->model('Post_model');
+            $condition = "referente_1_id = {$tema_id} AND id = {$pa_id}";
+            $saved_id = $this->Post_model->guardar_post($condition, $arr_row);
+        
+            if ( $saved_id > 0 )
+            {
+                $data = array('status' => 1, 'message' => 'La pregunta fue guardada correctamente', 'saved_id' => $saved_id);
+            }
+    
+        return $data;
+    }
+
+    /**
+     * Elimina una pregunta abierta (pa) de la tabla post, asociada a un $tema_id.
+     * 2019-09-03
+     */
+    function delete_pa($tema_id, $pa_id)
+    {
+        $data = array('status' => 0, 'message' => 'No se pudo eliminar la pregunta');
+    
+        $this->db->where('id', $pa_id);
+        $this->db->where('referente_1_id', $tema_id);
+        $this->db->where('tipo_id', 121);   //Post tipo Pregunta abierta 121
+        $this->db->delete('post');
+        
+        $quan_deleted = $this->db->affected_rows();
+    
+        if ( $quan_deleted > 0 )
+        {
+            $data = array('status' => 1, 'message' => 'Pregunta eliminada');
+        }
+    
+        return $data;
+    }
+
+    /**
+     * Importar masivamente preguntas abiertas a temas
+     * tabla post, tipo_id = 121
+     * 2019-09-06
+     * 
+     * @param type $array_hoja    Array con los datos de preguntas
+     */
+    function importar_pa($array_hoja)
+    {
+        $no_importados = array();
+        $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
+        
+        //Predeterminados registro nuevo
+        $arr_row['tipo_id'] = 121;
+
+        $this->load->model('Post_model');
+        
+        foreach ( $array_hoja as $array_fila )
+        {
+            //Identificar valores
+                $tema_id = $this->Pcrn->campo('tema', "cod_tema = '{$array_fila[0]}'", 'id');
+            
+            //Complementar registro
+                $arr_row['referente_1_id'] = $tema_id;
+                $arr_row['contenido'] = $array_fila[1];
+                
+            //Validar
+                $condiciones = 0;
+                if ( ! is_null($tema_id) ) { $condiciones++; }                  //Tiene tema identificado
+                if ( strlen($arr_row['contenido']) > 0 ) { $condiciones++; }    //Tiene contenido texto escrito
+                
+            //Si cumple las condiciones
+            if ( $condiciones == 2 )
+            {   
+                $this->Post_model->guardar_post('id = 0', $arr_row);    //Condición imposible, siempre agrega
+            } else {
+                $no_importados[] = $fila;
+            }
+            
+            $fila++;    //Para siguiente fila
+        }
+        
+        return $no_importados;
+    }
+
 }
