@@ -38,7 +38,8 @@
             <div class="col-md-1">
                 ID
             </div>
-            <div class="col-md-4">Tema</div>
+            <div class="col-md-1">Cód.</div>
+            <div class="col-md-3">Tema</div>
             <div class="col-md-2">Tipo</div>
             <div class="col-md-3">Nivel | Área</div>
             <div class="col-md-1">Evidencias</div>
@@ -72,6 +73,10 @@
                     <?php echo $row_resultado->id ?>
                 </div>
                 
+                <div class="col-md-1 col-sm-12">
+                    <?php echo $row_resultado->cod_tema; ?>
+                </div>
+
                 <div class="col-md-4 col-sm-12">
                     <?php echo $link_elemento ?>
                 </div>

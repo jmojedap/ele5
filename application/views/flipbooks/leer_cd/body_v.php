@@ -3,29 +3,29 @@
         <!-- BARRA DE HERRAMIENTAS-->
         <div class="row">
 
-            <div class="col-md-offset-2 col-md-7">
+            <div class="offset-md-2 col-md-7">
 
                 <div class="text-center">
-                    <div class="w2 pull-left boton_fb btn btn-default" v-on:click="pagina_ant"><i class="fa fa-caret-left"></i></div>
+                    <div class="w2 float-left boton_fb btn btn-light" v-on:click="pagina_ant"><i class="fa fa-chevron-left"></i></div>
 
                     <button
                         id="alternar_menu_recursos"
-                        class="w2 boton_fb btn btn-default hidden-md hidden-lg"
+                        class="w2 boton_fb btn btn-light hidden-md hidden-lg"
                         v-on:click="alternar_menu_recursos"
                         >
-                        <i class="fa fa-files-o"></i>
+                        <i class="fa fa-file"></i>
                     </button>
                     <button 
                         class="w2 boton_fb btn"
                         id="mostrar_indice"
                         title="Ver índice del Contenido"
                         v-on:click="alternar_indice"
-                        v-bind:class="[ver_indice ? 'btn-warning' : '', 'btn-default']"
+                        v-bind:class="[ver_indice ? 'btn-warning' : '', 'btn-light']"
                         >
                         <i class="fa fa-list"></i>
                     </button>
                     <button
-                        class="w2 btn"
+                        class="btn"
                         title="Separador en esta página"
                         v-on:click="establecer_bookmark"
                         v-bind:class="clase_bookmark()"
@@ -34,11 +34,12 @@
                         {{ parseInt(num_pagina) + 1 }}
                     </button>
 
-                    <div class="w2 pull-right boton_fb btn btn-default" v-on:click="pagina_sig"><i class="fa fa-caret-right"></i></div>
+                    <div class="w2 float-right boton_fb btn btn-light" v-on:click="pagina_sig"><i class="fa fa-chevron-right"></i></div>
                 </div>
                 
                 <input
                     type="range"
+                    class="form-control"
                     min="0" max="<?php echo $row->num_paginas - 1 ?>"
                     value="<?php echo $bookmark ?>"
                     v-model="num_pagina"
@@ -56,40 +57,44 @@
             
             <!-- SECCIÓN DE RECURSOS -->
             <div class="col col-md-2">
-                <div id="menu_recursos" class="hidden-xs hidden-sm">
-                    <!--QUICES-->
-                    <a id="btn_listado_quices" href="#listado_quices" data-toggle="collapse" aria-expanded="true" class="btn btn-default btn-block hidden" style="margin-bottom: 5px;">
-                        <img id="mostrar_quices" src="<?php echo URL_IMG ?>flipbook/quices_banner_v5.png">
-                    </a>
+                <div id="menu_recursos" class="">
+
+                    <!--PREGUNTAS ABIERTAS-->
+                    <button 
+                        class="btn btn-light btn-block mb-2"
+                        title="Asignar pregunta abierta"
+                        data-toggle="modal"
+                        data-target="#modal_pa"
+                        >
+                        <img src="<?php echo $carpeta_iconos . 'cd_escribe.png' ?>">
+                    </button>
+
+                    <?php $this->load->view('flipbooks/leer_cd/preguntas_abiertas_v') ?>
 
                     <div id="listado_quices" class="collapse_no sep2">
                         <a 
-                            class="btn btn-default btn-block"
+                            class="btn btn-light btn-block"
                             title="Evidencia de aprendizaje sobre el tema"
                             target="_blank"
                             v-for="quiz in data.quices"
                             v-bind:href="app_url + 'quices/iniciar/' + quiz.quiz_id"
                             v-show='num_pagina == quiz.num_pagina'
                             >
-                            <img src="<?php echo $carpeta_iconos . 'quices_v5.png' ?>">
+                            <img src="<?php echo $carpeta_iconos . 'cd_lectura.png' ?>">
                         </a>
                     </div>
 
                     <!--ARCHIVOS-->
-                    <a id="btn_listado_archivos" href="#listado_archivos" data-toggle="collapse" aria-expanded="true" class="btn btn-default btn-block hidden" style="margin-bottom: 5px;">
-                        <img id="mostrar_archivos" src="<?php echo URL_IMG ?>flipbook/archivos_banner_v5.png">
-                    </a>
-
                     <div id="listado_archivos" class="collapse_no sep2">
                         <!--AUDIOS 621-->
-                        <?php $this->load->view('flipbooks/leer/audios_v'); ?>
+                        <?php $this->load->view('flipbooks/leer_cd/audios_v'); ?>
 
                         <!--ANIMACIONES 619-->
-                        <?php $this->load->view('flipbooks/leer/animaciones_v'); ?>
+                        <?php $this->load->view('flipbooks/leer_cd/animaciones_v'); ?>
 
                         <!--OTROS ARCHIVOS -->
                         <a
-                            class="btn btn-default btn-block"
+                            class="btn btn-light btn-block"
                             v-for="archivo in data.archivos"
                             v-show="num_pagina == archivo.num_pagina"
                             v-bind:href="'<?php echo URL_UPLOADS ?>' + archivo.ubicacion"
@@ -102,13 +107,13 @@
                     </div>
 
                     <!--ENLACES-->
-                    <a id="btn_listado_quices" href="#listado_links" data-toggle="collapse" aria-expanded="true" class="btn btn-default btn-block hidden" style="margin-bottom: 5px;">
+                    <a id="btn_listado_quices" href="#listado_links" data-toggle="collapse" aria-expanded="true" class="btn btn-light btn-block hidden" style="margin-bottom: 5px;">
                         <img id="mostrar_quices" src="<?php echo URL_IMG ?>flipbook/link_banner_v5.png">
                     </a>
 
                     <div id="listado_links" class="collapse_no sep2">
                         <a
-                            class="btn btn-default btn-block"
+                            class="btn btn-light btn-block"
                             title="Link complementario sobre este tema"
                             target="_blank"
                             v-for="link in data.links"
@@ -122,7 +127,7 @@
                     <!--HERRAMIENTAS ADICIONALES-->
                     <?php if ( $elementos_fb['herramientas_adicionales'] ){ ?>
                         <div class="dropdown sep2">
-                            <button class="btn btn-default btn-block dropdown-toggle" type="button" data-toggle="dropdown" data-submenu="" aria-expanded="false">
+                            <button class="btn btn-light btn-block dropdown-toggle" type="button" data-toggle="dropdown" data-submenu="" aria-expanded="false">
                                 <i class="fa fa-ellipsis-v"></i>
                             </button>
 
@@ -228,7 +233,7 @@
                         <div class="row">    
                             <div class="col-md-6" v-for="pagina in data.indice">
                                 <a 
-                                    class="link_indice pull-left"
+                                    class="link_indice float-left"
                                     v-on:click="ir_a_pagina(pagina.num_pagina)"
                                     >
                                     <span class="badge badge-primary">{{ parseInt(pagina.num_pagina) + 1 }}</span>
@@ -255,7 +260,7 @@
                         </textarea>
                     </div>
                     <div class="sep2">
-                        <button class="btn btn-default btn-block" type="submit">
+                        <button class="btn btn-light btn-block" type="submit">
                             <i class="fa fa-save"></i>
                             Guardar
                         </button>
@@ -264,5 +269,5 @@
             </div>
         </div>
     </div>
-    <?php $this->load->view('flipbooks/leer/vue_v'); ?>
+    <?php $this->load->view('flipbooks/leer_cd/vue_v'); ?>
 </body>

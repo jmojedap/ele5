@@ -107,7 +107,7 @@
                 });
             },
             clase_bookmark: function() {
-                var clase = 'btn-default';
+                var clase = 'btn-light';
                 if ( this.num_pagina == this.bookmark ) {
                     clase = 'btn-success';
                 }

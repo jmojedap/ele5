@@ -460,6 +460,7 @@ class Flipbook_model extends CI_Model {
         $data['planes_aula'] = $this->planes_aula($flipbook_id)->result();
         $data['quices'] = $this->quices($flipbook_id)->result();
         $data['links'] = $this->links($flipbook_id)->result();
+        $data['preguntas_abiertas'] = $this->preguntas_abiertas($flipbook_id)->result();
         $data['relacionados'] = $this->n_arr_relacionados($flipbook_id);
 
         $data_str = json_encode($data);
@@ -545,6 +546,21 @@ class Flipbook_model extends CI_Model {
         $links = $this->db->get('recurso');
 
         return $links;
+    }
+
+    /**
+     * Preguntas abiertas asociadas a un tema, tabla post tipo_id 121
+     */
+    function preguntas_abiertas($flipbook_id)
+    {
+        $this->db->select('post.contenido AS text_pregunta, num_pagina, post.referente_1_id AS tema_id');
+        $this->db->join('pagina_flipbook', 'post.referente_1_id = pagina_flipbook.tema_id');
+        $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
+        $this->db->where('flipbook_id', $flipbook_id);
+        $this->db->where('tipo_id', 121);
+        $preguntas_abiertas = $this->db->get('post');
+
+        return $preguntas_abiertas;
     }
 
     /**
