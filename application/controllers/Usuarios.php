@@ -140,10 +140,10 @@ class Usuarios extends CI_Controller{
 
                 $this->load->view('app/descargar_phpexcel_v', $data);
             } else {
-                $data['titulo_pagina'] = 'Plataforma Enlace';
+                $data['head_title'] = APP_NAME;
                 $data['mensaje'] = "El número de registros es de {$resultados_total->num_rows()}. El máximo permitido es de " . MAX_REG_EXPORT . " registros. Puede filtrar los datos por algún criterio para poder exportarlos.";
                 $data['link_volver'] = "usuarios/explorar/?{$busqueda_str}";
-                $data['vista_a'] = 'app/mensaje_v';
+                $data['view_a'] = 'app/mensaje_v';
                 
                 $this->load->view(TPL_ADMIN, $data);
             }
@@ -362,9 +362,9 @@ class Usuarios extends CI_Controller{
         $data['clase_alerta'] = 'alert-info';
         
         //Solicitar vista
-            $data['titulo_pagina'] = 'Usuario registrado';
+            $data['head_title'] = 'Usuario registrado';
             $data['head_subtitle'] = $row_usuario->nombre . ' ' . $row_usuario->apellidos;
-            $data['vista_a'] = 'app/mensaje_v';
+            $data['view_a'] = 'app/mensaje_v';
             $this->load->view(TPL_ADMIN, $data);
     }
     
@@ -383,7 +383,7 @@ class Usuarios extends CI_Controller{
             $data['cod_activacion'] = $cod_activacion;
             $data['tipo_activacion'] = $tipo_activacion;
             $data['row'] = $row_usuario;
-            $data['vista_a'] = 'usuarios/activar_v';
+            $data['view_a'] = 'usuarios/activar_v';
             $data['titulo_pagina'] = "Cuenta de {$row_usuario->nombre}";
             
         //Evaluar condiciones

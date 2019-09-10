@@ -4,5 +4,8 @@
 </div>
 
 <?php if ( ! is_null($link_volver) ) { ?>
-    <?= anchor($link_volver, 'Volver', 'class="btn btn-default" title="Volver"') ?>
+    <a href="<?php echo base_url($link_volver) ?>" class="btn btn-primary">
+        <i class="fa fa-arrow-left"></i>
+        Volver
+    </a>
 <?php } ?>
