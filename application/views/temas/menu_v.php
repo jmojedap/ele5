@@ -28,13 +28,6 @@
             'atributos' => 'title="Evidencias de aprendizaje"'
         );
             
-        $arr_menus['links'] = array(
-            'icono' => '<i class="fa fa-link"></i>',
-            'texto' => 'Links',
-            'link' => "temas/links/{$row->id}",
-            'atributos' => 'title="Links"'
-        );
-            
         $arr_menus['programas'] = array(
             'icono' => '<i class="fa fa-bars"></i>',
             'texto' => 'Programas',
@@ -69,6 +62,20 @@
             'link' => "temas/copiar/{$row->id}",
             'atributos' => 'title="Crear una copia del programa"'
         );
+
+        $arr_menus['links'] = array(
+            'icono' => '<i class="fa fa-link"></i>',
+            'texto' => 'Links',
+            'link' => "temas/links/{$row->id}",
+            'atributos' => 'title="Links"'
+        );
+
+        $arr_menus['preguntas_abiertas'] = array(
+            'icono' => '<i class="fas fa-feather-alt"></i>',
+            'texto' => 'Preguntas abiertas',
+            'link' => "temas/preguntas_abiertas/{$row->id}",
+            'atributos' => 'title="Links"'
+        );
             
         $arr_menus['editar'] = array(
             'icono' => '<i class="fa fa-pencil-alt"></i>',
@@ -78,9 +85,9 @@
         );
         
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'copiar', 'editar');
-        $elementos_rol[1] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'copiar', 'editar');
-        $elementos_rol[2] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'copiar', 'editar');
+        $elementos_rol[0] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'preguntas_abiertas', 'copiar', 'editar');
+        $elementos_rol[1] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'preguntas_abiertas', 'copiar', 'editar');
+        $elementos_rol[2] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'preguntas_abiertas', 'copiar', 'editar');
         
     //Definiendo menú mostrar, según el rol del visitante
         $elementos = $elementos_rol[$this->session->userdata('rol_id')];

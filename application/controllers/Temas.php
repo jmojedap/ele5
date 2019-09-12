@@ -1062,4 +1062,130 @@ class Temas extends CI_Controller{
             $this->load->view(TPL_ADMIN, $data);
     }
     
+// PREGUNTAS ABIERTAS (pa)
+//-----------------------------------------------------------------------------
+
+    /**
+     * Vista para gestión de preguntas abiertas (pa) asociadas a tema
+     * 2019-09-06
+     */
+    function preguntas_abiertas($tema_id)
+    {
+        $data = $this->Tema_model->basico($tema_id);
+        $data['view_a'] = 'temas/preguntas_abiertas_v';
+        $data['subtitle_head'] = 'Preguntas abiertas';
+        $this->load->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * AJAX JSON
+     * Listado de preguntas abiertas (pa) asociadass a un tema
+     * 2019-09-06
+     */
+    function get_pa($tema_id)
+    {
+        $preguntas_abiertas = $this->Tema_model->preguntas_abiertas($tema_id);
+
+        $data['preguntas_abiertas'] = $preguntas_abiertas->result();
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
+    }
+
+    /**
+     * Guarda una pregunta abierta (pa) asociada a un tema
+     * 2019-09-06
+     */
+    function save_pa($tema_id, $pa_id = 0)
+    {
+        $data = $this->Tema_model->save_pa($tema_id, $pa_id);
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
+    }
+
+    /**
+     * Elimina el una pregunta abierta (pa) asociado a un tema
+     * 2019-09-06
+     */
+    function delete_pa($tema_id, $pa_id)
+    {
+        $data = $this->Tema_model->delete_pa($tema_id, $pa_id);
+        
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
+    }
+
+    /**
+     * Vista formulario importación de preguntas abiertas para temas
+     * 2019-09-06
+     */
+    function importar_pa()
+    {
+        //Iniciales
+            $nombre_archivo = '31_formato_cargue_preguntas_abiertas.xlsx';
+            $parrafos_ayuda = array();
+        
+        //Instructivo
+            $data['titulo_ayuda'] = '¿Cómo importar preguntas abiertas?';
+            $data['nota_ayuda'] = 'Se importarán preguntas abiertas asociadas a cada tema';
+            $data['parrafos_ayuda'] = $parrafos_ayuda;
+        
+        //Variables específicas
+            $data['destino_form'] = 'temas/importar_pa_e';
+            $data['nombre_archivo'] = $nombre_archivo;
+            $data['nombre_hoja'] = 'preguntas_abiertas';
+            $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
+            
+        //Variables generales
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Importar preguntas abiertas';
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_2'] = 'temas/explorar/menu_v';
+            $data['nav_3'] = 'temas/menu_importar_v';
+        
+        $this->load->view(TPL_ADMIN, $data);
+    }
+    
+    /**
+     * Importar preguntas abiertas a los temas, (e) ejecutar.
+     * Recibe archivo y datos de "temas/importar_pa"
+     * 2019-09-06
+     */
+    function importar_pa_e()
+    {
+        
+        //Proceso
+            $this->load->model('Pcrn_excel');
+            $no_importados = array();
+            $letra_columna = 'B';   //Última columna con datos
+            
+            $resultado = $this->Pcrn_excel->array_hoja_default($letra_columna);
+
+            if ( $resultado['valido'] )
+            {
+                $this->load->model('Tema_model');
+                $no_importados = $this->Tema_model->importar_pa($resultado['array_hoja']);
+            }
+        
+        //Cargue de variables
+            $data['valido'] = $resultado['valido'];
+            $data['mensaje'] = $resultado['mensaje'];
+            $data['array_hoja'] = $resultado['array_hoja'];
+            $data['nombre_hoja'] = $this->input->post('nombre_hoja');
+            $data['no_importados'] = $no_importados;
+            $data['destino_volver'] = 'temas/explorar/';
+        
+        //Cargar vista
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Resultado importación PA';
+            $data['view_a'] = 'comunes/resultado_importacion_v';
+            $data['nav_2'] = 'temas/explorar/menu_v';
+            $data['nav_3'] = 'temas/menu_importar_v';
+            $this->load->view(TPL_ADMIN, $data);
+    }
+
 }

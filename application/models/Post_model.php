@@ -276,12 +276,13 @@ class Post_Model extends CI_Model{
     {
         $post_id = $this->Pcrn->existe('post', $condicion);
         
+        //Complementar datos
         $registro['editor_id'] = $this->session->userdata('usuario_id');
-        $registro['editado'] = $this->session->userdata('usuario_id');
+        $registro['editado'] = date('Y-m-d H:i:s');
         
-        if ( $post_id == 0 ) {
+        if ( $post_id == 0 ) 
+        {
             //No existe, insertar
-            
             $registro['usuario_id'] = $this->session->userdata('usuario_id');
             $registro['creado'] = date('Y-m-d H:i:s');
             

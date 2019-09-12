@@ -849,5 +849,59 @@ class Grupo_model extends CI_Model{
         return $objeto_archivo;
                 
     }
+
+// PREGUNTAS ASIGNADAS A GRUPOS 2019-09-12
+//-----------------------------------------------------------------------------
+
+    /**
+     * Asignar pregunta abierta a grupo, tabla meta, como referencia se guarda en el registro
+     * el tema y el área del tema.
+     * 2019-09-10
+     */
+    function asignar_pa($grupo_id, $pa_id)
+    {
+        //Resultado inicial
+            $data = array('status' => 0, 'message' => 'Pregunta no asignada');
+
+        //Identificar variables
+            $row_pa = $this->Pcrn->registro_id('post', $pa_id);
+            $row_tema = $this->Pcrn->registro_id('tema', $row_pa->referente_1_id);
+
+        //Construir registro
+            $arr_row['tabla_id'] = 4100;            //Grupo
+            $arr_row['dato_id'] = 410020;           //Asignación de pregunta abierta
+            $arr_row['elemento_id'] = $grupo_id;
+            $arr_row['relacionado_id'] = $pa_id;    //ID Post, pregunta abierta
+            $arr_row['entero_1'] = $row_tema->id;
+            $arr_row['entero_2'] = $row_tema->area_id;
+
+        //Guardar
+            $condition = "dato_id = {$arr_row['dato_id']} AND elemento_id = {$arr_row['elemento_id']} AND entero_1 = {$arr_row['entero_1']}";
+            $meta_id =$this->Pcrn->guardar('meta', $condition, $arr_row);
+    
+        //Preparar resultado
+            if ( $meta_id > 0 )
+            {
+                $data = array('status' => 1, 'message' => 'Pregunta asignada', 'meta_id' => $meta_id);
+            }
+    
+        return $data;
+    }
+
+    /**
+     * Query con preguntas asignadas a un grupo en flipbooks del tipo Clase Dinámica
+     * 2019-09-11
+     */
+    function pa_asignadas($grupo_id, $area_id)
+    {
+        $this->db->select('relacionado_id AS pa_id, entero_1 AS tema_id, post.contenido AS texto_pregunta');
+        $this->db->where('elemento_id', $grupo_id);
+        $this->db->where('dato_id', 410020);    //Pregunta abierta asignada a grupo
+        $this->db->where('entero_2', $area_id); //Que coincida el área del tema con el área del flipbook
+        $this->db->join('post', 'post.id = meta.relacionado_id');
+        $pa_asignadas = $this->db->get('meta');
+
+        return $pa_asignadas;
+    }
     
 }

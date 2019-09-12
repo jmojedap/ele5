@@ -3,6 +3,7 @@
         el: '#flipbook',
         created: function(){
             this.cargar_data();
+            this.cargar_pa_asignadas();
         },
         data: {
             app_url: '<?php echo base_url() ?>',
@@ -12,7 +13,8 @@
             bookmark: '<?php echo $bookmark ?>',
             flipbook_id: '<?php echo $row->id ?>',
             pagina: {
-                archivo_imagen: '0db5031cfb53fe849a8d45978e22da7d.jpg'
+                archivo_imagen: '0db5031cfb53fe849a8d45978e22da7d.jpg',
+                tema_id: 0
             },
             data: {
                 relacionados: {
@@ -23,7 +25,11 @@
             },
             anotaciones: {},
             anotacion: '',
-            ver_indice: false
+            ver_indice: false,
+            grupo_id: <?php echo $this->session->userdata('grupo_id'); ?>,
+            area_id: <?php echo $row->area_id ?>,
+            pregunta_id: 0,
+            pa_asignadas: []
         },
         methods: {
             cargar_data: function () {
@@ -107,7 +113,7 @@
                 });
             },
             clase_bookmark: function() {
-                var clase = 'btn-default';
+                var clase = 'btn-light';
                 if ( this.num_pagina == this.bookmark ) {
                     clase = 'btn-success';
                 }
@@ -119,9 +125,34 @@
             alternar_menu_recursos: function() {
                 $('#alternar_menu_recursos').toggleClass('btn-default');
                 $('#alternar_menu_recursos').toggleClass('btn-info');
-                $('#menu_recursos').toggleClass('hidden-xs');
-                $('#menu_recursos').toggleClass('hidden-sm');
-            }
+                $('#menu_recursos').toggleClass('d-none');
+                $('#menu_recursos').toggleClass('d-lg-block');
+            },
+            cargar_pa_asignadas: function(){
+                axios.get(this.app_url + 'grupos/pa_asignadas/' + this.grupo_id + '/' + this.area_id, )
+                .then(response => {
+                    this.pa_asignadas = response.data.pa_asignadas;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
+            seleccionar_pregunta: function(pregunta_id){
+                this.pregunta_id = pregunta_id;
+            },
+            asignar_pa: function(){
+                axios.get(this.app_url + 'grupos/asignar_pa/' + this.grupo_id + '/' + this.pregunta_id)
+                .then(response => {
+                    console.log(response.data.message)
+                    if ( response.data.status ) {
+                        toastr['success']('La pregunta fue asignada al grupo');
+                        $('#modal_pa').modal('hide');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
         }
     });
 </script>
