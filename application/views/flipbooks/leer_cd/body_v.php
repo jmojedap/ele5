@@ -6,11 +6,13 @@
             <div class="offset-md-2 col-md-7">
 
                 <div class="text-center">
-                    <div class="w2 float-left boton_fb btn btn-light" v-on:click="pagina_ant"><i class="fa fa-chevron-left"></i></div>
+                    <button class="w2 float-left boton_fb btn btn-light" v-on:click="pagina_ant">
+                        <i class="fa fa-chevron-left"></i>
+                    </button>
 
                     <button
                         id="alternar_menu_recursos"
-                        class="w2 boton_fb btn btn-light hidden-md hidden-lg"
+                        class="w2 boton_fb btn btn-light d-md-none"
                         v-on:click="alternar_menu_recursos"
                         >
                         <i class="fa fa-file"></i>
@@ -34,12 +36,14 @@
                         {{ parseInt(num_pagina) + 1 }}
                     </button>
 
-                    <div class="w2 float-right boton_fb btn btn-light" v-on:click="pagina_sig"><i class="fa fa-chevron-right"></i></div>
+                    <button class="w2 float-right boton_fb btn btn-light" v-on:click="pagina_sig">
+                        <i class="fa fa-chevron-right"></i>
+                    </button>
                 </div>
                 
                 <input
                     type="range"
-                    class="form-control"
+                    class="form-control-range"
                     min="0" max="<?php echo $row->num_paginas - 1 ?>"
                     value="<?php echo $bookmark ?>"
                     v-model="num_pagina"
@@ -56,61 +60,59 @@
         <div class="row seccion_contenido">
             
             <!-- SECCIÓN DE RECURSOS -->
-            <div class="col col-md-2">
-                <div id="menu_recursos" class="">
+            <div class="col-md-2">
+                <div id="menu_recursos" class="d-none d-lg-block">
 
                     <!--PREGUNTAS ABIERTAS-->
-                    <button 
-                        class="btn btn-light btn-block mb-2"
-                        title="Asignar pregunta abierta"
-                        data-toggle="modal"
-                        data-target="#modal_pa"
-                        >
-                        <img src="<?php echo $carpeta_iconos . 'cd_escribe.png' ?>">
-                    </button>
+                    <?php if ( $this->session->userdata('rol_id') < 6 ) { ?>    
+                        <button 
+                            class="btn btn-light btn-block mb-2"
+                            title="Asignar pregunta abierta"
+                            data-toggle="modal"
+                            data-target="#modal_pa"
+                            >
+                            <img src="<?php echo $carpeta_iconos . 'cd_escribe.png' ?>">
+                        </button>
+                    <?php } ?>
 
                     <?php $this->load->view('flipbooks/leer_cd/preguntas_abiertas_v') ?>
 
-                    <div id="listado_quices" class="collapse_no sep2">
-                        <a 
-                            class="btn btn-light btn-block"
-                            title="Evidencia de aprendizaje sobre el tema"
-                            target="_blank"
-                            v-for="quiz in data.quices"
-                            v-bind:href="app_url + 'quices/iniciar/' + quiz.quiz_id"
-                            v-show='num_pagina == quiz.num_pagina'
-                            >
-                            <img src="<?php echo $carpeta_iconos . 'cd_lectura.png' ?>">
-                        </a>
-                    </div>
-
-                    <!--ARCHIVOS-->
-                    <div id="listado_archivos" class="collapse_no sep2">
-                        <!--AUDIOS 621-->
-                        <?php $this->load->view('flipbooks/leer_cd/audios_v'); ?>
-
-                        <!--ANIMACIONES 619-->
-                        <?php $this->load->view('flipbooks/leer_cd/animaciones_v'); ?>
-
-                        <!--OTROS ARCHIVOS -->
-                        <a
-                            class="btn btn-light btn-block"
-                            v-for="archivo in data.archivos"
-                            v-show="num_pagina == archivo.num_pagina"
-                            v-bind:href="'<?php echo URL_UPLOADS ?>' + archivo.ubicacion"
-                            target="_blank"
-                            title="Archivo complementario sobre el tema"
-                            >
-                            <img v-bind:src="'<?php echo URL_IMG . 'flipbook/' ?>' + archivo.icono">
-                        </a>
-
-                    </div>
-
-                    <!--ENLACES-->
-                    <a id="btn_listado_quices" href="#listado_links" data-toggle="collapse" aria-expanded="true" class="btn btn-light btn-block hidden" style="margin-bottom: 5px;">
-                        <img id="mostrar_quices" src="<?php echo URL_IMG ?>flipbook/link_banner_v5.png">
+                    <!-- LECTURA ESPECIAL -->
+                    <a 
+                        class="btn btn-light btn-block"
+                        title="Lectura especial sobre el tema, en construcción"
+                        href="#"
+                        data-toggle="modal"
+                        data-target="#lectura_modal"
+                        >
+                        <img src="<?php echo $carpeta_iconos . 'cd_lectura.png' ?>">
                     </a>
 
+                    <!-- Modal -->
+                    <div class="modal fade" id="lectura_modal" tabindex="-1" role="dialog" aria-labelledby="lectura_modal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Lectura Especial</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-center">
+                                    <i class="fa fa-info-circle text-info fa-2x"></i>
+                                    <br/>
+                                    Contenido en construcción 
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- LINKS -->
                     <div id="listado_links" class="collapse_no sep2">
                         <a
                             class="btn btn-light btn-block"
@@ -120,97 +122,18 @@
                             v-bind:href="link.url"
                             v-show='num_pagina == link.num_pagina'
                             >
-                            <img src="<?php echo $carpeta_iconos . 'link_v5.png' ?>">
+                            <span v-if="link.titulo">{{ link.titulo }}</span>
+                            <span v-else>
+                                <i class="fas fa-external-link-alt"></i>
+                                Enlace
+                            </span>
                         </a>
                     </div>
-
-                    <!--HERRAMIENTAS ADICIONALES-->
-                    <?php if ( $elementos_fb['herramientas_adicionales'] ){ ?>
-                        <div class="dropdown sep2">
-                            <button class="btn btn-light btn-block dropdown-toggle" type="button" data-toggle="dropdown" data-submenu="" aria-expanded="false">
-                                <i class="fa fa-ellipsis-v"></i>
-                            </button>
-
-                            <ul class="dropdown-menu">
-                                <?php if ( $elementos_fb['crear_cuestionario'] ){ ?>
-                                    <li>
-                                        <a href="<?php echo base_url("flipbooks/crear_cuestionario/{$row->id}") ?>" title="Crear cuestionario a partir de los temas de este libro" target="_blank">
-                                            <i class="fa fa-plus"></i>
-                                            Cuestionario
-                                        </a>
-                                    </li>
-                                <?php } ?>
-
-                                <?php if ( $elementos_fb['programar_temas'] ){ ?>
-                                    <li>
-                                        <a href="<?php echo base_url("flipbooks/programar_temas/{$row->id}") ?>" title="Programar temas de contenido" target="_blank">
-                                            <i class="fa fa-calendar-o"></i> Programar
-                                        </a>
-                                    </li>
-                                <?php } ?>
-
-                                <?php if ( $elementos_fb['plan_aula'] ){ ?>
-
-                                    <li class="recurso">
-                                        <a
-                                            title="Ver plan de aula"
-                                            target="_blank"
-                                            v-for="plan_aula in data.planes_aula"
-                                            v-bind:href="'<?php echo URL_UPLOADS ?>' + plan_aula.ubicacion"
-                                            v-show='num_pagina == plan_aula.num_pagina'
-                                            >
-                                            <i class="fa fa-book"></i> Planeador de clases
-                                        </a>
-                                    </li>
-                                <?php } ?>
-
-                                <!--TEMAS RELACIONADOS-->
-                                <?php if ( $elementos_fb['temas_relacionados'] ){ ?>
-
-                                    <li class="divider"></li>
-                                    <li class="dropdown-header">Saberes previos</li>
-                                    <li
-                                        v-for="tema in data.relacionados[1]"
-                                        v-show='num_pagina == tema.num_pagina'
-                                        >
-                                        <a v-bind:href="'<?php echo base_url('temas/leer/') ?>' + tema.relacionado_id" target="_blank">
-                                            {{ tema.nombre_tema_relacionado }}
-                                        </a>
-                                    </li>
-
-                                    <li class="divider"></li>
-                                    <li class="dropdown-header">Complementa</li>
-                                    <li
-                                        v-for="tema in data.relacionados[2]"
-                                        v-show='num_pagina == tema.num_pagina'
-                                        >
-                                        <a v-bind:href="'<?php echo base_url('temas/leer/') ?>' + tema.relacionado_id" target="_blank">
-                                            {{ tema.nombre_tema_relacionado }}
-                                        </a>
-                                    </li>
-
-                                    <li class="divider"></li>
-                                    <li class="dropdown-header">Profundiza</li>
-                                    <li
-                                        v-for="tema in data.relacionados[3]"
-                                        v-show='num_pagina == tema.num_pagina'
-                                        >
-                                        <a v-bind:href="'<?php echo base_url('temas/leer/') ?>' + tema.relacionado_id" target="_blank">
-                                            {{ tema.nombre_tema_relacionado }}
-                                        </a>
-                                    </li>
-                                <?php } ?>
-                                <!--FIN TEMAS RELACIONADOS-->
-                            </ul>
-                        </div>
-
-                    <?php } ?>
-                    <!--FIN HERRAMIENTAS ADICIONALES-->
                 </div>
             </div>
             
             <!-- IMAGEN PÁGINA E ÍNDICE -->
-            <div class="col col-md-7 seccion_pagina">
+            <div class="col-md-7 seccion_pagina">
 
                 
                 <div class="text-center" v-show="!ver_indice">
@@ -246,20 +169,43 @@
             </div>
             
             <!-- FORMULARIO DE ANOTACIONES -->
-            <div class="col col-md-3">
+            <div class="col-md-3">
+                <?php if ( $this->session->rol_id != 6 ) { ?>
+                    <a class="btn btn-light btn-block" href="<?php echo base_url("flipbooks/programar_temas/{$row->id}") ?>" title="Programar fechas a los temas del contenido">
+                        <img src="<?php echo URL_IMG ?>flipbook/cd_programar.png" alt="Imagen programador">
+                    </a>
+                    <a class="btn btn-light btn-block" href="<?php echo base_url("flipbooks/crear_cuestionario/{$row->id}") ?>" target="_blank" title="Crear un cuestionario">
+                        <img src="<?php echo URL_IMG ?>flipbook/cd_cuestionario.png" alt="Imagen cuestionario">
+                    </a>
+                    <a class="btn btn-light btn-block mb-2" href="<?php echo base_url('eventos/calendario') ?>" title="Calendario planeador">
+                        <img src="<?php echo URL_IMG ?>flipbook/cd_planeador.png" alt="Imagen planeador">
+                    </a>
+                <?php } ?>
+                
+                <div
+                    class="alert alert-info"
+                    v-for="pa_asignada in pa_asignadas"
+                    v-show="pa_asignada.tema_id == pagina.tema_id"
+                    >
+                    <p><b>Escribe y participa:</b></p>
+                    <p>
+                        {{ pa_asignada.texto_pregunta }}
+                    </p>
+                </div>
+
                 <form accept-charset="utf-8" @submit.prevent="guardar_anotacion">
-                    <div class="sep2">
+                    <div class="">
                         <textarea
                             id="anotacion"
-                            rows="10"
+                            rows="7"
                             class="anotacion"
-                            placeholder="Escribe una anotación sobre este tema"
+                            placeholder="Escribe aquí una anotación sobre este tema"
                             required
                             v-model="anotacion"
                             >
                         </textarea>
                     </div>
-                    <div class="sep2">
+                    <div class="">
                         <button class="btn btn-light btn-block" type="submit">
                             <i class="fa fa-save"></i>
                             Guardar

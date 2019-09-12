@@ -862,13 +862,13 @@ class Flipbooks extends CI_Controller{
 //-----------------------------------------------------------------------------
 
     /**
-     * Mostrar el flipbook para leer, vista completa para estudiantes
+     * Mostrar el flipbook para leer, vista completa para profesores y estudiantes
      * 2018-10-23
      * 
      * @param type $flipbook_id
      * @param type $num_pagina
      */
-    function leer_cd($flipbook_id, $num_pagina = NULL)
+    function clase_dinamica($flipbook_id, $num_pagina = NULL)
     {
         if ( $this->input->get('profiler') == 1 ) { $this->output->enable_profiler(TRUE); }
         
@@ -886,16 +886,6 @@ class Flipbooks extends CI_Controller{
         //Cargar vista
         $this->load->view('flipbooks/leer_cd/leer_v', $data);
     }
-
-    function preguntas_abiertas($flipbook_id)
-    {
-        $data['preguntas_abiertas'] = $this->Flipbook_model->preguntas_abiertas($flipbook_id)->result();
-        
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
-    }
-    
     
 //GESTIÓN DE PÁGINAS DE FLIPBOOK
 //---------------------------------------------------------------------------------------------------

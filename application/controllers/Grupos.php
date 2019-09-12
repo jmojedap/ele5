@@ -875,6 +875,40 @@ class Grupos extends CI_Controller{
         redirect("grupos/quitar_flipbook/{$grupo_id}/{$flipbook_id}");
         
     }
+
+// PREGUNTAS ABIERTAS ASIGNADAS A GRUPOS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Asignar pregunta abierta a grupo, desde contenidos de tipo clase dinámica
+     * Se guarda en la tabla meta
+     * 2019-09-10
+     */
+    function asignar_pa($grupo_id, $pregunta_id)
+    {
+        $data = $this->Grupo_model->asignar_pa($grupo_id, $pregunta_id);
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
+    }
+
+    /**
+     * AJAX JSON
+     * Listado de preguntas asignadas para un grupo y área determinadas
+     * Se solicita desde el flipook del tipo Clase Dinámica
+     * 2019-09-11
+     */
+    function pa_asignadas($grupo_id, $area_id)
+    {
+        $pa_asignadas = $this->Grupo_model->pa_asignadas($grupo_id, $area_id);
+
+        $data['pa_asignadas'] = $pa_asignadas->result();
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
+    }
     
 //---------------------------------------------------------------------------------------------------
 //ASIGNACIÓN DE ESTUDIANTES DEL GRUPO A UN ARCHIVO

@@ -535,12 +535,16 @@ class Flipbook_model extends CI_Model {
         return $archivos;
     }
 
+    /**
+     * Se incluye el campo titulo en la tabla, para ser mostrado en los flipbooks de tipo
+     * Clase Dinámica
+     * 2019-09-12
+     */
     function links($flipbook_id)
     {
-        $this->db->select('url, num_pagina');
+        $this->db->select('titulo, url, num_pagina');
         $this->db->join('pagina_flipbook', 'recurso.tema_id = pagina_flipbook.tema_id');
         $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
-        $this->db->join('item', 'recurso.tipo_archivo_id = item.id');
         $this->db->where('flipbook_id', $flipbook_id);
         $this->db->where('tipo_recurso_id', 2);
         $links = $this->db->get('recurso');
@@ -549,15 +553,18 @@ class Flipbook_model extends CI_Model {
     }
 
     /**
-     * Preguntas abiertas asociadas a un tema, tabla post tipo_id 121
+     * Preguntas abiertas asociadas a un tema, tabla post tipo_id 121, mostradas en los contenidos
+     * de tipo Clase Dinámica.
+     * 2019-09-10
      */
     function preguntas_abiertas($flipbook_id)
     {
-        $this->db->select('post.contenido AS text_pregunta, num_pagina, post.referente_1_id AS tema_id');
+        $this->db->select('post.id, post.contenido AS text_pregunta, post.referente_1_id AS tema_id');
         $this->db->join('pagina_flipbook', 'post.referente_1_id = pagina_flipbook.tema_id');
         $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
         $this->db->where('flipbook_id', $flipbook_id);
         $this->db->where('tipo_id', 121);
+        $this->db->group_by('post.id, post.contenido, post.referente_1_id');
         $preguntas_abiertas = $this->db->get('post');
 
         return $preguntas_abiertas;

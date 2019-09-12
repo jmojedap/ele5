@@ -1,6 +1,7 @@
 <?php
     //Clases columnas
         $cl_col['leer'] = 'd-none d-sm-table-cell d-lg-table-cell';
+        $cl_col['cd'] = 'd-none d-sm-table-cell d-lg-table-cell';
         $cl_col['nivel'] = 'd-none d-sm-table-cell d-lg-table-cell';
         $cl_col['taller'] = 'd-none d-sm-table-cell d-lg-table-cell';
         $cl_col['programa'] = 'd-none d-sm-table-cell d-lg-table-cell';
@@ -22,6 +23,7 @@
                 <th>Contenido</th>
                 
                 <th class="<?php echo $cl_col['leer'] ?>">Leer</th>
+                <th class="<?php echo $cl_col['cd'] ?>">Cláse Dinámica</th>
                 <th class="<?php echo $cl_col['nivel'] ?>" style="min-width: 200px;">Nivel Área</th>
                 <th class="<?php echo $cl_col['taller'] ?>">Taller</th>
                 <th class="<?php echo $cl_col['programa'] ?>">Programa origen</th>
@@ -60,6 +62,10 @@
 
                     <td class="<?= $cl_col['leer'] ?>">
                         <?php echo anchor("flipbooks/abrir/{$row_resultado->id}", '<i class="fa fa-book"></i>', 'class="btn btn-info" title="Leer" target="_blank"') ?>
+                    </td>
+                    
+                    <td class="<?= $cl_col['cd'] ?>">
+                        <?php echo anchor("flipbooks/clase_dinamica/{$row_resultado->id}", '<i class="fa fa-book"></i>', 'class="btn btn-warning" title="Leer en el formato de clase dinámica" target="_blank"') ?>
                     </td>
                     
                     <td class="<?php echo $cl_col['nivel'] ?>">
