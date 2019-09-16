@@ -1289,6 +1289,25 @@ class App_model extends CI_Model {
         return $opciones;
     }
 
+    /**
+     * Devuelve un array con las opciones de la tabla post, limitadas por una condición definida, con un $campo valor
+     * 2019-09-16
+     */
+    function opciones_post($condicion, $campo = 'nombre_post')
+    {
+
+        $this->db->select("CONCAT('0', post.id) AS post_id, nombre_post");
+        $this->db->where($condicion);
+        $this->db->order_by('post.nombre_post', 'ASC');
+        $query = $this->db->get('post');
+
+        $opciones_post = array('' => ' [Vacío] ');
+
+        $opciones_post = array_merge($opciones_post, $this->Pcrn->query_to_array($query, $campo, 'post_id'));
+
+        return $opciones_post;
+    }
+
     function areas($condicion = 'id > 0')
     {
         $this->db->select('id, item AS nombre_area, abreviatura, item_corto AS nombre_corto, slug');

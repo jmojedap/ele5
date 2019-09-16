@@ -307,14 +307,24 @@ class Posts extends CI_Controller{
 
 //BITÁCORA DE ACTIVIDAD - TIPO 30
 //-----------------------------------------------------------------------------
-    function bitacora($date_1 = '2019-07-01')
+
+    /**
+     * Bitácora de actividad
+     */
+    function bitacora($pago_id = 13835, $actividad_id = NULL)
     {
-        $this->db->select('id, nombre_post, fecha, contenido, texto_1 AS modulo, texto_2 AS elemento, referente_1_id AS prioridad');
+        $this->db->select('id, nombre_post, fecha, contenido, texto_1 AS modulo, texto_2 AS elemento, referente_1_id AS prioridad, decimal_2 AS costo');
         $this->db->order_by('texto_1', 'DESC');
         $this->db->order_by('fecha', 'ASC');
         $this->db->where('tipo_id', 30);
-        $this->db->where('fecha >=', $date_1);
+        $this->db->where('referente_3_id', $pago_id);
+        if ( ! is_null($actividad_id) ) { $this->db->where('id', $actividad_id);}
         $data['bitacora'] = $this->db->get('post');
+
+        $data['pago_id'] = $pago_id;
+
+        //Pagos
+        $data['pagos'] = $this->db->get_where('post', 'tipo_id = 91');
 
         $data['view_a'] = 'posts/bitacora/bitacora_v';
         $data['head_title'] = 'Bitacora';

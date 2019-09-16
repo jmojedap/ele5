@@ -106,7 +106,7 @@ class Post_Model extends CI_Model{
             $this->load->model('Busqueda_model');
             $data['busqueda'] = $this->Busqueda_model->busqueda_array();
             $data['busqueda_str'] = $this->Busqueda_model->busqueda_str();
-            $data['resultados'] = $this->Post_model->buscar($data['busqueda'], $data['per_page'], $offset);    //Resultados para página
+            $data['resultados'] = $this->buscar($data['busqueda'], $data['per_page'], $offset);    //Resultados para página
             
         //Otros
             $data['seleccionados_todos'] = '-'. $this->Pcrn->query_to_str($data['resultados'], 'id');               //Para selección masiva de todos los elementos de la página
@@ -126,7 +126,8 @@ class Post_Model extends CI_Model{
     {
         //Construir búsqueda
         //Crear array con términos de búsqueda
-            if ( strlen($busqueda['q']) > 2 ){
+            if ( strlen($busqueda['q']) > 2 )
+            {
                 
                 $campos_posts = array('nombre_post', 'contenido', 'resumen', 'editado', 'creado');
                 
@@ -140,7 +141,7 @@ class Post_Model extends CI_Model{
         
         //Especificaciones de consulta
             $this->db->select('post.*');
-            $this->db->order_by('editado', 'DESC');
+            $this->db->order_by('id', 'DESC');
             
         //Otros filtros
             if ( $busqueda['e'] != '' ) { $this->db->where('editado', $busqueda['e']); }                //Editado

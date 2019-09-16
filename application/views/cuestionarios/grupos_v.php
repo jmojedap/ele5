@@ -1,6 +1,7 @@
 <?php
     $show_print = FALSE;
-    if ( $this->session->userdata('institucion_id') == 41 ) { $show_print = TRUE; }
+    $row_institucion = $this->Pcrn->registro_id('institucion', $this->session->userdata('institucion_id'));
+    if ( $row_institucion->cat_1 == 1 ) { $show_print = TRUE; }
     if ( $this->session->userdata('rol_id') <= 1 ) { $show_print = TRUE; }
     if ( $row->num_preguntas > 60 ) { $show_print = FALSE; }
 ?>

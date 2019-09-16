@@ -890,14 +890,15 @@ class Grupo_model extends CI_Model{
 
     /**
      * Query con preguntas asignadas a un grupo en flipbooks del tipo Clase Dinámica
-     * 2019-09-11
+     * Se desactiva filtro por área, ya que algunos temas UT no tienen área asignada.
+     * 2019-09-16
      */
     function pa_asignadas($grupo_id, $area_id)
     {
         $this->db->select('relacionado_id AS pa_id, entero_1 AS tema_id, post.contenido AS texto_pregunta');
         $this->db->where('elemento_id', $grupo_id);
         $this->db->where('dato_id', 410020);    //Pregunta abierta asignada a grupo
-        $this->db->where('entero_2', $area_id); //Que coincida el área del tema con el área del flipbook
+        //$this->db->where('entero_2', $area_id); //Que coincida el área del tema con el área del flipbook 
         $this->db->join('post', 'post.id = meta.relacionado_id');
         $pa_asignadas = $this->db->get('meta');
 

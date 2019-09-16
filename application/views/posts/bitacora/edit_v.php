@@ -1,6 +1,4 @@
 <?php
-
-
     $att_nombre_post = array(
         'id'     => 'nombre_post',
         'name'   => 'nombre_post',
@@ -29,19 +27,21 @@
     );
     
     //Opciones
-        $opciones_ecomentarios = $this->Item_model->opciones('categoria_id = 41', 'Estado cuestionarios');
-        $opciones_tipo = $this->Item_model->opciones('categoria_id = 33', 'Tipo de post');
-    
-    $att_submit = array(
-        'class'  => 'btn btn-block btn-info',
-        'value'  => 'Actualizar'
-    );
+        $opciones_pago = $this->App_model->opciones_post('tipo_id = 91');
+        $opciones_estado_pago = array(
+            '' => '[ Estado de pago ]',
+            '01' => 'Pagado',
+            '02' => 'Finalizado',
+            '03' => 'En desarrollo',
+            '04' => 'Sin iniciar'
+        );
     
     $campos_general = array(
         'texto_1' => 'Módulo',
         'texto_2' => 'Elemento',
         'referente_1_id' => 'Prioridad Orden',
-        'decimal_1' => 'Horas Trabajo'
+        'decimal_1' => 'Horas Trabajo',
+        'decimal_2' => 'Costo'
     );
 ?>
 
@@ -118,9 +118,9 @@
             <div class="card card-default">
                 <div class="card-body">
                     <div class="form-group row">
-                        <label class="col-md-4 control-label" for="tipo_id">Tipo</label>
+                        <label class="col-md-4 control-label" for="referente_3_id">Contrato asociado</label>
                         <div class="col-md-8">
-                            <?= form_dropdown('tipo_id', $opciones_tipo, $row->tipo_id, 'class="form-control"') ?>
+                            <?= form_dropdown('referente_3_id', $opciones_pago, $row->referente_3_id, 'class="form-control"') ?>
                         </div>
                     </div>
 
@@ -148,6 +148,13 @@
                             </div>
                         </div>
                     <?php endforeach ?>
+
+                    <div class="form-group row">
+                        <label class="col-md-4 control-label" for="estado_id">Estado</label>
+                        <div class="col-md-8">
+                            <?= form_dropdown('estado_id', $opciones_estado_pago, '0'. $row->estado_id, 'class="form-control"') ?>
+                        </div>
+                    </div>
                 </div>
             </div>
 
