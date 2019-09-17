@@ -238,6 +238,8 @@
         $opciones_menus['estadisticas/flipbooks_area'] = array('ajustes', 'estadisticas', 'estadísticas');
         $opciones_menus['estadisticas/quices_nivel'] = array('ajustes', 'estadisticas', 'estadísticas');
         $opciones_menus['estadisticas/quices_area'] = array('ajustes', 'estadisticas', 'estadísticas');
+
+        $opciones_menus['posts/bitacora'] = array('ajustes', 'ajustes_bitacora', 'bitácora');
         
         $opciones_menus['lugares/explorar'] = array('ajustes', 'ajustes-lugares', 'lugares');
         $opciones_menus['lugares/sublugares'] = array('ajustes', 'ajustes-lugares', 'lugares');
@@ -395,6 +397,12 @@
                 
                 <li><a href="<?= base_url() ?>develop/procesos" class="<?= $clase_sm['ajustes/procesos'] ?>"><i class="fa fa-tasks"></i><span>procesos</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url('develop/tablas/item') ?>" class="<?= $clase_sm['ajustes/database'] ?>"><i class="fa fa-database"></i><span>base de datos</span></a></li>
+                <li>
+                    <a href="<?= base_url('posts/bitacora') ?>" class="<?= $clase_sm['ajustes_bitacora'] ?>">
+                        <i class="fa fa-clipboard"></i>
+                        <span>bitácora</span>
+                    </a>
+                </li>
                 <li>
                     <a href="<?= base_url('estadisticas/ctn_correctas_incorrectas') ?>" class="<?= $clase_sm['estadisticas'] ?>">
                         <i class="fa fa-bar-chart-o"></i>
