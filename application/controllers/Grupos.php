@@ -884,8 +884,19 @@ class Grupos extends CI_Controller{
      * Se guarda en la tabla meta
      * 2019-09-10
      */
-    function asignar_pa($grupo_id, $pregunta_id)
+    function asignar_pa($grupo_id, $pregunta_id = 0)
     {
+        if ( $pregunta_id == 0 )
+        {
+            //Crear nueva pregunta abierta, con datos del formulario
+            $this->load->model('Tema_model');
+            $data_pa = $this->Tema_model->save_pa($this->input->post('tema_id'), 0);
+            
+            //Si la creación de pregunta abierta fue exitosa
+            if ( $data_pa['status'] ) { $pregunta_id = $data_pa['saved_id']; }
+        }
+
+        //Se realiza la asignación en la tabla meta
         $data = $this->Grupo_model->asignar_pa($grupo_id, $pregunta_id);
 
         $this->output

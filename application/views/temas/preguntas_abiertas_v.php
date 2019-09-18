@@ -33,6 +33,7 @@
     <div class="modal fade" id="modal_form" tabindex="-1" role="dialog" aria-labelledby="modal_form" aria-hidden="true">
         <form accept-charset="utf-8" method="POST" id="pa_form" @submit.prevent="save_pa">
             <input type="hidden" name="id" v-bind:value="form_values.id">
+            <input type="hidden" name="referente_2_id" value="1">
 
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">

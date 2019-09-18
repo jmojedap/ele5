@@ -1,3 +1,7 @@
+<?php
+    $es_profesor = ( $this->session->userdata('rol_id') < 6 ) ? TRUE : FALSE ;
+?>
+
 <body style="background: <?php echo $colores[$row->area_id] ?>; ">
     <div class="container" id="flipbook">
         <!-- BARRA DE HERRAMIENTAS-->
@@ -62,9 +66,8 @@
             <!-- SECCIÓN DE RECURSOS -->
             <div class="col-md-2">
                 <div id="menu_recursos" class="d-none d-lg-block">
-
                     <!--PREGUNTAS ABIERTAS-->
-                    <?php if ( $this->session->userdata('rol_id') < 6 ) { ?>    
+                    <?php if ( $es_profesor ) { ?>    
                         <button 
                             class="btn btn-light btn-block mb-2"
                             title="Asignar pregunta abierta"
@@ -170,7 +173,7 @@
             
             <!-- FORMULARIO DE ANOTACIONES -->
             <div class="col-md-3">
-                <?php if ( $this->session->rol_id != 6 ) { ?>
+                <?php if ( $es_profesor ) { ?>
                     <a class="btn btn-light btn-block" href="<?php echo base_url("flipbooks/programar_temas/{$row->id}") ?>" title="Programar fechas a los temas del contenido">
                         <img src="<?php echo URL_IMG ?>flipbook/cd_programar.png" alt="Imagen programador">
                     </a>

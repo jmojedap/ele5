@@ -1405,6 +1405,7 @@ class Tema_Model extends CI_Model{
     {
         $this->db->select('id, contenido');
         $this->db->where('referente_1_id', $tema_id);
+        $this->db->where('referente_2_id', 1);  //Pública, creadas por ELE
         $this->db->where('tipo_id', 121);   //Post tipo 121
         $preguntas_abiertas = $this->db->get('post');
         
@@ -1423,6 +1424,7 @@ class Tema_Model extends CI_Model{
         //Construir registro
             $arr_row['tipo_id'] = 121;  //Pregunta abierta
             $arr_row['referente_1_id'] = $tema_id;  //Tema asociado
+            $arr_row['referente_2_id'] = $this->input->post('referente_2_id');
             $arr_row['contenido'] = $this->input->post('contenido');
 
         //Guardar
@@ -1475,6 +1477,7 @@ class Tema_Model extends CI_Model{
         
         //Predeterminados registro nuevo
         $arr_row['tipo_id'] = 121;
+        $arr_row['referente_2_id'] = 1; //Pública, agregada por ELE
 
         $this->load->model('Post_model');
         

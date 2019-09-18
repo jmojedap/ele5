@@ -29,7 +29,8 @@
             grupo_id: <?php echo $this->session->userdata('grupo_id'); ?>,
             area_id: <?php echo $row->area_id ?>,
             pregunta_id: 0,
-            pa_asignadas: []
+            pa_asignadas: [],
+            pregunta_personalizada: true
         },
         methods: {
             cargar_data: function () {
@@ -140,18 +141,48 @@
             seleccionar_pregunta: function(pregunta_id){
                 this.pregunta_id = pregunta_id;
             },
+            //Verificar el estado de las variables y el tipo de asignación
+            enviar_form_pa: function(){
+                var enviar_form = false;
+
+                if ( this.pregunta_personalizada ) {
+                    this.pregunta_id = 0 
+                    if ( $('#field-texto_pregunta').val() )
+                    {
+                        enviar_form = true
+                    } else {
+                        //No hay texto escrito, se marca como no válido
+                        $('#field-texto_pregunta').addClass('is-invalid');
+                    }
+                } else {
+                    if ( this.pregunta_id > 0 ){ 
+                        enviar_form = true; //Hay pregunta seleccionada
+                    } else {
+                        toastr['info']('Debe seleccionar una de las preguntas');
+                    }
+                }
+
+                if ( enviar_form ) { this.asignar_pa(); }
+            },
+            //Asignar pregunta abierta existente
             asignar_pa: function(){
-                axios.get(this.app_url + 'grupos/asignar_pa/' + this.grupo_id + '/' + this.pregunta_id)
+                axios.post(this.app_url + 'grupos/asignar_pa/' + this.grupo_id + '/' + this.pregunta_id, $('#pa_form').serialize())
                 .then(response => {
                     console.log(response.data.message)
                     if ( response.data.status ) {
                         toastr['success']('La pregunta fue asignada al grupo');
                         $('#modal_pa').modal('hide');
+                        $('#field-texto_pregunta').val('');    //Limpiar campo
+                        this.cargar_pa_asignadas();
                     }
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
+            },
+            //Alterna valor de variable, pregunta existente o pregunta personalizada
+            alternar_pregunta_personalizada: function(){
+                this.pregunta_personalizada = ! this.pregunta_personalizada;  
             },
         }
     });
