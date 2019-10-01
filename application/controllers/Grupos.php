@@ -1161,8 +1161,8 @@ class Grupos extends CI_Controller{
         //Se carga la lista de estudiantes que pertenecen un grupo
         $estudiantes = $this->Grupo_model->estudiantes($grupo_id);
         
-        foreach ($estudiantes->result() as $row_estudiante){
-            
+        foreach ($estudiantes->result() as $row_estudiante)
+        {
             if ( $this->input->post($row_estudiante->usuario_id) ){
                 
                 //$proceso_id = str_replace('p', '', $this->input->post('proceso') );

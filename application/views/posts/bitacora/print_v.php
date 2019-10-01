@@ -4,17 +4,15 @@
 
 <style>
     .bitacora h1{
-        color: #333;
+        
     }
 
     .bitacora h2{
-        color: #FFF;
-        background-color: #4fc3f7;
         padding: 3px;
     }
 
     .bitacora h3{
-        color: #89CB4E;
+        
     }
 </style>
 
@@ -33,48 +31,39 @@
         </div>
     </div>
     <div class="col-md-9">
-        <?php $this->load->view('posts/bitacora/bitacora_v') ?>
+        <?php $this->load->view('posts/bitacora/tabla_costos_v') ?>
 
         <br>
-
         <div class="card bitacora" style="max-width: 650px;">
             <div class="card-body">
                 <div class="text-center">
                     <h1>INFORME DE ACTIVIDAD</h1>
                     <h3><?php echo $this->Pcrn->campo_id('post', $pago_id, 'nombre_post') ?></h3>
                 </div>
+                
+
                 <?php foreach ( $bitacora->result() as $row_bitacora ) { ?>
                     <?php
                         $cl_costo = ( $row_bitacora->costo > 0) ? 'alert-info' : 'alert-success';
                     ?>
                     <?php if ( $row_bitacora->modulo != $modulo_ant ) { ?>
-                        <h2><?php echo $row_bitacora->modulo ?></h2>
+                        <h2>TTAA--<?php echo $row_bitacora->modulo ?></h2>
                     <?php } ?>
                     <h3>
-                        <?php echo $row_bitacora->elemento ?>: <?php echo $row_bitacora->nombre_post ?>
+                        TTBB--<?php echo $row_bitacora->elemento ?>: <?php echo $row_bitacora->nombre_post ?>
                     </h3>
                     
                     <p>
                         <?php echo $this->Pcrn->fecha_formato($row_bitacora->fecha, 'Y-M-d') ?>
                     </p>
                     <?php echo $row_bitacora->contenido ?>
-                    <br>
+                    
 
-                        <?php if ( $row_bitacora->costo > 0 ) { ?>
-                            <div class="alert <?php echo $cl_costo ?>">
-                                Costo: <b>$<?php echo number_format($row_bitacora->costo, 0) ?></b>
-                            </div>
-                        <?php } else { ?>
-                            <div class="alert <?php echo $cl_costo ?>">
-                                Costo: <b>$0</b> (Costo incluído en pagos del contrato de soporte permanente)
-                            </div>
-                        <?php } ?>
-
-
-                    <br/>
-                    <a href="<?php echo base_url("posts/editar/{$row_bitacora->id}") ?>" class="btn btn-success btn-sm" target="_blank">Editar</a>
-                    <br/>
-                    <hr>
+                    <?php if ( $row_bitacora->costo > 0 ) { ?>
+                        <p>
+                            Costo: <b>$<?php echo number_format($row_bitacora->costo, 0) ?></b>
+                        </p>
+                    <?php } ?>
                 <?php
                     $modulo_ant = $row_bitacora->modulo;
                 ?>
