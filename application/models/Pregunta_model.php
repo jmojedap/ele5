@@ -242,7 +242,7 @@ class Pregunta_model extends CI_Model{
     }
     
     /**
-     * $output del grocery crud para preguntaes
+     * $output del grocery crud para preguntas
      * 
      * @return type
      */
