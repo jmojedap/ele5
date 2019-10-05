@@ -11,13 +11,13 @@ class Pregunta_model extends CI_Model{
      */
     function basico($pregunta_id)
     {
-        
         $row = $this->Pcrn->registro_id('pregunta', $pregunta_id);
 
-        $basico['titulo_pagina'] = 'Pregunta ' . $row->id;
+        $basico['head_title'] = 'Pregunta ' . $row->id;
         $basico['row'] = $row;
         $basico['editable'] = $this->editable($row);
-        $basico['vista_a'] = 'preguntas/pregunta_v';
+        $basico['view_description'] = 'preguntas/pregunta_v';
+        $basico['nav_2'] = 'preguntas/menu_v';
         
         return $basico;
     }
@@ -43,7 +43,7 @@ class Pregunta_model extends CI_Model{
             $data['el_singular'] = 'pregunta';
                 
         //Otros
-            $data['arr_filtros'] = array('a', 'n');
+            $data['arr_filtros'] = array('a', 'n', 'tp', 'est');
             
         //Vistas
             $data['head_subtitle'] = number_format($data['cant_resultados'], 0, ',', '.');
@@ -106,6 +106,8 @@ class Pregunta_model extends CI_Model{
         //Otros filtros
             if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
             if ( $busqueda['n'] != '' ) { $this->db->where('nivel', $busqueda['n']); }      //Nivel
+            if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_pregunta_id', $busqueda['tp']); }      //Tipo
+            if ( $busqueda['est'] != '' ) { $this->db->where('estado', $busqueda['est']); }      //Estado de la pregunta
                 
         //Otros
             $this->db->where($filtro_rol);  //Filtro por rol
@@ -152,57 +154,6 @@ class Pregunta_model extends CI_Model{
         
         return $query->num_rows();
     }
-
-    /**
-     * Búsqueda de preguntas
-     * 
-     * @param type $busqueda
-     * @param type $per_page
-     * @param type $offset
-     * @return type
-     */
-    function z_buscar($busqueda, $per_page = NULL, $offset = NULL)
-    {
-            
-        //Filtro según el rol de usuario que se tenga
-            $filtro_rol = $this->filtro_rol();
-        
-        //Texto búsqueda
-            //Crear array con términos de búsqueda
-            if ( strlen($busqueda['q']) > 2 )
-            {
-                $palabras = $this->Busqueda_model->palabras($busqueda['q']);
-
-                foreach ($palabras as $palabra_busqueda)
-                {
-                    $concat_campos = $this->Busqueda_model->concat_campos(array('cod_pregunta', 'texto_pregunta'));
-                    $this->db->like("CONCAT({$concat_campos})", $palabra_busqueda);
-                }
-            }
-            
-        //Select
-            $this->db->select('id, texto_pregunta, nivel, area_id, editado, editado_usuario_id');
-        
-        //Filtros de la búsqueda
-            if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    // Área
-            if ( $busqueda['n'] != '' ) { $this->db->where('nivel', $busqueda['n']); }      // Nivel
-            if ( $busqueda['e'] != '' ) { $this->db->where('editado', $busqueda['e']); }    //Editado
-            
-        //Otros
-            $this->db->where($filtro_rol);  //Filtro por rol
-        
-        //Especificaciones de consulta
-            $this->db->order_by('editado', 'DESC');
-            
-        //Obtener resultados
-        if ( is_null($per_page) ){
-            $query = $this->db->get('pregunta'); //Resultados totales
-        } else {
-            $query = $this->db->get('pregunta', $per_page, $offset); //Resultados por página
-        }
-        
-        return $query;
-    }
     
     function filtro_rol($usuario_id = NULL)
     {
@@ -223,8 +174,107 @@ class Pregunta_model extends CI_Model{
         
     }
     
+// EDICIÓN
+//-----------------------------------------------------------------------------
+
+    /**
+     * Guardar cambios en registro de la tabla pregunta
+     * 2019-10-03
+     */
+    function save($pregunta_id)
+    {
+        $data = array('status' => 0, 'message' => 'Los cambios no se guardaron');
+
+        $arr_row = $this->input->post();
+        $arr_row['editado_usuario_id'] = $this->session->userdata('usuario_id');
+
+        $saved_id = $this->Pcrn->guardar('pregunta', "id = {$pregunta_id}", $arr_row);
     
-//GROCERY CRUD DE PÁGINAS
+        if ( $saved_id > 0 )
+        {
+            $data = array('status' => 1, 'message' => 'Los datos de la pregunta fueron guardados');
+        }
+    
+        return $data;
+    }
+
+    function set_image($pregunta_id)
+    {
+        //$data = array('status' => 1, 'message' => 'La imagen se cargó a la pregunta');
+
+        $data = $this->upload_image();
+
+        if ( $data['status'] == 1 )
+        {
+            //Actualizar el campo
+            $arr_row['archivo_imagen'] = $data['upload_data']['file_name'];
+
+            $this->db->where('id', $pregunta_id);
+            $this->db->update('pregunta', $arr_row);
+
+            $data['src'] = URL_UPLOADS . 'preguntas/' . $data['upload_data']['file_name'];
+        }
+
+        return $data;
+    }
+
+    /**
+     * Sube un archivo de imagen a la ruta de contenido de preguntas
+     */
+    function upload_image()
+    {
+        $data = array('status' => 0, 'message' => 'No se cargó el archivo', 'html_results' => '');
+
+        $config['upload_path']          = RUTA_UPLOADS . 'preguntas/';
+        $config['allowed_types']        = 'gif|jpg|png|jpeg';
+        $config['max_size']             = 2000;
+        $config['max_width']            = 2000;
+        $config['max_height']           = 2000;
+        $config['encrypt_name']         = TRUE;
+
+        $this->load->library('upload', $config);
+
+        if ( ! $this->upload->do_upload('file_field'))
+        {
+            $data['html_results'] = $this->upload->display_errors('<div class="alert alert-danger">', '</div>');
+        }
+        else
+        {
+            $data = array('status' => 1, 'message' => 'Se cargo la imagen');
+            $data['upload_data'] = $this->upload->data();
+        }
+
+        return $data;
+    }
+
+    /**
+     * Elimina archivo imagen y edita registro en la tabla pregunta, campo archivo_imagen
+     * 2019-10-04
+     */
+    function delete_archivo_imagen($pregunta_id)
+    {
+        //Resultado inicial por defecto
+            $data = array('status' => 0, 'message' => 'La imagen no fue eliminada');
+
+        //Eliminar archivo
+            $archivo_imagen = $this->Pcrn->campo_id('pregunta', $pregunta_id, 'archivo_imagen');
+            unlink(RUTA_UPLOADS . 'preguntas/' . $archivo_imagen);
+
+        //Modificar registro
+            $arr_row['archivo_imagen'] = '';
+            $this->db->where('id', $pregunta_id);
+            $this->db->update('pregunta', $arr_row);
+            
+        if ( $this->db->affected_rows() > 0 ) {
+            $data = array('status' => 1, 'message' => 'Imagen eliminada');
+        }
+
+        return $data;
+
+
+    }
+    
+//GROCERY CRUD DE PREGUNTAS
 //---------------------------------------------------------------------------------------------------
     
     function editable($row_pregunta)

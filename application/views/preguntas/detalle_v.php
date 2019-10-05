@@ -24,16 +24,16 @@
         }
 ?>
 
-<link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES . 'templates/apanel2/cuestionario.css' ?>">
+<link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES . 'templates/apanel3/cuestionario.css' ?>">
 
 <div class="row">
     <div class="col col-md-8">
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card card-default">
+            <div class="card-body">
                 <p style="font-size: 1.1em;"><?php echo $row_pregunta->texto_pregunta ?></p>
                 <p style="font-size: 1.1em;"><?php echo $row_pregunta->enunciado_2 ?></p>
 
-                <div class="sep1">
+                <div class="mb-2">
 
                     <?php foreach ($opciones_numeros as $opcion_numero) : ?>
                         <?php
@@ -41,8 +41,8 @@
                             if ( $row_pregunta->respuesta_correcta == $opcion_numero ) { $clase_opcion = 'opcion_seleccionada'; }
                             $campo = 'opcion_' . $opcion_numero;
                         ?>
-                        <div class="panel panel-default opcion_respuesta <?php echo $clase_opcion ?>" data-respuesta="<?php echo $opcion_numero ?>">
-                            <div class="panel-body">
+                        <div class="card mb-2 opcion_respuesta <?php echo $clase_opcion ?>" data-respuesta="<?php echo $opcion_numero ?>">
+                            <div class="card-body">
                                 <b>
                                     [<?php echo $opciones_letras[$opcion_numero] ?>]
                                 </b>
@@ -54,7 +54,7 @@
                 
                 <!-- Mostrar imagen si la pregunta tiene respuestas en imagen -->
                 <?php if ( strlen($row_pregunta->archivo_imagen) > 0 ):?>
-                    <div class="sep1 text-center">
+                    <div class="mb-2 text-center">
                         <div class="thumbnail">
                             <?php echo img($att_img) ?>
                         </div>
@@ -70,11 +70,11 @@
         </div>
 
         <?php if ( ! is_null($row_enunciado) ) { ?>
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="card">
+                <div class="card-header">
                     Lectura asociada
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     <div class="row">
                         <div class="col col-sm-6">
                             <h3><?php echo $row_enunciado->nombre_post ?></h3>
@@ -97,20 +97,26 @@
         <?php } ?>
     </div>
     <div class="col col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card card-default">
+            <div class="card-header">
                 Información de la pregunta
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <dl class="dl-horizontal">
                     <dt>Tema</dt>
                     <dd>
                         <?php echo $this->App_model->nombre_tema($row->tema_id) ?>
                     </dd>
                     
-                    <dt>Enunciado adjunto</dt>
+                    <dt>Lectura complementaria</dt>
                     <dd>
-                        <?php echo $nombre_enunciado ?>
+                        <?php if ( $row_pregunta->enunciado_id > 0 ) { ?>
+                            <a href="<?php echo base_url("datos/enunciados_ver/{$row->enunciado_id}") ?>" target="_blank">
+                                <?php echo $this->App_model->nombre_enunciado($row_pregunta->enunciado_id) ?>
+                            </a>
+                        <?php } else { ?>
+                            No tiene lectura complementaria
+                        <?php } ?>
                     </dd>
                     
                     <dt>Componente</dt>
@@ -125,23 +131,17 @@
                     
                     <dt>Editado</dt>
                     <dd>
+                        <?php echo $this->App_model->nombre_usuario($row->editado_usuario_id, 2) ?> - 
                         <?php echo $this->Pcrn->fecha_formato($row->editado) ?>
-                    </dd>
-                    
-                    <dt>Por</dt>
-                    <dd>
-                        <?php echo $this->App_model->nombre_usuario($row->editado_usuario_id, 2) ?>
                     </dd>
                     
                     <dt>Creado</dt>
                     <dd>
+                        <?php echo $this->App_model->nombre_usuario($row->creado_usuario_id, 2) ?> - 
                         <?php echo $this->Pcrn->fecha_formato($row->creado) ?>
                     </dd>
                     
-                    <dt>Por</dt>
-                    <dd>
-                        <?php echo $this->App_model->nombre_usuario($row->creado_usuario_id, 2) ?>
-                    </dd>
+                    
                 </dl>
             </div>
         </div>

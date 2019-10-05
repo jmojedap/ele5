@@ -40,9 +40,12 @@ class Preguntas extends CI_Controller{
             
             $data['opciones_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
             $data['opciones_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Nivel');
+            $data['opciones_tipo'] = $this->Item_model->opciones('categoria_id = 156', 'Todos');
+            $data['opciones_estado'] = $this->Item_model->opciones('categoria_id = 157', 'Todos');
             
         //Arrays con valores para contenido en la tabla
-            //$data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 15');
+            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 156');
+            $data['arr_estados'] = $this->Item_model->arr_interno('categoria_id = 157');
         
         //Cargar vista
             $this->load->view(TPL_ADMIN, $data);
@@ -82,42 +85,6 @@ class Preguntas extends CI_Controller{
             //$this->output->enable_profiler(TRUE);
     }
     
-//EXPLORAR_ANT
-//------------------------------------------------------------------------------------------
-
-    function explorar_ant()
-    {
-        $this->output->enable_profiler(TRUE);
-        //Cargando
-            $this->load->model('Busqueda_model');
-            $this->load->helper('text');
-        
-        //Grupos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
-            
-            $resultados_total = $this->Pregunta_model->buscar($busqueda); //Para calcular el total de resultados
-            
-        //Generar resultados para mostrar
-            $data['per_page'] = 15; //Cantidad de registros por página
-            $data['offset'] = $this->input->get('per_page');
-            $resultados = $this->Pregunta_model->buscar($busqueda, $data['per_page'], $data['offset']);
-        
-        //Variables para vista
-            $data['cant_resultados'] = $resultados_total->num_rows();
-            $data['busqueda'] = $busqueda;
-            $data['busqueda_str'] = $busqueda_str;
-            $data['resultados'] = $resultados;
-            $data['url_paginacion'] = base_url("preguntas/explorar/?{$busqueda_str}");
-        
-        //Solicitar vista
-            $data['titulo_pagina'] = 'Preguntas';
-            $data['subtitulo_pagina'] = $data['cant_resultados'];
-            $data['vista_a'] = 'preguntas/explorar/explorar_v';
-            $data['vista_menu'] = 'preguntas/explorar/menu_v';
-            $this->load->view(PTL_ADMIN, $data);
-    }
-    
     /**
      * Exporta el resultado de la búsqueda a un archivo de Excel
      */
@@ -154,7 +121,7 @@ class Preguntas extends CI_Controller{
                 $data['link_volver'] = "preguntas/explorar/?{$busqueda_str}";
                 $data['vista_a'] = 'app/mensaje_v';
                 
-                $this->load->view(PTL_ADMIN, $data);
+                $this->load->view(TPL_ADMIN, $data);
             }
             
     }
@@ -178,33 +145,7 @@ class Preguntas extends CI_Controller{
         
         echo count($seleccionados);
     }
-    
-    function editar()
-    {
-        //Cargando datos básicos
-            $pregunta_id = $this->uri->segment(4);
-            $data['row'] = $this->Pcrn->registro_id('pregunta', $pregunta_id);
-            $data['editable'] = $this->Pregunta_model->editable($data['row']);
-            $data['vista_a'] = 'preguntas/pregunta_v';
-            
-        //Render del grocery crud
-            if ( in_array($this->session->userdata('rol_id'), array(3,4,5)) ) 
-            {
-                $output = $this->Pregunta_model->crud_editar_institucional();
-            } else {
-                $output = $this->Pregunta_model->crud_editar();
-            }
-            
-        //Vista según permisos
-            $vista_b = 'comunes/gc_v';
-            if ( ! $data['editable'] ) { $vista_b = 'app/no_permitido_v'; }
-            
-        //Solicitar vista
-            $data['titulo_pagina'] = 'Editar pregunta';
-            $data['vista_b'] = $vista_b;
-            $output = array_merge($data,(array)$output);
-            $this->load->view(PTL_ADMIN, $output);
-    }
+
     
     function eliminar($pregunta_id)
     {
@@ -214,6 +155,72 @@ class Preguntas extends CI_Controller{
         $busqueda_str = $this->Busqueda_model->busqueda_str();
         
         redirect("datos/preguntas/?{$busqueda_str}");
+    }
+
+// EDICIÓN
+//-----------------------------------------------------------------------------
+
+    /**
+     * Formulario de edición de pregunta
+     */
+    function editar($pregunta_id)
+    {
+        //Datos básicos
+            $data = $this->Pregunta_model->basico($pregunta_id);
+
+        //Variables
+            $data['options_enunciado'] = $this->App_model->opciones_post('tipo_id = 4401');
+            $data['options_letras'] = $this->Item_model->opciones('categoria_id = 57 AND id_interno <= 4');
+            $data['options_nivel'] = $this->App_model->opciones_nivel('item_largo');
+            $data['options_area'] = $this->Item_model->opciones_id('categoria_id = 1');
+            $data['options_competencia'] = $this->Item_model->opciones_id('categoria_id = 4');
+            $data['options_componente'] = $this->Item_model->opciones_id('categoria_id = 8');
+        
+        //Array data espefícicas
+            $data['view_description'] = 'preguntas/pregunta_v';
+            $data['nav_2'] = 'preguntas/menu_v';
+            $data['view_a'] = 'preguntas/editar/editar_v';
+        
+        $this->load->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * Guardar datos de una pregunta
+     */
+    function save($pregunta_id)
+    {
+        $data = $this->Pregunta_model->save($pregunta_id);
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
+    }
+
+    /**
+     * Recibe el archivo en formulario de preguntas/editar
+     * y se lo asigna como imagen asociada a la $pregunta_id
+     * 2019-10-04
+     */
+    function set_image($pregunta_id)
+    {
+        $data = $this->Pregunta_model->set_image($pregunta_id);
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
+    }
+
+    /**
+     * Elimina archivo imagen asociado a una pregunta, y modifica
+     * el campo pregunta.archivo_imagen
+     */
+    function delete_archivo_imagen($pregunta_id)
+    {
+        $data = $this->Pregunta_model->delete_archivo_imagen($pregunta_id);
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
     }
     
 // IMPORTAR
@@ -281,7 +288,7 @@ class Preguntas extends CI_Controller{
             $data['subtitulo_pagina'] = 'Resultado cargue';
             $data['vista_a'] = 'comunes/resultado_importacion_v';
             $data['vista_menu'] = 'preguntas/explorar/menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
 
 //CARGUE MASIVO
@@ -294,7 +301,7 @@ class Preguntas extends CI_Controller{
             $data['subtitulo_pagina'] = 'Cargar masivamente';
             $data['ayuda_id'] = 263;
             $data['vista_a'] = 'preguntas/cargar_masivo_v';
-            $this->load->view(PTL_ADMIN, $data);   
+            $this->load->view(TPL_ADMIN, $data);   
     }
     
     function cargar_masivo_e()
@@ -357,11 +364,9 @@ class Preguntas extends CI_Controller{
         //Solicitar vista
             $data['row_pregunta'] = $row;
             $data['row_enunciado'] = $row_enunciado;
-            $data['vista_b'] = 'preguntas/detalle_v';
-            
-            
+            $data['view_a'] = 'preguntas/detalle_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
         
     }
     
@@ -379,9 +384,9 @@ class Preguntas extends CI_Controller{
         
         //Solicitar vista
         $data['row_pregunta'] = $data['row'];
-        $data['vista_b'] = 'preguntas/cuestionarios_v';
+        $data['view_a'] = 'preguntas/cuestionarios_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -405,9 +410,9 @@ class Preguntas extends CI_Controller{
         
         //Solicitar vista
         $data['row_pregunta'] = $data['row'];
-        $data['vista_b'] = 'preguntas/estadisticas_v';
+        $data['view_a'] = 'preguntas/estadisticas_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     
@@ -466,7 +471,7 @@ class Preguntas extends CI_Controller{
         //Solicitar vista
             $data['titulo_pregunta'] = "Cargar pregunta al {$tipo_mostrar}: {$referente_nombre}";
             $data['vista_b'] = 'preguntas/cargar_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**

@@ -51,5 +51,17 @@
             </div>
             <label for="n" class="col-md-3 control-label">Nivel</label>
         </div>
+        <div class="form-group row <?php echo $clases_filtros['tp'] ?>">
+            <div class="col-md-9">
+                <?php echo form_dropdown('tp', $opciones_tipo, $busqueda['tp'], 'class="form-control" title="Filtrar por tipo de pregunta"'); ?>
+            </div>
+            <label for="tp" class="col-md-3 control-label">Tipo pregunta</label>
+        </div>
+        <div class="form-group row <?php echo $clases_filtros['est'] ?>">
+            <div class="col-md-9">
+                <?php echo form_dropdown('est', $opciones_estado, $busqueda['est'], 'class="form-control" title="Filtrar por estado de la pregunta"'); ?>
+            </div>
+            <label for="est" class="col-md-3 control-label">Estado</label>
+        </div>
     </div>
 </form>

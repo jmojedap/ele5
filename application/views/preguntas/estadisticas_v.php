@@ -58,8 +58,8 @@
         </ul>
     </div>
     <div class="col col-md-8">
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card">
+            <div class="card-body">
                 <div id="container">
                 </div>
             </div>

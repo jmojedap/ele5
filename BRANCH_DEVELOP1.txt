@@ -1,0 +1,8 @@
+2019-10-02
+
+EDITOR DE PREGUNTAS ESPEJO
+Desarrollo del conjunto de herramientas para la apliación de revisión de versiones de preguntas.
+
+se creo el campo tipo
+preguntas/explorar Se creó el filtro de estado
+preguntas/explorar Se creó el filtro de tipo
