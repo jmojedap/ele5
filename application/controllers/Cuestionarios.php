@@ -1305,11 +1305,10 @@ class Cuestionarios extends CI_Controller{
     {   
         //Variables data
             $data = $this->Cuestionario_model->basico($cuestionario_id);
-            $data['preguntas'] = $this->Cuestionario_model->preguntas($cuestionario_id, 1000, 0);
         
         //Solicitar vista
             $data['cuestionario_id'] = $cuestionario_id;
-            $data['view_a'] = 'cuestionarios/preguntas_v';
+            $data['view_a'] = 'cuestionarios/preguntas/preguntas_v';
 
         $this->load->view(TPL_ADMIN, $data);
     }

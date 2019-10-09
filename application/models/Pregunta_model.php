@@ -43,7 +43,7 @@ class Pregunta_model extends CI_Model{
             $data['el_singular'] = 'pregunta';
                 
         //Otros
-            $data['arr_filtros'] = array('a', 'n', 'tp', 'est');
+            $data['arr_filtros'] = array('a', 'n', 'tp', 'f1');
             
         //Vistas
             $data['head_subtitle'] = number_format($data['cant_resultados'], 0, ',', '.');
@@ -101,15 +101,17 @@ class Pregunta_model extends CI_Model{
             if ( $words_condition ) { $this->db->where($words_condition); }
 
         //Construir consulta
-            $this->db->select('id, texto_pregunta, nivel, area_id, editado, editado_usuario_id');
+            $this->db->select('id, texto_pregunta, nivel, area_id, editado, editado_usuario_id, estado, tipo_pregunta_id, version_id');
             
         //Otros filtros
             if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
             if ( $busqueda['n'] != '' ) { $this->db->where('nivel', $busqueda['n']); }      //Nivel
             if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_pregunta_id', $busqueda['tp']); }      //Tipo
             if ( $busqueda['est'] != '' ) { $this->db->where('estado', $busqueda['est']); }      //Estado de la pregunta
-                
+            if ( $busqueda['f1'] == '1' ) { $this->db->where('version_id > 0 AND tipo_pregunta_id = 1'); }      //Si la pregunta tiene una versión propuesta
+            
         //Otros
+            $this->db->where('tipo_pregunta_id < 20');  //Tipos de pregunta, no incluir versiones propuestas
             $this->db->where($filtro_rol);  //Filtro por rol
             $this->db->order_by('id', 'DESC');    
             
@@ -614,6 +616,11 @@ class Pregunta_model extends CI_Model{
         
     }
     
+    /**
+     * Generación de formulario para la creación o edición de preguntas en un formulario
+     * por parte de usuario institucional.
+     * 2019-10-05
+     */
     function crud_add_institucional($cuestionario_id, $registro)
     {
         //Libería GC
@@ -680,6 +687,8 @@ class Pregunta_model extends CI_Model{
         //Valores por defecto
             if ( $registro['nivel'] > -1 ) { $crud->field_type('nivel', 'hidden', $registro['nivel']); }
             if ( $registro['area_id'] > 0 ) { $crud->field_type('area_id', 'hidden', $registro['area_id']); }
+            $crud->field_type('tipo_pregunta_id', 'hidden', 11);    //Pregunta institucional 2019-10-05
+            $crud->field_type('estado', 'hidden', 1);               //Publicada 2019-10-05
             
         //Redireccionamiento después de la insersión
             $destino = "cuestionarios/preguntas/{$cuestionario_id}";    
@@ -710,10 +719,7 @@ class Pregunta_model extends CI_Model{
             
             $output = $crud->render();
             return $output;
-        
     }
-
-    
     
     function crud_add_tema($tema_id, $registro, $orden)
     {
@@ -1528,5 +1534,133 @@ class Pregunta_model extends CI_Model{
             $this->db->update('pregunta', $registro);        
         
     }
+
+// GESTIÓN DE VERSIONES DE PREGUNTAS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Crear copia versión de una pregunta, tabla pregunta, tipo 5, estado 2
+     * 2019-10-01
+     */
+    function create_version($pregunta_id)
+    {
+        $data = array('status' => 0, 'message' => 'La versión de pregunta no se creó');
+
+        //Generar y guardar registro de versión alterna de pregunta
+            $row_array = $this->row_array_version($pregunta_id);
+            $version_id = $this->Pcrn->guardar('pregunta',"padre_id = {$pregunta_id}", $row_array);
     
+        //Si se guarda, actualizar campos y archivos
+        if ( $version_id > 0 )
+        {
+            //Actualizar pregunta.version_id, en pregunta original
+                $arr_row['version_id'] = $version_id;
+                $arr_row['editado_usuario_id'] = $this->session->userdata('usuario_id');
+                $this->Pcrn->guardar('pregunta', "id = {$pregunta_id}", $arr_row);
+
+            //Si tiene imagen asociada, crear copia
+                $data['new_filename'] = $this->create_image_version($pregunta_id, $version_id);
+            
+            //Actualizar resultado respuesta
+                $data = array('status' => 1, 'message' => 'La versión fue creada correctamente, ID: ' . $version_id, 'saved_id' => $version_id);            
+        }
+    
+        return $data;
+    }
+
+    /**
+     * Array de registro de versión alterna de pregunta
+     * 2019-10-08
+     */
+    function row_array_version($pregunta_id)
+    {
+        $row_array = NULL;
+
+        $query = $this->db->get_where('pregunta', "id = {$pregunta_id}");
+
+        if ( $query->num_rows() > 0 )
+        {
+            $row_array = $query->row_array(0);
+            unset($row_array['id']);
+            $row_array['tipo_pregunta_id'] = 50;    //Versión alterna
+            $row_array['padre_id'] = $pregunta_id;  //Pregunta de la que desciende
+            $row_array['estado'] = 2;                   //Inicia en estado de borrador
+            $row_array['creado_usuario_id'] = $this->session->userdata('usuario_id');
+            $row_array['editado_usuario_id'] = $this->session->userdata('usuario_id');
+        }
+
+        return $row_array;
+    }
+
+
+    /**
+     * Crea una copia de la imagen relacionada con la pregunta original.
+     * De manera que pueda ser eliminada o cambiada en el proceso de ajuste de versión.
+     * 2019-10-07
+     */
+    function create_image_version($pregunta_id, $version_id)
+    {
+        $row_pregunta = $this->Pcrn->registro_id('pregunta', $pregunta_id);
+        $new_filename = '';
+
+        $file_path = RUTA_UPLOADS . 'preguntas/' . $row_pregunta->archivo_imagen;
+
+        if ( file_exists($file_path) && strlen($row_pregunta->archivo_imagen) )
+        {
+            $new_filename = $version_id . '_' . $row_pregunta->archivo_imagen;
+            $new_file_path = RUTA_UPLOADS . 'preguntas/' . $new_filename;
+            copy($file_path, $new_file_path);
+
+            //Actualizar registro de nueva pregunta
+            $arr_row['archivo_imagen'] = $new_filename;
+            $this->db->where('id', $version_id);
+            $this->db->update('pregunta', $arr_row);
+        }
+
+        return $new_filename;
+    }
+
+    /**
+     * Aplicar los cambios de la pregunta versión a la pregunta original
+     * 2019-10-09
+     */
+    function approve_version($pregunta_id, $version_id)
+    {
+        //Resultado inicial
+            $data = array('status' => 0, 'message' => 'La pregunta no se modificó');
+            $row_original = $this->Pcrn->registro_id('pregunta', $pregunta_id);
+            $saved_id = 0;
+
+        //Cargar registro versión
+            $query = $this->db->get_where('pregunta', "id = {$version_id}");
+
+            if ( $query->num_rows() > 0 )
+            {
+                $row_array = $query->row_array(0);
+                unset($row_array['id']);
+                $row_array['tipo_pregunta_id'] = 1;     //Pregunta normal
+                $row_array['padre_id'] = 0;             //Se establece como Sin versión alterna
+                $row_array['version_id'] = 0;           //Se establece como Sin versión alterna
+                $row_array['estado'] = 1;               //Publicada
+                $row_array['editado_usuario_id'] = $this->session->userdata('usuario_id');
+
+                $saved_id = $this->Pcrn->guardar('pregunta', "id = {$pregunta_id}", $row_array);
+            }
+    
+        //Establecer resultado del proceso
+            if ( $saved_id > 0 )
+            {
+                $data = array('status' => 1, 'message' => 'Los cambios fueron aplicados a la pregunta');
+
+                //Eliminar archivo de imagen original
+                if ( strlen($row_original->archivo_imagen) )
+                {
+                    if ( file_exists(RUTA_UPLOADS . 'preguntas/' . $row_original->archivo_imagen) ) {
+                        unlink(RUTA_UPLOADS . 'preguntas/' . $row_original->archivo_imagen);
+                    }
+                }
+            }
+    
+        return $data;
+    }
 }

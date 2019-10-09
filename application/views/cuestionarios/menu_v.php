@@ -79,6 +79,7 @@
         $elementos_rol[3] = array('explorar', 'vista_previa', 'temas', 'grupos', 'asignar');
         $elementos_rol[4] = array('explorar', 'vista_previa', 'temas', 'grupos', 'asignar');
         $elementos_rol[5] = array('explorar', 'vista_previa', 'temas', 'grupos', 'asignar');
+        $elementos_rol[7] = array('explorar', 'vista_previa', 'preguntas', 'editar');
         
     //Si es editable
         if ( $editable ) {

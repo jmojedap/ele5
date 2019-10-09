@@ -599,7 +599,7 @@ class Cuestionario_model extends CI_Model
     function lista_preguntas($cuestionario_id)
     {
         $select = 'pregunta.id AS pregunta_id, ';
-        $select .= 'texto_pregunta, enunciado_2, opcion_1, opcion_2, opcion_3, opcion_4, enunciado_id, ';
+        $select .= 'texto_pregunta, enunciado_2, opcion_1, opcion_2, opcion_3, opcion_4, enunciado_id, version_id, ';
         $select .= 'CONCAT("' . URL_UPLOADS . 'preguntas/", (archivo_imagen)) AS url_imagen_pregunta, archivo_imagen, ' ;
         $select .= 'respuesta_correcta AS clv, "0" AS rta, "0" AS res, ';
         $select .= 'post.contenido AS contenido_enunciado, post.nombre_post AS titulo_enunciado, ';

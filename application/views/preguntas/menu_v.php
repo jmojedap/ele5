@@ -33,22 +33,28 @@
             'atributos' => 'title="Estadísticas de la pregunta"'
         );
             
-        
-            
         $arr_menus['editar'] = array(
             'icono' => '<i class="fa fa-pencil-alt"></i>',
             'texto' => 'Editar',
             'link' => "preguntas/editar/{$row->id}",
             'atributos' => 'title="Editar pregunta"'
         );
+
+        $arr_menus['version'] = array(
+            'icono' => '<i class="fa fa-code-branch"></i>',
+            'texto' => 'Versión propuesta',
+            'link' => "preguntas/version/{$row->id}",
+            'atributos' => 'title="Editar versión alterna de pregunta"'
+        );
         
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('explorar', 'detalle', 'cuestionarios', 'estadisticas', 'editar');
+        $elementos_rol[0] = array('explorar', 'detalle', 'cuestionarios', 'estadisticas', 'editar', 'version');
         $elementos_rol[1] = array('explorar', 'detalle', 'cuestionarios', 'estadisticas', 'editar');
         $elementos_rol[2] = array('explorar', 'detalle', 'cuestionarios', 'estadisticas', 'editar');
         $elementos_rol[3] = array('explorar', 'detalle', 'estadisticas');
         $elementos_rol[4] = array('explorar', 'detalle', 'estadisticas');
         $elementos_rol[5] = array('explorar', 'detalle', 'estadisticas');
+        $elementos_rol[7] = array('explorar', 'detalle', 'cuestionarios', 'estadisticas', 'version');
         $elementos_rol[8] = array('explorar', 'detalle', 'cuestionarios', 'estadisticas', 'editar');
         
         if ( $editable ) 

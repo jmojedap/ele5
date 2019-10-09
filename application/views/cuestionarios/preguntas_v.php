@@ -77,7 +77,7 @@
                             <?php echo anchor("cuestionarios/mover_pregunta/{$row->id}/{$row_pregunta->pregunta_id}/{$num_subir}", '<i class="fa fa-caret-up"></i>', 'class="a4" title="subir pregunta"') ?>
                             <?php echo anchor("cuestionarios/mover_pregunta/{$row->id}/{$row_pregunta->pregunta_id}/{$num_bajar}", '<i class="fa fa-caret-down"></i>', 'class="a4" title="bajar pregunta"') ?>
                             <?php echo anchor("cuestionarios/pregunta_nueva/{$row->id}/{$num_siguiente}/add", '<i class="fa fa-caret-right"></i>', 'class="a4" title="Insertar pregunta después de esta"') ?>
-                            <?php echo anchor("preguntas/editar/edit/{$row_pregunta->pregunta_id}", '<i class="fa fa-pencil-alt"></i>', 'class="a4" target="_blank" title="Detalle de la pregunta"') ?>
+                            <?php echo anchor("preguntas/editar/{$row_pregunta->pregunta_id}", '<i class="fa fa-pencil-alt"></i>', 'class="a4" target="_blank" title="Detalle de la pregunta"') ?>
                             <?php echo $this->Pcrn->anchor_confirm("cuestionarios/quitar_pregunta/{$row->id}/{$row_pregunta->pregunta_id}", '<i class="fa fa-times"></i>', 'class="a4" title="Quitar pregunta de este cuestionario"', '¿Desea quitar esta pregunta del cuestionario?') ?>
                             
                         <?php endif ?>

@@ -5,7 +5,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body" id="edicion_pregunta">
-                    <?php $this->load->view('preguntas/editar/form_v') ?>
+                    <?php $this->load->view($view_form) ?>
                 </div>
                 <?php $this->load->view('preguntas/editar/vue_v') ?>
             </div>

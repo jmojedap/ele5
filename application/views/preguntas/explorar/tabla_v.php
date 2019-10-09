@@ -3,12 +3,8 @@
         $col_cl['nivel_area'] = 'd-none d-sm-table-cell d-lg-table-cell';
         $col_cl['tipo'] = 'd-none d-md-table-cell d-lg-table-cell';
         $col_cl['texto_pregunta'] = 'd-none d-md-table-cell d-lg-table-cell';
+        $col_cl['descripcion'] = 'd-none d-md-table-cell d-lg-table-cell';
         $col_cl['edicion'] = 'd-none d-lg-table-cell d-xl-table-cell';
-        
-    //Arrays con valores para contenido en lista
-        $arr_tipos = $this->Item_model->arr_interno('categoria_id = 161');
-        $arr_nivel = $this->Item_model->arr_interno('categoria_id = 3');
-
 ?>
 
 <table class="table bg-white" cellspacing="0">
@@ -23,10 +19,11 @@
                     </div>
                 </th>
                 <th width="50px;">ID</th>
-                <th>Pregunta</th>
                 
+                <th></th>
                 <th class="<?php echo $col_cl['texto_pregunta'] ?>">Texto pregunta</th>
                 <th class="<?php echo $col_cl['nivel_area'] ?>" style="min-width: 200px;">Nivel Área</th>
+                <th class="<?php echo $col_cl['descripcion'] ?>"></th>
                 <th class="<?php echo $col_cl['edicion'] ?>">Editado por</th>
             </tr>
         </thead>
@@ -35,7 +32,7 @@
             <?php
                 //Variables
                     $nombre_elemento = "Pregunta " . $row_resultado->id;
-                    $link_elemento = anchor("preguntas/index/$row_resultado->id", $nombre_elemento);
+                    $link_elemento = anchor("preguntas/index/$row_resultado->id", 'Ver');
             ?>
                 <tr id="fila_<?php echo $row_resultado->id ?>">
                     <td>
@@ -47,20 +44,40 @@
                         </div>
                     </td>
                     
-                    <td><?php echo $row_resultado->id ?></td>
+                    <td class="table-warning"><?php echo $row_resultado->id ?></td>
                     
                     <td>
-                        <?php echo $link_elemento ?>
-                    </td>
-                    <td class="<?php echo $col_cl['texto_pregunta'] ?>">
-                        <?php echo word_limiter($row_resultado->texto_pregunta, 20) ?>
+                        <a href="<?php echo base_url("preguntas/index/{$row_resultado->id}") ?>" class="btn btn-primary">
+                            Ver
+                        </a>
                     </td>
 
+                    <td class="<?php echo $col_cl['texto_pregunta'] ?>">
+                        <?php echo word_limiter($row_resultado->texto_pregunta, 20) ?>
+                        <?php if ( $row_resultado->version_id > 0 ) { ?>
+                            <br>
+                            <a href="<?php echo base_url("preguntas/editar_version/{$row_resultado->id}") ?>"
+                                class="btn btn-danger btn-sm"
+                                title="Tiene versión con cambios propuestos"
+                                target="_blank"
+                                >
+                                <i class="fa fa-exclamation-triangle"></i> Versión
+                            </a>
+                        <?php } ?>
+                    </td>
+
+                    
                     <td class="<?php echo $col_cl['nivel_area'] ?>">
                         <span class="etiqueta nivel w1"><?php echo $row_resultado->nivel ?></span>
                         <?php echo $this->App_model->etiqueta_area($row_resultado->area_id) ?>
                     </td>
                     
+                    <td class="<?php echo $col_cl['descripcion'] ?>">
+                        <span class="text-muted">Tipo:</span>
+                        <?php echo $arr_tipos[$row_resultado->tipo_pregunta_id] ?>
+                        
+                        
+                    </td>
                     
                     <td class="<?php echo $col_cl['edicion'] ?>">
                         <?php echo $this->App_model->nombre_usuario($row_resultado->editado_usuario_id, 2); ?>

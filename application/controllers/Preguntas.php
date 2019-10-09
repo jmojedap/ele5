@@ -46,6 +46,7 @@ class Preguntas extends CI_Controller{
         //Arrays con valores para contenido en la tabla
             $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 156');
             $data['arr_estados'] = $this->Item_model->arr_interno('categoria_id = 157');
+            $data['arr_nivel'] = $this->Item_model->arr_interno('categoria_id = 3');
         
         //Cargar vista
             $this->load->view(TPL_ADMIN, $data);
@@ -67,7 +68,9 @@ class Preguntas extends CI_Controller{
             $data_pre = $this->Pregunta_model->data_tabla_explorar($num_pagina);
         
         //Arrays con valores para contenido en lista
-            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 15');
+            $data_pre['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 156');
+            $data_pre['arr_estados'] = $this->Item_model->arr_interno('categoria_id = 157');
+            $data_pre['arr_nivel'] = $this->Item_model->arr_interno('categoria_id = 3');
         
         //Preparar respuesta
             $data['html'] = $this->load->view('preguntas/explorar/tabla_v', $data_pre, TRUE);
@@ -81,8 +84,6 @@ class Preguntas extends CI_Controller{
             $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($data));
-
-            //$this->output->enable_profiler(TRUE);
     }
     
     /**
@@ -180,6 +181,12 @@ class Preguntas extends CI_Controller{
             $data['view_description'] = 'preguntas/pregunta_v';
             $data['nav_2'] = 'preguntas/menu_v';
             $data['view_a'] = 'preguntas/editar/editar_v';
+            $data['view_form'] = 'preguntas/editar/form_v';
+
+        //Formulario limitado para usuarios institucionales
+            if ( $this->session->userdata('srol') == 'institucional' ) {
+                $data['view_form'] = 'preguntas/editar/form_institucional_v';
+            }
         
         $this->load->view(TPL_ADMIN, $data);
     }
@@ -548,5 +555,74 @@ class Preguntas extends CI_Controller{
         redirect("preguntas/detalle/{$nueva_pregunta_id}");
         
     }
-    
+
+// GESTIÓN DE VERSIONES DE PREGUNTAS
+//-----------------------------------------------------------------------------
+
+    function version($pregunta_id, $modo = 'lectura')
+    {
+        //Datos básicos
+            $data = $this->Pregunta_model->basico($pregunta_id);
+
+        //Datos pregunta versión
+            $data['row_version'] = $this->Pcrn->registro_id('pregunta', $data['row']->version_id);
+
+        //Variables
+            $data['options_enunciado'] = $this->App_model->opciones_post('tipo_id = 4401');
+            $data['options_letras'] = $this->Item_model->opciones('categoria_id = 57 AND id_interno <= 4');
+            $data['options_nivel'] = $this->App_model->opciones_nivel('item_largo');
+            $data['options_area'] = $this->Item_model->opciones_id('categoria_id = 1');
+            $data['options_competencia'] = $this->Item_model->opciones_id('categoria_id = 4');
+            $data['options_componente'] = $this->Item_model->opciones_id('categoria_id = 8');
+        
+        //Array data espefícicas
+            $data['view_description'] = 'preguntas/pregunta_v';
+            $data['nav_2'] = 'preguntas/menu_v';
+            $data['view_a'] = 'preguntas/version/lectura_v';
+
+            if ( $modo == 'editar' ) { $data['view_a'] = 'preguntas/version/editar_v';}
+            if ( is_null($data['row_version']) ) { $data['view_a'] = 'preguntas/version/sin_version_v';}
+        
+        $this->load->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * Crea una copia de la pregunta, en la tabla pregunta, con el tipo_id = 5
+     * 2019-10-07
+     */
+    function create_version($pregunta_id)
+    {
+        $data = $this->Pregunta_model->create_version($pregunta_id);
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
+    }
+
+    /**
+     * Guardar datos de una pregunta versión alterna de otra
+     * 2019-10-08
+     */
+    function save_version($version_id)
+    {
+        $data = $this->Pregunta_model->save($version_id);
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
+    }
+
+    /**
+     * Incorpora los cambios de la versión propuesta de la pregunta, a la pregunta
+     * original.
+     * 2019-10-09
+     */
+    function approve_version($pregunta_id, $version_id)
+    {
+        $data = $this->Pregunta_model->approve_version($pregunta_id, $version_id);
+        
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
+    }
 }

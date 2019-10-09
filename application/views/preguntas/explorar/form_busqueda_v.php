@@ -5,6 +5,12 @@
             $clases_filtros[$filtro] = 'sin_filtrar';
             if ( strlen($busqueda[$filtro]) > 0 ) { $clases_filtros[$filtro] = ''; }
         }
+
+    //Opciones versión propuesta
+        $opciones_version = array(
+            '00' => ' [ Todas las preguntas ]',
+            '01' => 'Con versión propuesta'
+        );
 ?>
 
 <form accept-charset="utf-8" id="formulario_busqueda" method="POST">
@@ -51,17 +57,19 @@
             </div>
             <label for="n" class="col-md-3 control-label">Nivel</label>
         </div>
-        <div class="form-group row <?php echo $clases_filtros['tp'] ?>">
-            <div class="col-md-9">
-                <?php echo form_dropdown('tp', $opciones_tipo, $busqueda['tp'], 'class="form-control" title="Filtrar por tipo de pregunta"'); ?>
+        <?php if ( $this->session->userdata('srol') == 'interno' ) { ?>
+            <div class="form-group row <?php echo $clases_filtros['tp'] ?>">
+                <div class="col-md-9">
+                    <?php echo form_dropdown('tp', $opciones_tipo, $busqueda['tp'], 'class="form-control" title="Filtrar por tipo de pregunta"'); ?>
+                </div>
+                <label for="tp" class="col-md-3 control-label">Tipo pregunta</label>
             </div>
-            <label for="tp" class="col-md-3 control-label">Tipo pregunta</label>
-        </div>
-        <div class="form-group row <?php echo $clases_filtros['est'] ?>">
-            <div class="col-md-9">
-                <?php echo form_dropdown('est', $opciones_estado, $busqueda['est'], 'class="form-control" title="Filtrar por estado de la pregunta"'); ?>
+            <div class="form-group row <?php echo $clases_filtros['f1'] ?>">
+                <div class="col-md-9">
+                    <?php echo form_dropdown('f1', $opciones_version, $busqueda['f1'], 'class="form-control" title="Filtrar preguntas con versión propuesta"'); ?>
+                </div>
+                <label for="f1" class="col-md-3 control-label">Estado versión</label>
             </div>
-            <label for="est" class="col-md-3 control-label">Estado</label>
-        </div>
+        <?php } ?>
     </div>
 </form>
