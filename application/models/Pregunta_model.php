@@ -194,6 +194,7 @@ class Pregunta_model extends CI_Model{
     
         if ( $saved_id > 0 )
         {
+            $this->save_version_event($pregunta_id, 0, 26); //Evento edición de pregunta
             $data = array('status' => 1, 'message' => 'Los datos de la pregunta fueron guardados');
         }
     
@@ -215,6 +216,8 @@ class Pregunta_model extends CI_Model{
             $this->db->update('pregunta', $arr_row);
 
             $data['src'] = URL_UPLOADS . 'preguntas/' . $data['upload_data']['file_name'];
+
+            $this->save_version_event($pregunta_id, 0, 26); //Evento edición de pregunta
         }
 
         return $data;
@@ -1560,6 +1563,9 @@ class Pregunta_model extends CI_Model{
 
             //Si tiene imagen asociada, crear copia
                 $data['new_filename'] = $this->create_image_version($pregunta_id, $version_id);
+
+            //Evento de creación de versión (27)
+                $this->save_version_event($pregunta_id, $version_id, 27);
             
             //Actualizar resultado respuesta
                 $data = array('status' => 1, 'message' => 'La versión fue creada correctamente, ID: ' . $version_id, 'saved_id' => $version_id);            
@@ -1659,8 +1665,49 @@ class Pregunta_model extends CI_Model{
                         unlink(RUTA_UPLOADS . 'preguntas/' . $row_original->archivo_imagen);
                     }
                 }
+
+                $this->save_version_event($pregunta_id, $version_id, 28);    //Aprobación de versión
             }
     
         return $data;
+    }
+
+    /**
+     * Guarda un registro de edición de pregunta en la tabla evento
+     * 2019-10-11
+     */
+    function save_version_event($pregunta_id, $version_id, $type_id)
+    {
+        //Construir registro
+        $arr_row['fecha_inicio'] = date('Y-m-d');
+        $arr_row['hora_inicio'] = date('H:i:i');
+        $arr_row['tipo_id'] = $type_id;
+        $arr_row['referente_id'] = $pregunta_id;
+        $arr_row['referente_2_id'] = $version_id;
+        $arr_row['usuario_id'] = $this->session->userdata('usuario_id');
+        $arr_row['institucion_id'] = $this->session->userdata('institucion_id');
+        $arr_row['c_usuario_id'] = $this->session->userdata('usuario_id');
+        
+        //Guardar evento
+        //$condition = "tipo_id = {$arr_row['tipo_id']} AND referente_id = {$arr_row['referente_id']} AND referente_2_id = {$arr_row['referente_2_id']}";
+        $condition = 'id = 0';
+        $evento_id = $this->Pcrn->guardar('evento', $condition, $arr_row);
+
+        return $evento_id;
+    }
+
+    /**
+     * Query eventos de edición y gestión de versiones de preguntas
+     * 2019-10-11
+     */
+    function version_log($pregunta_id)
+    {
+        $this->db->select('fecha_inicio, hora_inicio, tipo_id, creado, editado, usuario_id, referente_id, referente_2_id');
+        $this->db->where('referente_id', $pregunta_id);
+        $this->db->where('tipo_id IN (26, 27, 28)');
+        $this->db->order_by('creado', 'DESC');
+        $eventos = $this->db->get('evento');
+
+        return $eventos;
     }
 }

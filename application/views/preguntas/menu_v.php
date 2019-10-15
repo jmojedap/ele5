@@ -46,11 +46,18 @@
             'link' => "preguntas/version/{$row->id}",
             'atributos' => 'title="Editar versión alterna de pregunta"'
         );
+
+        $arr_menus['historial'] = array(
+            'icono' => '<i class="far fa-clock"></i>',
+            'texto' => 'Historial',
+            'link' => "preguntas/historial/{$row->id}",
+            'atributos' => 'title="Historial de edición de la pregunta"'
+        );
         
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('explorar', 'detalle', 'cuestionarios', 'estadisticas', 'editar', 'version');
-        $elementos_rol[1] = array('explorar', 'detalle', 'cuestionarios', 'estadisticas', 'editar');
-        $elementos_rol[2] = array('explorar', 'detalle', 'cuestionarios', 'estadisticas', 'editar');
+        $elementos_rol[0] = array('explorar', 'detalle', 'cuestionarios', 'estadisticas', 'editar', 'version', 'historial');
+        $elementos_rol[1] = array('explorar', 'detalle', 'cuestionarios', 'estadisticas', 'editar', 'version', 'historial');
+        $elementos_rol[2] = array('explorar', 'detalle', 'cuestionarios', 'estadisticas', 'editar', 'version', 'historial');
         $elementos_rol[3] = array('explorar', 'detalle', 'estadisticas');
         $elementos_rol[4] = array('explorar', 'detalle', 'estadisticas');
         $elementos_rol[5] = array('explorar', 'detalle', 'estadisticas');

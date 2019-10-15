@@ -77,9 +77,12 @@
             </li>
         </ul>
     </div>
-    
+
     <?php if ( $convertible ) { ?>
-        <?php echo $this->Pcrn->anchor_confirm("cuestionarios/convertir/{$row->id}", '<i class="fa fa-pencil-square-o"></i> Convertir en editable', 'class="btn btn-secondary" title="Convertir en un cuestionario simple, para editar preguntas."', '¿Confirma que quiere convertir este cuestionario en Editable?') ?>
+        <a href="<?php echo base_url("cuestionarios/convertir/{$row->id}") ?>" class="btn btn-secondary" title="Convertir cuestionario en Editable">
+            <i class="fa fa-edit"></i>
+            Convertir
+        </a>
     <?php } ?>
 </div>
 
@@ -91,59 +94,15 @@
 //FUNCIONES
 //------------------------------------------------------------------------------------------
     var base_url = '<?php echo base_url() ?>';
-    var uc_id = <?php echo $row->id ?>;
-    var usuario_id = <?php echo $row->usuario_id ?>;
     var pregunta_id = <?php echo $row_pregunta->id ?>;
-    var cuestionario_id = <?php echo $row->cuestionario_id ?>;
-    
-    var num_preguntas = <?php echo $num_preguntas ?>;
-    var num_respondidas = <?php echo $row->num_con_respuesta ?>;
-    var num_respondidas_mas = <?php echo $num_respondidas_mas ?>;
-    var num_respondidas_menos = <?php echo $num_respondidas_menos ?>;
-    var sin_repuesta = <?php echo $sin_respuesta ?>;
-    
-    var porcentaje = <?php echo $porcentaje_inicial ?>;
-    var porcentaje_mas = <?php echo $porcentaje_mas ?>;
-    var porcentaje_menos = <?php echo $porcentaje_menos ?>;
-    var respuesta = 0;
 
 //DOCUMENT READY
 //------------------------------------------------------------------------------------------
     
     $(document).ready(function(){
-        //Cuenta regresiva
-        //$('#the_final_countdown_v4').countdown({until: +<?php echo $segundos_restantes ?>, format: 'HMS'});
-        //Fin de cuenta regresiva
-        
-        /**
-         * Al hacer clic en una de las opciones de respuesta
-         * @returns {undefined}
-         */
-        /*$('.opcion_respuesta').click(function(){
-            $('.opcion_respuesta').removeClass('opcion_seleccionada');
-            $(this).addClass('opcion_seleccionada');
-            respuesta = $(this).data('respuesta');
-            guardar_respuesta();
-            $('#borrar_repuesta').show();
-            
-            num_respondidas = num_respondidas_mas;
-            porcentaje = porcentaje_mas;
-            
-            actualizar_numeros();
-        });*/
-        
-        /**
-         * Al presional el botón [Borrar respuesta]
-         */
-        /*$('#borrar_respuesta').click(function(){
-            $('.opcion_respuesta').removeClass('opcion_seleccionada');
-            respuesta = 0;
-            guardar_respuesta();
-            
-            num_respondidas = num_respondidas_menos;
-            porcentaje = porcentaje_menos;
-            actualizar_numeros();
-        });*/
+        $('#btn_create_version').click(function(){
+            create_version();
+        });
         
     });
     
@@ -151,33 +110,17 @@
 //------------------------------------------------------------------------------------------
 
     //Ajax
-    function guardar_respuesta(){
+    function create_version(){
         $.ajax({        
             type: 'POST',
-            url: base_url + 'cuestionarios/guardar_respuesta_ajax/' + uc_id,
-            data: {
-                usuario_id : usuario_id,
-                pregunta_id : pregunta_id,
-                cuestionario_id : cuestionario_id,
-                respuesta : respuesta
-            },
-            success: function(respuesta){
-                $('#borrar_repuesta').removeClass('hidden');
+            url: base_url + 'preguntas/create_version/' + pregunta_id,
+            success: function(response){
+                console.log(response);
+                var win = window.open(base_url + 'preguntas/version/' + pregunta_id + '/editar', '_blank');
+                win.focus();
             }
         });
     }
-    
-    function actualizar_numeros()
-    {
-        sin_respuesta = num_preguntas - num_respondidas;
-        $('#barra_porcentaje').css('width', porcentaje + '%');
-        $('#barra_porcentaje').html(porcentaje + '%');
-        
-        $('#num_respondidas').html(num_respondidas);
-        $('#sin_respuesta').html(sin_respuesta);
-        $('#sin_respuesta_mensaje').html(sin_respuesta);
-    }
-    
 </script>
 
 <div class="row">
@@ -215,8 +158,28 @@
                                 <?php echo anchor("cuestionarios/vista_previa/{$row->id}/{$num_pregunta_sig}", '<i class="fa fa-arrow-right"></i>', 'class="btn btn-secondary w3" title="Siguiente pregunta"') ?>
                             </div>
                             <div class="col col-sm-6">
-                                <div class="btn btn-warning float-right" id="borrar_respuesta">
-                                    Borrar respuesta
+                                <div class="float-right">
+                                    <?php if ( $this->session->userdata('srol') == 'interno' ) { ?>
+                                        <?php if ( $row_pregunta->version_id == 0 ) { ?>
+                                            <button class="btn btn-secondary" id="btn_create_version">
+                                                <i class="fa fa-code-branch"></i>
+                                                Crear versión
+                                            </button>
+                                        <?php } else { ?>
+                                            <a href="<?php echo base_url("preguntas/version/{$row_pregunta->id}") ?>" class="btn btn-warning" title="Esta pregunta tiene una versión con cambios propuestos" target="_blank">
+                                                <i class="fa fa-exclamation-triangle"></i>
+                                                Versión
+                                            </a>
+                                        <?php } ?>
+                                    <?php } ?>
+
+
+                                    <?php if ( $this->session->userdata('rol_id') <= 2 ) { ?>
+                                        <a href="<?php echo base_url("preguntas/editar/{$row_pregunta->id}") ?>" class="btn btn-secondary" target="_blank">
+                                            <i class="fa fa-pencil-alt"></i>
+                                        </a>
+                                    <?php } ?>
+
                                 </div>
                             </div>
                         </div>

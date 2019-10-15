@@ -51,7 +51,7 @@
                         Aprobar versión
                     </button>
                 <?php } ?>
-                <a href="<?php echo base_url("preguntas/editar_version/{$row->id}/editar") ?>" class="btn btn-primary">
+                <a href="<?php echo base_url("preguntas/version/{$row->id}/editar") ?>" class="btn btn-primary">
                     <i class="fa fa-pencil-alt"></i>
                     Editar
                 </a>

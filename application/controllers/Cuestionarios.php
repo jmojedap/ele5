@@ -1307,6 +1307,7 @@ class Cuestionarios extends CI_Controller{
             $data = $this->Cuestionario_model->basico($cuestionario_id);
         
         //Solicitar vista
+            $data['editable'] = $this->Cuestionario_model->basico($cuestionario_id);
             $data['cuestionario_id'] = $cuestionario_id;
             $data['view_a'] = 'cuestionarios/preguntas/preguntas_v';
 
@@ -1316,15 +1317,18 @@ class Cuestionarios extends CI_Controller{
     /**
      * Eliminar un registro de la tabla 'cuestionario_pregunta'
      * No se elimina el registro de la pregunta, solo se la quita del cuestionario
+     * 2019-10-15
      */
     function quitar_pregunta($cuestionario_id, $pregunta_id)
     {
         $this->Cuestionario_model->quitar_pregunta($cuestionario_id, $pregunta_id);
         $this->Cuestionario_model->act_clave($cuestionario_id);
+
+        $data = array('status' => 1, 'message' => 'La pregunta se quitó del cuestionario');
         
-        $data['url'] = base_url("cuestionarios/preguntas/$cuestionario_id");
-        $data['msg_redirect'] = '';
-        $this->load->view('app/redirect_v', $data);
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
     }
     
     /**

@@ -13,7 +13,6 @@
                 type="text"
                 id="field-cod_pregunta"
                 name="cod_pregunta"
-                required
                 class="form-control"
                 placeholder="Código pregunta"
                 title="Código pregunta"

@@ -150,7 +150,7 @@ class Cuestionario_model extends CI_Model
         } elseif ( $row_usuario->rol_id == 5 ) {    //Profesor
             $condicion = "( tipo_id IN (3,4) AND creado_usuario_id = {$this->session->userdata('usuario_id')} )";
         } elseif ( $row_usuario->rol_id == 7 ) {    //Digitador
-            $condicion = "id > 0";
+            $condicion = "institucion_id IN (5)";
         } elseif ( $row_usuario->rol_id == 8 ) {    //Comercial
             //$condicion = "id > 0";    Modificado 2019-03-07
             $condicion = "institucion_id IN (SELECT id FROM institucion WHERE ejecutivo_id = {$this->session->userdata('usuario_id')})";
@@ -603,7 +603,7 @@ class Cuestionario_model extends CI_Model
         $select .= 'CONCAT("' . URL_UPLOADS . 'preguntas/", (archivo_imagen)) AS url_imagen_pregunta, archivo_imagen, ' ;
         $select .= 'respuesta_correcta AS clv, "0" AS rta, "0" AS res, ';
         $select .= 'post.contenido AS contenido_enunciado, post.nombre_post AS titulo_enunciado, ';
-        $select .= 'CONCAT("' . URL_UPLOADS . 'enunciados/", texto_2) AS url_imagen_enunciado, post.texto_2 AS archivo_enunciado';
+        $select .= 'CONCAT("' . URL_UPLOADS . 'enunciados/", texto_2) AS url_imagen_enunciado, post.texto_2 AS archivo_enunciado, pregunta.creado_usuario_id';
         
         $this->db->select($select);
         $this->db->join('pregunta', 'cuestionario_pregunta.pregunta_id = pregunta.id');
@@ -1531,6 +1531,7 @@ class Cuestionario_model extends CI_Model
     
     /**
      * Devuelve el registro de una pregunta de un cuestionario según el orden establecido
+     * 2019-10-11
      * 
      * @param type $cuestionario_id
      * @param type $num_pregunta
@@ -1540,7 +1541,7 @@ class Cuestionario_model extends CI_Model
     {
         
         //Construyendo la consulta
-            $this->db->select('pregunta.id, cuestionario_pregunta.orden, texto_pregunta, opcion_1, opcion_2, opcion_3, opcion_4, archivo_imagen, enunciado_id, post_id, respuesta_correcta');
+            $this->db->select('pregunta.id, cuestionario_pregunta.orden, texto_pregunta, opcion_1, opcion_2, opcion_3, opcion_4, archivo_imagen, enunciado_id, post_id, respuesta_correcta, version_id');
             $this->db->join('pregunta', 'cuestionario_pregunta.pregunta_id = pregunta.id');
             $this->db->where('cuestionario_id' , $cuestionario_id);
             $this->db->order_by('cuestionario_pregunta.orden', 'ASC');

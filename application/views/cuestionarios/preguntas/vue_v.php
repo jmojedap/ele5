@@ -25,6 +25,7 @@
             },
             set_current: function(key){
                 this.pregunta = this.lista[key];
+                console.log(this.pregunta.pregunta_id);
             },
             create_version: function(key){
                 this.set_current(key);
@@ -38,6 +39,19 @@
                     console.log(error);
                 });
             },
+            delete_element: function(){
+                axios.get(this.app_url + 'cuestionarios/quitar_pregunta/' + this.cuestionario_id + '/' + this.pregunta.pregunta_id)
+                .then(response => {
+                    if ( response.data.status == 1) {    
+                        this.get_list();
+                        toastr['info']('La pregunta se quitó del cuestionario');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
+
         }
     });
 </script>

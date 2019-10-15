@@ -275,7 +275,7 @@ class App_model extends CI_Model {
             } elseif ($formato == 3) {
                 $nombre_usuario = "{$row->apellidos} {$row->nombre}";
             } elseif ($formato == 'nau') {
-                $nombre_usuario = "{$row->nombre} {$row->apellidos} | {$row->username}";
+                $nombre_usuario = "{$row->nombre} {$row->apellidos} ({$row->username})";
             }
         }
 

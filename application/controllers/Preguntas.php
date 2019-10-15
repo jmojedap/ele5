@@ -587,6 +587,22 @@ class Preguntas extends CI_Controller{
     }
 
     /**
+     * Historial de edición y versiones de la pregunta
+     * 2019-10-11
+     */
+    function historial($pregunta_id)
+    {
+        $data = $this->Pregunta_model->basico($pregunta_id);
+
+        $data['eventos'] = $this->Pregunta_model->version_log($pregunta_id);
+        $data['arr_tipos'] = $this->Item_model->arr_item(13);
+
+        $data['view_a'] = 'preguntas/version/log_v';
+        $data['subtitle_head'] = 'Historial de edición';
+        $this->load->view(TPL_ADMIN, $data);
+    }
+
+    /**
      * Crea una copia de la pregunta, en la tabla pregunta, con el tipo_id = 5
      * 2019-10-07
      */

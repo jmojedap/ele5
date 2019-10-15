@@ -56,8 +56,8 @@
                         <?php echo word_limiter($row_resultado->texto_pregunta, 20) ?>
                         <?php if ( $row_resultado->version_id > 0 ) { ?>
                             <br>
-                            <a href="<?php echo base_url("preguntas/editar_version/{$row_resultado->id}") ?>"
-                                class="btn btn-danger btn-sm"
+                            <a href="<?php echo base_url("preguntas/version/{$row_resultado->id}") ?>"
+                                class="btn btn-warning btn-sm"
                                 title="Tiene versión con cambios propuestos"
                                 target="_blank"
                                 >
