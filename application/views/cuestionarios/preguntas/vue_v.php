@@ -51,6 +51,21 @@
                     console.log(error);
                 });
             },
+            move_question: function(key, new_position){
+                this.set_current(key);
+                axios.get(this.app_url + 'cuestionarios/mover_pregunta/' + this.cuestionario_id + '/' + this.pregunta.pregunta_id + '/' + new_position)
+                .then(response => {
+                    if (response.data.status == 1) {
+                        this.get_list();
+                        toastr['success'](response.data.message)
+                    } else {
+                        toastr['warning'](response.data.message)
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
 
         }
     });

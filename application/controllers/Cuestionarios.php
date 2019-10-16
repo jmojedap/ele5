@@ -1373,15 +1373,17 @@ class Cuestionarios extends CI_Controller{
      */
     function mover_pregunta($cuestionario_id, $pregunta_id, $pos_final)
     {
-        //$this->output->enable_profiler(TRUE);
-        
         //Cambiar la posición de una pregunta en un cuestionario
-        $this->Cuestionario_model->cambiar_pos_pregunta($cuestionario_id, $pregunta_id, $pos_final);
-        $this->Cuestionario_model->act_clave($cuestionario_id);
+        $data = $this->Cuestionario_model->cambiar_pos_pregunta($cuestionario_id, $pregunta_id, $pos_final);
         
-        $data['url'] = base_url("cuestionarios/preguntas/{$cuestionario_id}");
-        $data['msg_redirect'] = '';
-        $this->load->view('app/redirect_v', $data);
+        if ( $data['status'] )
+        {
+            $this->Cuestionario_model->act_clave($cuestionario_id);
+        }
+        
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
         
     }
     
@@ -1406,36 +1408,52 @@ class Cuestionarios extends CI_Controller{
         $this->load->view(TPL_ADMIN, $data);
         
     }
-    
+
+    /**
+     * Formulario para agregar una pregunta a un cuestionario
+     * 2019-10-16
+     */
     function pregunta_nueva($cuestionario_id, $orden)
     {
-        $this->load->model('Pregunta_model');
+        //Variables data
         $data = $this->Cuestionario_model->basico($cuestionario_id);
-            
-            $this->session->set_userdata('cuestionario_id', $cuestionario_id);
-            $this->session->set_userdata('orden', $orden);
-            
-            $registro['nivel'] = $data['row']->nivel;
-            $registro['area_id'] = $data['row']->area_id;
-            $this->session->set_userdata('area_id', $data['row']->area_id);
-            
-            if ( in_array($this->session->userdata('rol_id'), array(3,4,5)) ) {
-                $gc_output = $this->Pregunta_model->crud_add_institucional($cuestionario_id, $registro);
-            } else {
-                $gc_output = $this->Pregunta_model->crud_add($cuestionario_id, $registro);
-            }
-            
-        //Variables
-            $data['view_a'] = 'comunes/gc_v';
-            $data['nav_2'] = 'cuestionarios/menu_agregar_pregunta_v';
-            $data['orden'] = $orden;
-            $data['orden_mostrar'] = $orden + 1;
-            $data['seccion'] = 'nueva';
         
         //Solicitar vista
-            $data['head_subtitle'] = 'Nueva pregunta';
-            $output = array_merge($data,(array)$gc_output);
-            $this->load->view(TPL_ADMIN, $output);
+            $data['cuestionario_id'] = $cuestionario_id;
+            $data['view_form'] = 'preguntas/nuevo/form_cuestionario_v';
+            $data['view_a'] = 'preguntas/nuevo/nuevo_v';
+            $data['form_destination'] = "cuestionarios/agregar_pregunta/{$cuestionario_id}/{$orden}";
+            $data['success_destination'] = "cuestionarios/preguntas/{$cuestionario_id}";
+            $data['options_letras'] = $this->Item_model->opciones('categoria_id = 57 AND id_interno <= 4');
+
+        $this->load->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * Ejecuta la creación e inserción de una pregunta nueva a un cuestionario
+     * 2019-10-16
+     */
+    function agregar_pregunta($cuestionario_id, $orden)
+    {
+        $this->load->model('Pregunta_model');
+        $data_pregunta = $this->Pregunta_model->save(0);
+
+        //Valor inicial por defecto
+        $data = array('status' => 0, 'message' => 'La pregunta no fue agregada');
+
+        //Si la pregunta se creó correctamente, se inserta en el cuestionario
+        if ( $data_pregunta['status'])
+        {
+            $arr_row['cuestionario_id'] = $cuestionario_id;
+            $arr_row['pregunta_id'] = $data_pregunta['saved_id'];
+            $arr_row['orden'] = $orden;
+
+            $data = $this->Cuestionario_model->insertar_cp($arr_row);
+        }
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
     }
 
     /**

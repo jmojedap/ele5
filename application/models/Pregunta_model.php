@@ -180,12 +180,13 @@ class Pregunta_model extends CI_Model{
 //-----------------------------------------------------------------------------
 
     /**
-     * Guardar cambios en registro de la tabla pregunta
-     * 2019-10-03
+     * Guardar cambios en registro de la tabla pregunta, se actualizan las claves de respuesta
+     * de los cuestionarios donde la pregunta está incluida
+     * 2019-10-16
      */
     function save($pregunta_id)
     {
-        $data = array('status' => 0, 'message' => 'Los cambios no se guardaron');
+        $data = array('status' => 0, 'message' => 'Los cambios no se guardaron', 'saved_id' => 0);
 
         $arr_row = $this->input->post();
         $arr_row['editado_usuario_id'] = $this->session->userdata('usuario_id');
@@ -195,7 +196,14 @@ class Pregunta_model extends CI_Model{
         if ( $saved_id > 0 )
         {
             $this->save_version_event($pregunta_id, 0, 26); //Evento edición de pregunta
-            $data = array('status' => 1, 'message' => 'Los datos de la pregunta fueron guardados');
+            $data = array('status' => 1, 'message' => 'Los datos de la pregunta fueron guardados', 'saved_id' => $saved_id);
+
+            //Actualizar clave de cuestionarios donde la pregunta aparece
+                $this->load->model('Cuestionario_model');
+                $cuestionarios = $this->cuestionarios($pregunta_id);
+                foreach ($cuestionarios->result() as $row_cuestionario) {
+                    $this->Cuestionario_model->act_clave($row_cuestionario->cuestionario_id);
+                }
         }
     
         return $data;
@@ -486,242 +494,6 @@ class Pregunta_model extends CI_Model{
             
             return $output;
         
-    }
-    
-    function crud_add($cuestionario_id, $registro)
-    {
-        //Libería GC
-            $this->load->library('grocery_CRUD');
-        
-        //Modificación de la configuración de GroceryCrud para cargue de archivos
-            $this->load->config('grocery_crud');
-            $this->config->set_item('grocery_crud_file_upload_allow_file_types', 'gif|jpeg|jpg|png');
-
-        //Básico
-            $crud = new grocery_CRUD();
-            $crud->set_table('pregunta');
-            $crud->set_subject('pregunta');
-            $crud->unset_edit();
-            $crud->unset_delete();
-            $crud->unset_back_to_list();
-            $crud->unset_export();
-            $crud->unset_print();
-        
-        //Opciones de enunciados según el rol
-            $condicion_enunciados = 'id > 0';
-            if ( $this->session->userdata('rol_id') > 2 ){
-                //Condición enunciados
-                $condicion_enunciados = "post.referente_1_id = {$this->session->userdata('institucion_id')} AND tipo_id = 4401";
-            }
-
-        //Títulos de campos
-            $crud->display_as('cod_pregunta', 'Cód.');
-            $crud->display_as('enunciado_2', 'Enunciado complementario');
-            $crud->display_as('enunciado_id', 'Lectura asociada');
-            $crud->display_as('opcion_1', 'Opción A');
-            $crud->display_as('opcion_2', 'Opción B');
-            $crud->display_as('opcion_3', 'Opción C');
-            $crud->display_as('opcion_4', 'Opción D');
-            $crud->display_as('respuesta_correcta', 'Opción correcta');
-            $crud->display_as('tipo_pregunta_id', 'Tipo pregunta');
-            $crud->display_as('area_id', 'Área');
-            $crud->display_as('archivo_imagen', 'Imagen respuestas');
-            $crud->display_as('competencia_id', 'Competencia');
-            $crud->display_as('componente_id', 'Componente');
-            $crud->display_as('tema_id', 'Tema');
-            $crud->display_as('creado_usuario_id', 'Creado por');
-            
-        //Condición competencia
-            /*$condicion_competencia = 'id > 0 ';
-            if ( $registro['area_id'] > 0 ) { $condicion_competencia = "area_id = {$registro['area_id']}"; }*/
-
-        //Relaciones
-            $crud->set_relation('enunciado_id', 'post', 'nombre_post', $condicion_enunciados);
-            
-        //Opciones respuesta
-            $opciones_rta = $this->Item_model->opciones('categoria_id = 57 AND id_interno <=4');
-            $crud->field_type('respuesta_correcta', 'dropdown', $opciones_rta);
-
-        //Preparación de campos
-            $crud->set_field_upload('archivo_imagen', RUTA_UPLOADS . 'preguntas');
-
-        //Reglas de validación
-            $crud->required_fields('texto_pregunta', 'respuesta_correcta', 'area_id');
-
-        //Add form
-            $crud->add_fields(
-                    'cod_pregunta',
-                    'texto_pregunta',
-                    'enunciado_2',
-                    'enunciado_id',
-                    'archivo_imagen',
-                    'opcion_1',
-                    'opcion_2',
-                    'opcion_3',
-                    'opcion_4',
-                    'respuesta_correcta',
-                    'nivel',
-                    'area_id',
-                    'institucion_id',
-                    'editado',
-                    'editado_usuario_id',
-                    'creado',
-                    'creado_usuario_id'
-                );
-            
-        //Campo nivel
-            if ( $registro['nivel'] > -1 ) { 
-                $crud->field_type('nivel', 'hidden', $registro['nivel']); 
-            } else {
-                $opciones_nivel = $this->Item_model->opciones('categoria_id = 3');
-                $crud->field_type('nivel', 'dropdown', $opciones_nivel);
-            }
-            
-        //Campo área
-            if ( $registro['area_id'] > 0 ) {
-                $crud->field_type('area_id', 'hidden', $registro['area_id']);
-            } else {
-                $crud->set_relation('area_id', 'item', 'item', 'categoria_id = 1');
-            }
-            
-        //Redireccionamiento después de la insersión
-            $destino = "cuestionarios/preguntas/{$cuestionario_id}";    
-            $crud->callback_after_insert(array($this, 'gc_pregunta_after_insert'));
-            
-            
-        //Redirigir después de crear la pregunta
-            $crud->set_lang_string('insert_success_message',
-                                    'Su pregunta ha sido creada<br/>Por favor espere mientras se redirige al cuestionario.
-                                    <script type="text/javascript">
-                                    window.location = "'.site_url($destino).'";
-                                    </script>
-                                    <div style="display:none">
-                                    '
-            );
-            
-
-        //Valores por defecto
-            $crud->field_type('tipo_pregunta_id', 'hidden', 54); //Selección múltiple
-            $crud->field_type('editado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
-            $crud->field_type('creado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
-            $crud->field_type('creado', 'hidden', date('Y-m-d H:i:s'));
-            $crud->field_type('editado', 'hidden', date('Y-m-d H:i:s'));
-            $crud->field_type('institucion_id', 'hidden', $this->session->userdata('institucion_id'));
-            
-        //Formato
-            $crud->unset_texteditor('texto_pregunta', 'full_text');
-            $crud->unset_texteditor('enunciado_2', 'full_text');
-
-        //
-            $output = $crud->render();
-            
-            return $output;
-        
-    }
-    
-    /**
-     * Generación de formulario para la creación o edición de preguntas en un formulario
-     * por parte de usuario institucional.
-     * 2019-10-05
-     */
-    function crud_add_institucional($cuestionario_id, $registro)
-    {
-        //Libería GC
-            $this->load->library('grocery_CRUD');
-        
-        //Modificación de la configuración de GroceryCrud para cargue de archivos
-            $this->load->config('grocery_crud');
-            $this->config->set_item('grocery_crud_file_upload_allow_file_types', 'gif|jpeg|jpg|png');
-
-        //Básico
-            $crud = new grocery_CRUD();
-            $crud->set_table('pregunta');
-            $crud->columns('cod_pregunta');
-            $crud->set_subject('pregunta');
-            $crud->unset_edit();
-            $crud->unset_delete();
-            $crud->unset_back_to_list();
-            $crud->unset_export();
-            $crud->unset_print();
-            $crud->where('pregunta.id', 0);
-
-        //Títulos de campos
-            $crud->display_as('opcion_1', 'Opción A');
-            $crud->display_as('opcion_2', 'Opción B');
-            $crud->display_as('opcion_3', 'Opción C');
-            $crud->display_as('opcion_4', 'Opción D');
-            $crud->display_as('respuesta_correcta', 'Opción correcta');
-            $crud->display_as('tipo_pregunta_id', 'Tipo pregunta');
-            $crud->display_as('archivo_imagen', 'Imagen');
-            $crud->display_as('creado_usuario_id', 'Creado por');
-            
-        //Condición competencia
-            /*$condicion_competencia = 'id > 0 ';
-            if ( $registro['area_id'] > 0 ) { $condicion_competencia = "area_id = {$registro['area_id']}"; }*/
-
-        //Opciones respuesta correcta - letras
-            $opciones_rta = $this->Item_model->opciones('categoria_id = 57 AND id_interno <=4');
-            $crud->field_type('respuesta_correcta', 'dropdown', $opciones_rta);
-
-        //Preparación de campos
-            $crud->set_field_upload('archivo_imagen', RUTA_UPLOADS . 'preguntas');
-
-        //Reglas de validación
-            $crud->required_fields('texto_pregunta', 'respuesta_correcta', 'area_id');
-
-        //Add form
-            $crud->add_fields(
-                    'texto_pregunta',
-                    'opcion_1',
-                    'opcion_2',
-                    'opcion_3',
-                    'opcion_4',
-                    'respuesta_correcta',
-                    'archivo_imagen',
-                    'nivel',
-                    'area_id',
-                    'institucion_id',
-                    'editado',
-                    'editado_usuario_id',
-                    'creado',
-                    'creado_usuario_id'
-                );
-            
-        //Valores por defecto
-            if ( $registro['nivel'] > -1 ) { $crud->field_type('nivel', 'hidden', $registro['nivel']); }
-            if ( $registro['area_id'] > 0 ) { $crud->field_type('area_id', 'hidden', $registro['area_id']); }
-            $crud->field_type('tipo_pregunta_id', 'hidden', 11);    //Pregunta institucional 2019-10-05
-            $crud->field_type('estado', 'hidden', 1);               //Publicada 2019-10-05
-            
-        //Redireccionamiento después de la insersión
-            $destino = "cuestionarios/preguntas/{$cuestionario_id}";    
-            $crud->callback_after_insert(array($this, 'gc_pregunta_after_insert'));
-            
-            
-        //Redirigir después de crear la pregunta
-            $crud->set_lang_string('insert_success_message',
-                                    'Su pregunta ha sido creada<br/>Por favor espere mientras se redirige al cuestionario.
-                                    <script type="text/javascript">
-                                    window.location = "'.site_url($destino).'";
-                                    </script>
-                                    <div style="display:none">
-                                    '
-            );
-            
-
-        //Valores por defecto
-            $crud->field_type('tipo_pregunta_id', 'hidden', 54); //Selección múltiple
-            $crud->field_type('editado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
-            $crud->field_type('creado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
-            $crud->field_type('creado', 'hidden', date('Y-m-d H:i:s'));
-            $crud->field_type('editado', 'hidden', date('Y-m-d H:i:s'));
-            $crud->field_type('institucion_id', 'hidden', $this->session->userdata('institucion_id'));
-            
-        //Formato
-            $crud->unset_texteditor('texto_pregunta', 'full_text');
-            
-            $output = $crud->render();
-            return $output;
     }
     
     function crud_add_tema($tema_id, $registro, $orden)

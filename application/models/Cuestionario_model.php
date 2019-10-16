@@ -1068,6 +1068,11 @@ class Cuestionario_model extends CI_Model
         
         $this->actualizar_areas($cuestionario_id);
     }
+
+    function agregar_pregunta($cuestionario_id, $orden)
+    {
+        
+    }
     
     function quitar_pregunta($cuestionario_id, $pregunta_id)
     {
@@ -1106,7 +1111,6 @@ class Cuestionario_model extends CI_Model
         }
         
         return $i;
-        
     }
     
     /**
@@ -1142,6 +1146,9 @@ class Cuestionario_model extends CI_Model
      */
     function cambiar_pos_pregunta($cuestionario_id, $pregunta_id, $pos_final)
     {
+        //Resultado inicial por defecto
+            $data = array('status' => 1, 'message' => 'La pregunta no fue movida');
+
         //Fila de la pregunta que se va a mover
             $row_pregunta = $this->Pcrn->registro('cuestionario_pregunta', "pregunta_id = {$pregunta_id} AND cuestionario_id = {$cuestionario_id}");
             
@@ -1179,9 +1186,11 @@ class Cuestionario_model extends CI_Model
                 $registro['orden'] = $pos_final;
                 $this->db->where('pregunta_id', $pregunta_id);
                 $this->db->update('cuestionario_pregunta', $registro);
+
+            $data = array('status' => 1, 'message' => 'La pregunta fue movida de posición');
         }
         
-        return $sql;
+        return $data;
         
     }
 
@@ -1761,38 +1770,46 @@ class Cuestionario_model extends CI_Model
     
     /**
      * Insertar un registro en la tabla 'cuestionario_pregunta'
+     * 2019-10-16
      */
-    function insertar_cp($registro)
+    function insertar_cp($arr_row)
     {
+        //Resultado inicial por defecto
+            $data = array('status' => 0, 'message' => 'La pregunta no fue agregada');
+
         //Verificar que la pregunta no esté ya en el cuestionario
-            $this->db->where('cuestionario_id', $registro['cuestionario_id']);
-            $this->db->where('pregunta_id', $registro['pregunta_id']);
-            $cant_registros = $this->db->count_all_results('cuestionario_pregunta');
+            $condition = "cuestionario_id = {$arr_row['cuestionario_id']} AND pregunta_id = {$arr_row['pregunta_id']}";
+            $existe = $this->Pcrn->existe('cuestionario_pregunta', $condition);
             
         //Se inserta si el registro no existe
-            if ( $cant_registros == 0 )
+            if ( ! $existe )
             {
                 //Calculando el número de preguntas actual
-                $query = $this->db->get_where('cuestionario_pregunta', "cuestionario_id = {$registro['cuestionario_id']}");
-                $cant_preguntas = $query->num_rows();        
+                $cant_preguntas = $this->Pcrn->num_registros('cuestionario_pregunta', "cuestionario_id = {$arr_row['cuestionario_id']}");
 
                 //Verificar campo cuestionario_pregunta.orden
                 if ( $cant_preguntas == 0 ) {
                     //No hay preguntas en el cuestionario, es la primera
-                    $registro['orden'] = 0;
-                } elseif ( $registro['orden'] > $cant_preguntas OR !is_numeric($registro['orden']) ) {
+                    $arr_row['orden'] = 0;
+                } elseif ( $arr_row['orden'] > $cant_preguntas OR ! is_numeric($arr_row['orden']) ) {
                     //Es mayor al número actual de preguntas, se cambia, poniéndolo al final
-                    $registro['orden'] = $cant_preguntas;
+                    $arr_row['orden'] = $cant_preguntas;
                 } else {
                     //Se inserta en un punto intermedio, se cambian los números de las preguntas siguientes
-                    $this->db->query("UPDATE cuestionario_pregunta SET orden = (orden + 1) WHERE orden >= {$registro['orden']} AND cuestionario_id = {$registro['cuestionario_id']}");
+                    $this->db->query("UPDATE cuestionario_pregunta SET orden = (orden + 1) WHERE orden >= {$arr_row['orden']} AND cuestionario_id = {$arr_row['cuestionario_id']}");
                 }
 
                 //Se inserta el registro en la tabla
-                $this->db->insert('cuestionario_pregunta', $registro);
+                $this->db->insert('cuestionario_pregunta', $arr_row);
 
-                $this->act_clave($registro['cuestionario_id']);
+                //Establecer resultado
+                $data = array('status' => 1, 'message' => 'Se agregó la pregunta', 'cp_id' => $this->db->insert_id());
+
+                //Actualizar clave de respuestas de cuestionario
+                $this->act_clave($arr_row['cuestionario_id']);
             }
+
+        return $data;
         
     }
     
