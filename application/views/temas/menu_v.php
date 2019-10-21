@@ -76,6 +76,13 @@
             'link' => "temas/preguntas_abiertas/{$row->id}",
             'atributos' => 'title="Links"'
         );
+
+        $arr_menus['diccionarios'] = array(
+            'icono' => '<i class="far fa-file-alt"></i>',
+            'texto' => 'Diccionarios',
+            'link' => "temas/diccionarios/{$row->id}",
+            'atributos' => 'title="Lecturas diccionario"'
+        );
             
         $arr_menus['editar'] = array(
             'icono' => '<i class="fa fa-pencil-alt"></i>',
@@ -85,9 +92,9 @@
         );
         
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'preguntas_abiertas', 'copiar', 'editar');
-        $elementos_rol[1] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'preguntas_abiertas', 'copiar', 'editar');
-        $elementos_rol[2] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'preguntas_abiertas', 'copiar', 'editar');
+        $elementos_rol[0] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'preguntas_abiertas', 'diccionarios', 'copiar', 'editar');
+        $elementos_rol[1] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'preguntas_abiertas', 'diccionarios', 'copiar', 'editar');
+        $elementos_rol[2] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'preguntas_abiertas', 'diccionarios', 'copiar', 'editar');
         
     //Definiendo menú mostrar, según el rol del visitante
         $elementos = $elementos_rol[$this->session->userdata('rol_id')];

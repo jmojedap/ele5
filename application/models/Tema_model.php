@@ -1509,4 +1509,156 @@ class Tema_Model extends CI_Model{
         return $no_importados;
     }
 
+// LECTURAS DICCIONARIO
+//-----------------------------------------------------------------------------
+
+    function diccionarios($tema_id)
+    {
+        //$this->db->select('id, nombre');
+        $this->db->where('tipo_id', 125);
+        $this->db->where('referente_1_id', $tema_id);
+        $diccionarios = $this->db->get('post');
+
+        return $diccionarios;
+    }
+
+    function diccionario($diccionario_id)
+    {
+        $diccionario = $this->Pcrn->registro_id('post', $diccionario_id);
+        return $diccionario;
+    }
+
+    /**
+     * Importar masivamente lecturas diccionario a temas
+     * tabla post, tipo_id = 125
+     * 2019-10-17
+     * 
+     * @param type $array_hoja    Array con los datos de preguntas
+     */
+    function importar_diccionarios($array_hoja)
+    {
+        $no_importados = array();
+        $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
+        
+        $this->load->model('Post_model');
+        
+        foreach ( $array_hoja as $array_fila )
+        {
+            //Identificar valores
+                $tema_id = $this->Pcrn->campo('tema', "cod_tema = '{$array_fila[0]}'", 'id');
+                
+            //Validar
+                $condiciones = 0;
+                if ( ! is_null($tema_id) ) { $condiciones++; }                  //Tiene tema identificado
+                if ( strlen($array_fila[2]) > 0 ) { $condiciones++; }           //Tiene nombre de archivo
+                
+            //Si cumple las condiciones
+            if ( $condiciones == 2 )
+            {
+                $post_id = $this->importar_diccionario($tema_id, $array_fila);
+            } else {
+                $no_importados[] = $fila;
+            }
+            
+            $fila++;    //Para siguiente fila
+        }
+        
+        return $no_importados;
+    }
+
+    /**
+     * Realiza la importación de lectura diccionario de cada fila en el archivo excel
+     * 2019-10-17
+     */
+    function importar_diccionario($tema_id, $array_fila)
+    {
+        //Construir registro
+            $arr_row['nombre_post'] = $array_fila[1];
+            $arr_row['tipo_id'] = 125;
+            $arr_row['contenido_json'] = $this->diccionario_json($array_fila);
+            $arr_row['contenido'] = $this->diccionario_contenido($arr_row['contenido_json']);
+            $arr_row['texto_1'] = $array_fila[2];   //Nombre archivo de texto lectura
+            $arr_row['referente_1_id'] = $tema_id;
+
+        //Guardar
+            $post_id = $this->Post_model->guardar_post('id = 0', $arr_row);    //Condición imposible, siempre agrega
+
+        return $post_id;
+    }
+
+    /**
+     * A partir de la fila del archivo de excel, se construye un el contenido json de la lectura diccionario,
+     * que incluye la lectura original, y el conjunto de palabras y definiciones.
+     */
+    function diccionario_json($array_fila)
+    {
+        $contenido = array('lectura' => '', 'palabras' => NULL);
+
+        $contenido['lectura'] = $this->diccionario_lectura_org($array_fila[2]);
+        $contenido['palabras'] = $this->diccionario_palabras($array_fila);
+
+        $contenido_json = json_encode($contenido);
+
+        return $contenido_json;
+    }
+
+    function diccionario_lectura_org($file_name)
+    {
+        $lectura = 'NO HAY LECTURA DISPONIBLE';
+
+        $file_path = RUTA_UPLOADS . 'diccionarios/' . $file_name;
+
+        if ( file_exists($file_path) )
+        {
+            $lectura = file_get_contents($file_path);
+        }
+
+        return $lectura;
+    }
+
+    function diccionario_palabras($array_fila)
+    {
+        $palabras = array();
+
+        for ($i=3; $i < 22; $i+=2)
+        {
+            $palabra = array(
+                'titulo' => $array_fila[$i],
+                'definicion' => $array_fila[$i+1]
+            );
+
+            if ( strlen($palabra['titulo']) > 0 ) { $palabras[] = $palabra; }
+        }
+
+        return $palabras;
+    }
+
+    function diccionario_contenido($contenido_json)
+    {
+        $arr_contenido = json_decode($contenido_json);
+
+        //$contenido = $arr_contenido->lectura;
+        $contenido = '';
+        $palabras = explode(' ', $arr_contenido->lectura);
+
+        foreach ($palabras as $palabra)
+        {
+            $contenido .= '<span>' . $palabra .  '</span> ';
+        }
+
+        //str_replace('Big Bang');
+        
+        /*foreach ($arr_contenido->palabras as $palabra)
+        {
+            $modificado = '<span class="palabra" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="' . $palabra->definicion . '">';
+            $modificado .= $palabra->titulo;
+            $modificado .= '</span>';
+            $contenido = str_replace($palabra->titulo, $modificado, $contenido);
+        }*/
+
+        $contenido = str_replace('<br>', '<br><br>', $contenido);   //Doble salto de renglón
+
+        return $contenido;
+    }
+
 }

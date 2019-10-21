@@ -1188,4 +1188,93 @@ class Temas extends CI_Controller{
             $this->load->view(TPL_ADMIN, $data);
     }
 
+// LECTURAS DICCIONARIO
+//-----------------------------------------------------------------------------
+
+    /**
+     * Lecturas diccionario, asociadas a un tema
+     * 2019-10-17
+     */
+    function diccionarios($tema_id, $diccionario_id = NULL)
+    {
+        $data = $this->Tema_model->basico($tema_id);
+
+        $data['diccionarios'] = $this->Tema_model->diccionarios($tema_id);
+        $data['diccionario_id'] = $diccionario_id;
+        $data['diccionario'] = $this->Tema_model->diccionario($diccionario_id);
+
+        $data['view_a'] = 'temas/diccionarios/diccionarios_v';
+        $data['subtitle_head'] = 'Lecturas diccionario';
+        $this->load->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * Vista formulario importación de lecturas diccionarios para temas
+     * 2019-10-17
+     */
+    function importar_diccionarios()
+    {
+        //Iniciales
+            $nombre_archivo = '32_formato_cargue_diccionarios.xlsx';
+            $parrafos_ayuda = array();
+        
+        //Instructivo
+            $data['titulo_ayuda'] = '¿Cómo importar lecturas diccionario?';
+            $data['nota_ayuda'] = 'Se importarán lecturas diccionario asociadas a cada tema';
+            $data['parrafos_ayuda'] = $parrafos_ayuda;
+        
+        //Variables específicas
+            $data['destino_form'] = 'temas/importar_diccionarios_e';
+            $data['nombre_archivo'] = $nombre_archivo;
+            $data['nombre_hoja'] = 'diccionarios';
+            $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
+            
+        //Variables generales
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Importar lecturas diccionarios';
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_2'] = 'temas/explorar/menu_v';
+            $data['nav_3'] = 'temas/menu_importar_v';
+        
+        $this->load->view(TPL_ADMIN, $data);
+    }
+    
+    /**
+     * Importar preguntas abiertas a los temas, (e) ejecutar.
+     * Recibe archivo y datos de "temas/importar_pa"
+     * 2019-09-06
+     */
+    function importar_diccionarios_e()
+    {
+        
+        //Proceso
+            $this->load->model('Pcrn_excel');
+            $no_importados = array();
+            $letra_columna = 'W';   //Última columna con datos
+            
+            $resultado = $this->Pcrn_excel->array_hoja_default($letra_columna);
+
+            if ( $resultado['valido'] )
+            {
+                $this->load->model('Tema_model');
+                $no_importados = $this->Tema_model->importar_diccionarios($resultado['array_hoja']);
+            }
+        
+        //Cargue de variables
+            $data['valido'] = $resultado['valido'];
+            $data['mensaje'] = $resultado['mensaje'];
+            $data['array_hoja'] = $resultado['array_hoja'];
+            $data['nombre_hoja'] = $this->input->post('nombre_hoja');
+            $data['no_importados'] = $no_importados;
+            $data['destino_volver'] = 'temas/importar_diccionarios/';
+        
+        //Cargar vista
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Resultado importación diccionarios';
+            $data['view_a'] = 'comunes/resultado_importacion_v';
+            $data['nav_2'] = 'temas/explorar/menu_v';
+            $data['nav_3'] = 'temas/menu_importar_v';
+            $this->load->view(TPL_ADMIN, $data);
+    }
+
 }

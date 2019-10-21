@@ -87,13 +87,14 @@
                         href="#"
                         data-toggle="modal"
                         data-target="#lectura_modal"
+                        v-on:click="cargar_lectura"
                         >
                         <img src="<?php echo $carpeta_iconos . 'cd_lectura.png' ?>">
                     </a>
 
                     <!-- Modal -->
                     <div class="modal fade" id="lectura_modal" tabindex="-1" role="dialog" aria-labelledby="lectura_modal" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
+                        <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Lectura Especial</h5>
@@ -101,12 +102,8 @@
                                 <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <div class="modal-body">
-                                <p class="text-center">
-                                    <i class="fa fa-info-circle text-info fa-2x"></i>
-                                    <br/>
-                                    Contenido en construcción 
-                                </p>
+                            <div class="modal-body" style="min-height: 350px;">
+                                <div id="lectura_modal_contenido"></div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

@@ -184,6 +184,9 @@
             alternar_pregunta_personalizada: function(){
                 this.pregunta_personalizada = ! this.pregunta_personalizada;  
             },
+            cargar_lectura: function(){  
+                $('#lectura_modal_contenido').html('Tema: ' + this.pagina.tema_id);
+            }
         }
     });
 </script>
