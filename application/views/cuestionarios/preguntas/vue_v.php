@@ -13,7 +13,7 @@
         },
         methods: {
             get_list: function(){
-                axios.get(this.app_url + 'cuestionarios/lista_preguntas/' + this.cuestionario_id)
+                axios.get(this.app_url + 'cuestionarios/lista_preguntas_detalle/' + this.cuestionario_id)
                 .then(response => {
                     this.lista = response.data.lista;
                     this.cant_preguntas = response.data.cant_preguntas;

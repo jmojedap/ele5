@@ -1034,7 +1034,6 @@ class Pregunta_model extends CI_Model{
         
         //Eliminar archivos
             $this->eliminar_img_pregunta($row->archivo_imagen);
-            
         
         /* Modificar num_de Pregunta de las Preguntas de los cuestionarios en los que aparece
          * Al eliminarse una Pregunta, los números de Pregunta de las Preguntas siguientes deben disminuir
@@ -1071,6 +1070,7 @@ class Pregunta_model extends CI_Model{
             }
             
         //Reenumerar el campo pregunta.orden de las demás Preguntas del tema_id que la Pregunta eliminada tenía
+            $this->load->model('Tema_model');
             $this->Tema_model->numerar_preguntas($row->tema_id);
     }
     
@@ -1441,6 +1441,32 @@ class Pregunta_model extends CI_Model{
                 $this->save_version_event($pregunta_id, $version_id, 28);    //Aprobación de versión
             }
     
+        return $data;
+    }
+
+    /**
+     * Eliminar pregunta versión, y establece pregunta original como sin versión propuesta.
+     * 2019-10-21
+     */
+    function delete_version($pregunta_id, $version_id)
+    {
+        //Resultado inicial por defecto
+            $data = array('status' => 1, 'message' => 'La versión NO fue eliminada');
+
+        //Eliminar pregunta versión
+            $this->eliminar($version_id);
+        
+        //Actualizar pregunta.version_id
+            $arr_row['version_id'] = 0;
+            $this->db->where('version_id', $version_id);
+            $this->db->update('pregunta', $arr_row);
+
+        //Resultado
+            if (  $this->db->affected_rows() > 0 )
+            {
+                $data = array('status' => 1, 'message' => 'La versión propuesta de la pregunta fue eliminada');
+            }
+            
         return $data;
     }
 

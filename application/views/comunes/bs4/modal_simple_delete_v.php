@@ -11,7 +11,7 @@
                 <p>¿Confirma que desea eliminar este elemento?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" v-on:click="delete_element" data-dismiss="modal">
+                <button type="button" class="btn btn-danger" v-on:click="delete_element" data-dismiss="modal" id="btn_delete_element">
                     Eliminar
                 </button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>

@@ -872,6 +872,22 @@ class Cuestionarios extends CI_Controller{
         ->set_content_type('application/json')
         ->set_output(json_encode($data));
     }
+
+    /**
+     * Lista preguntas con detalle para edición y construcción
+     * 2019-10-21
+     */
+    function lista_preguntas_detalle($cuestionario_id)
+    {
+        $preguntas = $this->Cuestionario_model->lista_preguntas_detalle($cuestionario_id);
+        
+        $data['lista'] = $preguntas->result();
+        $data['cant_preguntas'] = $preguntas->num_rows();
+        
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
+    }
     
     /**
      * AJAX JSON

@@ -13,6 +13,7 @@
                     <p>
                         <span class="badge badge-primary">Pregunta {{ key + 1 }}</span>
                     </p>
+                    
                     <p v-html="pregunta.texto_pregunta"></p>
                     <ul style="list-style: none;">
                         <li>
@@ -45,42 +46,53 @@
             </div>
         </div>
         <div class="col-md-4">
-            <?php if ( $this->session->userdata('rol_id') <= 2 ) { ?>
-                <a class="btn btn-light" v-bind:href="`<?php echo base_url('preguntas/editar/') ?>` + pregunta.pregunta_id" target="_blank">
-                    <i class="fa fa-pencil-alt"></i>
-                </a>
-            <?php } ?>
+            <div>
+                <?php if ( $this->session->userdata('rol_id') <= 2 ) { ?>
+                    <a class="btn btn-light" v-bind:href="`<?php echo base_url('preguntas/editar/') ?>` + pregunta.pregunta_id" target="_blank">
+                        <i class="fa fa-pencil-alt"></i>
+                    </a>
+                <?php } ?>
 
-            <?php if ( $this->session->userdata('srol') == 'interno' ) { ?>
-                <button class="btn btn-light" v-on:click="create_version(key)" v-show="pregunta.version_id == 0" title="Crear una versión alterna de la pregunta">
-                    <i class="fa fa-code-branch"></i>
-                </button>
-            <?php } ?>
+                <?php if ( $this->session->userdata('srol') == 'interno' ) { ?>
+                    <button class="btn btn-light" v-on:click="create_version(key)" v-show="pregunta.version_id == 0" title="Crear una versión alterna de la pregunta">
+                        <i class="fa fa-code-branch"></i>
+                    </button>
+                <?php } ?>
 
-            <a class="btn btn-warning" v-show="pregunta.version_id > 0" title="Ver versión alterna de la pregunta" v-bind:href="`<?php echo base_url('preguntas/version/') ?>` + pregunta.pregunta_id" target="_blank">
-                <i class="fa fa-exclamation-triangle"></i> Versión
-            </a>
-            <?php if ( $editable ) { ?>
-                <a class="btn btn-light"
-                    v-bind:href="`<?php echo base_url('preguntas/editar/') ?>` + pregunta.pregunta_id"
-                    target="_blank"
-                    v-show="pregunta.creado_usuario_id == <?php echo $this->session->userdata('usuario_id') ?>"
-                    >
-                    <i class="fa fa-pencil-alt"></i>
+                <a class="btn btn-warning" v-show="pregunta.version_id > 0" title="Ver versión alterna de la pregunta" v-bind:href="`<?php echo base_url('preguntas/version/') ?>` + pregunta.pregunta_id" target="_blank">
+                    <i class="fa fa-exclamation-triangle"></i> Versión
                 </a>
-                <a v-bind:href="`<?php echo base_url("cuestionarios/pregunta_nueva/{$row->id}/") ?>` + (key + 1)" class="btn btn-light" title="Agregar pregunta después de esta">
-                    <i class="fa fa-plus"></i>
-                </a>
-                <button class="btn btn-light" v-on:click="move_question(key, key - 1)">
-                    <i class="fa fa-caret-up"></i>
-                </button>
-                <button class="btn btn-light" v-on:click="move_question(key, key + 1)">
-                    <i class="fa fa-caret-down"></i>
-                </button>
-                <button class="btn btn-light" title="Quitar pregunta del cuestionario" data-toggle="modal" data-target="#delete_modal" v-on:click="set_current(key)">
-                    <i class="fa fa-times"></i>
-                </button>
-            <?php } ?>
+                <?php if ( $editable ) { ?>
+                    <a class="btn btn-light"
+                        v-bind:href="`<?php echo base_url('preguntas/editar/') ?>` + pregunta.pregunta_id"
+                        target="_blank"
+                        v-show="pregunta.creado_usuario_id == <?php echo $this->session->userdata('usuario_id') ?>"
+                        >
+                        <i class="fa fa-pencil-alt"></i>
+                    </a>
+                    <a v-bind:href="`<?php echo base_url("cuestionarios/pregunta_nueva/{$row->id}/") ?>` + (key + 1)" class="btn btn-light" title="Agregar pregunta después de esta">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                    <button class="btn btn-light" v-on:click="move_question(key, key - 1)">
+                        <i class="fa fa-caret-up"></i>
+                    </button>
+                    <button class="btn btn-light" v-on:click="move_question(key, key + 1)">
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <button class="btn btn-light" title="Quitar pregunta del cuestionario" data-toggle="modal" data-target="#delete_modal" v-on:click="set_current(key)">
+                        <i class="fa fa-times"></i>
+                    </button>
+                <?php } ?>
+            </div>
+
+            <div>
+                <p>
+                    Tema:
+                    <b class="text-success">{{ pregunta.nombre_tema }}</b>
+                    
+                </p>
+            </div>
+
 
         </div>
     </div>

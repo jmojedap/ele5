@@ -11,6 +11,10 @@
         $('#btn_aprobar').click(function(){
             aprobar_version();
         });
+
+        $('#btn_delete_element').click(function(){
+            eliminar_version();
+        });
     });
 
 // Funciones
@@ -19,6 +23,18 @@
         $.ajax({        
             type: 'POST',
             url: base_url + 'preguntas/approve_version/' + pregunta_id + '/' + version_id,
+            success: function(response){
+                if (response.status == 1) {
+                    window.location = base_url + 'preguntas/detalle/' + pregunta_id;
+                }
+            }
+        });
+    }
+
+    function eliminar_version(){
+        $.ajax({        
+            type: 'POST',
+            url: base_url + 'preguntas/delete_version/' + pregunta_id + '/' + version_id,
             success: function(response){
                 if (response.status == 1) {
                     window.location = base_url + 'preguntas/detalle/' + pregunta_id;
@@ -55,6 +71,11 @@
                     <i class="fa fa-pencil-alt"></i>
                     Editar
                 </a>
+
+                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#delete_modal" title="Descartar esta versión propuesta de la pregunta">
+                    <i class="fa fa-trash"></i>
+                    Eliminar
+                </button>
             </td>
         </tr>
         <tr>
@@ -207,3 +228,5 @@
         </tr>
     </tbody>
 </table>
+
+<?php $this->load->view('comunes/bs4/modal_simple_delete_v') ?>

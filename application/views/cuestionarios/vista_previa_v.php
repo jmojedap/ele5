@@ -186,6 +186,12 @@
                     </div>
                     <div class="card card-default">
                         <div class="card-body">
+                            <div class="alert alert-info">
+                                Tema pregunta: 
+                                <b>
+                                    <?php echo $this->Pcrn->campo_id('tema', $row_pregunta->tema_id, 'nombre_tema'); ?>
+                                </b>
+                            </div>
 
                             <div class="mb-3">
                                 <p style="font-size: 1.1em;"><?php echo $row_pregunta->texto_pregunta ?></p>

@@ -615,6 +615,34 @@ class Cuestionario_model extends CI_Model
         
         return $query;   
     }
+
+    /**
+     * Preguntas de un cuestionario, para edición
+     * 2019-10-21
+     * 
+     * @param type $cuestionario_id
+     * @return type
+     */
+    function lista_preguntas_detalle($cuestionario_id)
+    {
+        $select = 'pregunta.id AS pregunta_id, ';
+        $select .= 'texto_pregunta, enunciado_2, opcion_1, opcion_2, opcion_3, opcion_4, enunciado_id, version_id, tema_id, nombre_tema, ';
+        $select .= 'CONCAT("' . URL_UPLOADS . 'preguntas/", (archivo_imagen)) AS url_imagen_pregunta, archivo_imagen, ' ;
+        $select .= 'respuesta_correcta AS clv, "0" AS rta, "0" AS res, ';
+        $select .= 'post.contenido AS contenido_enunciado, post.nombre_post AS titulo_enunciado, ';
+        $select .= 'CONCAT("' . URL_UPLOADS . 'enunciados/", texto_2) AS url_imagen_enunciado, post.texto_2 AS archivo_enunciado, pregunta.creado_usuario_id';
+        
+        $this->db->select($select);
+        $this->db->join('pregunta', 'cuestionario_pregunta.pregunta_id = pregunta.id');
+        $this->db->join('post', 'pregunta.enunciado_id = post.id', 'LEFT');
+        $this->db->join('tema', 'pregunta.tema_id = tema.id', 'LEFT');
+        $this->db->order_by('cuestionario_pregunta.orden', 'ASC');
+        $this->db->where('cuestionario_pregunta.cuestionario_id', $cuestionario_id );
+        
+        $query = $this->db->get('cuestionario_pregunta');
+        
+        return $query;   
+    }
     
     /**
      * Enunciados asociados a las preguntas de un cuestionario
@@ -1550,7 +1578,7 @@ class Cuestionario_model extends CI_Model
     {
         
         //Construyendo la consulta
-            $this->db->select('pregunta.id, cuestionario_pregunta.orden, texto_pregunta, opcion_1, opcion_2, opcion_3, opcion_4, archivo_imagen, enunciado_id, post_id, respuesta_correcta, version_id');
+            $this->db->select('pregunta.id, cuestionario_pregunta.orden, texto_pregunta, opcion_1, opcion_2, opcion_3, opcion_4, archivo_imagen, enunciado_id, post_id, respuesta_correcta, version_id, tema_id');
             $this->db->join('pregunta', 'cuestionario_pregunta.pregunta_id = pregunta.id');
             $this->db->where('cuestionario_id' , $cuestionario_id);
             $this->db->order_by('cuestionario_pregunta.orden', 'ASC');

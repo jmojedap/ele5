@@ -651,4 +651,16 @@ class Preguntas extends CI_Controller{
         ->set_content_type('application/json')
         ->set_output(json_encode($data));
     }
+
+    /**
+     * Eliminar o descartar la versión propuesta de una pregunta
+     * 2019-10-21
+     */
+    function delete_version($pregunta_id, $version_id)
+    {
+        $data = $this->Pregunta_model->delete_version($pregunta_id, $version_id);
+        
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
 }
