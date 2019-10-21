@@ -229,6 +229,16 @@ class Preguntas extends CI_Controller{
         ->set_content_type('application/json')
         ->set_output(json_encode($data));
     }
+
+    function upload_image()
+    {
+        $data = $this->Pregunta_model->upload_image();
+        $data['src'] = URL_UPLOADS . 'preguntas/' . $data['upload_data']['file_name'];
+
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($data));
+    }
     
 // IMPORTAR
 //-----------------------------------------------------------------------------

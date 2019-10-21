@@ -1,6 +1,8 @@
 <form accept-charset="utf-8" method="POST" id="pregunta_form" @submit.prevent="send_form">        
     <input type="hidden" name="nivel" value="<?php echo $row->nivel ?>">
     <input type="hidden" name="area_id" value="<?php echo $row->area_id ?>">
+    <input type="hidden" name="archivo_imagen" id="field-archivo_imagen" value="">
+    <input type="hidden" name="creado_usuario_id" id="field-creado_usuario_id" value="<?php echo $this->session->userdata('usuario_id') ?>">
     <div class="form-group row">
         <div class="col-md-8 offset-md-4">
             <button class="btn btn-success btn-block" type="submit">

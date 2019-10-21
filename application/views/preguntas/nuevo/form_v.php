@@ -1,4 +1,5 @@
 <form accept-charset="utf-8" method="POST" id="pregunta_form" @submit.prevent="send_form">        
+    
     <div class="form-group row">
         <div class="col-md-8 offset-md-4">
             <button class="btn btn-success btn-block" type="submit">

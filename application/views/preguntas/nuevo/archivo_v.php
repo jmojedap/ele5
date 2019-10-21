@@ -45,13 +45,13 @@
         var form = $('#file_form')[0];
         var form_data = new FormData(form);
 
-        $.ajax({        
+        $.ajax({
             type: 'POST',
             enctype: 'multipart/form-data', //Para incluir archivos en POST
             processData: false,  // Important!
             contentType: false,
             cache: false,
-            url: '<?php echo base_url("preguntas/set_image/{$row->id}") ?>',
+            url: '<?php echo base_url("preguntas/upload_image/") ?>',
             data: form_data,
             beforeSend: function(){
                 $('#status_text').html('Enviando archivo');
@@ -65,6 +65,8 @@
                     $('#file_form').addClass('d-none');
                     $('#img_archivo_imagen').attr('src', response.src);
                     toastr['success'](response.message);
+                    $('#field-archivo_imagen').val(response.upload_data.file_name);
+                    console.log(response.upload_data.file_name);
                 } else {
                     $('#html_results').html(response.html_results);
                 }
