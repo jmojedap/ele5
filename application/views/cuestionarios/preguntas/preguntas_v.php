@@ -59,9 +59,13 @@
                     </button>
                 <?php } ?>
 
-                <a class="btn btn-warning" v-show="pregunta.version_id > 0" title="Ver versión alterna de la pregunta" v-bind:href="`<?php echo base_url('preguntas/version/') ?>` + pregunta.pregunta_id" target="_blank">
-                    <i class="fa fa-exclamation-triangle"></i> Versión
+                <a class="btn btn-primary" v-show="pregunta.version_id > 0" title="Ver versión alterna de la pregunta" v-bind:href="`<?php echo base_url('preguntas/version/') ?>` + pregunta.pregunta_id" target="_blank">
+                    Versión
                 </a>
+                <button class="btn btn-warning" v-show="pregunta.version_id > 0" title="Eliminar versión propuesta de esta pregunta" v-on:click="delete_version(key)">
+                    <i class="fa fa-trash"></i> Versión
+                </button>
+
                 <?php if ( $editable ) { ?>
                     <a class="btn btn-light"
                         v-bind:href="`<?php echo base_url('preguntas/editar/') ?>` + pregunta.pregunta_id"

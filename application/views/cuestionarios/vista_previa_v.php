@@ -103,6 +103,10 @@
         $('#btn_create_version').click(function(){
             create_version();
         });
+
+        $('#btn_delete_element').click(function(){
+            eliminar_version();
+        });
         
     });
     
@@ -120,6 +124,18 @@
                 win.focus();
             }
         });
+    }
+
+    function eliminar_version(){
+        var version_id = '<?php echo $row_pregunta->version_id ?>';
+        console.log('ELIMINANDO');
+        $.ajax({        
+            type: 'POST',
+            url: base_url + 'preguntas/delete_version/' + pregunta_id + '/' + version_id,
+            success: function(response){
+                if (response.status == 1) { location.reload();}
+            }
+        });
     }
 </script>
 
@@ -166,10 +182,13 @@
                                                 Crear versión
                                             </button>
                                         <?php } else { ?>
-                                            <a href="<?php echo base_url("preguntas/version/{$row_pregunta->id}") ?>" class="btn btn-warning" title="Esta pregunta tiene una versión con cambios propuestos" target="_blank">
-                                                <i class="fa fa-exclamation-triangle"></i>
-                                                Versión
+                                            <a href="<?php echo base_url("preguntas/version/{$row_pregunta->id}") ?>" class="btn btn-primary" title="Esta pregunta tiene una versión con cambios propuestos" target="_blank">
+                                                Ver versión
                                             </a>
+                                            <button id="btn_eliminar_version" type="button" class="btn btn-warning" data-toggle="modal" data-target="#delete_modal" title="Eliminar la versión alterna propuesta de esta pregunta">
+                                                <i class="fa fa-trash"></i>
+                                                Versión
+                                            </button>
                                         <?php } ?>
                                     <?php } ?>
 
@@ -318,6 +337,6 @@
             
         </div>
     </div>
-    
-    
 </div>
+
+<?php $this->load->view('comunes/bs4/modal_simple_delete_v') ?>

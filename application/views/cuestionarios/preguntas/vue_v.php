@@ -66,6 +66,22 @@
                     console.log(error);
                 });
             },
+            //Elimina la versión propuesta existente de una pregunta
+            delete_version: function(key){
+                this.set_current(key);
+                axios.get(this.app_url + 'preguntas/delete_version/' + this.pregunta.pregunta_id + '/' + this.pregunta.version_id)
+                .then(response => {
+                    if (response.data.status == 1) {
+                        this.get_list();
+                        toastr['success'](response.data.message)
+                    } else {
+                        toastr['warning'](response.data.message)
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
 
         }
     });
