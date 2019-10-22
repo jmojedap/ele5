@@ -31,8 +31,10 @@
                 this.set_current(key);
                 axios.get(this.app_url + 'preguntas/create_version/' + this.pregunta.pregunta_id)
                 .then(response => {
-                    if ( response.data.status == 1 ) {
-                        window.location = this.app_url + 'preguntas/version/' + response.data.saved_id + '/editar'
+                    if ( response.data.status == 1 ) 
+                    {
+                        var win = window.open(this.app_url + 'preguntas/version/' + this.pregunta.pregunta_id + '/editar', '_blank');
+                        win.focus();
                     }
                 })
                 .catch(function (error) {
@@ -67,8 +69,7 @@
                 });
             },
             //Elimina la versión propuesta existente de una pregunta
-            delete_version: function(key){
-                this.set_current(key);
+            delete_version: function(){
                 axios.get(this.app_url + 'preguntas/delete_version/' + this.pregunta.pregunta_id + '/' + this.pregunta.version_id)
                 .then(response => {
                     if (response.data.status == 1) {

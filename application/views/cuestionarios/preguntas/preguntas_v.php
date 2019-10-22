@@ -62,7 +62,7 @@
                 <a class="btn btn-primary" v-show="pregunta.version_id > 0" title="Ver versión alterna de la pregunta" v-bind:href="`<?php echo base_url('preguntas/version/') ?>` + pregunta.pregunta_id" target="_blank">
                     Versión
                 </a>
-                <button class="btn btn-warning" v-show="pregunta.version_id > 0" title="Eliminar versión propuesta de esta pregunta" v-on:click="delete_version(key)">
+                <button class="btn btn-warning" v-show="pregunta.version_id > 0" title="Eliminar versión propuesta de esta pregunta" data-toggle="modal" data-target="#delete_version_modal" v-on:click="set_current(key)">
                     <i class="fa fa-trash"></i> Versión
                 </button>
 
@@ -102,6 +102,10 @@
     </div>
 
     <?php $this->load->view('comunes/bs4/modal_simple_delete_v') ?>
+
+    <!-- Modal Eliminación de Versión -->
+    <?php $this->load->view('cuestionarios/preguntas/modal_delete_version_v') ?>
+
 </div>
 
 <?php $this->load->view('cuestionarios/preguntas/vue_v') ?>
