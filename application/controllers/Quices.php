@@ -274,8 +274,8 @@ class Quices extends CI_Controller{
     
     function construir($quiz_id)
     {
-        //$this->output->enable_profiler(TRUE);
         $data = $this->Quiz_model->basico($quiz_id);
+        
         $data['elementos_quiz'] = $this->Quiz_model->elementos($quiz_id);
         $data['imagenes'] = $this->Quiz_model->imagenes($quiz_id);
         $data['imagen'] = $this->Quiz_model->imagen($quiz_id);
@@ -520,6 +520,14 @@ class Quices extends CI_Controller{
         $data['vista_a'] = 'app/mensaje_v';
         $this->load->view(PTL_ADMIN, $data);
         
+    }
+
+    function demo()
+    {
+        $data['head_title'] = 'Evidencias 2.0';
+        $data['view_a'] = 'quices/demo/demo_v';
+
+        $this->load->view('quices/demo/template_v', $data);
     }
 
 }

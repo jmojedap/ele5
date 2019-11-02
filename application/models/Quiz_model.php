@@ -533,12 +533,13 @@ class Quiz_Model extends CI_Model{
         $elementos = $this->elementos($quiz_id);
         $arr_elementos = array();
         
-        foreach ($elementos->result() as $row_elemento) {
+        foreach ($elementos->result() as $row_elemento)
+        {
             $arr_elementos[] = $this->arr_elemento($row_elemento);
         }
         
         if ( $formato == 'string' ){
-            return json_encode($arr_elementos); //Devuelve string
+            return json_encode($arr_elementos); //Devuelve string JSON
         } else {    
             return $arr_elementos;  //Devuelve array
         }
@@ -560,7 +561,8 @@ class Quiz_Model extends CI_Model{
         $elemento['alto'] = $row->alto;
         $elemento['ancho'] = $row->ancho;
         
-        if ( is_array($arr_detalle) ){
+        if ( is_array($arr_detalle) )
+        {
             foreach ( $arr_detalle as $key => $texto_opcion ){
                 $campo = 'opcion_' . $key;
                 $elemento[$campo] = $texto_opcion;
