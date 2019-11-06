@@ -524,7 +524,7 @@ class Quices extends CI_Controller{
 
     function demo()
     {
-        $data['head_title'] = 'Evidencias 2.0';
+        $data['head_title'] = 'Evidencias M2';
         $data['view_a'] = 'quices/demo/demo_v';
 
         $this->load->view('quices/demo/template_v', $data);
