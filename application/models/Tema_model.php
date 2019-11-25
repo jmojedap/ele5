@@ -1509,4 +1509,181 @@ class Tema_Model extends CI_Model{
         return $no_importados;
     }
 
+// LECTURAS DINAMICAS (ledin)
+//-----------------------------------------------------------------------------
+
+    /**
+     * Query lecturas dinámicas asociadas a un tema
+     * 2019-11-21
+     */
+    function ledins($tema_id)
+    {
+        //$this->db->select('id, nombre');
+        $this->db->where('tipo_id', 125);
+        $this->db->where('referente_1_id', $tema_id);
+        $ledins = $this->db->get('post');
+
+        return $ledins;
+    }
+
+    /**
+     * Registro lectura dinámica (ledin_id)
+     */
+    function ledin($ledin_id)
+    {
+        $ledin = $this->Pcrn->registro_id('post', $ledin_id);
+        return $ledin;
+    }
+
+    /**
+     * Importar masivamente ledins a temas
+     * tabla post, tipo_id = 125
+     * 2019-10-17
+     * 
+     * @param type $array_hoja    Array con los datos de preguntas
+     */
+    function importar_ledins($array_hoja)
+    {
+        $no_importados = array();
+        $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
+        
+        $this->load->model('Post_model');
+        
+        foreach ( $array_hoja as $array_fila )
+        {
+            //Identificar valores
+                $tema_id = $this->Pcrn->campo('tema', "cod_tema = '{$array_fila[0]}'", 'id');
+                
+            //Validar
+                $condiciones = 0;
+                if ( ! is_null($tema_id) ) { $condiciones++; }                  //Tiene tema identificado
+                if ( strlen($array_fila[2]) > 0 ) { $condiciones++; }           //Tiene nombre de archivo
+                
+            //Si cumple las condiciones
+            if ( $condiciones == 2 )
+            {
+                $post_id = $this->importar_ledin($tema_id, $array_fila);
+            } else {
+                $no_importados[] = $fila;
+            }
+            
+            $fila++;    //Para siguiente fila
+        }
+        
+        return $no_importados;
+    }
+
+    /**
+     * Realiza la importación de lectura ledin de cada fila en el archivo excel
+     * 2019-10-17
+     */
+    function importar_ledin($tema_id, $array_fila)
+    {
+        //Construir registro
+            $arr_row['nombre_post'] = $array_fila[1];
+            $arr_row['tipo_id'] = 125;
+            $arr_row['contenido_json'] = $this->ledin_json($array_fila);
+            $arr_row['contenido'] = $this->ledin_lectura($array_fila[0]);
+            $arr_row['texto_1'] = $array_fila[0] . '.txt';   //Nombre archivo de texto lectura
+            $arr_row['texto_2'] = $array_fila[2];            //Nombre archivo imagen asociada
+            $arr_row['referente_1_id'] = $tema_id;
+
+        //Guardar
+            $post_id = $this->Post_model->guardar_post('id = 0', $arr_row);    //Condición imposible, siempre agrega
+
+        return $post_id;
+    }
+
+    /**
+     * A partir de la fila del archivo de excel, se construye un el contenido json de la lectura ledin,
+     * que incluye la lectura original, y el conjunto de palabras y definiciones.
+     */
+    function ledin_json($array_fila)
+    {
+        //$contenido = array('lectura' => '', 'palabras' => NULL);
+
+        $contenido['lectura'] = $this->ledin_lectura($array_fila[0]);
+        $contenido['palabras'] = $this->ledin_palabras($array_fila);
+        $contenido['lectura_dinamica'] = $this->ledin_lectura_dinamica($contenido);
+        $contenido['diccionario'] = $this->ledin_diccionario($contenido);
+
+        $contenido_json = json_encode($contenido);
+
+        return $contenido_json;
+    }
+
+    function ledin_lectura($file_name)
+    {
+        $lectura = 'NO HAY LECTURA DISPONIBLE';
+
+        $file_path = RUTA_UPLOADS . 'lecturas_dinamicas/' . $file_name . '.txt';
+
+        if ( file_exists($file_path) )
+        {
+            $lectura = file_get_contents($file_path);
+        }
+
+        return $lectura;
+    }
+
+    /**
+     * Array palabras y su definición
+     */
+    function ledin_palabras($array_fila)
+    {
+        $palabras = array();
+
+        for ($i=3; $i < 22; $i+=2)
+        {
+            $palabra = array(
+                'titulo' => $array_fila[$i],
+                'definicion' => $array_fila[$i+1]
+            );
+
+            if ( strlen($palabra['titulo']) > 0 ) { $palabras[] = $palabra; }
+        }
+
+        return $palabras;
+    }
+
+    function ledin_contenido_total($contenido_json)
+    {
+        $contenido = $this->ledin_contenido($contenido_json);
+        $contenido .= $this->ledin_lectura_dinamica($contenido_json);
+
+        return $contenido;
+    }
+
+    function ledin_diccionario($contenido)
+    {
+        $diccionario = $contenido['lectura'];
+        
+        foreach ($contenido['palabras'] as $palabra)
+        {
+            $modificado = '<span class="con_definicion" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="' . $palabra['definicion'] . '">';
+            $modificado .= $palabra['titulo'];
+            $modificado .= '</span>';
+            $diccionario = str_replace($palabra['titulo'], $modificado, $diccionario);
+        }
+
+        $diccionario = str_replace('<br>', '<br><br>', $diccionario);   //Doble salto de renglón
+
+        return $diccionario;
+    }
+
+    function ledin_lectura_dinamica($contenido)
+    {
+        $ledin = '';
+        $palabras = explode(' ', $contenido['lectura']);
+
+        foreach ($palabras as $palabra)
+        {
+            $ledin .= '<span>' . $palabra .  '</span> ';
+        }
+
+        $ledin = str_replace('<br>', '<br><br>', $ledin);   //Doble salto de renglón
+
+        return $ledin;
+    }
+
 }

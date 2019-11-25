@@ -1,0 +1,38 @@
+#ledin {
+    background-color: #fffEFA;
+    padding: 1em;
+}
+
+#ledin_contenido {
+    text-align: justify;
+    font-family: 'Merriweather', serif;
+    font-size: 1.05em;
+}
+
+#ledin span.con_definicion{
+    color: #01579b;
+    background: #b3e5fc;
+    padding: 0 2px 0 2px;
+    cursor: pointer;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+
+#ledin span.atenuada{
+    color: #fffEFA;
+}
+
+#ledin span.resaltada{
+    color: #3e2723;
+    background: #ffe082;
+    cursor: pointer;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+
+#ledin hr {
+    display: block;
+    border: 1px solid red;
+}

@@ -76,6 +76,13 @@
             'link' => "temas/preguntas_abiertas/{$row->id}",
             'atributos' => 'title="Links"'
         );
+
+        $arr_menus['lecturas_dinamicas'] = array(
+            'icono' => '<i class="far fa-file-alt"></i>',
+            'texto' => 'Lecturas dinámicas',
+            'link' => "temas/lecturas_dinamicas/{$row->id}",
+            'atributos' => 'title="Lecturas diccionario"'
+        );
             
         $arr_menus['editar'] = array(
             'icono' => '<i class="fa fa-pencil-alt"></i>',
@@ -85,7 +92,7 @@
         );
         
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'preguntas_abiertas', 'copiar', 'editar');
+        $elementos_rol[0] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'preguntas_abiertas', 'lecturas_dinamicas', 'copiar', 'editar');
         $elementos_rol[1] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'preguntas_abiertas', 'copiar', 'editar');
         $elementos_rol[2] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'preguntas_abiertas', 'copiar', 'editar');
         

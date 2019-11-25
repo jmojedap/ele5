@@ -5,6 +5,7 @@
         if ( $seccion == 'copiar_preguntas_e' ) { $clases_sm['copiar_preguntas'] = 'active'; }
         if ( $seccion == 'asignar_quices_e' ) { $clases_sm['asignar_quices'] = 'active'; }
         if ( $seccion == 'importar_pa_e' ) { $clases_sm['importar_pa'] = 'active'; }
+        if ( $seccion == 'importar_lecturas_dinamicas_e' ) { $clases_sm['importar_lecturas_dinamicas'] = 'active'; }
 
         $clases_sm[$seccion] = 'active';
     
@@ -43,9 +44,16 @@
             'link' => 'temas/importar_pa/',
             'atributos' => 'title="Importar preguntas abiertas a los temas"'
         );
+
+        $arr_menus['importar_lecturas_dinamicas'] = array(
+            'icono' => '<i class="far fa-file-alt"></i>',
+            'texto' => 'Lecturas dinámicas',
+            'link' => 'temas/importar_lecturas_dinamicas/',
+            'atributos' => 'title="Importar lecturas dinámicas a los temas"'
+        );
         
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('importar', 'importar_ut', 'copiar_preguntas', 'asignar_quices', 'importar_pa');
+        $elementos_rol[0] = array('importar', 'importar_ut', 'copiar_preguntas', 'asignar_quices', 'importar_pa', 'importar_lecturas_dinamicas');
         $elementos_rol[1] = array('importar', 'importar_ut', 'copiar_preguntas', 'asignar_quices', 'importar_pa');
         $elementos_rol[2] = array('importar', 'importar_ut');
         
