@@ -134,7 +134,6 @@
             
             <!-- IMAGEN PÁGINA E ÍNDICE -->
             <div class="col-md-7 seccion_pagina">
-
                 
                 <div class="text-center" v-show="!ver_indice">
                     <img

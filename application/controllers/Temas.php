@@ -1188,50 +1188,87 @@ class Temas extends CI_Controller{
             $this->load->view(TPL_ADMIN, $data);
     }
 
-// LECTURAS DICCIONARIO
+// LECTURAS DINÁMICAS (ledin)
 //-----------------------------------------------------------------------------
 
     /**
-     * Lecturas diccionario, asociadas a un tema
+     * Lecturas dinámicas, asociadas a un tema
      * 2019-10-17
      */
-    function diccionarios($tema_id, $diccionario_id = NULL)
+    function lecturas_dinamicas($tema_id, $ledin_id = NULL)
     {
         $data = $this->Tema_model->basico($tema_id);
 
-        $data['diccionarios'] = $this->Tema_model->diccionarios($tema_id);
-        $data['diccionario_id'] = $diccionario_id;
-        $data['diccionario'] = $this->Tema_model->diccionario($diccionario_id);
+        $data['ledins'] = $this->Tema_model->ledins($tema_id);
+        $data['ledin_id'] = $ledin_id;
+        $data['ledin'] = $this->Tema_model->ledin($ledin_id);
 
-        $data['view_a'] = 'temas/diccionarios/diccionarios_v';
-        $data['subtitle_head'] = 'Lecturas diccionario';
+        $data['view_a'] = 'temas/ledins/ledins_v';
+        $data['subtitle_head'] = 'Lecturas dinámicas';
         $this->load->view(TPL_ADMIN, $data);
     }
 
+    function lectura_dinamica($ledin_id, $json = FALSE)
+    {
+        $data['ledin_id'] = $ledin_id;
+        $data['ledin'] = $this->Tema_model->ledin($ledin_id);
+        
+        if ( $json )
+        {
+            //Salida JSON
+            $data_json['html'] = $this->load->view('temas/ledins/ledin_v', $data, true);
+            $this->output->set_content_type('application/json')->set_output(json_encode($data_json));
+        } else {
+            
+            $data['view_a'] = 'temas/ledins/ledin_v';
+            $data['head_title'] = $data['ledin']->nombre_post;
+            $data['subtitle_head'] = 'Lecturas dinámicas';
+            $this->load->view(TPL_ADMIN, $data);
+        }
+    }
+
+    function lectura_dinamica_tema($tema_id)
+    {
+        $ledins = $this->Tema_model->ledins($tema_id);
+        
+        $data_json['message'] = 'Este tema no tiene lectura dinámica asignada';
+        $data_json['html'] = 'Este tema no tiene lectura dinámica asignada';
+
+        if ( $ledins->num_rows() > 0 )
+        {
+            $data['ledin_id'] = $ledins->row()->id;
+            $data['ledin'] = $this->Tema_model->ledin($ledins->row()->id);
+            $data_json['message'] = 'Sí tiene ledin: ' . $data['ledin_id'];
+            $data_json['html'] = $this->load->view('temas/ledins/ledin_v', $data, true);
+        }
+
+        $this->output->set_content_type('application/json')->set_output(json_encode($data_json));
+    }
+
     /**
-     * Vista formulario importación de lecturas diccionarios para temas
+     * Vista formulario importación de lecturas ledins para temas
      * 2019-10-17
      */
-    function importar_diccionarios()
+    function importar_lecturas_dinamicas()
     {
         //Iniciales
-            $nombre_archivo = '32_formato_cargue_diccionarios.xlsx';
+            $nombre_archivo = '32_formato_cargue_ledins.xlsx';
             $parrafos_ayuda = array();
         
         //Instructivo
-            $data['titulo_ayuda'] = '¿Cómo importar lecturas diccionario?';
-            $data['nota_ayuda'] = 'Se importarán lecturas diccionario asociadas a cada tema';
+            $data['titulo_ayuda'] = '¿Cómo importar lecturas ledin?';
+            $data['nota_ayuda'] = 'Se importarán lecturas dinámicas asociadas a cada tema';
             $data['parrafos_ayuda'] = $parrafos_ayuda;
         
         //Variables específicas
-            $data['destino_form'] = 'temas/importar_diccionarios_e';
+            $data['destino_form'] = 'temas/importar_lecturas_dinamicas_e';
             $data['nombre_archivo'] = $nombre_archivo;
-            $data['nombre_hoja'] = 'diccionarios';
+            $data['nombre_hoja'] = 'lecturas';
             $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
             
         //Variables generales
             $data['head_title'] = 'Temas';
-            $data['head_subtitle'] = 'Importar lecturas diccionarios';
+            $data['head_subtitle'] = 'Importar lecturas ledins';
             $data['view_a'] = 'comunes/bs4/importar_v';
             $data['nav_2'] = 'temas/explorar/menu_v';
             $data['nav_3'] = 'temas/menu_importar_v';
@@ -1244,7 +1281,7 @@ class Temas extends CI_Controller{
      * Recibe archivo y datos de "temas/importar_pa"
      * 2019-09-06
      */
-    function importar_diccionarios_e()
+    function importar_lecturas_dinamicas_e()
     {
         
         //Proceso
@@ -1257,7 +1294,7 @@ class Temas extends CI_Controller{
             if ( $resultado['valido'] )
             {
                 $this->load->model('Tema_model');
-                $no_importados = $this->Tema_model->importar_diccionarios($resultado['array_hoja']);
+                $no_importados = $this->Tema_model->importar_ledins($resultado['array_hoja']);
             }
         
         //Cargue de variables
@@ -1266,11 +1303,11 @@ class Temas extends CI_Controller{
             $data['array_hoja'] = $resultado['array_hoja'];
             $data['nombre_hoja'] = $this->input->post('nombre_hoja');
             $data['no_importados'] = $no_importados;
-            $data['destino_volver'] = 'temas/importar_diccionarios/';
+            $data['destino_volver'] = 'temas/importar_lecturas_dinamicas/';
         
         //Cargar vista
             $data['head_title'] = 'Temas';
-            $data['head_subtitle'] = 'Resultado importación diccionarios';
+            $data['head_subtitle'] = 'Resultado importación Lecturas dinámicas';
             $data['view_a'] = 'comunes/resultado_importacion_v';
             $data['nav_2'] = 'temas/explorar/menu_v';
             $data['nav_3'] = 'temas/menu_importar_v';
