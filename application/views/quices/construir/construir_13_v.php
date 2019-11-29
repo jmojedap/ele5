@@ -224,9 +224,9 @@
 </style>
 
 <div class="row">
-    <div class="col col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-body">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
                 <?= form_open_multipart("quices/cargar_img_elemento_nuevo/{$row->id}", $att_form) ?>
                 <table class="tabla-transparente" width="100%">
                     <tbody>
@@ -252,9 +252,9 @@
             </div>
         </div>
     </div>
-    <div class="col col-md-8">
-        <div class="panel panel-default">
-            <div class="panel-body">
+    <div class="col-md-8">
+        <div class="card mb-2">
+            <div class="card-body">
                 <?php if (strlen($imagen['src']) == 0) { ?>
                     <?= $this->load->view('quices/construir/form_imagen_v') ?>
                 <?php } else { ?>
@@ -279,7 +279,7 @@
             </div>
         </div>
         
-        <table class="table table-default bg-blanco">
+        <table class="table bg-white mb-2">
             <thead>
                 <th width="50px">Orden</th>
                 <th>Image</th>
@@ -302,7 +302,7 @@
                 <?php endforeach ?>
             </tbody>
         </table>
-        <div class="sep3">
+        <div class="">
             <span class="btn btn-info" id="nuevo_elemento">Nuevo</span>
         </div>
     </div>

@@ -62,46 +62,6 @@ class Quices extends CI_Controller{
     /**
      * Exporta el resultado de la búsqueda a un archivo de Excel
      */
-    function exportar_org()
-    {
-        
-        set_time_limit(120);    //120 segundos, 2 minutos para el proceso
-        //Cargando
-            $this->load->model('Busqueda_model');
-            $this->load->model('Pcrn_excel');
-        
-        //Datos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
-            $resultados_total = $this->Quiz_model->buscar($busqueda); //Para calcular el total de resultados
-        
-            if ( $resultados_total->num_rows() <= MAX_REG_EXPORT ) 
-            {
-                //Preparar datos
-                    $datos['nombre_hoja'] = 'Evidencias';
-                    $datos['query'] = $resultados_total;
-
-                //Preparar archivo
-                    $objWriter = $this->Pcrn_excel->archivo_query($datos);
-
-                $data['objWriter'] = $objWriter;
-                $data['nombre_archivo'] = date('Ymd_His'). '_evidencias'; //save our workbook as this file name
-
-                $this->load->view('comunes/descargar_phpexcel_v', $data);
-            } else {
-                $data['titulo_pagina'] = 'Plataforma Enlace';
-                $data['mensaje'] = "El número de registros es de {$resultados_total->num_rows()}. El máximo permitido es de " . MAX_REG_EXPORT . " registros. Puede filtrar los datos por algún criterio para poder exportarlos.";
-                $data['link_volver'] = "quices/explorar/?{$busqueda_str}";
-                $data['vista_a'] = 'app/mensaje_v';
-                
-                $this->load->view(PTL_ADMIN, $data);
-            }
-            
-    }
-    
-    /**
-     * Exporta el resultado de la búsqueda a un archivo de Excel
-     */
     function exportar()
     {
         
@@ -145,12 +105,10 @@ class Quices extends CI_Controller{
     
     function detalle($quiz_id)
     {
-        //$this->output->enable_profiler(TRUE);
-        
         $data = $this->Quiz_model->basico($quiz_id);
         
-        $data['vista_b'] = "quices/detalle_v";
-        $this->load->view(PTL_ADMIN, $data);
+        $data['view_a'] = "quices/detalle_v";
+        $this->load->view(TPL_ADMIN, $data);
     }
     
 // GESTIÓN DE TEMAS
@@ -165,9 +123,9 @@ class Quices extends CI_Controller{
         $data = $this->Quiz_model->basico($quiz_id);
         
         $data['temas'] = $this->Quiz_model->temas($quiz_id);
-        
-        $data['vista_b'] = "quices/temas_v";
-        $this->load->view(PTL_ADMIN, $data);
+        $data['view_a'] = "quices/temas_v";
+
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -256,9 +214,9 @@ class Quices extends CI_Controller{
             $gc_output = $this->Quiz_model->crud_editar($quiz_id);
             
         //Solicitar vista
-            $data['vista_b'] = 'comunes/gc_v';
+            $data['view_a'] = 'comunes/gc_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN, $output);
     }
     
     function eliminar($quiz_id, $tema_id = NULL)
@@ -285,10 +243,18 @@ class Quices extends CI_Controller{
         
         $tipo_quiz_id = $data['row']->tipo_quiz_id;
         
-        $data['vista_b'] = "quices/construir/construir_{$tipo_quiz_id}_v";
-        $data['subtitulo_pagina'] = 'Quiz';
+        $data['view_a'] = "quices/construir/construir_{$tipo_quiz_id}_v";
+
+        //Nuevos tipos
+        if ( $tipo_quiz_id > 100 )
+        {
+            $data['view_a'] = "quices/construir/{$tipo_quiz_id}/construir_v";
+        }
+
+
+        $data['head_subtitle'] = 'Quiz';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     function elementos($quiz_id)
@@ -296,16 +262,14 @@ class Quices extends CI_Controller{
         
         //Cargando datos básicos
             $data = $this->Quiz_model->basico($quiz_id);
-            $data['vista_b'] = 'quices/elementos_v';
+            $data['view_a'] = 'comunes/gc_v';
             
         //Head includes específicos para la página
-            $head_includes[] = 'grocery_crud';
-            $data['head_includes'] = $head_includes;
             $output = $this->Quiz_model->crud_elemento($quiz_id);
             
         //Información
             $output = array_merge($data,(array)$output);
-            $this->load->view(PTL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN, $output);
         
     }
     
@@ -380,29 +344,32 @@ class Quices extends CI_Controller{
     /**
      * AJAX
      * Crea un registro de anotación en la tabla 'quiz_elemento', con posición
-     * 
      */
     function guardar_elemento_pos()
     {
         //Valor por defecto
-        $ua_id = 0;
+        $qe_id = 0;
         
         //Si es una página existente
-        if ( $this->input->post('quiz_id') > 0 ){
+        if ( $this->input->post('quiz_id') > 0 )
+        {
             //Construir el registro que se va a insertar
             $registro = array(
                 'id_alfanumerico' => $this->input->post('id_alfanumerico'),
+                'quiz_id' => $this->input->post('quiz_id'),
+                'tipo_id' => $this->input->post('tipo_id'),
                 'x' => $this->input->post('x'),
                 'y' => $this->input->post('y'),
                 'alto' => $this->input->post('alto'),
                 'ancho' => $this->input->post('ancho')
             );
 
-            $ua_id = $this->Quiz_model->guardar_elemento($registro);
+            $qe_id = $this->Quiz_model->guardar_elemento($registro);
         }
 
         //Respuesta
-        echo $ua_id;
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output($qe_id);
     }
     
 //IMÁGENES
@@ -413,7 +380,7 @@ class Quices extends CI_Controller{
         $results = $this->Quiz_model->cargar_imagen();
         
         //Cargue exitoso, se crea registro asociado
-            if ( $results['result'] ) { $this->Quiz_model->guardar_imagen($results['upload_data']); }
+            if ( $results['status'] ) { $this->Quiz_model->guardar_imagen($results['upload_data']); }
         
         $this->session->set_flashdata('message', $results['message']);
         redirect("quices/construir/{$quiz_id}");
@@ -448,7 +415,7 @@ class Quices extends CI_Controller{
     {
         $results = $this->Quiz_model->cargar_imagen();
         
-        if ( $results['result'] ) {
+        if ( $results['status'] ) {
             
             //Preparar registro
                 $registro['id_alfanumerico'] = $this->input->post('id_alfanumerico');
@@ -470,6 +437,7 @@ class Quices extends CI_Controller{
         
         $this->session->set_flashdata('mensaje_elemento', $results['message']);
         redirect("quices/construir/{$quiz_id}");
+        //$this->output->enable_profiler(TRUE);
         
     }
     
@@ -529,5 +497,4 @@ class Quices extends CI_Controller{
 
         $this->load->view('quices/demo/template_v', $data);
     }
-
 }

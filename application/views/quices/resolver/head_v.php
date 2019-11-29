@@ -1,4 +1,4 @@
-    <title><?= $titulo_pagina ?></title>
+    <title><?php echo $head_title ?></title>
     <link rel="shortcut icon" href="<?php echo URL_IMG ?>admin/icono.png" type="image/ico" />
 
     <meta charset="UTF-8">

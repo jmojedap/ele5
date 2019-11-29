@@ -1,31 +1,19 @@
-<?php
-    $att_form = array(
-        'class' =>  'form-horizontal'
-    );
-    
-    $att_submit = array(
-        'value' => 'Cargar',
-        'class' =>  'btn btn-primary'
-    );
-    
-    $att_archivo = array(
-        'name' => 'archivo'
-    );
-?>
-
-<h4>Imagen de fondo</h4>
+<h4 class="card-title">Imagen de fondo</h4>
 
 <?php if ( $this->session->flashdata('message') ){ ?>
     <?= $this->session->flashdata('message') ?>
 <?php } ?>
 
-<?= form_open_multipart("quices/cargar_imagen/{$row->id}", $att_form) ?>
-    <?= form_hidden('quiz_id', $row->id)  ?>
-    <div class="sep2">
-        <?= form_upload($att_archivo) ?>
+<form action="<?php echo base_url("quices/cargar_imagen/{$row->id}") ?>" enctype="multipart/form-data" method="post" accept-charset="utf-8">
+
+    <input type="hidden" name="quiz_id" value="<?php echo $row->id ?>"">
+    <div class="form-group">
+        <input type="file" name="archivo" class="form-control-file" required>
     </div>
 
-    <div class="sep2">
-        <?= form_submit($att_submit) ?>
+    <div class="form-group">
+        <button class="btn btn-primary w4">
+            Cargar
+        </button>
     </div>
-<?= form_close('') ?>
+</form>

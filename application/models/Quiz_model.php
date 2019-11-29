@@ -16,8 +16,9 @@ class Quiz_Model extends CI_Model{
         $basico['quiz_id'] = $quiz_id;
         $basico['row'] = $row_quiz;
         $basico['row_tema'] = $this->Pcrn->registro_id('tema', $row_quiz->tema_id);
-        $basico['titulo_pagina'] = $row_quiz->nombre_quiz;
-        $basico['vista_a'] = 'quices/quiz_v';
+        $basico['head_title'] = $row_quiz->nombre_quiz;
+        $basico['view_description'] = 'quices/quiz_v';
+        $basico['nav_2'] = 'quices/menu_v';
         $basico['carpeta_imagenes'] = RUTA_UPLOADS . 'quices/';
         
         return $basico;
@@ -86,7 +87,8 @@ class Quiz_Model extends CI_Model{
             9 => 144,   //G
             10 => 129,  //J
             12 => 132,  //L
-            13 => 180   //M
+            13 => 180,   //M
+            113 => 180   //M2
         );
         
         return $posts[$tipo_id];
@@ -589,23 +591,29 @@ class Quiz_Model extends CI_Model{
         $this->enumerar_elementos($registro['quiz_id'], $registro['tipo_id']);
         
         return $elemento_id;
-        
     }
     
     /* Función que elimina un registro de la tabla quiz_elemento
-     * 
+     * 2019-11-29
      */
     function eliminar_elemento($id_alfanumerico)
     {
         $row_elemento = $this->Pcrn->registro('quiz_elemento', "id_alfanumerico = '{$id_alfanumerico}'");
         $quiz_id = $row_elemento->quiz_id;
         
-        $this->db->where('id', $row_elemento->id);
-        $this->db->delete('quiz_elemento');
-        
-        $this->actualizar_clave($quiz_id);
-        $this->enumerar_elementos($quiz_id, $row_elemento->tipo_id);
-        
+        //Eliminar archivo si tiene
+            $file_path = RUTA_UPLOADS . 'quices/' . $row_elemento->archivo;
+            if ( strlen($row_elemento->archivo) > 0 && file_exists($file_path) ) {
+                unlink($file_path);
+            }
+
+        //Eliminar registro
+            $this->db->where('id', $row_elemento->id);
+            $this->db->delete('quiz_elemento');
+
+        //Actalizaciones
+            $this->actualizar_clave($quiz_id);
+            $this->enumerar_elementos($quiz_id, $row_elemento->tipo_id);
     }
     
     /**
@@ -624,7 +632,8 @@ class Quiz_Model extends CI_Model{
         $elementos = $this->db->get('quiz_elemento');
         $i = 0;
         
-        foreach ( $elementos->result() as $row_elemento ){
+        foreach ( $elementos->result() as $row_elemento )
+        {
             $registro['orden'] = $i;
             $this->db->where('id', $row_elemento->id);
             $this->db->update('quiz_elemento', $registro);
@@ -640,11 +649,11 @@ class Quiz_Model extends CI_Model{
         $this->load->library('upload', $config);
 
         if ( ! $this->upload->do_upload('archivo')) {
-            $results['result'] = 0;
-            $results['message'] = $this->upload->display_errors('<h4 class="alert_error">', '<h4>');
+            $results['status'] = 0;
+            $results['html'] = $this->upload->display_errors('<div class="alert alert-danger">', '</div>');
         } else {
-            $results['result'] = 1;
-            $results['message'] = '';
+            $results['status'] = 1;
+            $results['html'] = '';
             $results['upload_data'] = $this->upload->data();
         }
         
@@ -659,7 +668,7 @@ class Quiz_Model extends CI_Model{
 
         $registro['id_alfanumerico'] = $this->Pcrn->alfanumerico_random(16, 0, 1);
         $registro['quiz_id'] = $this->input->post('quiz_id');
-        $registro['tipo_id'] = 5;
+        $registro['tipo_id'] = 5;   //Fondo de imagen
         $registro['orden'] = 0;
         $registro['archivo'] = $upload_data['file_name'];
         $registro['detalle'] = json_encode($detalle);
@@ -668,8 +677,7 @@ class Quiz_Model extends CI_Model{
     }
     
     function asignar_archivo($elemento_id, $upload_data)
-    {
-        
+    {   
         $registro['archivo'] = $upload_data['file_name'];
         
         $this->db->where('id', $elemento_id);
