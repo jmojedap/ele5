@@ -24,8 +24,6 @@
 <?php $this->load->view('quices/construir/113/style_v') ?>
 
 <div style="margin: 0px auto; width: 838px;">
-    
-
     <div class="card mb-2">
         <div class="card-body">
             <?php if (strlen($imagen['src']) == 0) { ?>
@@ -45,8 +43,7 @@
 
                     <?php foreach ($elementos_quiz->result() as $row_elemento) : ?>
                         <?php
-                            $line_height = $row_elemento->alto * 0.9;
-                            $style = "left: {$row_elemento->x}px; top: {$row_elemento->y}px; width: {$row_elemento->ancho}px; height: {$row_elemento->alto}px; line-height: {$line_height}px";
+                            $style = "left: {$row_elemento->x}px; top: {$row_elemento->y}px; width: {$row_elemento->ancho}px; height: {$row_elemento->alto}px;";
                             $att_img_elemento['src'] = $carpeta_quices . $row_elemento->archivo;
                         ?>
                         <div id="draggable_<?= $row_elemento->id_alfanumerico ?>"

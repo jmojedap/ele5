@@ -10,8 +10,10 @@
     }
 
     .draggable:hover{
-        opacity: 0.8;
-        border: 1px solid #fafafa;
+        opacity: 0.9;
+        -webkit-box-shadow: 0px 0px 0px 2px rgba(197,225,165,1);
+        -moz-box-shadow: 0px 0px 0px 2px rgba(197,225,165,1);
+        box-shadow: 0px 0px 0px 2px rgba(197,225,165,1);
     }
 
     #quiz_container{

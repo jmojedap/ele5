@@ -55,9 +55,9 @@
         );
         
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('explorar', 'temas', 'construir', 'resolver', 'elementos', 'detalle', 'editar');
-        $elementos_rol[1] = array('explorar', 'temas', 'construir', 'resolver', 'editar');
-        $elementos_rol[2] = array('explorar', 'temas', 'construir', 'resolver', 'editar');
+        $elementos_rol[0] = array('explorar', 'temas', 'construir', 'elementos', 'detalle', 'editar', 'resolver');
+        $elementos_rol[1] = array('explorar', 'temas', 'construir', 'editar', 'resolver');
+        $elementos_rol[2] = array('explorar', 'temas', 'construir', 'editar', 'resolver');
         
     //Definiendo menú mostrar, según el rol del visitante
         $elementos = $elementos_rol[$this->session->userdata('rol_id')];

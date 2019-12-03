@@ -61,7 +61,7 @@
            todo se hace por medio de JQuery UI
          */
         $(".draggable").draggable({
-            containment: "#quiz-container", 
+            containment: "#quiz_container", 
             scroll: false,
             stop: function(e){
                 cargar_variables_pos(e);
