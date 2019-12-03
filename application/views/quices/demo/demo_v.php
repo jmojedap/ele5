@@ -38,12 +38,9 @@
         overflow: hidden;
     }
 
-    /*.dragging{
-        border: 1px solid #64b5f6;
-        -webkit-box-shadow: 5px 5px 5px 0px rgba(194,194,194,1);
-        -moz-box-shadow: 5px 5px 5px 0px rgba(194,194,194,1);
-        box-shadow: 5px 5px 5px 0px rgba(194,194,194,1);
-    }*/
+    .draggable:hover{
+        opacity: 0.9;
+    }
 </style>
 <script>
     $(document).ready(function(){

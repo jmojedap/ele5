@@ -34,8 +34,7 @@
             
             
                 <div class="quiz_detalle">
-                    <?php //echo $vista_a ?>
-                    <?php $this->load->view($vista_a); ?>
+                    <?php $this->load->view($view_a); ?>
                 </div>
                 
                 <div class="mb-3 text-center">

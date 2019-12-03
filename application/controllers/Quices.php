@@ -191,8 +191,9 @@ class Quices extends CI_Controller{
     function resolver($quiz_id)
     {   
         //Registrar en evento
-        
         $data = $this->Quiz_model->basico($quiz_id);
+
+        //Cargar datos
         $data['elementos'] = $this->Quiz_model->elementos($quiz_id);
         $data['imagen'] = $this->Quiz_model->imagen($quiz_id);
         $data['row_tipo_quiz'] = $this->Quiz_model->row_tipo_quiz($data['row']->tipo_quiz_id);
@@ -200,8 +201,12 @@ class Quices extends CI_Controller{
         
         $tipo_quiz_id = $data['row']->tipo_quiz_id;
         
-        $data['vista_a'] = "quices/resolver/resolver_{$tipo_quiz_id}_v";
-        $this->load->view('quices/resolver/resolver_v', $data);
+        $data['view_a'] = "quices/resolver/resolver_{$tipo_quiz_id}_v";
+
+        $view_ptl = 'quices/resolver/resolver_v';
+        if ( $tipo_quiz_id > 100 ) { $view_ptl = 'templates/apanel3/quiz_v';}
+
+        $this->load->view($view_ptl, $data);
     }
     
     function editar()
@@ -290,11 +295,9 @@ class Quices extends CI_Controller{
         
         $this->load->model('Evento_model');
         $this->Evento_model->guardar_fin_quiz($ua_id);
-        
-        echo $ua_id;
-        
-        $this->output->enable_profiler(TRUE);
-        
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($ua_id));
     }
     
     /**

@@ -239,7 +239,9 @@ class Quiz_Model extends CI_Model{
 //---------------------------------------------------------------------------------------------------------
     
     
-    
+    /**
+     * Elementos incluidos en un Quiz
+     */
     function elementos($quiz_id)
     {
         $this->db->where('tipo_id <= 4');    //Imágenes no incluidas
@@ -251,6 +253,10 @@ class Quiz_Model extends CI_Model{
         return $elementos;
     }
     
+    /**
+     * Imágenes incluídas en un quiz
+     * 2019-12-02
+     */
     function imagenes($quiz_id)
     {
         $this->db->where('quiz_id', $quiz_id);
@@ -271,7 +277,8 @@ class Quiz_Model extends CI_Model{
         
         $imagenes = $this->imagenes($quiz_id);
         
-        if ( $imagenes->num_rows() > 0 ){
+        if ( $imagenes->num_rows() > 0 )
+        {
             $row_imagen = $imagenes->row();
             $arr_detalle = json_decode($row_imagen->detalle);
 

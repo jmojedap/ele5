@@ -97,7 +97,6 @@
                 resultado : resultado
             }
         });
-
     }
 
     /*
