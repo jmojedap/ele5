@@ -148,6 +148,7 @@
             data: {
                 id_alfanumerico : id_alfanumerico,
                 quiz_id : quiz_id,
+                tipo_id : tipo_id,
                 x : x,
                 y : y,
                 alto : alto,

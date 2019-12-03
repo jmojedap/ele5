@@ -385,7 +385,7 @@ class Quices extends CI_Controller{
         //Cargue exitoso, se crea registro asociado
             if ( $results['status'] ) { $this->Quiz_model->guardar_imagen($results['upload_data']); }
         
-        $this->session->set_flashdata('message', $results['message']);
+        $this->session->set_flashdata('html', $results['html']);
         redirect("quices/construir/{$quiz_id}");
     }
     
@@ -409,7 +409,7 @@ class Quices extends CI_Controller{
             $this->Quiz_model->asignar_archivo($elemento_id, $results['upload_data']); 
         }
         
-        $this->session->set_flashdata('mensaje_elemento', $results['message']);
+        $this->session->set_flashdata('html', $results['html']);
         redirect("quices/construir/{$quiz_id}");
         
     }
@@ -438,7 +438,7 @@ class Quices extends CI_Controller{
                 $this->Quiz_model->asignar_archivo($elemento_id, $results['upload_data']); 
         }
         
-        $this->session->set_flashdata('mensaje_elemento', $results['message']);
+        $this->session->set_flashdata('html', $results['html']);
         redirect("quices/construir/{$quiz_id}");
         //$this->output->enable_profiler(TRUE);
         
