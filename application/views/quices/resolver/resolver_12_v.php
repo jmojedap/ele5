@@ -92,15 +92,19 @@
 <?php } ?>
 
 <?php foreach ($elementos->result() as $row_elemento) : ?>
-    <?php
-        $att_casilla = array(
-            'name' => 'casilla_' . $row_elemento->orden,
-            'id' => 'casilla_' . $row_elemento->orden,
-            'class' => 'casilla_quiz w2',
-        );
-        $casilla = form_input($att_casilla);
-    ?>
-    <?= str_replace('#casilla', $casilla, $row_elemento->texto) ?>
+    <div class="card mb-1">
+        <div class="card-body">
+            <?php
+                $att_casilla = array(
+                    'name' => 'casilla_' . $row_elemento->orden,
+                    'id' => 'casilla_' . $row_elemento->orden,
+                    'class' => 'casilla_quiz w2',
+                );
+                $casilla = form_input($att_casilla);
+            ?>
+            <?= str_replace('#casilla', $casilla, $row_elemento->texto) ?>
+        </div>
+    </div>
     
     <?php $key_elemento += 1; ?>
 <?php endforeach ?>

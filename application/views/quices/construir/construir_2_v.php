@@ -154,8 +154,8 @@
 
 <div class="row">
     <div class="col col-md-4">
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="card card-default">
+        <div class="card-body">
             <table class="tabla-transparente" width="100%">
                 <tbody>
                     <tr width="150px">
@@ -176,7 +176,7 @@
                         <tr>
                             <td></td>
                             <td>
-                                <span class="btn btn-primary" id="guardar_elemento">Agregar</span>
+                                <button type="button" class="btn btn-primary w4" id="guardar_elemento">Agregar</span>
                             </td>
                         </tr>
                 </tbody>
@@ -184,12 +184,12 @@
             
             <hr/>
         
-            <div class="sep2">  
+            <div class="my-2">  
                 <?php if ( $imagenes->num_rows() == 0 ){ ?>
                     <?= $this->load->view('quices/construir/form_imagen_v') ?>
                 <?php } else { ?>
                     <?= $this->Pcrn->anchor_confirm("quices/eliminar_archivo/{$quiz_id}/{$imagenes->row()->id_alfanumerico}", 'Eliminar', 'class="btn btn-primary" title="Eliminar imagen"', '¿Confirma la eliminación de esta imagen?') ?>
-                    <div style="max-width: 800px;" class="sep2">
+                    <div style="max-width: 800px;" class="my-2">
                         <?= img($att_img) ?>
                     </div>
                 <?php } ?>
@@ -198,15 +198,15 @@
     </div>
     </div>
     <div class="col col-md-8">
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card card-default">
+            <div class="card-body">
                 <?php foreach ($elementos_quiz->result() as $row_elemento) : ?>
                     <div id="elemento_<?= $row_elemento->id_alfanumerico ?>">
                         <?php $opciones = json_decode($row_elemento->detalle); ?>
 
 
                         <div class="pull-right">
-                            <span class="a4 editar_elemento" id="editar_<?= $row_elemento->orden ?>"><i class="fa fa-pencil"></i></span>
+                            <span class="a4 editar_elemento" id="editar_<?= $row_elemento->orden ?>"><i class="fa fa-pencil-alt"></i></span>
                             <span class="a4 eliminar_elemento" id="eliminar_<?= $row_elemento->id_alfanumerico ?>"><i class="fa fa-times"></i></span>
                         </div>
 
@@ -233,7 +233,7 @@
                     </div>
                 <?php endforeach ?>
                 <p>
-                    <span class="btn btn-info" id="nuevo_elemento">Nuevo</span>
+                    <button type="button" class="btn btn-info w4" id="nuevo_elemento">Nuevo</button>
                 </p>
             </div>
         </div>

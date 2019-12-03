@@ -115,8 +115,8 @@
 
 <div class="row">
     <div class="col col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card card-default">
+            <div class="card-body">
                 <p>Ingrese los fragmentos del párrafo en el orden correcto</p>
                 <table class="tabla-transparente" width="100%">
                     <tbody>
@@ -150,13 +150,13 @@
         </div>
     </div>
     <div class="col col-md-8">
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card card-default">
+            <div class="card-body">
                 <?php foreach ($elementos_quiz->result() as $row_elemento) : ?>
                     <div id="elemento_<?= $row_elemento->id_alfanumerico ?>">
 
                         <div class="pull-right">
-                            <span class="a4 editar_elemento" id="editar_<?= $row_elemento->orden ?>" title="Editar elemento"><i class="fa fa-pencil"></i></span>
+                            <span class="a4 editar_elemento" id="editar_<?= $row_elemento->orden ?>" title="Editar elemento"><i class="fa fa-pencil-alt"></i></span>
                             <span class="a4 eliminar_elemento" id="eliminar_<?= $row_elemento->id_alfanumerico ?>" title="Eliminar elemento"><i class="fa fa-times"></i></span>
                         </div>
 

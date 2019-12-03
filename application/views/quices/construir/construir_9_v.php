@@ -234,8 +234,8 @@
 
 <div class="row">
     <div class="col col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card card-default">
+            <div class="card-body">
                 <table class="tabla-transparente" width="100%">
                     <tbody>
                         <tr width="150px">
@@ -300,7 +300,7 @@
                         <td><?= $row_elemento->detalle ?></td>
                         <td><?= $row_elemento->texto ?></td>
                         <td>
-                            <span class="a4 editar_elemento" id="editar_<?= $row_elemento->orden ?>"><i class="fa fa-pencil"></i></span>
+                            <span class="a4 editar_elemento" id="editar_<?= $row_elemento->orden ?>"><i class="fa fa-pencil-alt"></i></span>
                             <span class="a4 eliminar_elemento" id="eliminar_<?= $row_elemento->id_alfanumerico ?>"><i class="fa fa-times"></i></span>
                         </td>
                     </tr>
