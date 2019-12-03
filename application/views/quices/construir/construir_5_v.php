@@ -165,7 +165,7 @@
                 <?php foreach ($elementos_quiz->result() as $row_elemento) : ?>
                     <div id="elemento_<?= $row_elemento->id_alfanumerico ?>">
 
-                        <div class="pull-right">
+                        <div class="float-right">
                             <span class="a4 editar_elemento" id="editar_<?= $row_elemento->orden ?>" title="Editar elemento"><i class="fa fa-pencil-alt"></i></span>
                             <span class="a4 eliminar_elemento" id="eliminar_<?= $row_elemento->id_alfanumerico ?>" title="Eliminar elemento"><i class="fa fa-times"></i></span>
                         </div>
