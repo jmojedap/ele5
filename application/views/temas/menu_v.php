@@ -93,7 +93,7 @@
         
     //Elementos de menú según el rol del visitante
         $elementos_rol[0] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'preguntas_abiertas', 'lecturas_dinamicas', 'copiar', 'editar');
-        $elementos_rol[1] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'preguntas_abiertas', 'copiar', 'editar');
+        $elementos_rol[1] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'preguntas_abiertas', 'lecturas_dinamicas', 'copiar', 'editar');
         $elementos_rol[2] = array('explorar', 'paginas', 'preguntas', 'programas', 'relacionados', 'quices', 'archivos', 'links', 'preguntas_abiertas', 'copiar', 'editar');
         
     //Definiendo menú mostrar, según el rol del visitante

@@ -336,14 +336,22 @@ class Post_Model extends CI_Model{
         return $data;
     }
     
+    /**
+     * Determina si se tiene el permiso para eliminar o no un registro de la tabla post
+     */
     function eliminable($post_id)
     {
-        $eliminable = 1;
+        $eliminable = 0;
+        if ( $this->session->userdata('rol_id') <= 2 ) {
+            $eliminable = 1;
+        }
         return $eliminable;
     }
     
     function eliminar($post_id)
     {
+        $qty_deleted = 0;
+
         if ( $this->eliminable($post_id) ) 
         {
             //Tablas relacionadas, post
@@ -359,7 +367,11 @@ class Post_Model extends CI_Model{
             //Tabla principal
                 $this->db->where('id', $post_id);
                 $this->db->delete('post');
+
+            $qty_deleted = $this->db->affected_rows();
         }
+
+        return $qty_deleted;
     }
     
     function reordenar_lista($post_id, $arr_elementos)

@@ -1557,7 +1557,7 @@ class Tema_Model extends CI_Model{
             //Validar
                 $condiciones = 0;
                 if ( ! is_null($tema_id) ) { $condiciones++; }                  //Tiene tema identificado
-                if ( strlen($array_fila[2]) > 0 ) { $condiciones++; }           //Tiene nombre de archivo
+                if ( strlen($array_fila[1]) > 0 ) { $condiciones++; }           //Tiene título
                 
             //Si cumple las condiciones
             if ( $condiciones == 2 )
@@ -1685,5 +1685,4 @@ class Tema_Model extends CI_Model{
 
         return $ledin;
     }
-
 }

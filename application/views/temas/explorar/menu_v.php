@@ -10,6 +10,8 @@
         if ( $seccion == 'copiar_preguntas_e' ) { $clases['importar'] = 'active'; }
         if ( $seccion == 'asignar_quices' ) { $clases['importar'] = 'active'; }
         if ( $seccion == 'asignar_quices_e' ) { $clases['importar'] = 'active'; }
+        if ( $seccion == 'importar_lecturas_dinamicas' ) { $clases['importar'] = 'active'; }
+        if ( $seccion == 'importar_lecturas_dinamicas_e' ) { $clases['importar'] = 'active'; }
 
         $clases[$seccion] = 'active';
     

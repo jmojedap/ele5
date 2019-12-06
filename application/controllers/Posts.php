@@ -88,9 +88,24 @@ class Posts extends CI_Controller{
             $this->Post_model->eliminar($elemento_id);
         }
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($seleccionados));
+        $this->output->set_content_type('application/json')->set_output(json_encode($seleccionados));
+    }
+
+    /**
+     * Eliminar POST
+     * 2019-12-05
+     */
+    function delete($post_id)
+    {
+        $data = array('status' => 0, 'qty_deleted' => 0);
+        $qty_deleted = $this->Post_model->eliminar($post_id);
+
+        if ( $qty_deleted > 0 ) {
+            $data = array('status' => 1, 'qty_deleted' => $qty_deleted);
+        }
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**
@@ -326,7 +341,7 @@ class Posts extends CI_Controller{
         //Pagos
         $data['pagos'] = $this->db->get_where('post', 'tipo_id = 91');
 
-        $data['view_a'] = 'posts/bitacora/bitacora_v';
+        $data['view_a'] = 'posts/bitacora/print_v';
         $data['head_title'] = 'Bitacora';
         $this->load->view(TPL_ADMIN, $data);
     }

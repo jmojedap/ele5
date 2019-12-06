@@ -106,7 +106,7 @@
                                 <div id="lectura_modal_contenido"></div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-secondary btn_stop_ledin" data-dismiss="modal">Cerrar</button>
                             </div>
                             </div>
                         </div>
@@ -167,18 +167,29 @@
                 </div>
             </div>
             
-            <!-- FORMULARIO DE ANOTACIONES -->
+            <!-- HERRAMIENTAS DERECHA -->
             <div class="col-md-3">
                 <?php if ( $es_profesor ) { ?>
-                    <a class="btn btn-light btn-block" href="<?php echo base_url("flipbooks/programar_temas/{$row->id}") ?>" title="Programar fechas a los temas del contenido">
-                        <img src="<?php echo URL_IMG ?>flipbook/cd_programar.png" alt="Imagen programador">
+                    <a class="btn btn-light btn-block" href="<?php echo base_url("flipbooks/programar_temas/{$row->id}") ?>" title="Programar fechas a los temas de este contenido">
+                        <img src="<?php echo URL_IMG ?>flipbook/cd_programar_temas.png" alt="Imagen programador">
                     </a>
-                    <a class="btn btn-light btn-block" href="<?php echo base_url("flipbooks/crear_cuestionario/{$row->id}") ?>" target="_blank" title="Crear un cuestionario">
+                    <a class="btn btn-light btn-block" href="<?php echo base_url("flipbooks/crear_cuestionario/{$row->id}") ?>" target="_blank" title="Crear un cuestionario con los temas de este contenido">
                         <img src="<?php echo URL_IMG ?>flipbook/cd_cuestionario.png" alt="Imagen cuestionario">
                     </a>
-                    <a class="btn btn-light btn-block mb-2" href="<?php echo base_url('eventos/calendario') ?>" title="Calendario planeador">
-                        <img src="<?php echo URL_IMG ?>flipbook/cd_planeador.png" alt="Imagen planeador">
+                    <a class="btn btn-light btn-block mb-2" href="<?php echo base_url('eventos/calendario') ?>" title="Calendario programador">
+                        <img src="<?php echo URL_IMG ?>flipbook/cd_programador.png" alt="Imagen programador">
                     </a>
+                    <a
+                        class="btn btn-light btn-block mb-2"
+                        v-for="plan_aula in data.planes_aula"
+                        v-show="plan_aula.num_pagina == num_pagina"
+                        v-bind:href="`<?php echo URL_UPLOADS ?>` + plan_aula.ubicacion"
+                        target="_blank"
+                        title="Plan de aula"
+                        >
+                        <img src="<?php echo URL_IMG ?>flipbook/cd_plan_aula.png" alt="Imagen programador">
+                    </a>
+                    
                 <?php } ?>
                 
                 <div

@@ -132,6 +132,10 @@
         $opciones_menus['temas/copiar'] = array('recursos', 'temas', 'temas');
         $opciones_menus['temas/asignar_quices'] = array('recursos', 'temas', 'temas');
         $opciones_menus['temas/asignar_quices_e'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['temas/importar_pa'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['temas/importar_pa_e'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['temas/importar_lecturas_dinamicas'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['temas/importar_lecturas_dinamicas_e'] = array('recursos', 'temas', 'temas');
 
         $opciones_menus['flipbooks/explorar'] = array('recursos', 'flipbooks', 'contenidos');
         $opciones_menus['flipbooks/asignar_taller'] = array('recursos', 'flipbooks', 'contenidos');

@@ -1,12 +1,13 @@
 #ledin {
     background-color: #fffEFA;
-    padding: 1em;
+    padding: 1.5em;
 }
 
-#ledin_contenido {
+.ledin_contenido {
     text-align: justify;
     font-family: 'Merriweather', serif;
     font-size: 1.05em;
+    color: #333;
 }
 
 #ledin span.con_definicion{
@@ -35,4 +36,8 @@
 #ledin hr {
     display: block;
     border: 1px solid red;
+}
+
+#ledin h2{
+    color: #b71c1c;
 }

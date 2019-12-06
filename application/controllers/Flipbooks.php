@@ -621,22 +621,29 @@ class Flipbooks extends CI_Controller{
 // LECTURA
 //-----------------------------------------------------------------------------
     
+    /**
+     * Seleccionar función con la cual se abre el flipbook para vista lectura
+     * 2019-12-06
+     */
     function abrir($flipbook_id, $num_pagina = NULL)
     {
+        $row = $this->Pcrn->registro_id('flipbook', $flipbook_id);
+        $destino = "flipbooks/leer/{$flipbook_id}/{$num_pagina}";
+
+        //Clase dinámica
+        if ( $row->tipo_flipbook_id == 4 ) { $destino = "flipbooks/clase_dinamica/{$flipbook_id}/{$num_pagina}";}
+        
+        //Selección de navegador
         //Redirigir
         $this->load->model('Esp');
         $navegador = $this->Esp->navegador();
-
-        $destino = "flipbooks/leer/{$flipbook_id}/{$num_pagina}";
         $navegadores_ant = array('Internet Explorer', 'Safari');
-
         if ( in_array($navegador, $navegadores_ant) )
         {
             $destino = "flipbooks/leer_v3/{$flipbook_id}/{$num_pagina}";
         }
 
         redirect($destino);
-        
     }
 
     /**
@@ -792,9 +799,7 @@ class Flipbooks extends CI_Controller{
             $data_str = $this->Flipbook_model->crear_json($flipbook_id);
         }
             
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output($data_str);
+        $this->output->set_content_type('application/json')->set_output($data_str);
     }
     
     /**

@@ -1201,7 +1201,12 @@ class Temas extends CI_Controller{
 
         $data['ledins'] = $this->Tema_model->ledins($tema_id);
         $data['ledin_id'] = $ledin_id;
-        $data['ledin'] = $this->Tema_model->ledin($ledin_id);
+
+        if ( is_null($ledin_id) && $data['ledins']->num_rows() > 0 ) {
+            $data['ledin_id'] = $data['ledins']->row()->id;
+        }
+
+        $data['ledin'] = $this->Tema_model->ledin($data['ledin_id']);
 
         $data['view_a'] = 'temas/ledins/ledins_v';
         $data['subtitle_head'] = 'Lecturas dinámicas';
@@ -1252,11 +1257,11 @@ class Temas extends CI_Controller{
     function importar_lecturas_dinamicas()
     {
         //Iniciales
-            $nombre_archivo = '32_formato_cargue_ledins.xlsx';
+            $nombre_archivo = '32_formato_cargue_lecturas.xlsx';
             $parrafos_ayuda = array();
         
         //Instructivo
-            $data['titulo_ayuda'] = '¿Cómo importar lecturas ledin?';
+            $data['titulo_ayuda'] = '¿Cómo importar lecturas dinámicas?';
             $data['nota_ayuda'] = 'Se importarán lecturas dinámicas asociadas a cada tema';
             $data['parrafos_ayuda'] = $parrafos_ayuda;
         
@@ -1268,7 +1273,7 @@ class Temas extends CI_Controller{
             
         //Variables generales
             $data['head_title'] = 'Temas';
-            $data['head_subtitle'] = 'Importar lecturas ledins';
+            $data['head_subtitle'] = 'Importar lecturas dinámicas';
             $data['view_a'] = 'comunes/bs4/importar_v';
             $data['nav_2'] = 'temas/explorar/menu_v';
             $data['nav_3'] = 'temas/menu_importar_v';

@@ -54,7 +54,7 @@
         
     //Elementos de menú según el rol del visitante
         $elementos_rol[0] = array('importar', 'importar_ut', 'copiar_preguntas', 'asignar_quices', 'importar_pa', 'importar_lecturas_dinamicas');
-        $elementos_rol[1] = array('importar', 'importar_ut', 'copiar_preguntas', 'asignar_quices', 'importar_pa');
+        $elementos_rol[1] = array('importar', 'importar_ut', 'copiar_preguntas', 'asignar_quices', 'importar_pa', 'importar_lecturas_dinamicas');
         $elementos_rol[2] = array('importar', 'importar_ut');
         
     //Definiendo menú mostrar, según el rol del visitante

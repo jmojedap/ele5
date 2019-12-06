@@ -1,38 +1,69 @@
+<?php
+    $lapse_index = 3;
+
+    //Velocidades, lapsos entre palabra y palabra en milisegundos
+    $arr_lapses = array(
+        1 => '2000',
+        2 => '950',
+        3 => '515',
+        4 => '280',
+        5 => '130'
+    );
+?>
+
 <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="<?php echo URL_RESOURCES ?>css/lectura_dinamica.css">
 
 <script>
-    var i = 0;
-    var lapse = 150;
+    var i = 0;  //Índice palabra
+    var lapse = <?php echo $arr_lapses[$lapse_index] ?>;
+    var lapse_index = <?php echo $lapse_index; ?>;
+    var pending = {};
+    var restart_timeout;
 
     $(document).ready(function(){
 
+        $('.playing').hide();
+
         var palabras = $("#lectura_dinamica span");
 
+        //Iniciar recorrido de palabras
         $('#btn_play').click(function(){
             
-            $('#lectura_dinamica').show();
-            $('#lectura_diccionario').hide();
-            $('#btn_play').hide();
+            $('.stopped').hide();
+            $('.playing').show();
 
             $("#lectura_dinamica span").addClass('atenuada');
-            //$("#texto_prueba span").addClass('palabra');
             for (let index = 0; index < palabras.length; index++)
             {
                 siguiente_palabra(index);
             }
 
-            setTimeout(() => {
-                $('#lectura_dinamica').hide();
-                $('#lectura_diccionario').show();
-                $('#btn_play').show();
+            //Al final mostrar diccionario
+            restart_timeout = setTimeout(() => {
+                $('.stopped').show();
+                $('.playing').hide();
             }, palabras.length * lapse);
 
         });
 
+        //Detener lectura dinámica
+        $('.btn_stop_ledin').click(function(){
+            console.log('Lectura dinámica detenida');
+            for (var t in pending) if (pending.hasOwnProperty(t)) {
+                clearTimeout(t);
+                delete pending[t];
+            }
+
+            clearTimeout(restart_timeout);
+            $('.stopped').show();
+            $('.playing').hide();
+        });
+
+        //Pasar a siguiente palabra, (span)
         function siguiente_palabra(i)
         {
-            setTimeout(() => {
+            t = setTimeout(() => {
                 var palabra_ant = palabras[i-1];
                 var palabra = palabras[i];
                 var palabra_2 = palabras[i+1];
@@ -44,13 +75,22 @@
                 $(palabra_2).addClass('resaltada', 'slow');
                 $(palabra_3).addClass('resaltada', 'slow');
             }, i * lapse);
-        }
-        
 
-        $(function () {
-            $('.con_definicion').popover({
-                container: '#ledin'
-            })
+            pending[t] = 1; //Cagar array de eventos programados
+        } 
+
+        //Seleccionar velocidad de lectura
+        $('.btn_speed').click(function(){
+            $('.btn_speed').removeClass('btn-primary');
+            $('.btn_speed').addClass('btn-light');
+            $(this).removeClass('btn-light');
+            $(this).addClass('btn-primary');
+            lapse = $(this).data('lapse');
+            console.log(lapse);
+        });
+        
+        $('.con_definicion').popover({
+            container: '#ledin'
         })
 
         $('.con_definicion').hover(function(){
@@ -70,25 +110,45 @@
 
 
 <div id="ledin">
-    <div id="ledin_contenido">
+    <div>
         <?php if ( ! is_null($ledin) ) { ?>
             <?php
                 $elementos = json_decode($ledin->contenido_json);
             ?>
-            <h4 class="card-title"><?php echo $ledin->nombre_post ?></h4>
-            <img src="<?php echo URL_UPLOADS . 'lecturas_dinamicas_imagenes/' . $ledin->texto_2 ?>" alt="" width="100%" class="rounded mb-3">
-            <div id="lectura_diccionario">
+            <h2 class="text-center"><?php echo $ledin->nombre_post ?></h2>
+
+            <?php if ( $ledin->texto_2 ) { ?>
+                <img src="<?php echo URL_UPLOADS . 'lecturas_dinamicas_imagenes/' . $ledin->texto_2 ?>" alt="" width="100%" class="rounded mb-3">
+            <?php } ?>
+
+            <div class="mb-3">
+                <button class="btn btn-success w4 stopped" id="btn_play">
+                    Iniciar Lectura
+                </button>
+                <button class="btn btn-warning w4 playing btn_stop_ledin">
+                    Detener
+                </button>
+                <div class="btn-group stopped" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-secondary" disabled>Velocidad</button>
+                    <?php foreach ( $arr_lapses as $key => $lapse ) { ?>    
+                        <?php
+                            $cl_lapse = $this->Pcrn->clase_activa($key, $lapse_index, 'btn-primary', 'btn-light');
+                        ?>
+                        <button type="button" class="btn w2 btn_speed <?php echo $cl_lapse ?>" data-lapse="<?php echo $lapse ?>">
+                            <?php echo $key; ?>
+                        </button>
+                    <?php } ?>
+                </div>
+            </div>
+
+            <div id="lectura_diccionario" class="ledin_contenido stopped">
                 <?php echo $elementos->diccionario ?>
             </div>
-            <div id="lectura_dinamica" style="display: none;">
+            <div id="lectura_dinamica" class="ledin_contenido playing">
                 <?php echo $elementos->lectura_dinamica ?>
             </div>
         <?php } ?>
     </div>
-    <button class="btn btn-success mt-2" id="btn_play">
-        <i class="fa fa-play"></i>
-        Lectura dinámica
-    </button>
 
     <!-- Modal Definición -->
     <div class="modal fade" id="modal_definicion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

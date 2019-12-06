@@ -20,7 +20,7 @@
         $arr_menus['abrir'] = array(
             'icono' => '<i class="fa fa-external-link-alt"></i>',
             'texto' => 'Abrir',
-            'link' => "flipbooks/leer/{$row->id}",
+            'link' => "flipbooks/abrir/{$row->id}",
             'atributos' => 'target="_blank"',
         );
 
