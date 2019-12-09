@@ -75,7 +75,7 @@ class Datos_model extends CI_Model{
         $crud->set_table('item');
         $crud->set_subject('competencia');
         $crud->columns('id', 'item_grupo', 'orden', 'item', 'descripcion');
-        $crud->unset_add();
+        //$crud->unset_add();
         $crud->unset_print();
 
         //Filtro
