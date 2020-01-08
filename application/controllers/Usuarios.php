@@ -891,7 +891,7 @@ class Usuarios extends CI_Controller{
         }
         
         //Flipbooks
-            $data['funcion_flipbook'] = 'abrir_flipbook';
+            $data['funcion_flipbook'] = 'abrir';
             $data['flipbooks'] = $this->session->userdata('arr_flipbooks');
 
         //Cuestionarios

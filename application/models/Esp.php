@@ -162,7 +162,7 @@ class Esp extends CI_Model {
 
         //Flipbooks
         $this->load->model('Usuario_model');
-        $flipbooks = $this->Usuario_model->flipbooks($row_usuario, '0,1,3');
+        $flipbooks = $this->Usuario_model->flipbooks($row_usuario, '0,1,3,4');
         $data['arr_flipbooks'] = $flipbooks->result_array();
 
         //Cuestionarios

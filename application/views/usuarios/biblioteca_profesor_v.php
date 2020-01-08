@@ -5,7 +5,7 @@
         $contenidos = array();
         foreach ( $flipbooks as $flipbook )
         {
-            if ( in_array($flipbook['tipo_flipbook_id'], array(0,3)) ) { $contenidos[] = $flipbook; }
+            if ( in_array($flipbook['tipo_flipbook_id'], array(0,3,4)) ) { $contenidos[] = $flipbook; }
         }
     
         $img_flipbook_general = $url_resources . 'flipbook_general.png';

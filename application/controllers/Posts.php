@@ -339,9 +339,12 @@ class Posts extends CI_Controller{
         $data['pago_id'] = $pago_id;
 
         //Pagos
-        $data['pagos'] = $this->db->get_where('post', 'tipo_id = 91');
+        $this->db->order_by('fecha', 'desc');
+        $this->db->where('tipo_id', 91);
+        $data['pagos'] = $this->db->get('post');
 
         $data['view_a'] = 'posts/bitacora/print_v';
+        //$data['view_a'] = 'posts/bitacora/bitacora_v';
         $data['head_title'] = 'Bitacora';
         $this->load->view(TPL_ADMIN, $data);
     }
