@@ -1,6 +1,6 @@
 <?php
     //$this->set_css($this->default_theme_path.'/bootstrap/css/bootstrap/bootstrap.min.css');
-    $this->set_css($this->default_theme_path.'/bootstrap/css/font-awesome/css/font-awesome.min.css');    
+    //$this->set_css($this->default_theme_path.'/bootstrap/css/font-awesome/css/font-awesome.min.css');
     $this->set_css($this->default_theme_path.'/bootstrap/css/common.css');    
     $this->set_css($this->default_theme_path.'/bootstrap/css/list.css');
     $this->set_css($this->default_theme_path.'/bootstrap/css/general.css');
@@ -150,14 +150,14 @@
                             <td class="no-border-left <?php if ($buttons_counter === 0) { ?>hidden<?php } ?>">
                                 <div class="floatL">
                                     <a href="javascript:void(0);" title="<?php echo $this->l('list_delete') ?>"
-                                       class="hidden btn btn-secondary delete-selected-button">
-                                        <i class="fa fa-trash-o text-danger"></i>
+                                       class="hidden btn btn-light delete-selected-button">
+                                        <i class="fas fa-trash text-danger"></i>
                                         <span class="text-danger"><?php echo $this->l('list_delete') ?></span>
                                     </a>
                                 </div>
                                 <div class="floatR l5">
                                     <a href="javascript:void(0);" class="btn btn-secondary gc-refresh">
-                                        <i class="fa fa-refresh"></i>
+                                        <i class="fa fa-sync-alt"></i>
                                     </a>
                                 </div>
                                 </div>

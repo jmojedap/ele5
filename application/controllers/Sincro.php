@@ -38,7 +38,7 @@ class Sincro extends CI_Controller {
         //Variables específicas
             $data['metodo_id'] = $metodo_id;    //Método de sincronización.
             $data['tablas'] = $this->Develop_model->tablas($condicion);
-            $data['limit'] = 5000;             //Número máximo de registros a transferir por ciclo
+            $data['limit'] = 2000;             //Número máximo de registros a transferir por ciclo
             $data['sincro_url'] = $this->Pcrn->campo_id('sis_opcion', 2, 'valor');
             
         //Se puede sincronizar solo si es versión local, backup

@@ -74,7 +74,7 @@
                                             <i class="fa fa-rotate-left"></i>
                                             <?php echo $this->l('form_save_and_go_back'); ?>
                                         </button>
-                                        <button class="btn btn-default cancel-button b10" type="button" id="cancel-button">
+                                        <button class="btn btn-light cancel-button b10" type="button" id="cancel-button">
                                             <i class="fa fa-warning"></i>
                                             <?php echo $this->l('form_cancel'); ?>
                                         </button>

@@ -365,23 +365,60 @@ class Temas extends CI_Controller{
             $data['view_a'] = 'temas/paginas_v';
             $this->load->view(TPL_ADMIN, $data);
     }
+
+// GESTIÓN DE ARCHIVOS ASOCIADOS A TEMAS
+//-----------------------------------------------------------------------------
     
     function archivos($tema_id)
     {       
         //Cargando datos básicos
             $data = $this->Tema_model->basico($tema_id);
-            
-        //Render del grocery crud
-            $gc_output = $this->Tema_model->crud_archivos($tema_id);
         
         //Archivos
             $data['archivos'] = $this->Tema_model->archivos($tema_id);
+            $data['options_type'] = $this->Item_model->opciones_id('categoria_id = 20', 'Elija el tipo de archivo');
+            $data['options_yn'] = $this->Item_model->opciones('categoria_id = 55 AND id_interno < 2');
+
+            $data['arr_types'] = $this->Item_model->arr_item(20, 'id');
+            $data['arr_yn'] = $this->Item_model->arr_item(55, 'id_interno_num');
             
         //Solicitar vista
             $data['head_subtitle'] = 'Archivos';
-            $data['view_a'] = 'comunes/bs4/gc_v';
-            $output = array_merge($data,(array)$gc_output);
-            $this->load->view(TPL_ADMIN, $output);
+            $data['view_a'] = 'temas/archivos_v';
+            $this->load->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * AJAX JSON
+     * Listado de archivos asociados a un tema
+     * 2020-01-23
+     */
+    function get_archivos($tema_id)
+    {
+        $archivos = $this->Tema_model->archivos($tema_id);
+        $data['archivos'] = $archivos->result();
+
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * Guarda un archivo asociado a un tema
+     * 2020-01-23
+     */
+    function save_archivo($tema_id, $archivo_id = 0)
+    {
+        $data = $this->Tema_model->save_archivo($tema_id, $archivo_id);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * Elimina el un archivo asociado a un tema
+     * 2020-01-23
+     */
+    function delete_archivo($tema_id, $archivo_id)
+    {
+        $data = $this->Tema_model->delete_archivo($tema_id, $archivo_id);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
 // GESTIÓN DE LINKS ASOCIADOS A TEMAS
@@ -442,8 +479,6 @@ class Temas extends CI_Controller{
         ->set_content_type('application/json')
         ->set_output(json_encode($data));
     }
-    
-    
     
 // CARGA MASIVA DE TEMAS
 //---------------------------------------------------------------------------------------------------

@@ -351,154 +351,6 @@ class Tema_Model extends CI_Model{
         redirect("temas/preguntas/{$primary_key}");
     }
     
-    function crud_archivos($tema_id)
-    {
-        //Grocery crud
-        $this->load->library('grocery_CRUD');
-        
-        $crud = new grocery_CRUD();
-        $crud->set_table('recurso');
-        $crud->set_subject('archivo');
-        $crud->unset_export();
-        $crud->unset_print();
-        $crud->unset_read();
-        $crud->columns('nombre_archivo', 'tipo_archivo_id', 'fecha_subida', 'disponible');
-        
-        //Filtro
-            $crud->where('tema_id', $tema_id);
-            $crud->where('tipo_recurso_id', 1);
-
-        //Callback, vista
-            //$crud->callback_column('nombre_tema',array($this,'gc_link_tema'));
-        
-        //Títulos de los campos
-            $crud->display_as('tipo_archivo_id', 'Tipo');
-            $crud->display_as('usuario_id', 'Editado por');
-            $crud->display_as('fecha_subida', 'Editado');
-        
-        //Relaciones
-            $crud->set_relation('tipo_archivo_id', 'item', 'item', 'categoria_id = 20 AND item_grupo = 1');
-            
-        //Opciones disponible
-            $opciones_disponible = $this->Item_model->opciones('categoria_id = 55 AND id_interno <=1');
-            $crud->field_type('disponible', 'dropdown', $opciones_disponible);
-        
-
-        //Formulario Edit
-            $crud->edit_fields(
-                'nombre_archivo',
-                'tema_id',
-                'tipo_recurso_id',
-                'tipo_archivo_id',
-                'fecha_subida',
-                'disponible',
-                'usuario_id'
-            );
-
-        //Formulario Add
-            $crud->add_fields(
-                'nombre_archivo',
-                'tema_id',
-                'tipo_recurso_id',
-                'tipo_archivo_id',
-                'fecha_subida',
-                'disponible',
-                'usuario_id'
-            );
-
-        //Funciones
-            //$crud->callback_after_update(array($this, 'gc_after_insert'));
-
-        //Reglas de validación
-            $crud->required_fields('nombre_archivo', 'tipo_archivo_id');
-            
-        //Valores por defecto
-            $crud->field_type('usuario_id', 'hidden', $this->session->userdata('usuario_id'));
-            $crud->field_type('fecha_subida', 'hidden', date('Y-m-d H:i:s') );
-            $crud->field_type('tema_id', 'hidden', $tema_id );
-            $crud->field_type('tipo_recurso_id', 'hidden', 1 ); //1 => Archivos
-        
-        //Cargue de archivo
-            //$this->config->set_item('grocery_crud_file_upload_allow_file_types', 'mp3|pdf|mp4|jpg|png');
-            //$crud->set_field_upload('nombre_archivo', 'assets/uploads/audios');
-        
-        $output = $crud->render();
-        
-        return $output;
-        
-    }
-    
-    function crud_links($tema_id)
-    {
-        //Grocery crud
-        $this->load->library('grocery_CRUD');
-        
-        $crud = new grocery_CRUD();
-        $crud->set_table('recurso');
-        $crud->set_subject('link');
-        $crud->unset_export();
-        $crud->unset_print();
-        $crud->unset_read();
-        $crud->columns('url', 'tipo_archivo_id', 'fecha_subida', 'usuario_id');
-        
-        //Filtro
-            $crud->where('tema_id', $tema_id);
-            $crud->where('tipo_recurso_id', 2);
-
-        //Callback, vista
-            $crud->callback_column('url',array($this,'gc_link_recurso'));
-        
-        //Títulos de los campos
-            $crud->display_as('tipo_archivo_id', 'Tipo');
-            $crud->display_as('usuario_id', 'Editado por');
-            $crud->display_as('fecha_subida', 'Editado');
-        
-        //Relaciones
-            $crud->set_relation('tipo_archivo_id', 'item', 'item', 'categoria_id = 20 AND item_grupo = 2');
-        
-
-        //Formulario Edit
-            $crud->edit_fields(
-                'url',
-                'tema_id',
-                'tipo_recurso_id',
-                'tipo_archivo_id',
-                'fecha_subida',
-                'usuario_id'
-            );
-
-        //Formulario Add
-            $crud->add_fields(
-                'url',
-                'tema_id',
-                'tipo_recurso_id',
-                'tipo_archivo_id',
-                'fecha_subida',
-                'usuario_id'
-            );
-
-        //Funciones
-            //$crud->callback_after_update(array($this, 'gc_after_insert'));
-
-        //Reglas de validación
-            $crud->required_fields('url', 'tipo_archivo_id');
-            
-        //Valores por defecto
-            $crud->field_type('usuario_id', 'hidden', $this->session->userdata('usuario_id'));
-            $crud->field_type('fecha_subida', 'hidden', date('Y-m-d H:i:s') );
-            $crud->field_type('tema_id', 'hidden', $tema_id );
-            $crud->field_type('tipo_recurso_id', 'hidden', 2 ); //1 => Links
-        
-        //Cargue de archivo
-            //$this->config->set_item('grocery_crud_file_upload_allow_file_types', 'mp3|pdf|mp4|jpg|png');
-            //$crud->set_field_upload('nombre_archivo', 'assets/uploads/audios');
-        
-        $output = $crud->render();
-        
-        return $output;
-        
-    }
-    
     /**
      * Link para Grocery Crud de los temas
      * 
@@ -603,14 +455,14 @@ class Tema_Model extends CI_Model{
         return $paginas;
     }
     
-    function archivos($tema_id)
+    /*function archivos($tema_id)
     {
         $this->db->where('tema_id', $tema_id);
         $this->db->where('tipo_recurso_id', 1);
         $archivos = $this->db->get('recurso');
         
         return $archivos;
-    }
+    }*/
     
     function archivos_leer($tema_id)
     {
@@ -1389,6 +1241,75 @@ class Tema_Model extends CI_Model{
         if ( $quan_deleted > 0 )
         {
             $data = array('status' => 1, 'message' => 'Link eliminado');
+        }
+    
+        return $data;
+    }
+
+// GESTIÓN DE ARCHIVOS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Listado de archivos asociados a un tema
+     * 2020-01-23
+     */
+    function archivos($tema_id)
+    {
+        //$this->db->select('id, nombre_archivo, disponible');
+        $this->db->where('tema_id', $tema_id);
+        $this->db->where('tipo_recurso_id', 1);
+        $archivos = $this->db->get('recurso');
+        
+        return $archivos;
+    }
+
+    /**
+     * Guardar archivo asociado a un tema en la tabla recurso
+     * 2019-09-03
+     */
+    function save_archivo($tema_id, $archivo_id)
+    {
+        //Resultado inicial por defecto
+            $data = array('status' => 0, 'message' => 'El archivo no fue guardado');
+
+        //Construir registro
+            $arr_row['nombre_archivo'] = $this->input->post('nombre_archivo');
+            $arr_row['tipo_archivo_id'] = $this->input->post('tipo_archivo_id');
+            $arr_row['disponible'] = $this->input->post('disponible');
+            $arr_row['tema_id'] = $tema_id;
+            $arr_row['tipo_recurso_id'] = 1;    //Archivo
+            $arr_row['editado'] = date('Y-m-d H:i:s');
+            $arr_row['usuario_id'] = $this->session->userdata('usuario_id');
+
+        //Guardar
+            $condition = "tema_id = {$tema_id} AND id = {$archivo_id}";
+            $saved_id = $this->Pcrn->guardar('recurso', $condition, $arr_row);
+        
+            if ( $saved_id > 0 )
+            {
+                $data = array('status' => 1, 'message' => 'Los datos del archivo fueron guardados', 'archivo_id' => $saved_id);
+            }
+    
+        return $data;
+    }
+
+    /**
+     * Elimina un archivo de la tabla recurso, asociado a un $tema_id.
+     * 2020-01-23
+     */
+    function delete_archivo($tema_id, $archivo_id)
+    {
+        $data = array('status' => 0, 'message' => 'No se pudo eliminar el archivo');
+    
+        $this->db->where('id', $archivo_id);
+        $this->db->where('tema_id', $tema_id);
+        $this->db->delete('recurso');
+        
+        $quan_deleted = $this->db->affected_rows();
+    
+        if ( $quan_deleted > 0 )
+        {
+            $data = array('status' => 1, 'message' => 'Archivo eliminado');
         }
     
         return $data;

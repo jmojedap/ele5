@@ -10,7 +10,6 @@
             $('.chzn-drop').css('width', '300px');
             $('.chzn-drop').css('width', '300px');
             $('.chzn-search input').css('width', '280px');
-        
     });
 </script>
 

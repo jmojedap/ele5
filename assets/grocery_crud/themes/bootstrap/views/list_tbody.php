@@ -39,7 +39,7 @@
             <?php if ($buttons_counter === 0) {?>class="hidden"<?php }?>>
                 <div class="only-desktops"  style="white-space: nowrap">
                     <?php if(!$unset_edit){?>
-                        <a class="btn btn-default" href="<?php echo $row->edit_url?>"><i class="fa fa-pencil"></i>
+                        <a class="btn btn-secondary" href="<?php echo $row->edit_url?>"><i class="fa fa-pencil-alt"></i>
                             <?php //echo $this->l('list_edit'); ?>
                         </a>
                     <?php } ?>
@@ -47,7 +47,7 @@
 
                         <?php if ($show_more_button) { ?>
                             <div class="btn-group dropdown">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
                                     <?php echo $more_string; ?>
                                     <span class="caret"></span>
                                 </button>
@@ -74,7 +74,7 @@
                                     <?php if (!$unset_delete) { ?>
                                         <li>
                                             <a data-target="<?php echo $row->delete_url?>" href="javascript:void(0)" title="<?php echo $this->l('list_delete')?>" class="delete-row">
-                                                <i class="fa fa-trash-o text-danger"></i>
+                                                <i class="fas fa-trash text-danger"></i>
                                                 <span class="text-danger"><?php echo $this->l('list_delete')?></span>
                                             </a>
                                         </li>
@@ -86,21 +86,21 @@
                                     foreach($row->action_urls as $action_unique_id => $action_url){
                                         $action = $actions[$action_unique_id];
                                         ?>
-                                        <a href="<?php echo $action_url; ?>" class="btn btn-default">
+                                        <a href="<?php echo $action_url; ?>" class="btn btn-secondary">
                                             <i class="fa <?php echo $action->css_class; ?>"></i> <?php echo $action->label?>
                                         </a>
                                     <?php }
                                 }
 
                                 if (!$unset_read) { ?>
-                                    <a class="btn btn-default" href="<?php echo $row->read_url?>"><i class="fa fa-eye"></i>
+                                    <a class="btn btn-secondary" href="<?php echo $row->read_url?>"><i class="fa fa-eye"></i>
                                         <?php //echo $this->l('list_view')?>
                                     </a>
                                 <?php }
 
                                 if (!$unset_delete) { ?>
-                                    <a data-target="<?php echo $row->delete_url?>" href="javascript:void(0)" title="<?php echo $this->l('list_delete')?>" class="delete-row btn btn-default">
-                                        <i class="fa fa-trash-o text-danger"></i>
+                                    <a data-target="<?php echo $row->delete_url?>" href="javascript:void(0)" title="<?php echo $this->l('list_delete')?>" class="delete-row btn btn-light">
+                                        <i class="fas fa-trash text-danger"></i>
                                         <span class="text-danger">
                                         <?php //echo $this->l('list_delete')?></span>
                                     </a>
@@ -112,7 +112,7 @@
                 <div class="only-mobiles">
                     <?php if ($buttons_counter > 0) { ?>
                     <div class="btn-group dropdown">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
                             <?php echo $this->l('list_actions'); ?>
                             <span class="caret"></span>
                         </button>
@@ -120,7 +120,7 @@
                             <?php if (!$unset_edit) { ?>
                             <li>
                                 <a href="<?php echo $row->edit_url?>">
-                                    <i class="fa fa-pencil"></i> <?php echo $this->l('list_edit'); ?>
+                                    <i class="fa fa-pencil-alt"></i> <?php echo $this->l('list_edit'); ?>
                                 </a>
                             </li>
                             <?php } ?>

@@ -391,7 +391,7 @@ class Item_model extends CI_Model{
                 //id, ordenado alfabéticamente
                 $arr_config['campo_indice'] = 'id';
                 $arr_config['order_by'] = 'item';
-                $arr_config['str'] = TRUE;
+                $arr_config['str'] = FALSE;
                 break;
             case 'id_interno':
                 //id_interno, ordenado por id_interno
