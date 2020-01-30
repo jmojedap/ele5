@@ -76,9 +76,7 @@ class Eventos extends CI_Controller{
             $data = array('status' => 1, 'message' => 'Registros eliminados: ' . $cant_eliminados);
         }
 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     function nuevo()
@@ -126,8 +124,8 @@ class Eventos extends CI_Controller{
     
     function calendario()
     {
-        if ($this->input->get('profiler')){ $this->output->enable_profiler(TRUE); }
-        
+        if ( $this->input->get('profiler') ) { $this->output->enable_profiler(TRUE); }
+
         $this->load->model('Usuario_model');
         $this->load->model('Busqueda_model');
         
@@ -142,16 +140,14 @@ class Eventos extends CI_Controller{
             $eventos[2] = $this->Evento_model->evs_temas($busqueda);                //Programación de temas
             $eventos[3] = $this->Evento_model->evs_quices($busqueda);               //Programación de quices
             $eventos[4] = $this->Evento_model->evs_links($busqueda);                //Programación de links
-            //$eventos[22] = $this->Evento_model->evs_cuestionarios($busqueda);       //Asignación de cuestionarios
             $view_a = 'eventos/calendario/calendario_v';
         } else {
             //Los demás usuarios
             $tipos_evento = '2,4,22';
-            //$eventos[1] = $this->Evento_model->evs_cuestionarios_prf($busqueda);     //Asignación de cuestionarios
             $eventos[2] = $this->Evento_model->evs_temas($busqueda);                 //Programación de temas
             $eventos[4] = $this->Evento_model->evs_links($busqueda);                 //Programación de links
             $eventos[22] = $this->Evento_model->evs_cuestionarios_prf($busqueda);     //Asignación de cuestionarios
-            $view_a = 'eventos/calendario/calendario_prf_v';
+            $view_a = 'eventos/calendario_prf/calendario_prf_v';
         }
         
         $data['eventos'] = $eventos;
@@ -160,19 +156,11 @@ class Eventos extends CI_Controller{
         $data['grupos'] = $this->Usuario_model->grupos_usuario($this->session->userdata('usuario_id'));
         $data['busqueda'] = $busqueda;
         $data['destino_filtros'] = "eventos/calendario/";
-        
-        if ( $this->input->get('profiler') == 1 )
-        {
-            $this->output->enable_profiler(TRUE);
-        }
-        
-        /*$data['head_title'] = 'Programador';
-        $data['view_a'] = $view_a;
-        $data['nav_2'] = 'usuarios/biblioteca_menu_v';*/
 
-        $data['titulo_pagina'] = 'Programador';
-        $data['vista_a'] = $view_a;
-        $this->load->view(PTL_ADMIN, $data);
+        $data['head_title'] = 'Programador';
+        $data['nav_2'] = 'usuarios/biblioteca_menu_v';
+        $data['view_a'] = $view_a;
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     function imprimir_calendario($mes = NULL)
@@ -191,14 +179,14 @@ class Eventos extends CI_Controller{
             $eventos[2] = $this->Evento_model->evs_temas($busqueda);            //Programación de temas
             $eventos[3] = $this->Evento_model->evs_quices($busqueda);           //Programación de quices
             $eventos[4] = $this->Evento_model->evs_links($busqueda);            //Programación de links
-            $vista_a = 'eventos/calendario/calendario_v';
+            $view_a = 'eventos/calendario/calendario_v';
         } else {
             //Los demás usuarios
             $tipos_evento = '1,2,4';
-            $eventos[1] = $this->Evento_model->evs_cuestionarios_prf($busqueda);     //Asignación de cuestionarios
             $eventos[2] = $this->Evento_model->evs_temas($busqueda);                 //Programación de temas
             $eventos[4] = $this->Evento_model->evs_links($busqueda);                 //Programación de links
-            $vista_a = 'eventos/calendario/imprimir_calendario_prf_v';
+            $eventos[22] = $this->Evento_model->evs_cuestionarios_prf($busqueda);     //Asignación de cuestionarios
+            $view_a = 'eventos/calendario/imprimir_calendario_prf_v';
         }
         
         //Establecer mes
@@ -214,8 +202,8 @@ class Eventos extends CI_Controller{
         
         
         $data['head_title'] = 'Programación';
-        $data['view_a'] = $vista_a;
-        $this->load->view('templates/print/main_v', $data);
+        $data['view_a'] = $view_a;
+        $this->load->view('templates/bs4_print/main_v', $data);
     }
     
     
@@ -293,10 +281,7 @@ class Eventos extends CI_Controller{
     function eliminar($evento_id)
     {
         $cant_registros = $this->Evento_model->eliminar($evento_id);
-        
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($cant_registros));
+        $this->output->set_content_type('application/json')->set_output(json_encode($cant_registros));
     }
     
     /**
@@ -324,9 +309,7 @@ class Eventos extends CI_Controller{
         $respuesta['html'] = $html;
         $respuesta['cant_noticias'] = $noticias->num_rows();
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($respuesta));
+        $this->output->set_content_type('application/json')->set_output(json_encode($respuesta));
     }
 
     
@@ -353,10 +336,39 @@ class Eventos extends CI_Controller{
             $condicion = "id = {$this->input->post('evento_id')}";
             $this->Pcrn->guardar('evento', $condicion, $registro);
         }
-        
-        
             
         redirect('eventos/calendario');
+    }
+
+    /**
+     * Recibe los datos del formulario de eventos/calendario
+     * Guarda registro de evento de lectura programada de link
+     * 2020-01-28
+     */
+    function guardar_ev_link($evento_id = 0)
+    {  
+        $data['saved_id'] = 0;
+
+        $arr_row['tipo_id'] = 4;   //Link asignado
+        $arr_row['fecha_inicio'] = $this->input->post('fecha_inicio');   //Link asignado
+        $arr_row['referente_id'] = time();   //Para identificarlo
+        $arr_row['url'] = $this->input->post('url');
+        $arr_row['institucion_id'] = $this->session->userdata('institucion_id');
+        $arr_row['grupo_id'] = $this->input->post('grupo_id');
+        $arr_row['c_usuario_id'] = $this->session->userdata('usuario_id');
+        
+        if ( $evento_id == 0 ) {
+            $data['saved_id'] = $this->Evento_model->guardar_evento($arr_row);
+        } else {
+            $condicion = "id = {$evento_id}";
+            $data['saved_id'] = $this->Pcrn->guardar('evento', $condicion, $arr_row);
+        }
+
+        //Comprobar resultado
+        $data['status'] = ( $data['saved_id'] > 0 ) ? 1 : 0 ;
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
 //PROGRAMACIÓN DE TEMAS
@@ -378,9 +390,7 @@ class Eventos extends CI_Controller{
         
         $evento_id = $this->Evento_model->programar_tema($datos);
 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output($evento_id);
+        $this->output->set_content_type('application/json')->set_output($evento_id);
     }
     
 }

@@ -285,6 +285,7 @@ class Flipbooks extends CI_Controller{
                 0 => 'flipbooks/crear_cuestionario_v',
                 1 => 'flipbooks/crear_cuestionario_v',
                 3 => 'flipbooks/crear_cuestionario_ut_v',
+                4 => 'flipbooks/crear_cuestionario_v',
             );
         
         //Solicitar vista
@@ -813,9 +814,7 @@ class Flipbooks extends CI_Controller{
     {
         $data['anotaciones'] = $this->Flipbook_model->anotaciones($flipbook_id)->result();
         
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($data));   
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));   
     }
     
     /**
@@ -832,9 +831,7 @@ class Flipbooks extends CI_Controller{
         $data_str = $this->Flipbook_model->crear_json($flipbook_id);
         if ( strlen($data_str) > 0 ) { $data['status'] = 1; }
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -868,14 +865,14 @@ class Flipbooks extends CI_Controller{
 
     /**
      * Mostrar el flipbook para leer, vista completa para profesores y estudiantes
-     * 2018-10-23
+     * 2019-10-23
      * 
      * @param type $flipbook_id
      * @param type $num_pagina
      */
     function clase_dinamica($flipbook_id, $num_pagina = NULL)
     {
-        if ( $this->input->get('profiler') == 1 ) { $this->output->enable_profiler(TRUE); }
+        if ( $this->input->get('profiler') ) { $this->output->enable_profiler(TRUE); }
         
         //Datos básicos
             $data = $this->Flipbook_model->basico($flipbook_id);

@@ -1,4 +1,4 @@
-<?php $this->load->view('assets/fullcalendar'); ?>
+<?php $this->load->view('assets/fullcalendar4'); ?>
 
 <?php
     
@@ -40,7 +40,11 @@
 
     $(document).ready(function()
     {
-        $('#calendar').fullCalendar({
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'bootstrap' ],
+            themeSystem: 'bootstrap',
             header: {
                 left: 'prev,next today',
                 center: 'title',
@@ -52,18 +56,18 @@
             eventLimit: true, // allow "more" link when too many events
             events: [
                 //Eventos, programación de cuestionarios
-                <?php foreach ($eventos[1]->result() as $row_evento) : ?>
+                <?php foreach ($eventos[22]->result() as $row_evento) : ?>
                     <?php
-                        $url = base_url() . "cuestionarios/grupos/{$row_evento->referente_2_id}/{$row_evento->institucion_id}/{$row_evento->grupo_id}";
-                        $nombre_cuestionario = $this->App_model->nombre_cuestionario($row_evento->referente_2_id);
+                        $url = base_url("cuestionarios/grupos/{$row_evento->referente_id}/{$row_evento->institucion_id}/{$row_evento->grupo_id}");
+                        $nombre_cuestionario = $this->Pcrn->campo_id('cuestionario', $row_evento->referente_id, 'nombre_cuestionario');
                         $color = $colores_evento[1];
                     ?>
                     {
-                        id: <?= $row_evento->referente_2_id ?>,
-                        title: 'Cuestionario: <?= $nombre_cuestionario ?>',
+                        id: <?php echo $row_evento->referente_id ?>,
+                        title: "Cuestionario: <?php echo $nombre_cuestionario ?>",
                         start: '<?= $row_evento->fecha_inicio ?>',
                         end: '<?= $this->Pcrn->suma_fecha($row_evento->fecha_fin) ?>',
-                        //url: '<?= $url ?>',
+                        url: '<?= $url ?>',
                         color : '<?= $color ?>'
                     },
                 <?php endforeach ?>
@@ -97,30 +101,11 @@
                         color : '<?= $color ?>'
                     },
                 <?php endforeach ?>
-            ],
-            eventClick: function(event) {
-                if (event.url === 'link_externo') {
-                    evento_id = event.id;
-                    cargar();
-                    return false;
-                } else {
-                    window.open(event.url, "_blank");
-                    return false;
-                }
-            },
-            dayClick: function(date, jsEvent, view) {
-                
-                $('.fc-day').css('background-color', '#ffffff');
-                $(this).css('background-color', '#fcf8e3');
-                $('#campo_url').focus();
-                $('#campo_url').val('');
-                $('#campo_grupo_id').val('');
-                $('#campo_fecha_inicio').val(date.format());
-                $('#eliminar_link').addClass('hidden');
-                $('.evento_link').addClass('hidden');
-                
-            }
+            ]
         });
+
+        calendar.setOption('locale', 'Es');
+        calendar.render();
     });
 
 </script>
@@ -150,30 +135,22 @@
     </tbody>
 </table>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div id='calendar'></div>
-            </div>
-        </div>
-    </div>
-</div>
+<div id="calendar"></div>
 
-<div class="panel panel-default">
-    <div class="panel-body">
+<div class="card my-2">
+    <div class="card-body">
         <p>
-            <span class="suave">Usuario: </span>
+            <span class="text-muted">Usuario: </span>
             <strong><?= $this->session->userdata('nombre_completo') ?>    </strong>
-            <span class="suave"> | </span>
+            <span class="text-muted"> | </span>
 
-            <span class="suave">Institución: </span>
+            <span class="text-muted">Institución: </span>
             <strong> <?= $this->App_model->nombre_institucion($this->session->userdata('institucion_id')) ?>     </strong>
-            <span class="suave"> | </span>
+            <span class="text-muted"> | </span>
             
-            <span class="suave">Fecha: </span>
+            <span class="text-muted">Fecha: </span>
             <strong> <?= date('Y-m-d') ?>     </strong>
-            <span class="suave"> | </span>
+            <span class="text-muted"> | </span>
         </p>
     </div>
 </div>

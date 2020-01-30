@@ -412,7 +412,7 @@ class Temas extends CI_Controller{
     }
 
     /**
-     * Elimina el un archivo asociado a un tema
+     * Elimina un archivo asociado a un tema
      * 2020-01-23
      */
     function delete_archivo($tema_id, $archivo_id)
@@ -1271,6 +1271,7 @@ class Temas extends CI_Controller{
     {
         $ledins = $this->Tema_model->ledins($tema_id);
         
+        $data_json['status'] = 0;
         $data_json['message'] = 'Este tema no tiene lectura dinámica asignada';
         $data_json['html'] = 'Este tema no tiene lectura dinámica asignada';
 
@@ -1278,6 +1279,7 @@ class Temas extends CI_Controller{
         {
             $data['ledin_id'] = $ledins->row()->id;
             $data['ledin'] = $this->Tema_model->ledin($ledins->row()->id);
+            $data_json['status'] = 1;
             $data_json['message'] = 'Sí tiene ledin: ' . $data['ledin_id'];
             $data_json['html'] = $this->load->view('temas/ledins/ledin_v', $data, true);
         }
@@ -1353,5 +1355,4 @@ class Temas extends CI_Controller{
             $data['nav_3'] = 'temas/menu_importar_v';
             $this->load->view(TPL_ADMIN, $data);
     }
-
 }

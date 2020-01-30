@@ -1,5 +1,5 @@
 <?php $this->load->view('assets/bootstrap_datepicker'); ?>
-<?php $this->load->view('assets/fullcalendar'); ?>
+<?php $this->load->view('assets/fullcalendar4'); ?>
 <?php $this->load->view('assets/icheck'); ?>
 
 <?php
@@ -12,19 +12,21 @@
 </script>
 
 <script>
-    $(document).ready(function() 
-    {
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
 
-        $('#calendar').fullCalendar({
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'bootstrap' ],
+            themeSystem: 'bootstrap',
+            defaultView: 'dayGridMonth',
+            //defaultDate: '2019-01-05',
+            defaultDate: '<?php echo date('Y-m-d') ?>',
             header: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'month,agendaWeek'
+                right: ''
             },
-            defaultDate: '<?= date('Y-m-d') ?>',
             firstDay: 0,
-            editable: false,
-            eventLimit: true, // allow "more" link when too many events
             events: [
                 //Eventos, programación de cuestionarios
                 <?php foreach ($eventos[1]->result() as $row_evento) : ?>
@@ -82,36 +84,31 @@
                     },
                 <?php endforeach ?>
             ],
-            eventClick: function(event) {
-                if (event.url) {
-                    window.open(event.url, "_blank");
-                    return false;
-                }
-            }
+            eventClick: function(info) {
+                info.jsEvent.preventDefault(); // don't let the browser navigate
+                console.log('evento_id: ' + info.event.id);
+                window.open(info.event.url, "_blank");
+                return false;
+            },
         });
 
+        calendar.setOption('locale', 'Es');
+        calendar.render();
     });
-
 </script>
 
-<?php $this->load->view('usuarios/biblioteca_menu_bs3_v'); ?>
-
 <div class="row">
-    <div class="col-md-2">
-        <div class="sep1">
-            <?php $this->load->view('eventos/filtro_areas_v'); ?>
+    <div class="col-md-3">
+        <div class="mb-2">
+            <?php $this->load->view('eventos/filtros_bs4/filtro_areas_v'); ?>
         </div>
         
-        <div class="sep1">
-            <?php $this->load->view('eventos/filtro_tipos_v'); ?>
+        <div class="mb-2">
+            <?php $this->load->view('eventos/filtros_bs4/filtro_tipos_v'); ?>
         </div>
     </div>
-    <div class="col-md-10">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div id='calendar'></div>
-            </div>
-        </div>
+    <div class="col-md-9">
+        <div id="calendar"></div>
     </div>
 </div>
 

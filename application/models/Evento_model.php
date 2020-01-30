@@ -46,7 +46,8 @@ class Evento_Model extends CI_Model{
         $cant_eliminados = 0;
         $eliminable = $this->eliminable($evento_id);
         
-        if ( $eliminable ) {
+        if ( $eliminable )
+        {
             //Tablas relacionadas
                 $this->db->where('tipo_id', 3); //Programación de quices
                 $this->db->where('referente_2_id', $evento_id);

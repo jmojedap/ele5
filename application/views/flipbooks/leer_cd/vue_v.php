@@ -30,7 +30,8 @@
             area_id: <?php echo $row->area_id ?>,
             pregunta_id: 0,
             pa_asignadas: [],
-            pregunta_personalizada: true
+            pregunta_personalizada: true,
+            tiene_lectura: false,
         },
         methods: {
             cargar_data: function () {

@@ -254,8 +254,13 @@ class App extends CI_Controller{
         
         $arr_elementos = $resultados->result_array();
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($arr_elementos));
-    }   
+        $this->output->set_content_type('application/json')->set_output(json_encode($arr_elementos));
+    }
+
+    function calendar()
+    {
+        $data['view_a'] = 'app/calendar_v';        
+        $data['head_title'] = 'Calendar';
+        $this->load->view(TPL_ADMIN, $data);
+    }
 }

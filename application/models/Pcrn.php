@@ -846,7 +846,9 @@ class Pcrn extends CI_Model{
      */
     function texto_url($url)
     {
-        $texto_url = str_replace('http://', '', $url);
+        $texto_url = str_replace('https://www.', '', $url);
+        $texto_url = str_replace('http://www.', '', $texto_url);
+        $texto_url = str_replace('http://', '', $texto_url);
         $texto_url = str_replace('https://', '', $texto_url);
         $texto_url = str_replace('http //', '', $texto_url);
         

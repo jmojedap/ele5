@@ -460,6 +460,7 @@ class Flipbook_model extends CI_Model {
         $data['planes_aula'] = $this->planes_aula($flipbook_id)->result();
         $data['quices'] = $this->quices($flipbook_id)->result();
         $data['links'] = $this->links($flipbook_id)->result();
+        $data['lecturas'] = $this->lecturas($flipbook_id)->result();
         $data['preguntas_abiertas'] = $this->preguntas_abiertas($flipbook_id)->result();
         $data['relacionados'] = $this->n_arr_relacionados($flipbook_id);
 
@@ -500,7 +501,6 @@ class Flipbook_model extends CI_Model {
             }
 
             $tema_id = $row_pagina->tema_id;    //Tema para comparar en siguiente página
-
         }
 
         return $indice;
@@ -674,7 +674,8 @@ class Flipbook_model extends CI_Model {
         return $subquices;
     }
 
-    function planes_aula($flipbook_id) {
+    function planes_aula($flipbook_id)
+    {
         $this->db->select('recurso.id AS archivo_id, nombre_archivo, slug AS tipo_archivo, CONCAT( (slug), (".png")) AS icono, CONCAT( (slug), ("/"),(nombre_archivo)) AS ubicacion, num_pagina');
         $this->db->join('pagina_flipbook', 'recurso.tema_id = pagina_flipbook.tema_id');
         $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
@@ -799,7 +800,6 @@ class Flipbook_model extends CI_Model {
             $elementos['herramientas_adicionales'] = 1;
         }
 
-
         return $elementos;
     }
 
@@ -818,6 +818,23 @@ class Flipbook_model extends CI_Model {
         $quices = $this->db->get('recurso');
 
         return $quices;
+    }
+
+    /**
+     * Listado de lecturas dinámicas asociadas a un contenido
+     * 2020-01-29
+     */
+    function lecturas($flipbook_id)
+    {
+        $this->db->select('post.id AS ledin_id, num_pagina, post.referente_1_id AS tema_id');
+        $this->db->join('pagina_flipbook', 'post.referente_1_id = pagina_flipbook.tema_id');
+        $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
+        $this->db->where('flipbook_id', $flipbook_id);
+        $this->db->where('post.tipo_id', 125);  //Lectura dinámica
+        $this->db->order_by('num_pagina', 'ASC');
+        $ledins = $this->db->get('post');
+
+        return $ledins;
     }
 
 //GESTIÓN DE PÁGINAS    

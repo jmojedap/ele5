@@ -83,11 +83,13 @@
                     <!-- LECTURA ESPECIAL -->
                     <a 
                         class="btn btn-light btn-block"
-                        title="Lectura especial sobre el tema, en construcción"
+                        title=""
                         href="#"
                         data-toggle="modal"
                         data-target="#lectura_modal"
                         v-on:click="cargar_lectura"
+                        v-for="lectura in data.lecturas"
+                        v-show='num_pagina == lectura.num_pagina'
                         >
                         <img src="<?php echo $carpeta_iconos . 'cd_lectura.png' ?>">
                     </a>
