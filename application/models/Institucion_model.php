@@ -499,15 +499,13 @@ class Institucion_model extends CI_Model{
     
     /**
      * Devuelve query con los flipbooks asociados a una institución
-     * 
-     * @param type $institucion_id
-     * @return type 
+     * 2020-02-03
      */
     function flipbooks($institucion_id)
     {
         $this->db->select('flipbook_id, taller_id');
         $this->db->where('institucion_id', $institucion_id);
-        $this->db->where('tipo_flipbook_id IN (0,3)');    //Flipbook estudiantes
+        $this->db->where('tipo_flipbook_id IN (0,3,4)');    //Flipbook estudiantes (20200203 Agrega No 4)
         $this->db->group_by('flipbook_id, taller_id');
         $this->db->join('usuario', 'usuario.id = usuario_flipbook.usuario_id');
         $this->db->join('flipbook', 'flipbook.id = usuario_flipbook.flipbook_id');
