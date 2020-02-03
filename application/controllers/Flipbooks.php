@@ -624,7 +624,7 @@ class Flipbooks extends CI_Controller{
     
     /**
      * Seleccionar función con la cual se abre el flipbook para vista lectura
-     * 2019-12-06
+     * 2020-02-03
      */
     function abrir($flipbook_id, $num_pagina = NULL)
     {
@@ -633,6 +633,7 @@ class Flipbooks extends CI_Controller{
 
         //Clase dinámica
         if ( $row->tipo_flipbook_id == 4 ) { $destino = "flipbooks/clase_dinamica/{$flipbook_id}/{$num_pagina}";}
+        if ( $row->tipo_flipbook_id == 5 ) { $destino = "flipbooks/clase_dinamica/{$flipbook_id}/{$num_pagina}";}
         
         //Selección de navegador
         //Redirigir
