@@ -477,7 +477,7 @@ class Tema_Model extends CI_Model{
     }
     
     /**
-     * Preguntas asociadas a un tema
+     * Preguntas asociadas a un tema, filtradas por el tipo de pregunta
      * 2020-02-13
      */
     function preguntas($tema_id, $tipo_pregunta_id = 1)

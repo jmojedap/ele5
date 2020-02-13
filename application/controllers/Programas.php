@@ -541,8 +541,8 @@ class Programas extends CI_Controller{
                 $registro['programa_id'] = $programa_id;
                 $registro['creado'] = date('Y-m-d H:i:s');
                 $registro['editado'] = date('Y-m-d H:i:s');
-                $registro['creado_usuario_id'] = $this->session->userdata('usuario_id');
-                $registro['editado_usuario_id'] = $this->session->userdata('usuario_id');
+                $registro['creador_id'] = $this->session->userdata('usuario_id');
+                $registro['editor_id'] = $this->session->userdata('usuario_id');
             
             //Crear flipbook, registro y páginas
                 $flipbook_id = $this->Programa_model->generar_flipbook($programa_id, $registro);

@@ -458,15 +458,13 @@ class Programa_Model extends CI_Model{
     
     /**
      * Genera multiples flipbooks desde múltiples programas
-     * 
-     * @param type $array_hoja    Array con los datos de los programas y flipbooks
-     * @return type
+     * 2020-02-13, se agregó  los tipos de contenidos permitidos
      */
     function generar_flipbooks_multi($array_hoja)
     {
         $no_importados = array();
         $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
-        $arr_tipos = array(0,1,3);  //Tipos de flipbook existentes
+        $arr_tipos = array(0,1,3,4,5);  //Tipos de flipbook existentes
 
         //Valores comunes
             $registro['creado'] = date('Y-m-d H:i:s');
