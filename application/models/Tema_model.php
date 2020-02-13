@@ -476,9 +476,14 @@ class Tema_Model extends CI_Model{
         return $archivos;
     }
     
-    function preguntas($tema_id)
+    /**
+     * Preguntas asociadas a un tema
+     * 2020-02-13
+     */
+    function preguntas($tema_id, $tipo_pregunta_id = 1)
     {
         $this->db->where('tema_id', $tema_id);
+        $this->db->where('tipo_pregunta_id', $tipo_pregunta_id);
         $this->db->order_by('orden', 'ASC');
         $preguntas = $this->db->get('pregunta');
         
