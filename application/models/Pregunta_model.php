@@ -572,6 +572,7 @@ class Pregunta_model extends CI_Model{
                 'opcion_4',
                 'respuesta_correcta',
                 'nivel', 'area_id',
+                'tipo_pregunta_id',
                 'tema_id',
                 'orden',
                 'competencia_id',
@@ -613,7 +614,7 @@ class Pregunta_model extends CI_Model{
             $crud->callback_after_insert(array($this, 'gc_pregunta_after_insert_tema'));
 
         //Valores por defecto
-            $crud->field_type('tipo_pregunta_id', 'hidden', 54);
+            $crud->field_type('tipo_pregunta_id', 'hidden', 1);
             $crud->field_type('editado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
             $crud->field_type('creado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
             $crud->field_type('creado', 'hidden', date('Y-m-d H:i:s'));
