@@ -281,9 +281,7 @@ class Temas extends CI_Controller{
         
         $recurso_id = $this->Tema_model->asignar_quiz($tema_id, $quiz_id);
                 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output($recurso_id);
+        $this->output->set_content_type('application/json')->set_output($recurso_id);
     }
     
     /**
