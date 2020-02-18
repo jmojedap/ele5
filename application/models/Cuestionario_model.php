@@ -1578,7 +1578,7 @@ class Cuestionario_model extends CI_Model
     {
         
         //Construyendo la consulta
-            $this->db->select('pregunta.id, cuestionario_pregunta.orden, texto_pregunta, opcion_1, opcion_2, opcion_3, opcion_4, archivo_imagen, enunciado_id, post_id, respuesta_correcta, version_id, tema_id');
+            $this->db->select('pregunta.id, cuestionario_pregunta.orden, texto_pregunta, enunciado_2, opcion_1, opcion_2, opcion_3, opcion_4, archivo_imagen, enunciado_id, post_id, respuesta_correcta, version_id, tema_id');
             $this->db->join('pregunta', 'cuestionario_pregunta.pregunta_id = pregunta.id');
             $this->db->where('cuestionario_id' , $cuestionario_id);
             $this->db->order_by('cuestionario_pregunta.orden', 'ASC');

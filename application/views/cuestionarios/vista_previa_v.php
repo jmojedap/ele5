@@ -214,6 +214,7 @@
 
                             <div class="mb-3">
                                 <p style="font-size: 1.1em;"><?php echo $row_pregunta->texto_pregunta ?></p>
+                                <p style="font-size: 1.1em;"><?php echo $row_pregunta->enunciado_2 ?></p>
                             </div>
 
                             <div class="mb-3">
