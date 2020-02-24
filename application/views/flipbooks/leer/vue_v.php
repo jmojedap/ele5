@@ -12,7 +12,7 @@
             bookmark: '<?php echo $bookmark ?>',
             flipbook_id: '<?php echo $row->id ?>',
             pagina: {
-                archivo_imagen: '0db5031cfb53fe849a8d45978e22da7d.jpg'
+                archivo_imagen: 'pf_nd_3.png'
             },
             data: {
                 relacionados: {

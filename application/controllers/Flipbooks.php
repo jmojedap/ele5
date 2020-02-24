@@ -867,9 +867,6 @@ class Flipbooks extends CI_Controller{
     /**
      * Mostrar el flipbook para leer, vista completa para profesores y estudiantes
      * 2019-10-23
-     * 
-     * @param type $flipbook_id
-     * @param type $num_pagina
      */
     function clase_dinamica($flipbook_id, $num_pagina = NULL)
     {

@@ -148,7 +148,7 @@
                 </div>
 
                 <!-- ÍNDICE -->
-                <div id="indice_flipbook" v-show="ver_indice"> 
+                <div id="indice_flipbook" v-show="ver_indice">
                     <div id="titulo_indice">
                         <h3 class="text-center"><?php echo $titulo_pagina ?></h3>
                     </div>
