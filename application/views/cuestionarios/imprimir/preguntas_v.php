@@ -114,8 +114,9 @@
         <b style="margin-right: 10px;">
             <?= $num_pregunta ?>.
         </b>
-        <?= $row_pregunta->texto_pregunta; ?>
+        <?php echo $row_pregunta->texto_pregunta; ?>
     </p>
+    <p><?php echo $row_pregunta->enunciado_2 ?></p>
     
     
     <!-- Mostrar imagen si la pregunta tiene respuestas en imagen -->
