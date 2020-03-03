@@ -674,16 +674,20 @@ class Flipbook_model extends CI_Model {
         return $subquices;
     }
 
+    /**
+     * Planes de aula asociados a un tema 854 (normal), 1007 (Descargable)
+     * 2020-03-02
+     */
     function planes_aula($flipbook_id)
     {
-        $this->db->select('recurso.id AS archivo_id, nombre_archivo, slug AS tipo_archivo, CONCAT( (slug), (".png")) AS icono, CONCAT( (slug), ("/"),(nombre_archivo)) AS ubicacion, num_pagina');
+        $this->db->select('recurso.id AS archivo_id, nombre_archivo, slug AS tipo_archivo, CONCAT( (slug), (".png")) AS icono, CONCAT( (slug), ("/"),(nombre_archivo)) AS ubicacion, num_pagina, item.id AS recurso_tipo_id');
         $this->db->join('pagina_flipbook', 'recurso.tema_id = pagina_flipbook.tema_id');
         $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
         $this->db->join('item', 'recurso.tipo_archivo_id = item.id');
         $this->db->order_by('tipo_archivo_id', 'ASC');
         $this->db->where('flipbook_id', $flipbook_id);
         $this->db->where('tipo_recurso_id', 1);
-        $this->db->where('tipo_archivo_id', 854);   //Plan de aula, ver item.id
+        $this->db->where('tipo_archivo_id IN (854, 1007)');   //Plan de aula (Normal y descargable), ver item.id
         $this->db->where('disponible', 1);
         $planes_aula = $this->db->get('recurso');
 

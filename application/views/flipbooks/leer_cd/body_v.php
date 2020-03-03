@@ -184,12 +184,21 @@
                     <a
                         class="btn btn-light btn-block mb-2"
                         v-for="plan_aula in data.planes_aula"
-                        v-show="plan_aula.num_pagina == num_pagina"
+                        v-show="plan_aula.num_pagina == num_pagina && plan_aula.recurso_tipo_id == 854"
                         v-bind:href="`<?php echo URL_UPLOADS ?>` + plan_aula.ubicacion"
                         target="_blank"
                         title="Plan de aula"
                         >
                         <img src="<?php echo URL_IMG ?>flipbook/cd_plan_aula.png" alt="Imagen programador">
+                    <a
+                        class="btn btn-light btn-block mb-2"
+                        v-for="plan_aula in data.planes_aula"
+                        v-show="plan_aula.num_pagina == num_pagina && plan_aula.recurso_tipo_id == 1007"
+                        v-bind:href="`<?php echo URL_UPLOADS ?>` + plan_aula.ubicacion"
+                        title="Descargar planeador de clases"
+                        download
+                        >
+                        <img src="<?php echo URL_IMG ?>flipbook/cd_plan_aula_descargable.png" alt="Imagen Descargar">
                     </a>
                     
                 <?php } ?>
