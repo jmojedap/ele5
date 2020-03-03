@@ -326,7 +326,7 @@ class Posts extends CI_Controller{
     /**
      * Bitácora de actividad
      */
-    function bitacora($pago_id = 13835, $actividad_id = NULL)
+    function bitacora($pago_id = 14272, $actividad_id = NULL)
     {
         $this->db->select('id, nombre_post, fecha, contenido, texto_1 AS modulo, texto_2 AS elemento, referente_1_id AS prioridad, decimal_2 AS costo');
         $this->db->order_by('texto_1', 'DESC');
@@ -339,12 +339,14 @@ class Posts extends CI_Controller{
         $data['pago_id'] = $pago_id;
 
         //Pagos
-        $this->db->order_by('fecha', 'desc');
+        $this->db->order_by('fecha', 'DESC');
         $this->db->where('tipo_id', 91);
         $data['pagos'] = $this->db->get('post');
 
-        $data['view_a'] = 'posts/bitacora/print_v';
-        //$data['view_a'] = 'posts/bitacora/bitacora_v';
+        $data['row'] = $this->Pcrn->registro_id('post', $pago_id);
+
+        //$data['view_a'] = 'posts/bitacora/print_v';
+        $data['view_a'] = 'posts/bitacora/bitacora_v';
         $data['head_title'] = 'Bitacora';
         $this->load->view(TPL_ADMIN, $data);
     }

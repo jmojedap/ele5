@@ -82,7 +82,7 @@
                         </button>
                     <?php } ?>
 
-                    <?php $this->load->view('flipbooks/leer_cd/preguntas_abiertas_v') ?>
+                    <?php $this->load->view('flipbooks/leer_lectura/preguntas_abiertas_v') ?>
 
                     <!-- LECTURA ESPECIAL -->
                     <a 
@@ -116,24 +116,6 @@
                             </div>
                             </div>
                         </div>
-                    </div>
-                
-                    <!-- LINKS -->
-                    <div id="listado_links" class="collapse_no sep2">
-                        <a
-                            class="btn btn-light btn-block"
-                            title="Link complementario sobre este tema"
-                            target="_blank"
-                            v-for="link in data.links"
-                            v-bind:href="link.url"
-                            v-show='num_pagina == link.num_pagina'
-                            >
-                            <span v-if="link.titulo">{{ link.titulo }}</span>
-                            <span v-else>
-                                <i class="fas fa-external-link-alt"></i>
-                                Enlace
-                            </span>
-                        </a>
                     </div>
                 </div>
             </div>
@@ -179,32 +161,9 @@
                     <a class="btn btn-light btn-block" href="<?php echo base_url("flipbooks/programar_temas/{$row->id}") ?>" title="Programar fechas a los temas de este contenido">
                         <img src="<?php echo URL_IMG ?>flipbook/cd_programar_temas.png" alt="Imagen programador">
                     </a>
-                    <a class="btn btn-light btn-block" href="<?php echo base_url("flipbooks/crear_cuestionario/{$row->id}") ?>" target="_blank" title="Crear un cuestionario con los temas de este contenido">
-                        <img src="<?php echo URL_IMG ?>flipbook/cd_cuestionario.png" alt="Imagen cuestionario">
-                    </a>
                     <a class="btn btn-light btn-block mb-2" href="<?php echo base_url('eventos/calendario') ?>" title="Calendario programador">
                         <img src="<?php echo URL_IMG ?>flipbook/cd_programador.png" alt="Imagen programador">
                     </a>
-                    <a
-                        class="btn btn-light btn-block mb-2"
-                        v-for="plan_aula in data.planes_aula"
-                        v-show="plan_aula.num_pagina == num_pagina && plan_aula.recurso_tipo_id == 854"
-                        v-bind:href="`<?php echo URL_UPLOADS ?>` + plan_aula.ubicacion"
-                        target="_blank"
-                        title="Plan de aula"
-                        >
-                        <img src="<?php echo URL_IMG ?>flipbook/cd_plan_aula.png" alt="Imagen programador">
-                    <a
-                        class="btn btn-light btn-block mb-2"
-                        v-for="plan_aula in data.planes_aula"
-                        v-show="plan_aula.num_pagina == num_pagina && plan_aula.recurso_tipo_id == 1007"
-                        v-bind:href="`<?php echo URL_UPLOADS ?>` + plan_aula.ubicacion"
-                        title="Descargar planeador de clases"
-                        download
-                        >
-                        <img src="<?php echo URL_IMG ?>flipbook/cd_plan_aula_descargable.png" alt="Imagen Descargar">
-                    </a>
-                    
                 <?php } ?>
                 
                 <div
@@ -240,5 +199,5 @@
             </div>
         </div>
     </div>
-    <?php $this->load->view('flipbooks/leer_cd/vue_v'); ?>
+    <?php $this->load->view('flipbooks/leer_lectura/vue_v'); ?>
 </body>

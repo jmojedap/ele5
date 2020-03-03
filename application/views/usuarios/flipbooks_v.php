@@ -8,7 +8,7 @@
                     <p class="card-text">
                         <?php echo $this->App_model->etiqueta_area($row_flipbook->area_id) ?>
                     </p>
-                    <a href="<?php echo base_url("flipbooks/leer/{$row_flipbook->flipbook_id}") ?>" class="btn btn-primary">
+                    <a href="<?php echo base_url("flipbooks/abrir/{$row_flipbook->flipbook_id}") ?>" class="btn btn-primary">
                         Abrir
                     </a>
                     <?php if ( $this->session->userdata('rol_id') <= 6 ) { ?>

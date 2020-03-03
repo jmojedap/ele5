@@ -63,13 +63,13 @@
             <tr class="flipbook_<?= $row_flipbook->flipbook_id ?>">
                 <td><?= $i ?></td>
                 <td class="warning"><?= $row_flipbook->flipbook_id ?></td>
-                <td><?= anchor("flipbooks/leer/{$row_flipbook->flipbook_id}", $this->App_model->nombre_flipbook($row_flipbook->flipbook_id), 'target="_blank"') ?></td>
+                <td><?= anchor("flipbooks/abrir/{$row_flipbook->flipbook_id}", $this->App_model->nombre_flipbook($row_flipbook->flipbook_id), 'target="_blank"') ?></td>
                 <td>
                     <span class="etiqueta nivel w1"><?= $row_flipbook_full->nivel ?></span>
                     <?= $this->App_model->etiqueta_area($row_flipbook_full->area_id); ?>
                 </td>
                 <td>
-                    <?= anchor("flipbooks/leer/{$row_flipbook->taller_id}", $this->App_model->nombre_flipbook($row_flipbook->taller_id), 'target="_blank"') ?>
+                    <?= anchor("flipbooks/abrir/{$row_flipbook->taller_id}", $this->App_model->nombre_flipbook($row_flipbook->taller_id), 'target="_blank"') ?>
                 </td>
                 <td class="hidden-xs">
                     <?php if ( $editable ){ ?>

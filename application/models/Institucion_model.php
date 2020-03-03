@@ -505,7 +505,7 @@ class Institucion_model extends CI_Model{
     {
         $this->db->select('flipbook_id, taller_id');
         $this->db->where('institucion_id', $institucion_id);
-        $this->db->where('tipo_flipbook_id IN (0,3,4)');    //Flipbook estudiantes (20200203 Agrega No 4)
+        $this->db->where('tipo_flipbook_id IN (0,3,4,5)');    //Flipbook estudiantes (20200203 Agrega No 4)
         $this->db->group_by('flipbook_id, taller_id');
         $this->db->join('usuario', 'usuario.id = usuario_flipbook.usuario_id');
         $this->db->join('flipbook', 'flipbook.id = usuario_flipbook.flipbook_id');

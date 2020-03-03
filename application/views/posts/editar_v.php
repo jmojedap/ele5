@@ -55,6 +55,7 @@
     );
     
     $campos_general = array(
+        'estado_id' => 'Estado',
         'texto_1' => 'Texto 1',
         'texto_2' => 'Texto 2',
         'referente_1_id' => 'Referente 1 ID',

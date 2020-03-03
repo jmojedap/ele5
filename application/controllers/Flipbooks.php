@@ -632,8 +632,8 @@ class Flipbooks extends CI_Controller{
         $destino = "flipbooks/leer/{$flipbook_id}/{$num_pagina}";
 
         //Clase dinámica
-        if ( $row->tipo_flipbook_id == 4 ) { $destino = "flipbooks/clase_dinamica/{$flipbook_id}/{$num_pagina}";}
-        if ( $row->tipo_flipbook_id == 5 ) { $destino = "flipbooks/clase_dinamica/{$flipbook_id}/{$num_pagina}";}
+        if ( $row->tipo_flipbook_id == 4 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
+        if ( $row->tipo_flipbook_id == 5 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         
         //Selección de navegador
         //Redirigir
@@ -752,15 +752,12 @@ class Flipbooks extends CI_Controller{
         echo $respuesta;
     }
     
-// NUEVAS HERRAMIENTAS PARA LEER
+// LECTURA NORMAL
 //-----------------------------------------------------------------------------
     
     /**
      * Mostrar el flipbook para leer, vista completa para estudiantes
      * 2018-10-23
-     * 
-     * @param type $flipbook_id
-     * @param type $num_pagina
      */
     function leer($flipbook_id, $num_pagina = NULL)
     {
@@ -785,8 +782,7 @@ class Flipbooks extends CI_Controller{
      * String JSON para construir el flipbook para leer, vista completa para 
      * estudiantes y profesores. 1) Verifica si el archivo JSON del flipbook
      * existe, si no existe se crea.
-     * 
-     * @param type $flipbook_id
+     *
      */
     function data($flipbook_id)
     {
@@ -861,14 +857,14 @@ class Flipbooks extends CI_Controller{
         $this->load->view('flipbooks/demo/leer_v', $data);
     }
 
-// CONTENIDO TIPO CLASE DINÁMICA
+// VISTA LEER V5
 //-----------------------------------------------------------------------------
 
     /**
      * Mostrar el flipbook para leer, vista completa para profesores y estudiantes
      * 2019-10-23
      */
-    function clase_dinamica($flipbook_id, $num_pagina = NULL)
+    function leer_v5($flipbook_id, $num_pagina = NULL)
     {
         if ( $this->input->get('profiler') ) { $this->output->enable_profiler(TRUE); }
         
@@ -882,9 +878,15 @@ class Flipbooks extends CI_Controller{
             $data['carpeta_iconos'] = URL_IMG . 'flipbook/';
             $data['colores'] = $this->App_model->arr_color_area();
             $data['elementos_fb'] = $this->Flipbook_model->elementos_fb($data['row']);
+
+        //Seleccionar vista
+            $main_view = 'flipbooks/leer_cd/leer_v';
+            if ( $data['row']->tipo_flipbook_id == 5 ) {
+                $main_view = 'flipbooks/leer_lectura/leer_v';
+            }
             
         //Cargar vista
-        $this->load->view('flipbooks/leer_cd/leer_v', $data);
+        $this->load->view($main_view, $data);
     }
     
 //GESTIÓN DE PÁGINAS DE FLIPBOOK

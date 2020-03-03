@@ -1,5 +1,6 @@
 <?php
     $modulo_ant = '';
+    $total_cost = 0;
 ?>
 
 <style>
@@ -31,7 +32,30 @@
         </div>
     </div>
     <div class="col-md-9">
-        <?php $this->load->view('posts/bitacora/tabla_costos_v') ?>
+        <table class="table bg-white" style="max-width: 650px;">
+            <thead>
+                <th>Elemento</th>
+                <th>Desarrollo/Actividad</th>
+                <th>Precio</th>
+            </thead>
+            <tbody>
+                <?php foreach ( $bitacora->result() as $row_bitacora ) { ?>
+                    <?php
+                        $total_cost += $row_bitacora->costo;
+                    ?>
+                    <tr>
+                        <td><?php echo $row_bitacora->elemento ?></td>
+                        <td><?php echo $row_bitacora->nombre_post ?></td>
+                        <td class="text-right">$<?php echo number_format($row_bitacora->costo, 0) ?></td>
+                    </tr>
+                <?php } ?>
+                <tr class="table-info">
+                    <td>Total</td>
+                    <td></td>
+                    <td class="text-right">$<?php echo number_format($total_cost, 0) ?></td>
+                </tr>
+            </tbody>
+        </table>
 
         <br>
         <div class="card bitacora" style="max-width: 650px;">

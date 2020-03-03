@@ -214,10 +214,11 @@ class App_model extends CI_Model {
         $colores[51] = '#a678c3';
         $colores[52] = '#04bdbf';
         $colores[53] = '#86bc42';
-        $colores[464] = '#666';
+        $colores[464] = '#f57c00';
         $colores[599] = '#666';
         $colores[605] = '#ff577e';
         $colores[957] = '#ff577e';
+        $colores[1004] = '#ff577e';
         
         return $colores;
     }
@@ -364,7 +365,6 @@ class App_model extends CI_Model {
                 $nombre_tema = $query->row()->nombre_tema;
             }
         }
-
 
         return $nombre_tema;
     }
