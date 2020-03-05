@@ -15,6 +15,7 @@
 
         <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/style.css">
         <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/style_add.css">
+        <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES . 'css/abc_checkbox.css' ?>">
 
         <!-- Vue.js -->
         <?php $this->load->view('assets/vue') ?>

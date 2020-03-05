@@ -224,9 +224,9 @@ class Login_model extends CI_Model{
                 'usuario_id'    =>  $row_usuario->id,
                 'rol_id'    => $row_usuario->rol_id,
                 'rol_abrv'    => $this->Pcrn->campo('item', "categoria_id = 58 AND id_interno = {$row_usuario->rol_id}", 'abreviatura'),
-                'ultimo_login'    => $row_usuario->ultimo_login,
-                //'src_img'    => $this->App_model->src_img_usuario($row_usuario, 'sm_'),
-                //'acl' => $this->acl($row_usuario)   //Listado de permisos
+                'role'    => $row_usuario->rol_id,
+                'role_abbr' => $this->Pcrn->campo('item', "categoria_id = 58 AND id_interno = {$row_usuario->rol_id}", 'abreviatura'),
+                'ultimo_login'    => $row_usuario->ultimo_login
             );
                 
         //Session $data específico para esta aplicación

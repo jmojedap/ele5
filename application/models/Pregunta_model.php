@@ -24,6 +24,161 @@ class Pregunta_model extends CI_Model{
     
 // EXPLORACIÓN
 //-----------------------------------------------------------------------------
+
+    /**
+     * Array con los datos para la vista de exploración
+     */
+    function explore_data($num_page)
+    {
+        //Data inicial, de la tabla
+            $data = $this->get($num_page);
+        
+        //Elemento de exploración
+            $data['controller'] = 'preguntas';                      //Nombre del controlador
+            $data['cf'] = 'preguntas/explore/';                      //Nombre del controlador
+            $data['views_folder'] = 'preguntas/explore/';           //Carpeta donde están las vistas de exploración
+            
+        //Vistas
+            $data['head_title'] = 'Preguntas';
+            $data['head_subtitle'] = $data['search_num_rows'];
+            $data['view_a'] = $data['views_folder'] . 'explore_v';
+            $data['nav_2'] = $data['views_folder'] . 'menu_v';
+        
+        return $data;
+    }
+
+    function get($num_page)
+    {
+        //Referencia
+            $per_page = 10;                             //Cantidad de registros por página
+            $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
+
+        //Búsqueda y Resultados
+            $this->load->model('Search_model');
+            $data['filters'] = $this->Search_model->filters();
+            $elements = $this->search($data['filters'], $per_page, $offset);    //Resultados para página
+        
+        //Cargar datos
+            $data['list'] = $elements->result();
+            $data['str_filters'] = $this->Search_model->str_filters();
+            $data['search_num_rows'] = $this->search_num_rows($data['filters']);
+            $data['max_page'] = ceil($this->pml->if_zero($data['search_num_rows'],1) / $per_page);   //Cantidad de páginas
+
+        return $data;
+    }
+    
+    /**
+     * String con condición WHERE SQL para filtrar post
+     * 
+     * @param type $filters
+     * @return type
+     */
+    function search_condition($filters)
+    {
+        $condition = NULL;
+        
+        //Tipo de post
+        if ( $filters['a'] != '' ) { $condition .= "area_id = {$filters['a']} AND "; }
+        
+        if ( strlen($condition) > 0 )
+        {
+            $condition = substr($condition, 0, -5);
+        }
+        
+        return $condition;
+    }
+    
+    function search($filters, $per_page = NULL, $offset = NULL)
+    {
+        
+        $role_filter = $this->role_filter($this->session->userdata('post_id'));
+
+        //Construir consulta
+            //$this->db->select('id, post_name, except, ');
+        
+        //Crear array con términos de búsqueda
+            $words_condition = $this->Search_model->words_condition($filters['q'], array('post_name', 'content', 'excerpt', 'keywords'));
+            if ( $words_condition )
+            {
+                $this->db->where($words_condition);
+            }
+            
+        //Orden
+            if ( $filters['o'] != '' )
+            {
+                $order_type = $this->pml->if_strlen($filters['ot'], 'ASC');
+                $this->db->order_by($filters['o'], $order_type);
+            } else {
+                $this->db->order_by('editado', 'DESC');
+            }
+            
+        //Filtros
+            $this->db->where($role_filter); //Filtro según el rol de post en sesión
+            $search_condition = $this->search_condition($filters);
+            if ( $search_condition ) { $this->db->where($search_condition);}
+            
+        //Obtener resultados
+        if ( is_null($per_page) )
+        {
+            $query = $this->db->get('pregunta'); //Resultados totales
+        } else {
+            $query = $this->db->get('pregunta', $per_page, $offset); //Resultados por página
+        }
+        
+        return $query;
+        
+    }
+    
+    /**
+     * Devuelve la cantidad de registros encontrados en la tabla con los filtros
+     * establecidos en la búsqueda
+     * 
+     * @param type $filters
+     * @return type
+     */
+    function search_num_rows($filters)
+    {
+        $query = $this->search($filters); //Para calcular el total de resultados
+        return $query->num_rows();
+    }
+    
+    /**
+     * Devuelve segmento SQL
+     * 
+     * @param type $post_id
+     * @return type 
+     */
+    function role_filter()
+    {
+        
+        $role = $this->session->userdata('role');
+        $condition = 'id = 0';  //Valor por defecto, ningún post, se obtendrían cero post.
+        
+        if ( $role <= 2 ) 
+        {   //Desarrollador, todos los post
+            $condition = 'id > 0';
+        }
+        
+        return $condition;
+    }
+    
+    /**
+     * Array con options para ordenar el listado de post en la vista de
+     * exploración
+     * 
+     * @return string
+     */
+    function order_options()
+    {
+        $order_options = array(
+            '' => '[ Ordenar por ]',
+            'texto_pregunta' => 'Texto Pregunta',
+            'area_id' => 'Área',
+            'nivel' => 'Nivel'
+        );
+        
+        return $order_options;
+    }
     
     /**
      * Array con los datos para la vista de exploración

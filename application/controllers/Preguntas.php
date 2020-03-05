@@ -27,17 +27,46 @@ class Preguntas extends CI_Controller{
 //EXLPORACIÓN
 //------------------------------------------------------------------------------------------
 
+    /** Exploración de Preguntas */
+    function explorar()
+    {        
+        //Datos básicos de la exploración
+            $data = $this->Pregunta_model->explore_data(1);
+        
+        //Opciones de filtros de búsqueda
+            $data['options_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
+            $data['options_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Nivel');
+            $data['options_tipo'] = $this->Item_model->opciones('categoria_id = 156', 'Todos');
+            $data['options_estado'] = $this->Item_model->opciones('categoria_id = 157', 'Todos');
+            
+        //Arrays con valores para contenido en la tabla
+            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 156');
+            $data['arr_estados'] = $this->Item_model->arr_interno('categoria_id = 157');
+            $data['arr_nivel'] = $this->Item_model->arr_interno('categoria_id = 3');
+            
+        //Cargar vista
+            $this->App_model->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * Listado de Pregunas, filtrados por búsqueda, JSON
+     */
+    function get($num_page = 1)
+    {
+        $data = $this->Pregunta_model->get($num_page);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
     /**
      * Exploración y búsqueda
      */
-    function explorar($num_pagina = 1)
+    function explorar_ant($num_pagina = 1)
     {
         //Datos básicos de la exploración
             $this->load->helper('text');
             $data = $this->Pregunta_model->data_explorar($num_pagina);
         
         //Opciones de filtros de búsqueda
-            
             $data['opciones_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
             $data['opciones_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Nivel');
             $data['opciones_tipo'] = $this->Item_model->opciones('categoria_id = 156', 'Todos');
