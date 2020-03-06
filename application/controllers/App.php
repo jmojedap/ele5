@@ -93,13 +93,11 @@ class App extends CI_Controller{
                 }
 
                 // ** EJECUCIÓN DE CRON JOBS 2019-06-19 **
-                $data['cron_id'] = $this->App_model->cron_jobs();
+                $data['arr_crons'] = $this->App_model->cron_jobs();
             }
             
         //Respuesta
-            $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($data));  
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));  
     }
 
     function inicio()

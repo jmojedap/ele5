@@ -3,6 +3,7 @@
 // Variables
 //-----------------------------------------------------------------------------
     var arr_areas = <?php echo json_encode($arr_areas); ?>;
+    var arr_tipos = <?php echo json_encode($arr_tipos); ?>;
 
 // Filtros
 //-----------------------------------------------------------------------------
@@ -15,6 +16,12 @@
     Vue.filter('area_name', function (value) {
         if (!value) return '';
         value = arr_areas[value];
+        return value;
+    });
+
+    Vue.filter('tipo_name', function (value) {
+        if (!value) return '';
+        value = arr_tipos[value];
         return value;
     });
 // App

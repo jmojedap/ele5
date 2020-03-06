@@ -1,5 +1,11 @@
 <?php
     $filters_style = ( strlen($str_filters) > 0 ) ? '' : 'display: none;' ;
+
+    //Opciones versión propuesta
+    $options_version = array(
+        '00' => ' [ Todas las preguntas ]',
+        '01' => 'Con versión propuesta'
+    );
 ?>
 
 <form accept-charset="utf-8" method="POST" id="search_form" @submit.prevent="get_list">
@@ -37,6 +43,24 @@
                 <?php echo form_dropdown('a', $options_area, $filters['a'], 'class="form-control" title="Filtrar por área" v-model="filters.a"'); ?>
             </div>
             <label for="a" class="col-md-3 col-form-label">Área</label>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-9">
+                <?php echo form_dropdown('n', $options_nivel, $filters['n'], 'class="form-control" title="Filtrar por nivel" v-model="filters.n"'); ?>
+            </div>
+            <label for="n" class="col-md-3 col-form-label">Nivel</label>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-9">
+                <?php echo form_dropdown('tp', $options_tipo, $filters['tp'], 'class="form-control" title="Filtrar por tipo" v-model="filters.tp"'); ?>
+            </div>
+            <label for="tp" class="col-md-3 col-form-label">Tipo pregunta</label>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-9">
+                <?php echo form_dropdown('f1', $options_version, $filters['f1'], 'class="form-control" title="Filtrar por estado versión" v-model="filters.f1"'); ?>
+            </div>
+            <label for="f1" class="col-md-3 col-form-label">Estado versión</label>
         </div>
     </div>
 </form>

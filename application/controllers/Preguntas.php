@@ -35,11 +35,12 @@ class Preguntas extends CI_Controller{
         
         //Opciones de filtros de búsqueda
             $data['options_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
-            $data['options_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Nivel');
+            $data['options_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Todos');
             $data['options_tipo'] = $this->Item_model->opciones('categoria_id = 156', 'Todos');
             $data['options_estado'] = $this->Item_model->opciones('categoria_id = 157', 'Todos');
             
         //Arrays con valores para contenido en la tabla
+            $data['arr_areas'] = $this->Item_model->arr_item('1', 'id');
             $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 156');
             $data['arr_estados'] = $this->Item_model->arr_interno('categoria_id = 157');
             $data['arr_nivel'] = $this->Item_model->arr_interno('categoria_id = 3');
@@ -648,10 +649,7 @@ class Preguntas extends CI_Controller{
     function create_version($pregunta_id)
     {
         $data = $this->Pregunta_model->create_version($pregunta_id);
-
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -661,10 +659,7 @@ class Preguntas extends CI_Controller{
     function save_version($version_id)
     {
         $data = $this->Pregunta_model->save($version_id);
-
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -675,10 +670,7 @@ class Preguntas extends CI_Controller{
     function approve_version($pregunta_id, $version_id)
     {
         $data = $this->Pregunta_model->approve_version($pregunta_id, $version_id);
-        
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -692,4 +684,16 @@ class Preguntas extends CI_Controller{
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
+
+// CÁLCULO DE INDICADORES
+//-----------------------------------------------------------------------------
+
+    /*function calculate_totals($cuestionario_id)
+    {
+        $this->load->model('Cuestionario_model');
+        $preguntas = $this->Cuestionario_model->preguntas($cuestionario_id);
+    }*/
+
+    
+
 }

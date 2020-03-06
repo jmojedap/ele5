@@ -1,7 +1,7 @@
 <?php
     $cl_col['title'] = '';
     $cl_col['open'] = '';
-    $cl_col['area'] = 'd-none d-md-table-cell d-lg-table-cell';
+    $cl_col['level_area'] = 'd-none d-md-table-cell d-lg-table-cell';
 ?>
 
 <div class="table-responsive">
@@ -13,8 +13,9 @@
                     <label class="form-check-label" for="checkbox_all_selected"></label>
                 </div>
             </th>
-            <th class="<?php echo $cl_col['open'] ?>"></th>
+            <th class="<?php echo $cl_col['open'] ?>" width="40px"></th>
             <th class="<?php echo $cl_col['title'] ?>">Texto Pregunta</th>
+            <th class="<?php echo $cl_col['level_area'] ?>">Nivel Área</th>
             <th width="50px"></th>
         </thead>
         <tbody>
@@ -26,11 +27,25 @@
                     </div>
                 </td>
                 <td class="<?php echo $cl_col['open'] ?>">
-                    <a v-bind:href="`<?php echo base_url("preguntas/index/") ?>` + element.client_id" class="btn btn-primary btn-sm">
+                    <a v-bind:href="`<?php echo base_url("preguntas/index/") ?>` + element.id" class="btn btn-primary btn-sm">
                         Abrir
                     </a>
                 </td>
-                <td class="<?php echo $cl_col['title'] ?>" v-html="element.texto_pregunta"></td>
+                <td class="<?php echo $cl_col['title'] ?>">
+                    <div v-html="element.texto_pregunta"></div>
+                    <div v-if="element.version_id > 0">
+                        <br>
+                        <a v-bind:href="`<?php echo base_url("preguntas/version/") ?>` + element.id" class="btn btn-warning btn-sm" target="_blank" title="Tiene versión con cambios propuestos">
+                            <i class="fa fa-exclamation-triangle"></i> Versión
+                        </a>
+                    </div>
+                </td>
+                <td class="<?php echo $cl_col['level_area'] ?>">
+                    <span class="etiqueta nivel w1">{{ element.nivel }}</span>
+                    <span class="etiqueta_a" v-bind:class="`etiqueta_a` + element.area_id">
+                        {{ element.area_id | area_name }}
+                    </span>
+                </td>
                 
                 <td>
                     <button class="btn btn-light btn-sm w31p" data-toggle="modal" data-target="#detail_modal" @click="set_current(key)">

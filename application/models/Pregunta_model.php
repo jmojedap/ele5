@@ -35,7 +35,7 @@ class Pregunta_model extends CI_Model{
         
         //Elemento de exploración
             $data['controller'] = 'preguntas';                      //Nombre del controlador
-            $data['cf'] = 'preguntas/explore/';                      //Nombre del controlador
+            $data['cf'] = 'preguntas/explorar/';                      //Nombre del controlador
             $data['views_folder'] = 'preguntas/explore/';           //Carpeta donde están las vistas de exploración
             
         //Vistas
@@ -79,6 +79,9 @@ class Pregunta_model extends CI_Model{
         
         //Tipo de post
         if ( $filters['a'] != '' ) { $condition .= "area_id = {$filters['a']} AND "; }
+        if ( $filters['n'] != '' ) { $condition .= "nivel = {$filters['n']} AND "; }
+        if ( $filters['tp'] != '' ) { $condition .= "tipo_pregunta_id = {$filters['tp']} AND "; }
+        if ( $filters['f1'] == '1' ) { $condition .= 'version_id > 0 AND tipo_pregunta_id = 1 AND '; }      //Si la pregunta tiene una versión propuesta
         
         if ( strlen($condition) > 0 )
         {
@@ -97,7 +100,7 @@ class Pregunta_model extends CI_Model{
             //$this->db->select('id, post_name, except, ');
         
         //Crear array con términos de búsqueda
-            $words_condition = $this->Search_model->words_condition($filters['q'], array('post_name', 'content', 'excerpt', 'keywords'));
+            $words_condition = $this->Search_model->words_condition($filters['q'], array('texto_pregunta', 'enunciado_2'));
             if ( $words_condition )
             {
                 $this->db->where($words_condition);
@@ -1664,4 +1667,23 @@ class Pregunta_model extends CI_Model{
 
         return $eventos;
     }
+
+// TOTALES PREGUNTAS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Actualiza los campos de totales de la tabla preguntas
+     * 2020-03-06
+     */
+    function update_totals()
+    {
+        $sql = 'UPDATE pregunta ';
+        $sql .= 'INNER JOIN ';
+        $sql .= '(SELECT pregunta_id, COUNT(id) AS qty_answers, SUM(resultado) AS qty_right, (100*SUM(resultado)/COUNT(id)) AS pct_right, (100-100*SUM(resultado)/COUNT(id)) AS difficulty FROM usuario_pregunta GROUP BY pregunta_id) AS src ';
+        $sql .= 'ON pregunta.id = src.pregunta_id ';
+        $sql .= 'SET pregunta.qty_answers = src.qty_answers, pregunta.qty_right = src.qty_right, pregunta.pct_right = src.pct_right, pregunta.difficulty = src.difficulty;';
+
+        $this->db->query($sql);
+    }
+
 }

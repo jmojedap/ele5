@@ -1,0 +1,15 @@
+.etiqueta_a{
+    background-color: #666666;
+    display: inline-block;
+    color: white;
+    padding: 0px 5px 0px 5px;
+    text-align: center;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+.etiqueta_a50{ background-color: #006bab; }
+.etiqueta_a51{ background-color: #a678c3; }
+.etiqueta_a52{ background-color: #04bdbf; }
+.etiqueta_a53{ background-color: #86bc42; }
+.etiqueta_a464{ background-color: #f57c00; }

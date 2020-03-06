@@ -8,7 +8,7 @@
         </div>
 
         <div class="col">
-            <a href="<?php echo base_url("groups/export/?{$str_filters}") ?>" class="btn btn-light" title="Exportar registros encontrados a Excel">
+            <a href="<?php echo base_url("preguntas/exportar/?{$str_filters}") ?>" class="btn btn-light" title="Exportar registros encontrados a Excel">
                 <i class="fa fa-download"></i>
             </a>
             <a class="btn btn-light"

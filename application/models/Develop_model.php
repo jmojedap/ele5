@@ -507,40 +507,71 @@ class Develop_model extends CI_Model{
 
     /**
      * Ejecución de un proceso automático de la herramienta.
-     * 2019-06-26
+     * 2020-03-06
      */
-    function cron($cron_code)
+    function cron($cron_name)
     {
         //Valores por defecto
-            $data = array('status' => 0, 'message' => 'Cron NO ejecutado', 'event_id' => 0);
-            $arr_row = null;
             $event_id = 0;
+            $arr_row = NULL;
 
         //Ejecutar proceso
-        if ( $cron_code == 12537 )
-        {
-            $date = date('Y-m-d');
-            $condition = "tipo_id = 210 AND referente_id = {$cron_code} AND fecha_inicio = '{$date}'";
-            $row_event = $this->Pcrn->registro('evento', $condition);
-
-            if ( is_null($row_event) )  //No existe, se ejecuta
+            if ( $cron_name == 'actualizar_dw_up' )
             {
-                $mes = date("Y-m",strtotime(date('Y-m-d')."- 1 days"));
-                $arr_row['nombre_evento'] = 'actualizar_dw_up/' . $mes;
-                $arr_row['referente_id'] = $cron_code;
-                $this->load->model('Cuestionario_model');
-                $cron_data = $this->Cuestionario_model->actualizar_dw_up($mes);
+                $arr_row = $this->cron_actualizar_dw_up();
+            } elseif ( $cron_name == 'update_pregunta_totals' ) {
+                $arr_row = $this->cron_update_pregunta_totals();
             }
-        }
 
         //Registro del proceso en la tabla evento
             if ( ! is_null($arr_row) )
             {
                 $event_id = $this->save_cron_event($arr_row);
-                $data = array('status' => 1, 'message' => 'Cron ejecutado: ' . $event_id, 'event_id' => $event_id);
             }
 
-        return $data;
+        return $event_id;
+    }
+
+    /** 2020-03-06 */
+    function cron_actualizar_dw_up()
+    {
+        $cron_code = 12537;
+        $arr_row = NULL;
+        $date = date('Y-m-d');  //Hoy ya se ejecutó el cron?
+        $condition = "tipo_id = 210 AND referente_id = {$cron_code} AND fecha_inicio = '{$date}'";
+        $row_event = $this->Pcrn->registro('evento', $condition);
+
+        if ( is_null($row_event) )  //No existe, se ejecuta
+        {
+            $mes = date("Y-m",strtotime(date('Y-m-d')."- 1 days"));
+            $arr_row['nombre_evento'] = 'actualizar_dw_up/' . $mes;
+            $arr_row['referente_id'] = $cron_code;
+            $this->load->model('Cuestionario_model');
+            $cron_data = $this->Cuestionario_model->actualizar_dw_up($mes);
+        }
+
+        return $arr_row;
+    }
+
+    /** 2020-03-06 */
+    function cron_update_pregunta_totals()
+    {
+        $cron_code = 12548;
+        $arr_row = NULL;
+        $date = date('Y-m-d');  //Hoy ya se ejecutó el cron?
+        $condition = "tipo_id = 210 AND referente_id = {$cron_code} AND fecha_inicio = '{$date}'";
+        $row_event = $this->Db_model->row('evento', $condition);
+
+        if ( is_null($row_event) )  //No existe, se ejecuta
+        {
+            $arr_row['nombre_evento'] = 'actualizar_totales_pregunta';
+            $arr_row['referente_id'] = $cron_code;
+
+            $this->load->model('Pregunta_model');
+            $this->Pregunta_model->update_totals();
+        }
+
+        return $arr_row;
     }
 
     /**

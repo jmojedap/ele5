@@ -48,22 +48,22 @@ class App_model extends CI_Model {
 
     /**
      * Ejecución de procesos automáticos al inició de sesión en un rango de horas
-     * determinado: antes de las 5:59am.
-     * 2019-06-26
+     * determinado: antes de las 6:59am.
+     * 2020-03-06
      */
     function cron_jobs()
     {
-        $cron_id = 0;
+        $arr_crons = array();
 
         //Si la hora (G) es menor o igual a las 6 (am)
         if ( date('G') <= 6 )
         {
             $this->load->model('Develop_model');
-            $data_cron = $this->Develop_model->cron(12537);
-            if ( $data_cron['status'] ) { $cron_id = $data_cron['event_id']; }
+            $arr_crons['actualizar_dw_up'] = $this->Develop_model->cron('actualizar_dw_up');
+            $arr_crons['update_pregunta_totals'] = $this->Develop_model->cron('update_pregunta_totals');
         }
 
-        return $cron_id;
+        return $arr_crons;
     }
     
     function menu_current($controlador, $funcion)
