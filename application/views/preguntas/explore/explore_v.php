@@ -1,4 +1,4 @@
-<script src="<?php echo URL_RESOURCES . 'js/pcrn.js' ?>"></script>
+<script src="<?php echo URL_RESOURCES . 'js/pcrn_en.js' ?>"></script>
 <?php $this->load->view('assets/momentjs') ?>
 
 <div id="app_explore">
@@ -30,10 +30,10 @@
 
     <div id="elements_table">
         <?php $this->load->view($views_folder . 'table_v'); ?>
-        <?php //$this->load->view($views_folder . 'detail_v'); ?>
+        <?php $this->load->view($views_folder . 'detail_v'); ?>
     </div>
 
-    <?php //$this->load->view('common/modal_delete_v'); ?>
+    <?php $this->load->view('common/modal_delete_v'); ?>
 </div>
 
 <?php $this->load->view($views_folder . 'vue_v') ?>

@@ -24,6 +24,24 @@
         value = arr_tipos[value];
         return value;
     });
+
+    Vue.filter('difficulty_class', function (value) {
+        if (!value) return '';
+        new_value = 'bg-success';
+        if ( value > 20 ) { new_value = 'bg-info'; }
+        if ( value > 40 ) { new_value = 'bg-warning'; }
+        if ( value > 60 ) { new_value = 'bg-danger'; }
+        return new_value;
+    });
+
+    Vue.filter('difficulty_name', function (value) {
+        if (!value) return '';
+        new_value = 'Baja';
+        if ( value > 20 ) { new_value = 'Normal'; }
+        if ( value > 40 ) { new_value = 'Media'; }
+        if ( value > 60 ) { new_value = 'Alta'; }
+        return new_value;
+    });
 // App
 //-----------------------------------------------------------------------------
 

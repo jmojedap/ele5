@@ -1,6 +1,6 @@
 <div class="input-group float-right" style="width: 120px;">
     <div class="input-group-prepend">
-        <button class="btn btn-default" v-on:click="sum_page(-1)" title="Página anterior">
+        <button class="btn btn-secondary" v-on:click="sum_page(-1)" title="Página anterior">
             <i class="fa fa-caret-left"></i>
         </button>
     </div>
@@ -17,7 +17,7 @@
         v-bind:title="`${max_page} páginas en total`"
         >
     <div class="input-group-append">
-        <button class="btn btn-default" v-on:click="sum_page(1)" title="Página siguiente">
+        <button class="btn btn-secondary" v-on:click="sum_page(1)" title="Página siguiente">
             <i class="fa fa-caret-right"></i>
         </button>
     </div>

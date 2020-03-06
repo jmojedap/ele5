@@ -375,9 +375,7 @@ class Item_model extends CI_Model{
     /**
      * Devuelve array con valores predeterminados para utilizar en la función
      * Item_model->arr_item
-     * 
-     * @param type $estilo
-     * @return string
+     * 2020-03-06
      */
     function arr_config_item($estilo = 'id_interno')
     {
@@ -405,6 +403,14 @@ class Item_model extends CI_Model{
                 $arr_config['order_by'] = 'id_interno';
                 $arr_config['str'] = FALSE;
                 break;
+            case 'id_nombre_corto':
+                //id, ordenado por id_interno, numérico 2020-03-06
+                $arr_config['campo_indice'] = 'id';
+                $arr_config['campo_valor'] = 'item_corto';
+                $arr_config['order_by'] = 'id';
+                $arr_config['str'] = FALSE;
+                break;
+            
         }
         
         return $arr_config;

@@ -15,22 +15,24 @@
                         <td>{{ element.id }}</td>
                     </tr>
                     <tr>
-                        <td>Asunto</td>
-                        <td>
-                            {{ element.post_name }}
-                        </td>
-                    </tr>
-                    <tr>
                         <td>Creada por</td>
                         <td>
-                            {{ element.creator_display_name }} en 
+                            {{ element.creado_usuario_id }}
                         </td>
                     </tr>
                     <tr>
                         <td>Creada en</td>
                         <td>
-                            {{ element.created_at }}, 
-                            {{ element.created_at | ago }}
+                            {{ element.creado }}, 
+                            {{ element.creado | ago }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Estadísticas
+                        </td>
+                        <td>
+                            Respondida: {{ element.qty_answers }} | Correctas: {{ element.qty_right }}
                         </td>
                     </tr>
                 </table>

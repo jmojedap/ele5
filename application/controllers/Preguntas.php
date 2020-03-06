@@ -40,7 +40,7 @@ class Preguntas extends CI_Controller{
             $data['options_estado'] = $this->Item_model->opciones('categoria_id = 157', 'Todos');
             
         //Arrays con valores para contenido en la tabla
-            $data['arr_areas'] = $this->Item_model->arr_item('1', 'id');
+            $data['arr_areas'] = $this->Item_model->arr_item('1', 'id_nombre_corto');
             $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 156');
             $data['arr_estados'] = $this->Item_model->arr_interno('categoria_id = 157');
             $data['arr_nivel'] = $this->Item_model->arr_interno('categoria_id = 3');
@@ -57,64 +57,6 @@ class Preguntas extends CI_Controller{
         $data = $this->Pregunta_model->get($num_page);
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
-
-    /**
-     * Exploración y búsqueda
-     */
-    function explorar_ant($num_pagina = 1)
-    {
-        //Datos básicos de la exploración
-            $this->load->helper('text');
-            $data = $this->Pregunta_model->data_explorar($num_pagina);
-        
-        //Opciones de filtros de búsqueda
-            $data['opciones_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
-            $data['opciones_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Nivel');
-            $data['opciones_tipo'] = $this->Item_model->opciones('categoria_id = 156', 'Todos');
-            $data['opciones_estado'] = $this->Item_model->opciones('categoria_id = 157', 'Todos');
-            
-        //Arrays con valores para contenido en la tabla
-            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 156');
-            $data['arr_estados'] = $this->Item_model->arr_interno('categoria_id = 157');
-            $data['arr_nivel'] = $this->Item_model->arr_interno('categoria_id = 3');
-        
-        //Cargar vista
-            $this->load->view(TPL_ADMIN, $data);
-    }
-
-    /**
-     * AJAX
-     * 
-     * Devuelve JSON, que incluye string HTML de la tabla de exploración para la
-     * página $num_pagina, y los filtros enviados por post
-     * 
-     * @param type $num_pagina
-     */
-    function tabla_explorar($num_pagina = 1)
-    {
-        $this->load->helper('text');
-
-        //Datos básicos de la exploración
-            $data_pre = $this->Pregunta_model->data_tabla_explorar($num_pagina);
-        
-        //Arrays con valores para contenido en lista
-            $data_pre['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 156');
-            $data_pre['arr_estados'] = $this->Item_model->arr_interno('categoria_id = 157');
-            $data_pre['arr_nivel'] = $this->Item_model->arr_interno('categoria_id = 3');
-        
-        //Preparar respuesta
-            $data['html'] = $this->load->view('preguntas/explorar/tabla_v', $data_pre, TRUE);
-            $data['seleccionados_todos'] = $data_pre['seleccionados_todos'];
-            $data['num_pagina'] = $num_pagina;
-            $data['busqueda_str'] = $data_pre['busqueda_str'];
-            $data['cant_resultados'] = $data_pre['cant_resultados'];
-            $data['max_pagina'] = $data_pre['max_pagina'];
-        
-        //Salida
-            $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($data));
-    }
     
     /**
      * Exporta el resultado de la búsqueda a un archivo de Excel
@@ -125,12 +67,13 @@ class Preguntas extends CI_Controller{
         set_time_limit(120);    //120 segundos, 2 minutos para el proceso
         //Cargando
             $this->load->model('Busqueda_model');
+            $this->load->model('Search_model');
             $this->load->model('Pcrn_excel');
         
         //Datos de consulta, construyendo array de búsqueda
             $busqueda = $this->Busqueda_model->busqueda_array();
             $busqueda_str = $this->Busqueda_model->busqueda_str();
-            $resultados_total = $this->Pregunta_model->buscar($busqueda); //Para calcular el total de resultados
+            $resultados_total = $this->Pregunta_model->search($busqueda); //Para calcular el total de resultados
             $max_reg_export = 10000;
         
             if ( $resultados_total->num_rows() <= $max_reg_export ) 
@@ -147,10 +90,10 @@ class Preguntas extends CI_Controller{
 
                 $this->load->view('app/descargar_phpexcel_v', $data);
             } else {
-                $data['titulo_pagina'] = 'Plataforma Enlace';
-                $data['mensaje'] = "El número de registros es de {$resultados_total->num_rows()}. El máximo permitido es de " . $max_reg_export . " registros. Puede filtrar los datos por algún criterio para poder exportarlos.";
+                $data['head_title'] = 'Plataforma En Línea';
+                $data['mensaje'] = "El número de registros que quiere exportar es de {$resultados_total->num_rows()}. El máximo permitido es de " . $max_reg_export . " registros. Puede filtrar los datos por algún criterio para poder exportarlos.";
                 $data['link_volver'] = "preguntas/explorar/?{$busqueda_str}";
-                $data['vista_a'] = 'app/mensaje_v';
+                $data['view_a'] = 'app/mensaje_v';
                 
                 $this->load->view(TPL_ADMIN, $data);
             }
