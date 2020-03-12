@@ -171,9 +171,7 @@ class Preguntas extends CI_Controller{
     {
         $data = $this->Pregunta_model->save($pregunta_id);
 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -184,10 +182,7 @@ class Preguntas extends CI_Controller{
     function set_image($pregunta_id)
     {
         $data = $this->Pregunta_model->set_image($pregunta_id);
-
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -208,9 +203,7 @@ class Preguntas extends CI_Controller{
         $data = $this->Pregunta_model->upload_image();
         $data['src'] = URL_UPLOADS . 'preguntas/' . $data['upload_data']['file_name'];
 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
 // IMPORTAR
@@ -628,15 +621,85 @@ class Preguntas extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
-// CÁLCULO DE INDICADORES
+// SELECTORP (Seleccionador de preguntas)
 //-----------------------------------------------------------------------------
 
-    /*function calculate_totals($cuestionario_id)
+    function update_totals()
     {
-        $this->load->model('Cuestionario_model');
-        $preguntas = $this->Cuestionario_model->preguntas($cuestionario_id);
-    }*/
+        $data = array('status' => 0, 'affected_rows' => '0');
 
-    
+        $data['affected_rows'] = $this->Pregunta_model->update_totals();
+        if ( $data['affected_rows'] > 0 ) { $data['status'] = 1; }
 
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    function selectorp()
+    {
+        $data['preguntas'] = $this->Pregunta_model->selectorp_preguntas();
+
+        //Opciones formulario
+        $data['options_nivel'] = $this->Item_model->opciones('categoria_id = 3', 'Nivel');
+        $data['options_area'] = $this->Item_model->opciones_id('categoria_id = 1 AND item_grupo = 1', 'Área');
+
+        $data['head_title'] = 'Preguntas';
+        $data['head_subtitle'] = 'Selector';
+        $data['view_a'] = 'preguntas/selectorp/selectorp_v';
+        $this->App_model->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * Listado de preguntas seleccionadas
+     */
+    function selectorp_get()
+    {
+
+    }
+
+    function selectorp_add()
+    {
+        $arr_selectorp_pre = $this->session->userdata('arr_selectorp');
+        
+        $selected = explode(',', $this->input->post('selected'));
+        
+        foreach ( $selected as $pregunta_id ) 
+        {
+            $arr_selectorp_pre[] = $pregunta_id;
+        }
+
+        $arr_selectorp = array_unique($arr_selectorp_pre);   //Solo elementos únicos
+        $this->session->set_userdata('arr_selectorp', $arr_selectorp);      //Cargar en variable de sesión 
+
+        $data['qty_added'] = count($arr_selectorp) - count($arr_selectorp_pre);
+
+
+        //Establecer resultado
+        $data['status'] = 0;
+        if ( $data['qty_added'] >= 0 ) { $data['status'] = 1; }
+        $data['arr_selectorp'] = $arr_selectorp;
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    function selectorp_remove($pregunta_id)
+    {
+        $arr_selectorp_pre = $this->session->userdata('arr_selectorp');
+
+        $arr_selectorp = array_diff($arr_selectorp_pre, array($pregunta_id));
+
+        $this->session->set_userdata('arr_selectorp', $arr_selectorp);
+
+        $data = array('status' => 0);
+        if ( count($arr_selectorp_pre) - count($arr_selectorp) )
+        {
+            $preguntas = $this->Pregunta_model->selectorp_preguntas();
+
+            $data['preguntas'] = $preguntas->result();
+            $data['avg_difficulty'] = $this->Pregunta_model->selectorp_avg_difficulty($preguntas);
+            $data['status'] = 1;
+        }
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
 }

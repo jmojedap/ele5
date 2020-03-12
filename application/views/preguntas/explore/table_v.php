@@ -1,6 +1,7 @@
 <?php
     $cl_col['title'] = '';
     $cl_col['open'] = 'd-none d-md-table-cell d-lg-table-cell';
+    $cl_col['info'] = 'd-none d-md-table-cell d-lg-table-cell';
     $cl_col['level_area'] = 'd-none d-md-table-cell d-lg-table-cell';
     $cl_col['difficulty'] = 'd-none d-md-table-cell d-lg-table-cell';
 ?>
@@ -16,6 +17,7 @@
             </th>
             <th class="<?php echo $cl_col['open'] ?>" width="40px"></th>
             <th class="<?php echo $cl_col['title'] ?>">Texto Pregunta</th>
+            <th class="<?php echo $cl_col['info'] ?>">Detalles</th>
             <th class="<?php echo $cl_col['difficulty'] ?>" width="150px">Dificultad</th>
             <th class="<?php echo $cl_col['level_area'] ?>">Nivel Área</th>
             <th width="50px"></th>
@@ -35,6 +37,7 @@
                 </td>
                 <td class="<?php echo $cl_col['title'] ?>">
                     <div v-html="element.texto_pregunta"></div>
+
                     <div v-if="element.version_id > 0">
                         <br>
                         <a v-bind:href="`<?php echo base_url("preguntas/version/") ?>` + element.id" class="btn btn-warning btn-sm" target="_blank" title="Tiene versión con cambios propuestos">
@@ -43,8 +46,15 @@
                     </div>
                 </td>
 
+                <td class="<?php echo $cl_col['info'] ?>">
+                    <div>
+                        <span class="text-muted">Palabras clave:</span>
+                        <span>{{ element.palabras_clave }}</span>
+                    </div>
+                </td>
+
                 <td class="<?php echo $cl_col['difficulty'] ?>">
-                    <div class="progress">
+                    <div class="progress" v-if="element.qty_answers > 0">
                         <div class="progress-bar" v-bind:class="element.difficulty | difficulty_class" role="progressbar" v-bind:style="`width: ` + element.difficulty + `%`" v-bind:aria-valuenow="element.difficulty" aria-valuemin="0" aria-valuemax="100">
                             {{ element.difficulty | difficulty_name }}
                         </div>

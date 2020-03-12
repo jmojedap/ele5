@@ -11,7 +11,7 @@
             <a href="<?php echo base_url("preguntas/exportar/?{$str_filters}") ?>" class="btn btn-light" title="Exportar registros encontrados a Excel">
                 <i class="fa fa-download"></i>
             </a>
-            <a class="btn btn-light"
+            <button class="btn btn-light"
                 id="btn_delete_selected"
                 title="Eliminar elementos seleccionados"
                 data-toggle="modal"
@@ -19,8 +19,13 @@
                 v-show="selected.length > 0"
                 >
                 <i class="fa fa-trash"></i>
+            </button>
+            <a href="<?php echo base_url("preguntas/selectorp") ?>" class="btn btn-success">
+                <span id="qty_preguntas_selectorp"><?php echo count($this->session->userdata('arr_selectorp')); ?></span> preguntas
             </a>
-            
+            <button class="btn btn-success" v-on:click="add_to_selectorp" title="Agregar preguntas seleccionadas a Selector">
+                <i class="fa fa-plus"></i>
+            </button>
         </div>
         
         <div class="col mb-2">

@@ -74,6 +74,23 @@
         </div>
     </div>
     <div class="form-group row">
+        <label for="cod_pregunta" class="col-md-2 col-form-label text-right">Palabras clave</label>
+        <div class="col-md-5">
+            <p>{{ pregunta.palabras_clave }}</p>
+        </div>
+        <div class="col-md-5">
+            <input
+                type="text"
+                id="field-palabras_clave"
+                name="palabras_clave"
+                class="form-control"
+                placeholder="Palabras clave"
+                title="Palabras clave"
+                v-model="form_values.palabras_clave"
+                >
+        </div>
+    </div>
+    <div class="form-group row">
         <label for="enunciado_id" class="col-md-2 col-form-label text-right">Lectura asociada</label>
         <div class="col-md-5">
             <?php echo $this->Pcrn->campo_id('post', $row->enunciado_id, 'nombre_post'); ?>

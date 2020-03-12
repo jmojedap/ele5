@@ -103,6 +103,10 @@
             </div>
             <div class="card-body">
                 <dl class="dl-horizontal">
+                    <dt>Palabras clave</dt>
+                    <dd>
+                        <?php echo $row->palabras_clave ?>
+                    </dd>
                     <dt>Tema</dt>
                     <dd>
                         <?php echo $this->App_model->nombre_tema($row->tema_id) ?>

@@ -94,9 +94,7 @@ class Cuestionarios extends CI_Controller{
         
         $resultado = array('ejecutado' => 1, 'mensaje' =>  count($seleccionados) . ' cuestionarios eliminados');
 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($resultado));
+        $this->output->set_content_type('application/json')->set_output(json_encode($resultado));
     }
     
     /**
@@ -1497,4 +1495,36 @@ class Cuestionarios extends CI_Controller{
         ->set_content_type('application/json')
         ->set_output(json_encode($data));
     }
+
+// SelectorP Conctructor de Pregunta
+//-----------------------------------------------------------------------------
+
+    function selectorp_create()
+    {
+        //Valores iniciales
+            $data['qty_preguntas'] = 0;
+
+        //Crear cuestionario
+            $data_cuestionario = $this->Cuestionario_model->insert();
+            $data['cuestionario_id'] = $data_cuestionario['saved_id'];
+
+        //Agregar preguntas al cuestionario creado
+            $str_preguntas = $this->input->post('str_preguntas');
+            $arr_preguntas = explode(',', $str_preguntas);
+
+            $arr_row['cuestionario_id'] = $data_cuestionario['saved_id'];
+            
+            foreach ( $arr_preguntas as $orden => $pregunta_id ) 
+            {
+                $arr_row['pregunta_id'] = $pregunta_id;
+                $arr_row['orden'] = $orden;
+                $data_cp = $this->Cuestionario_model->insertar_cp($arr_row);   
+
+                $data['qty_preguntas'] += $data_cp['status'];
+            }
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
 }

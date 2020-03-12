@@ -9,30 +9,16 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-borderless table-sm">
+                <table class="table">
                     <tr>
                         <td>ID</td>
                         <td>{{ element.id }}</td>
                     </tr>
                     <tr>
-                        <td>Creada por</td>
+                        <td>Estadísticas</td>
                         <td>
-                            {{ element.creado_usuario_id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Creada en</td>
-                        <td>
-                            {{ element.creado }}, 
-                            {{ element.creado | ago }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Estadísticas
-                        </td>
-                        <td>
-                            Respondida: {{ element.qty_answers }} | Correctas: {{ element.qty_right }}
+                            Respondida <span class="badge badge-primary">{{ element.qty_answers }}</span> veces | 
+                            <span class="badge badge-success">{{ element.qty_right }}</span> correctas
                         </td>
                     </tr>
                 </table>

@@ -218,6 +218,7 @@ class Login_model extends CI_Model{
         //$data general
             $data = array(
                 'logged' =>   TRUE,
+                'username' => $row_usuario->username,
                 'nombre_usuario'    =>  $row_usuario->username,
                 'nombre_completo'    =>  "{$row_usuario->nombre} {$row_usuario->apellidos}",
                 'nombre_corto'    =>  $row_usuario->nombre,

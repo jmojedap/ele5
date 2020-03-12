@@ -123,6 +123,23 @@
                 this.showing_filters = !this.showing_filters;
                 $('#adv_filters').toggle('fast');
             },
+            //Especiales
+            add_to_selectorp: function(){
+                var params = new FormData();
+                params.append('selected', this.selected);
+                
+                axios.post(app_url + this.controller + '/selectorp_add', params)
+                .then(response => {
+                    if ( response.data.status == 1 )
+                    {
+                        toastr_text = 'Preguntas agregadas';
+                        toastr['success'](toastr_text);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
         }
     });
 </script>

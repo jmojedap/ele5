@@ -100,7 +100,7 @@ class Pregunta_model extends CI_Model{
             //$this->db->select('id, post_name, except, ');
         
         //Crear array con términos de búsqueda
-            $words_condition = $this->Search_model->words_condition($filters['q'], array('texto_pregunta', 'enunciado_2'));
+            $words_condition = $this->Search_model->words_condition($filters['q'], array('texto_pregunta', 'enunciado_2', 'palabras_clave'));
             if ( $words_condition )
             {
                 $this->db->where($words_condition);
@@ -117,6 +117,7 @@ class Pregunta_model extends CI_Model{
             
         //Filtros
             $this->db->where($role_filter); //Filtro según el rol de post en sesión
+            $this->db->where('tipo_pregunta_id < 20');  //Tipos de pregunta, no incluir versiones propuestas
             $search_condition = $this->search_condition($filters);
             if ( $search_condition ) { $this->db->where($search_condition);}
             
@@ -153,13 +154,14 @@ class Pregunta_model extends CI_Model{
      */
     function role_filter()
     {
+        $row_usuario = $this->Db_model->row_id('usuario', $this->session->userdata('usuario_id'));
+        $condition = "id = 0";  //Valor por defecto, ningún usuario, se obtendrían cero resultados.
         
-        $role = $this->session->userdata('role');
-        $condition = 'id = 0';  //Valor por defecto, ningún post, se obtendrían cero post.
-        
-        if ( $role <= 2 ) 
-        {   //Desarrollador, todos los post
+        if ( $row_usuario->rol_id <= 2 )            //Usuarios internos
+        {
             $condition = 'id > 0';
+        } elseif ( in_array($row_usuario->rol_id, array(3,4,5)) ) {    //Usuarios institucionales
+            $condition = "creado_usuario_id = {$usuario_id}";
         }
         
         return $condition;
@@ -1684,6 +1686,35 @@ class Pregunta_model extends CI_Model{
         $sql .= 'SET pregunta.qty_answers = src.qty_answers, pregunta.qty_right = src.qty_right, pregunta.pct_right = src.pct_right, pregunta.difficulty = src.difficulty;';
 
         $this->db->query($sql);
+
+        return $this->db->affected_rows();
+    }
+
+// SELECTOR DE PREGUNTAS selectrp
+//-----------------------------------------------------------------------------
+
+    function selectorp_preguntas()
+    {
+        $arr_selectorp = $this->session->userdata('arr_selectorp');
+        $data['str_preguntas'] = implode(',',$arr_selectorp);
+
+        //Query preguntas
+        $this->db->where("id IN ({$data['str_preguntas']})");
+        $preguntas = $this->db->get('pregunta');
+
+        return $preguntas;
+    }
+
+    function selectorp_avg_difficulty($preguntas)
+    {
+        $sum_difficulty = 0;
+        foreach ($preguntas->result() as $row_pregunta) {
+            $sum_difficulty += $row_pregunta->difficulty;
+        }
+
+        $avg_difficulty = $this->Pcrn->dividir($sum_difficulty, $preguntas->num_rows());
+
+        return $avg_difficulty;
     }
 
 }
