@@ -4,6 +4,7 @@
 //-----------------------------------------------------------------------------
     var arr_areas = <?php echo json_encode($arr_areas); ?>;
     var arr_tipos = <?php echo json_encode($arr_tipos); ?>;
+    var arr_difficulty_level = <?php echo json_encode($arr_difficulty_level); ?>;
 
 // Filtros
 //-----------------------------------------------------------------------------
@@ -36,11 +37,8 @@
 
     Vue.filter('difficulty_name', function (value) {
         if (!value) return '';
-        new_value = 'Baja';
-        if ( value > 20 ) { new_value = 'Normal'; }
-        if ( value > 40 ) { new_value = 'Media'; }
-        if ( value > 60 ) { new_value = 'Alta'; }
-        return new_value;
+        value = arr_difficulty_level[value];
+        return value;
     });
 // App
 //-----------------------------------------------------------------------------
@@ -54,22 +52,24 @@
             cf: '<?php echo $cf; ?>',
             controller: '<?php echo $controller; ?>',
             num_page: 1,
-            max_page: 1,
+            max_page: <?php echo $max_page ?>,
             list: <?php echo json_encode($list) ?>,
             element: [],
             selected: [],
             all_selected: false,
             filters: <?php echo json_encode($filters) ?>,
-            showing_filters: false
+            showing_filters: false,
+            qty_selectorp: <?php echo $qty_selectorp ?>,
         },
         methods: {
             get_list: function(){
+                this.num_page = 1;
                 axios.post(app_url + this.controller + '/get/' + this.num_page, $('#search_form').serialize())
                 .then(response => {
                     this.list = response.data.list;
                     this.max_page = response.data.max_page;
                     $('#head_subtitle').html(response.data.search_num_rows);
-                    history.pushState(null, null, app_url + this.cf + this.num_page +'/?' + response.data.str_filters);
+                    history.pushState(null, null, app_url + this.cf + this.num_page + '/?' + response.data.str_filters);
                     this.all_selected = false;
                     this.selected = [];
                 })
@@ -86,8 +86,18 @@
                 }
             },
             sum_page: function(sum){
-                this.num_page = Pcrn.limit_between(this.num_page + sum, 1, this.max_page);
-                this.get_list();
+                this.num_page = Pcrn.limit_between(+this.num_page + +sum, 1, this.max_page);
+                axios.post(app_url + this.controller + '/get/' + this.num_page, $('#search_form').serialize())
+                .then(response => {
+                    this.list = response.data.list;
+                    this.max_page = response.data.max_page;
+                    history.pushState(null, null, app_url + this.cf + this.num_page +'/?' + response.data.str_filters);
+                    this.all_selected = false;
+                    this.selected = [];
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
             },
             delete_selected: function(){
                 var params = new FormData();
@@ -135,10 +145,20 @@
                         toastr_text = 'Preguntas agregadas';
                         toastr['success'](toastr_text);
                     }
+                    this.qty_selectorp = response.data.qty_selectorp;
+                    $('#link_selectorp').removeClass('animated');
+                    $('#link_selectorp').removeClass('heartBeat');
+                    $('#link_selectorp').addClass('animated');
+                    $('#link_selectorp').addClass('heartBeat');
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
+            },
+            add_to_selectorp_unique: function(pregunta_id){
+                this.selected = [pregunta_id];
+                this.add_to_selectorp();
+                this.selected = [];
             },
         }
     });

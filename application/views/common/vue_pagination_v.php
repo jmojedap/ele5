@@ -13,7 +13,7 @@
         min="1"
         v-bind:max="max_page"
         v-model="num_page"
-        v-on:change="get_list"
+        v-on:change="sum_page(0)"
         v-bind:title="`${max_page} páginas en total`"
         >
     <div class="input-group-append">

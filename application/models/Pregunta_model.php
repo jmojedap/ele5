@@ -82,6 +82,8 @@ class Pregunta_model extends CI_Model{
         if ( $filters['n'] != '' ) { $condition .= "nivel = {$filters['n']} AND "; }
         if ( $filters['tp'] != '' ) { $condition .= "tipo_pregunta_id = {$filters['tp']} AND "; }
         if ( $filters['f1'] == '1' ) { $condition .= 'version_id > 0 AND tipo_pregunta_id = 1 AND '; }      //Si la pregunta tiene una versión propuesta
+        if ( $filters['f2'] != '' ) { $condition .= "difficulty_level = {$filters['f2']} AND "; }
+        
         
         if ( strlen($condition) > 0 )
         {
@@ -97,7 +99,11 @@ class Pregunta_model extends CI_Model{
         $role_filter = $this->role_filter($this->session->userdata('post_id'));
 
         //Construir consulta
-            //$this->db->select('id, post_name, except, ');
+            $select = 'id, ';
+            $select .= 'texto_pregunta, enunciado_2, opcion_1, opcion_2, opcion_3, opcion_4, enunciado_id, version_id, respuesta_correcta, nivel, area_id, ';
+            $select .= 'qty_answers, qty_right, difficulty, difficulty_level, palabras_clave, ';
+            $select .= 'CONCAT("' . URL_UPLOADS . 'preguntas/", (archivo_imagen)) AS url_imagen_pregunta, archivo_imagen' ;
+            $this->db->select($select);
         
         //Crear array con términos de búsqueda
             $words_condition = $this->Search_model->words_condition($filters['q'], array('texto_pregunta', 'enunciado_2', 'palabras_clave'));
@@ -109,7 +115,7 @@ class Pregunta_model extends CI_Model{
         //Orden
             if ( $filters['o'] != '' )
             {
-                $order_type = $this->pml->if_strlen($filters['ot'], 'ASC');
+                $order_type = $this->pml->if_strlen($filters['ot'], 'DESC');
                 $this->db->order_by($filters['o'], $order_type);
             } else {
                 $this->db->order_by('editado', 'DESC');
@@ -173,16 +179,19 @@ class Pregunta_model extends CI_Model{
      * 
      * @return string
      */
-    function order_options()
+    function options_order()
     {
-        $order_options = array(
+        $options_order = array(
             '' => '[ Ordenar por ]',
-            'texto_pregunta' => 'Texto Pregunta',
+            'editado' => 'Fecha de edición',
             'area_id' => 'Área',
-            'nivel' => 'Nivel'
+            'nivel' => 'Nivel',
+            'qty_answers' => 'Veces respondida',
+            'qty_right' => 'Respuestas correctas',
+            'difficulty' => 'Dificultad',
         );
         
-        return $order_options;
+        return $options_order;
     }
     
     /**
@@ -1679,15 +1688,66 @@ class Pregunta_model extends CI_Model{
      */
     function update_totals()
     {
+        //Totales numéricos
         $sql = 'UPDATE pregunta ';
         $sql .= 'INNER JOIN ';
         $sql .= '(SELECT pregunta_id, COUNT(id) AS qty_answers, SUM(resultado) AS qty_right, (100*SUM(resultado)/COUNT(id)) AS pct_right, (100-100*SUM(resultado)/COUNT(id)) AS difficulty FROM usuario_pregunta GROUP BY pregunta_id) AS src ';
         $sql .= 'ON pregunta.id = src.pregunta_id ';
         $sql .= 'SET pregunta.qty_answers = src.qty_answers, pregunta.qty_right = src.qty_right, pregunta.pct_right = src.pct_right, pregunta.difficulty = src.difficulty;';
+        $this->db->query($sql);
 
+        $qty_affected = $this->db->affected_rows();
+
+        //Si se modificaron números
+        if ( $qty_affected >= 0 ) { $this->update_difficulty_level(); }
+
+        return $qty_affected;
+    }
+
+    /**
+     * Actualiza el campo pregunta.difficulty_level según rangos valor pregunta.difficulty
+     * 2020-03-16
+     */
+    function update_difficulty_level()
+    {
+        $sql = "UPDATE pregunta ";
+        $sql .= "SET difficulty_level = IF(difficulty > 60,4,IF(difficulty > 40,3,IF(difficulty > 20,2,1))) ";
+        $sql .= "WHERE qty_answers > 0";
         $this->db->query($sql);
 
         return $this->db->affected_rows();
+    }
+
+    /**
+     * Actualiza el campo pregunta.palabras_clave, que está vacío, con el nombre del tema asociado
+     * 2020-03-16
+     */
+    function update_palabras_clave_auto()
+    {
+        $this->db->select('pregunta.id, nombre_tema');
+        $this->db->join('tema', 'pregunta.tema_id = tema.id');
+        $this->db->where('palabras_clave = ""');
+        $preguntas = $this->db->get('pregunta');
+
+        $data = array('status' => 1, 'message' => 'Se actualizaron 0 registros', 'qty_affected' => 0);
+
+        foreach ( $preguntas->result() as $row )
+        {
+            $arr_row['palabras_clave'] = $row->nombre_tema;
+            $this->db->where('id', $row->id);
+            $this->db->update('pregunta', $arr_row);
+
+            $data['qty_affected'] += 1;
+        }
+
+        $data['qty_affected'] = $preguntas->num_rows();
+        if ( $data['qty_affected'] > 0 )
+        {
+            $data['status'] = 1;
+            $data['message'] = 'Registros modificados: ' . $data['qty_affected'];
+        }
+
+        return $data;
     }
 
 // SELECTOR DE PREGUNTAS selectrp
@@ -1696,9 +1756,17 @@ class Pregunta_model extends CI_Model{
     function selectorp_preguntas()
     {
         $arr_selectorp = $this->session->userdata('arr_selectorp');
-        $data['str_preguntas'] = implode(',',$arr_selectorp);
+        $data['str_preguntas'] = '0';
+        if ( count($arr_selectorp) > 0 ) {
+            $data['str_preguntas'] = implode(',',$arr_selectorp);
+        }
 
         //Query preguntas
+        $select = 'id, ';
+        $select .= 'texto_pregunta, enunciado_2, opcion_1, opcion_2, opcion_3, opcion_4, enunciado_id, version_id, respuesta_correcta, nivel, area_id, ';
+        $select .= 'difficulty, palabras_clave, qty_answers, qty_right, ';
+        $select .= 'CONCAT("' . URL_UPLOADS . 'preguntas/", (archivo_imagen)) AS url_imagen_pregunta, archivo_imagen' ;
+        $this->db->select($select);
         $this->db->where("id IN ({$data['str_preguntas']})");
         $preguntas = $this->db->get('pregunta');
 
@@ -1708,11 +1776,23 @@ class Pregunta_model extends CI_Model{
     function selectorp_avg_difficulty($preguntas)
     {
         $sum_difficulty = 0;
-        foreach ($preguntas->result() as $row_pregunta) {
-            $sum_difficulty += $row_pregunta->difficulty;
+        $qty_questions = 0;
+        $avg_difficulty = 0;
+        foreach ($preguntas->result() as $row_pregunta) 
+        {
+            if ( $row_pregunta->qty_answers > 0 )
+            {
+                $sum_difficulty += $row_pregunta->difficulty;
+                $qty_questions += 1;
+            }
         }
 
-        $avg_difficulty = $this->Pcrn->dividir($sum_difficulty, $preguntas->num_rows());
+        //Calcular resultado
+        if ( $sum_difficulty > 0 )
+        {
+            $avg_difficulty = $this->Pcrn->dividir($sum_difficulty, $qty_questions);
+            $avg_difficulty = number_format($avg_difficulty,0);
+        }
 
         return $avg_difficulty;
     }

@@ -58,9 +58,26 @@
         </div>
         <div class="form-group row">
             <div class="col-md-9">
-                <?php echo form_dropdown('f1', $options_version, $filters['f1'], 'class="form-control" title="Filtrar por estado versión" v-model="filters.f1"'); ?>
+                <?php echo form_dropdown('f2', $options_difficulty_level, $filters['f2'], 'class="form-control" title="Filtrar por nivel de dificultad" v-model="filters.f2"'); ?>
             </div>
-            <label for="f1" class="col-md-3 col-form-label">Estado versión</label>
+            <label for="f2" class="col-md-3 col-form-label">Nivel de dificultad</label>
+        </div>
+        <?php if ( $this->session->userdata('role') <= 2 ) { ?>
+            <div class="form-group row">
+                <div class="col-md-9">
+                    <?php echo form_dropdown('f1', $options_version, $filters['f1'], 'class="form-control" title="Filtrar por estado versión" v-model="filters.f1"'); ?>
+                </div>
+                <label for="f1" class="col-md-3 col-form-label">Estado versión</label>
+            </div>
+        <?php } ?>
+        <div class="form-group row">
+            <div class="col-md-5">
+                <?php echo form_dropdown('o', $options_order, $filters['o'], 'class="form-control" title="Ordenar por" v-model="filters.o"'); ?>
+            </div>
+            <div class="col-md-4">
+                <?php echo form_dropdown('ot', $options_order_type, $filters['ot'], 'class="form-control" title="Tipo de orden" v-model="filters.ot"'); ?>
+            </div>
+            <label for="o" class="col-md-3 col-form-label">Ordenar por</label>
         </div>
     </div>
 </form>

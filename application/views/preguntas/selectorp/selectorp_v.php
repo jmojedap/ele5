@@ -1,3 +1,5 @@
+<script src="<?php echo URL_RESOURCES ?>assets/sortablejs/Sortable.js"></script>
+
 <?php
     //Establecer valores iniciales
     $nombre_cuestionario = 'Cuestionario ' . $this->session->userdata('username') . ' (' . date('d/M') . ')';
@@ -6,18 +8,38 @@
     if ( $preguntas->result() > 0 ) { $nivel = '0' . $preguntas->row()->nivel; }
 
     $area_id = '';
-    if ( $preguntas->result() > 0 ) { $area_id = '0' . $preguntas->row()->area_id; }
-
-    //Estadísticas
-    
+    if ( $preguntas->result() > 0 ) { $area_id = '0' . $preguntas->row()->area_id; }  
 ?>
 
 <style>
     .handle{
         cursor: move;
     }
+
+    .card-ghost{
+        border: 1px solid #81d4fa;
+        background-color: #e1f5fe;
+    }
+
+    #pregunta_detail li {
+        margin-right: 20px;
+        border: 1px solid red;
+        padding: 2px;
+        margin-bottom: 2px;
+        border-radius: 3px 3px 3px 3px;
+        -moz-border-radius: 3px 3px 3px 3px;
+        -webkit-border-radius: 3px 3px 3px 3px;
+        border: 0px solid #000000;
+    }
+
+    #pregunta_detail li.right_answer{
+        color: #FFFFFF;
+        background-color: #81d4fa;
+        border: 1px solid #4fc3f7;
+    }
+
 </style>
-<script src="<?php echo URL_RESOURCES ?>assets/sortablejs/Sortable.js"></script>
+
 
 <script>
 // Variables
@@ -64,7 +86,7 @@
         <div class="col-md-4">
             <table class="table bg-white">
                 <thead>
-                    <th>Resumen</th>
+                    <th width="45%">Resumen</th>
                     <th></th>
                 </thead>
                 <tbody>
@@ -73,12 +95,25 @@
                         <td>{{ list.length }}</td>
                     </tr>
                     <tr>
-                        <td>Dificultad</td>
-                        <td><?php echo number_format($avg_difficulty, 1) ?></td>
+                        <td>Dificultad total</td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar" v-bind:class="avg_difficulty | difficulty_class" role="progressbar" v-bind:style="`width: ` + avg_difficulty + `%`" v-bind:aria-valuenow="avg_difficulty" aria-valuemin="0" aria-valuemax="100">
+                                    {{ avg_difficulty }} &middot;
+                                    {{ avg_difficulty | difficulty_name }}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ocultar detalle preguntas</td>
+                        <td>
+                            <input type="checkbox" name="hide_detail" v-model="hide_detail">
+                        </td>
                     </tr>
                 </tbody>
             </table>
-            <div class="card">
+            <div class="card" v-show="list.length > 0">
                 <div class="card-header">
                     <i class="fa fa-plus"></i>
                     Generar cuestionario
@@ -124,8 +159,7 @@
                                 </button>
                             </div>
                         </div>
-                        <hr>
-                        <input type="text" class="form-control" name="str_preguntas" id="field-str_preguntas" value="<?php echo $str_preguntas ?>">
+                        <input type="text" class="d-none" name="str_preguntas" id="field-str_preguntas" value="<?php echo $str_preguntas ?>">
 
                     </form>
                 </div>
@@ -139,14 +173,31 @@
                 <div class="card mb-1 mw750p" v-for="(pregunta, row_key) in list" v-bind:id="`pregunta_` + pregunta.id">
                     <div class="card-body">
                         <div class="float-right">
-                            <button class="btn btn-light btn-sm" v-on:click="delete_element(row_key)">
-                                <i class="fa fa-times"></i>
-                            </button>
-                            <div class="btn btn-light btn-sm handle">
-                                <i class="fa fa-arrows-alt"></i>
+                            <div class="">
+                                <div class="btn btn-light btn-sm handle">
+                                    <i class="fas fa-arrows-alt"></i>
+                                </div>
+                                <button class="btn btn-light btn-sm" v-on:click="delete_element(row_key)">
+                                    <i class="fa fa-times"></i>
+                                </button>
                             </div>
                         </div>
                         <p v-html="pregunta.texto_pregunta"></p>
+                        <div id="pregunta_detail" class="mb-2" v-show="!hide_detail">
+                            <p v-html="pregunta.enunciado_2"></p>
+                            <img v-if="pregunta.archivo_imagen" v-bind:src="pregunta.url_imagen_pregunta" alt="Imagen pregunta" class="img-thumbnail mb-2">
+                            <ul style="list-style-type:none;">
+                                <li v-bind:class="{'right_answer': pregunta.respuesta_correcta == 1 }">A) {{ pregunta.opcion_1 }}</li>
+                                <li v-bind:class="{'right_answer': pregunta.respuesta_correcta == 2 }">B) {{ pregunta.opcion_2 }}</li>
+                                <li v-bind:class="{'right_answer': pregunta.respuesta_correcta == 3 }">C) {{ pregunta.opcion_3 }}</li>
+                                <li v-bind:class="{'right_answer': pregunta.respuesta_correcta == 4 }">D) {{ pregunta.opcion_4 }}</li>
+                            </ul>
+                        </div>
+                        <div class="progress mb-2" v-if="pregunta.qty_answers > 0" style="height: 2px;">
+                            <div class="progress-bar" v-bind:class="pregunta.difficulty | difficulty_class" role="progressbar" v-bind:style="`width: ` + pregunta.difficulty + `%`" v-bind:aria-valuenow="pregunta.difficulty" aria-valuemin="0" aria-valuemax="100">
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -155,12 +206,36 @@
 </div>
 
 <script>
+// Filtros
+//-----------------------------------------------------------------------------
+    Vue.filter('difficulty_class', function (value) {
+        if (!value) return '';
+        new_value = 'bg-success';
+        if ( value > 20 ) { new_value = 'bg-info'; }
+        if ( value > 40 ) { new_value = 'bg-warning'; }
+        if ( value > 60 ) { new_value = 'bg-danger'; }
+        return new_value;
+    });
+
+    Vue.filter('difficulty_name', function (value) {
+        if (!value) return '';
+        new_value = 'Baja';
+        if ( value > 20 ) { new_value = 'Normal'; }
+        if ( value > 40 ) { new_value = 'Media'; }
+        if ( value > 60 ) { new_value = 'Alta'; }
+        return new_value;
+    });
+
+// VueApp
+//-----------------------------------------------------------------------------
     new Vue({
         el: '#app_selectorp',
         data: {
             list: <?php echo json_encode($preguntas->result()) ?>,
             row_id: 0,
-            row_key: 0
+            row_key: 0,
+            avg_difficulty: <?php echo $avg_difficulty ?>,
+            hide_detail: true
         },
         methods: {
             delete_element: function(row_key){
@@ -172,6 +247,7 @@
                 .then(response => {
                     console.log(response.data.status)
                     this.list = response.data.preguntas;
+                    this.avg_difficulty = response.data.avg_difficulty;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -188,7 +264,7 @@
     new Sortable(sortable_preguntas, {
         handle: '.handle', // handle class
         animation: 200,
-        ghostClass: 'bg-light',
+        ghostClass: 'card-ghost',
         // Called when dragging element changes position
         onEnd: function(/**Event*/evt) {
             str_preguntas = '';

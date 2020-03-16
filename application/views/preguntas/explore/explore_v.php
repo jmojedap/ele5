@@ -1,5 +1,7 @@
-<script src="<?php echo URL_RESOURCES . 'js/pcrn_en.js' ?>"></script>
+<?php $this->load->view('assets/lightbox2') ?>
 <?php $this->load->view('assets/momentjs') ?>
+<script src="<?php echo URL_RESOURCES . 'js/pcrn_en.js' ?>"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.css" integrity="sha256-a2tobsqlbgLsWs7ZVUGgP5IvWZsx8bTNQpzsqCSm5mk=" crossorigin="anonymous" />
 
 <div id="app_explore">
     <div class="row">
@@ -8,10 +10,10 @@
         </div>
 
         <div class="col">
-            <a href="<?php echo base_url("preguntas/exportar/?{$str_filters}") ?>" class="btn btn-light" title="Exportar registros encontrados a Excel">
+            <!-- <a href="<?php //echo base_url("preguntas/exportar/?{$str_filters}") ?>" class="btn btn-light" title="Exportar registros encontrados a Excel">
                 <i class="fa fa-download"></i>
-            </a>
-            <button class="btn btn-light"
+            </a> -->
+            <button class="btn btn-bordered-light"
                 id="btn_delete_selected"
                 title="Eliminar elementos seleccionados"
                 data-toggle="modal"
@@ -20,11 +22,16 @@
                 >
                 <i class="fa fa-trash"></i>
             </button>
-            <a href="<?php echo base_url("preguntas/selectorp") ?>" class="btn btn-success">
-                <span id="qty_preguntas_selectorp"><?php echo count($this->session->userdata('arr_selectorp')); ?></span> preguntas
+            <a href="<?php echo base_url("preguntas/selectorp") ?>"
+                class="btn w3" id="link_selectorp"
+                title="Preguntas seleccionadas para generar cuestionario"
+                v-bind:class="{'btn-secondary': qty_selectorp == 0, 'btn-warning': qty_selectorp > 0 }"
+                >
+                <i class="fa fa-spinner fa-spin" v-show="qty_selectorp > 0"></i>
+                <span id="qty_preguntas_selectorp">{{ qty_selectorp }}</span> en lista
             </a>
-            <button class="btn btn-success" v-on:click="add_to_selectorp" title="Agregar preguntas seleccionadas a Selector">
-                <i class="fa fa-plus"></i>
+            <button class="btn btn-primary" v-on:click="add_to_selectorp" title="Agregar a lista para construir cuestionario" v-show="selected.length > 0">
+                <i class="fa fa-plus"></i> Agregar
             </button>
         </div>
         

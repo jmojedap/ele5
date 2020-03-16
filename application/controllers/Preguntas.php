@@ -36,14 +36,21 @@ class Preguntas extends CI_Controller{
         //Opciones de filtros de búsqueda
             $data['options_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
             $data['options_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Todos');
-            $data['options_tipo'] = $this->Item_model->opciones('categoria_id = 156', 'Todos');
+            $data['options_tipo'] = $this->Item_model->opciones('categoria_id = 156 AND id_interno < 50', 'Todos');
             $data['options_estado'] = $this->Item_model->opciones('categoria_id = 157', 'Todos');
+            $data['options_difficulty_level'] = $this->Item_model->opciones('categoria_id = 158', 'Todos');
+            $data['options_order'] = $this->Pregunta_model->options_order();
+            $data['options_order_type'] = array('ASC' => 'Ascendente', 'DESC' => 'Descendente');
             
         //Arrays con valores para contenido en la tabla
             $data['arr_areas'] = $this->Item_model->arr_item('1', 'id_nombre_corto');
             $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 156');
             $data['arr_estados'] = $this->Item_model->arr_interno('categoria_id = 157');
+            $data['arr_difficulty_level'] = $this->Item_model->arr_item('158', 'id_interno_num');
             $data['arr_nivel'] = $this->Item_model->arr_interno('categoria_id = 3');
+
+        //Especiales
+            $data['qty_selectorp'] = count($this->session->userdata('arr_selectorp'));
             
         //Cargar vista
             $this->App_model->view(TPL_ADMIN, $data);
@@ -621,23 +628,38 @@ class Preguntas extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
-// SELECTORP (Seleccionador de preguntas)
+// Cálculo de totales y parámetros
 //-----------------------------------------------------------------------------
 
     function update_totals()
     {
-        $data = array('status' => 0, 'affected_rows' => '0');
+        $data = array('status' => 0, 'affected_rows' => '0', 'message' => 'Mensaje no ejecutado');
 
         $data['affected_rows'] = $this->Pregunta_model->update_totals();
-        if ( $data['affected_rows'] > 0 ) { $data['status'] = 1; }
+        if ( $data['affected_rows'] >= 0 )
+        {
+            $data['status'] = 1;
+            $data['message'] = "Preguntas actualizadas: " . $data['affected_rows'];
+        }
 
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
+    function update_palabras_clave_auto()
+    {
+        $data = $this->Pregunta_model->update_palabras_clave_auto();
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+// SELECTORP (Seleccionador de preguntas)
+//-----------------------------------------------------------------------------
+
     function selectorp()
     {
         $data['preguntas'] = $this->Pregunta_model->selectorp_preguntas();
+        $data['avg_difficulty'] = $this->Pregunta_model->selectorp_avg_difficulty($data['preguntas']);
 
         //Opciones formulario
         $data['options_nivel'] = $this->Item_model->opciones('categoria_id = 3', 'Nivel');
@@ -657,11 +679,19 @@ class Preguntas extends CI_Controller{
 
     }
 
-    function selectorp_add()
+    /**
+     * Agregar pregunta o grupo de preguntas
+     * 2020-03-16
+     */
+    function selectorp_add($pregunta_id = 0)
     {
         $arr_selectorp_pre = $this->session->userdata('arr_selectorp');
         
-        $selected = explode(',', $this->input->post('selected'));
+        if ( $pregunta_id > 0 ) {
+            $selected = array($pregunta_id);    //Pregunta individual
+        } else {
+            $selected = explode(',', $this->input->post('selected'));   //Preguntas seleccionadas en listado explorar
+        }
         
         foreach ( $selected as $pregunta_id ) 
         {
@@ -671,6 +701,7 @@ class Preguntas extends CI_Controller{
         $arr_selectorp = array_unique($arr_selectorp_pre);   //Solo elementos únicos
         $this->session->set_userdata('arr_selectorp', $arr_selectorp);      //Cargar en variable de sesión 
 
+        $data['qty_selectorp'] = count($arr_selectorp);
         $data['qty_added'] = count($arr_selectorp) - count($arr_selectorp_pre);
 
 

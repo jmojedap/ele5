@@ -30,7 +30,9 @@
             success: function(response){
                 console.log(response.message);
                 var type = 'error';
+                var message = 'Proceso ejecutado';
                 if ( response.status == 1 ) { type = 'success'; }
+                
                 toastr[type](response.message)
             }
     });
