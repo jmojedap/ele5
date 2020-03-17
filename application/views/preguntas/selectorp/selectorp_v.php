@@ -182,6 +182,12 @@
                                 </button>
                             </div>
                         </div>
+                        <p>
+                            <span class="etiqueta nivel w1">{{ pregunta.nivel }}</span>
+                            <span class="etiqueta_a" v-bind:class="`etiqueta_a` + pregunta.area_id">
+                                {{ pregunta.area_id | area_name }}
+                            </span>
+                        </p>
                         <p v-html="pregunta.texto_pregunta"></p>
                         <div id="pregunta_detail" class="mb-2" v-show="!hide_detail">
                             <p v-html="pregunta.enunciado_2"></p>
@@ -206,8 +212,18 @@
 </div>
 
 <script>
+// Variables
+//-----------------------------------------------------------------------------
+    var arr_areas = <?php echo json_encode($arr_areas); ?>;
+
 // Filtros
 //-----------------------------------------------------------------------------
+    Vue.filter('area_name', function (value) {
+        if (!value) return '';
+        value = arr_areas[value];
+        return value;
+    });
+
     Vue.filter('difficulty_class', function (value) {
         if (!value) return '';
         new_value = 'bg-success';

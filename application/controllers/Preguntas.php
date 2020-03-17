@@ -665,6 +665,8 @@ class Preguntas extends CI_Controller{
         $data['options_nivel'] = $this->Item_model->opciones('categoria_id = 3', 'Nivel');
         $data['options_area'] = $this->Item_model->opciones_id('categoria_id = 1 AND item_grupo = 1', 'Área');
 
+        $data['arr_areas'] = $this->Item_model->arr_item('1', 'id_nombre_corto');
+
         $data['head_title'] = 'Preguntas';
         $data['head_subtitle'] = 'Selector';
         $data['view_a'] = 'preguntas/selectorp/selectorp_v';

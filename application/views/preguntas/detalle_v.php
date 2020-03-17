@@ -6,12 +6,14 @@
         3 => 'C',
         4 => 'D',
     );
+
+    $cl_difficulty_level = array('bg-light', 'bg-success', 'bg-info', 'bg-warning', 'bg-danger');
     //shuffle($opciones_numeros); //Se desordenan las opciones
     
     //Imagen pregunta: pregunta.archivo_imagen
         $src_alt = URL_IMG . "app/img_pregunta_nd.png";   //Imagen alternativa
 
-        $att_img['src'] = RUTA_UPLOADS .  "preguntas/" .$row_pregunta->archivo_imagen;
+        $att_img['src'] = URL_UPLOADS .  "preguntas/" .$row_pregunta->archivo_imagen;
         $att_img['width'] = '100%';
         $att_img['style'] = 'max-width: 800px';
         $att_img['onError'] = "this.src='" . $src_alt . "'"; //Imagen alternativa
@@ -103,6 +105,20 @@
             </div>
             <div class="card-body">
                 <dl class="dl-horizontal">
+                    <dt>Estadísticas</dt>
+                    <dd>
+                        Respondida <?php echo $row->qty_answers; ?> veces, <?php echo $row->qty_right; ?> correctas
+                    </dd>
+                    <dt>Dificultad</dt>
+                    <dd>
+                        <div class="progress">
+                            <div class="progress-bar <?php echo $cl_difficulty_level[$row->difficulty_level] ?>" role="progressbar" style="width: <?php echo $row->difficulty ?>%" aria-valuenow="<?php echo $row->difficulty ?>" aria-valuemin="0" aria-valuemax="100">
+                                <?php echo $row->difficulty ?>
+                                &middot;
+                                <?php echo $this->Item_model->nombre(158, $row->difficulty_level); ?>
+                            </div>
+                        </div>
+                    </dd>
                     <dt>Palabras clave</dt>
                     <dd>
                         <?php echo $row->palabras_clave ?>
@@ -144,8 +160,6 @@
                         <?php echo $this->App_model->nombre_usuario($row->creado_usuario_id, 2) ?> - 
                         <?php echo $this->Pcrn->fecha_formato($row->creado) ?>
                     </dd>
-                    
-                    
                 </dl>
             </div>
         </div>
