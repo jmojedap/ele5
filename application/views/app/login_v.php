@@ -90,6 +90,23 @@
         </div>
     </form>
 
+    <div class="alert alert-warning text-center">
+        <p>
+            <i class="fa fa-info-circle fa-2x"></i>
+        </p>
+        <p>
+            Debido a la suspensión de clases presenciales en las
+            instituciones educativas, el acceso a las páginas web
+            de entornos de educación virtual
+            <b>se ha incrementado enormemente</b> en Colombia y el Mundo.
+        </p>
+        <p>
+            Por tal motivo es posible que se perciba <b>cierta lentitud</b> en su funcionamiento.
+            Estaremos trabajando constantemente para poder seguir disfrutando del servicio con normalidad.
+            Agradecemos su compresión.
+        </p>
+    </div>
+
     <div class="clearfix"></div>
 
     <div class="mb-2" id="mensajes"></div>

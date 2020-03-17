@@ -12,6 +12,7 @@
     </head>
     <body>
         <?php $this->load->view("templates/apanel3/menus/menu_{$this->session->userdata('rol_id')}"); ?>
+        <?php $this->load->view('templates/apanel3/parts/head_tools') ?>
         <?php $this->load->view('templates/apanel3/parts/content'); ?>
     </body>
 </html>

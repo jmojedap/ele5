@@ -18,6 +18,9 @@
         <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>css/pel.css">
         <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES . 'css/abc_checkbox.css' ?>">
 
+        <!-- Animate CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.css" integrity="sha256-a2tobsqlbgLsWs7ZVUGgP5IvWZsx8bTNQpzsqCSm5mk=" crossorigin="anonymous" />
+
         <!-- Vue.js -->
         <?php $this->load->view('assets/vue') ?>
 

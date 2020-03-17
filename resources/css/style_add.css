@@ -156,8 +156,6 @@
 
 /* TEXTO
 ----------------------------------------------------------------------------------------------------*/
-
-
 .resaltar{
     font-weight: bold;
     color: #da4631;
@@ -194,5 +192,10 @@ span.suave{
 ----------------------------------------------------------------------------------------------------*/
 
 .flexigrid .form-control{
-    box-sizing: content-box;  //pcrn-mod 2015-02-23
+    box-sizing: content-box;  /*pcrn-mod 2015-02-23*/
+}
+
+/* Clase para volver ordenable un elemento con Sortable.js */
+.sortable_handle{
+    cursor: move;
 }

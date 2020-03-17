@@ -333,11 +333,22 @@ table.tabla-transparente th {
 ----------------------------------------------------------------------------------------------------*/
 
 .flexigrid .form-control{
-    box-sizing: content-box;  //pcrn-mod 2015-02-23
+    box-sizing: content-box;  /*pcrn-mod 2015-02-23*/
 }
 
 /* ADAPTACIÓN GROCERY CRUD BOOTSTRAP THEME
 ----------------------------------------------------------------------------------------------------*/
+
+#head_subtitle{
+    font-size: 0.7em;
+    color: #333;
+    padding-left: 0px;
+}
+
+#head_tools{
+    float: right;
+    margin: 5px 5px 0 0;
+}
 
 .container_gc_pcrn{
     background: #fefefe;
@@ -349,3 +360,38 @@ table.tabla-transparente th {
 }
 
 .w27p { width: 27px; }
+.w120p { width: 120px; }
+
+.btn-sm-square { width: 27px; }
+
+/* SORTABLE JS
+----------------------------------------------------------------------------------------------------*/
+
+/* Clase para volver ordenable un elemento con Sortable.js */
+.sortable_handle{
+    cursor: move;
+}
+
+.card-ghost{
+    border: 1px solid #81d4fa;
+    background-color: #e1f5fe;
+}
+
+/* CUESTIONARIOS Y PREGUNTAS
+----------------------------------------------------------------------------------------------------*/
+#pregunta_detail li {
+    margin-right: 20px;
+    border: 1px solid red;
+    padding: 2px;
+    margin-bottom: 2px;
+    border-radius: 3px 3px 3px 3px;
+    -moz-border-radius: 3px 3px 3px 3px;
+    -webkit-border-radius: 3px 3px 3px 3px;
+    border: 0px solid #000000;
+}
+
+#pregunta_detail li.right_answer{
+    color: #FFFFFF;
+    background-color: #81d4fa;
+    border: 1px solid #4fc3f7;
+}

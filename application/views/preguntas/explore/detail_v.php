@@ -17,8 +17,8 @@
                     <tr>
                         <td>Estadísticas</td>
                         <td>
-                            <span class="badge badge-success w1">{{ element.qty_right }}</span> correctas de 
-                            <span class="badge badge-primary w1">{{ element.qty_answers }}</span> veces respondida
+                            Respondida <span class="badge badge-primary w1">{{ element.qty_answers }}</span> veces,
+                            <span class="badge badge-success w1">{{ element.qty_right }}</span> correctas.
                         </td>
                     </tr>
                     <tr>
@@ -31,34 +31,22 @@
                     <tr>
                         <td>Opciónes</td>
                         <td>
-                            <ul style="list-style-type:none;">
-                                <li>
-                                    <span class="badge badge-secondary" v-bind:class="{'badge-success': element.respuesta_correcta == 1 }">
-                                        A
-                                    </span>
+                            <ul style="list-style-type:none;" id="pregunta_detail">
+                                <li v-bind:class="{'right_answer': element.respuesta_correcta == 1 }">
+                                    <span class="badge badge-secondary">A</span>
                                     {{ element.opcion_1 }}
-                                    <i class="fa fa-check-circle text-success" v-if="element.respuesta_correcta == 1"></i>
                                 </li>
-                                <li>
-                                    <span class="badge badge-secondary" v-bind:class="{'badge-success': element.respuesta_correcta == 2 }">
-                                        B
-                                    </span>
+                                <li v-bind:class="{'right_answer': element.respuesta_correcta == 2 }">
+                                    <span class="badge badge-secondary">B</span>
                                     {{ element.opcion_2 }}
-                                    <i class="fa fa-check-circle text-success" v-if="element.respuesta_correcta == 2"></i>
                                 </li>
-                                <li>
-                                    <span class="badge badge-secondary" v-bind:class="{'badge-success': element.respuesta_correcta == 3 }">
-                                        C
-                                    </span>
+                                <li v-bind:class="{'right_answer': element.respuesta_correcta == 3 }">
+                                    <span class="badge badge-secondary">C</span>
                                     {{ element.opcion_3 }}
-                                    <i class="fa fa-check-circle text-success" v-if="element.respuesta_correcta == 3"></i>
                                 </li>
-                                <li>
-                                    <span class="badge badge-secondary" v-bind:class="{'badge-success': element.respuesta_correcta == 4 }">
-                                        D
-                                    </span>
+                                <li v-bind:class="{'right_answer': element.respuesta_correcta == 4 }">
+                                    <span class="badge badge-secondary">D</span>
                                     {{ element.opcion_4 }}
-                                    <i class="fa fa-check-circle text-success" v-if="element.respuesta_correcta == 4"></i>
                                 </li>
                             </ul>
                         </td>

@@ -1499,6 +1499,11 @@ class Cuestionarios extends CI_Controller{
 // SelectorP Conctructor de Pregunta
 //-----------------------------------------------------------------------------
 
+    /**
+     * Toma el listado de preguntas en la variable de sesión {arr_selectorp}
+     * y crea un nuevo cuestionario, con los datos provenientes en POST de preguntas/selectorp
+     * 2020-03-17
+     */
     function selectorp_create()
     {
         //Valores iniciales
@@ -1523,8 +1528,10 @@ class Cuestionarios extends CI_Controller{
                 $data['qty_preguntas'] += $data_cp['status'];
             }
 
+        //Quitar listado de preguntas de datos de sesión
+        if ( $data['qty_preguntas']) { $this->session->unset_userdata('arr_selectorp'); }
+
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
-
 }

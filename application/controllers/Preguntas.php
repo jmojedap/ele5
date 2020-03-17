@@ -628,7 +628,7 @@ class Preguntas extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
-// Cálculo de totales y parámetros
+// CÁLCULO DE TOTALES Y PARÁMETROS DE PREGUNTAS
 //-----------------------------------------------------------------------------
 
     function update_totals()
@@ -656,16 +656,23 @@ class Preguntas extends CI_Controller{
 // SELECTORP (Seleccionador de preguntas)
 //-----------------------------------------------------------------------------
 
+    /**
+     * Vista herramienta construcción de cuestionario, muestra preguntas seleccionadas en lista
+     * para ordenar. Botón para crear nuevo cuestionario.
+     * 2020-03-17
+     */
     function selectorp()
     {
         $data['preguntas'] = $this->Pregunta_model->selectorp_preguntas();
         $data['avg_difficulty'] = $this->Pregunta_model->selectorp_avg_difficulty($data['preguntas']);
+        $data['str_preguntas'] = implode(',', $this->session->userdata('arr_selectorp'));
 
         //Opciones formulario
         $data['options_nivel'] = $this->Item_model->opciones('categoria_id = 3', 'Nivel');
         $data['options_area'] = $this->Item_model->opciones_id('categoria_id = 1 AND item_grupo = 1', 'Área');
 
         $data['arr_areas'] = $this->Item_model->arr_item('1', 'id_nombre_corto');
+        $data['arr_difficulty_level'] = $this->Item_model->arr_item('158', 'id_interno_num');
 
         $data['head_title'] = 'Preguntas';
         $data['head_subtitle'] = 'Selector';
@@ -674,15 +681,8 @@ class Preguntas extends CI_Controller{
     }
 
     /**
-     * Listado de preguntas seleccionadas
-     */
-    function selectorp_get()
-    {
-
-    }
-
-    /**
-     * Agregar pregunta o grupo de preguntas
+     * Agregar pregunta o grupo de preguntas al listado en variables de sesión para
+     * construir un nuevo cuestionario.
      * 2020-03-16
      */
     function selectorp_add($pregunta_id = 0)
@@ -706,7 +706,6 @@ class Preguntas extends CI_Controller{
         $data['qty_selectorp'] = count($arr_selectorp);
         $data['qty_added'] = count($arr_selectorp) - count($arr_selectorp_pre);
 
-
         //Establecer resultado
         $data['status'] = 0;
         if ( $data['qty_added'] >= 0 ) { $data['status'] = 1; }
@@ -714,6 +713,11 @@ class Preguntas extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
+    /**
+     * Quita una pregunta del listado en las variables de sesión. Devuelve listado de preguntas
+     * y calcula el nuevo nivel de dificultad.
+     * 2020-03-17
+     */
     function selectorp_remove($pregunta_id)
     {
         $arr_selectorp_pre = $this->session->userdata('arr_selectorp');
