@@ -102,8 +102,7 @@
         </p>
         <p>
             Por tal motivo es posible que se perciba <b>cierta lentitud</b> en su funcionamiento.
-            Estaremos trabajando constantemente para poder seguir disfrutando del servicio con normalidad.
-            Agradecemos su compresión.
+            Trabajamos continuamente para brindar el mejor servicio.
         </p>
     </div>
 
