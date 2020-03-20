@@ -50,7 +50,6 @@
 <script>
 // Variables
 //-----------------------------------------------------------------------------
-    var app_url = '<?php echo base_url() ?>';
     var post_id = '<?php echo $row->id ?>';
 
 // Document Ready
