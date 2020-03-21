@@ -35,11 +35,6 @@ class Recursos extends CI_Controller{
         redirect("recursos/{$elemento}/?{$busqueda_str}");
     }
     
-    function explorar()
-    {
-        
-    }
-    
 //ARCHIVOS
 //---------------------------------------------------------------------------------------------------
     
@@ -279,11 +274,42 @@ class Recursos extends CI_Controller{
     
 //LINKS
 //---------------------------------------------------------------------------------------------------
+
+    /**
+     * Exploración de links
+     * 2020-03-21
+     */
+    function links()
+    {
+        //Datos básicos de la exploración
+        $data = $this->Recurso_model->links_explore_data(1);
+                
+        //Opciones de filtros de búsqueda
+            $data['options_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
+            $data['options_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Todos');
+            
+        //Arrays con valores para contenido en la tabla
+            $data['arr_areas'] = $this->Item_model->arr_item('1', 'id_nombre_corto');
+            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 156');
+            
+        //Cargar vista
+            $this->App_model->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * Listado de links, filtrados por búsqueda, JSON
+     */
+    function links_get($num_page = 1)
+    {
+        $data = $this->Recurso_model->links_get($num_page);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
     
     /**
      * Exploración de recursos tipo link externo
      */    
-    function links()
+    function links_ant()
     {
         $this->load->model('Busqueda_model');
         $this->load->helper('text');
@@ -321,7 +347,7 @@ class Recursos extends CI_Controller{
     /**
      * Exporta el resultado de la búsqueda a un archivo de Excel
      */
-    function exportar_links()
+    function links_exportar()
     {
         set_time_limit(120);    //120 segundos, 2 minutos para el proceso
         //Cargando
@@ -362,39 +388,38 @@ class Recursos extends CI_Controller{
      * 
      * @param type $programa_id
      */
-    function importar_links()
+    function links_importar()
     {
         
         //Iniciales
-            $nombre_archivo = '06_formato_cargue_links.xlsx';
-            $parrafos_ayuda = array();
+            $template_file_name = '06_formato_cargue_links.xlsx';
+            $help_tips = array();
         
         //Instructivo
             $data['titulo_ayuda'] = '¿Cómo importar links?';
-            $data['nota_ayuda'] = 'Se importarán recursos tipo link a la Plataforma.';
-            $data['parrafos_ayuda'] = $parrafos_ayuda;
+            $data['help_note'] = 'Se importarán recursos tipo link a la Plataforma.';
+            $data['help_tips'] = $help_tips;
         
         //Variables específicas
-            $data['destino_form'] = 'recursos/importar_links_e';
-            $data['nombre_archivo'] = $nombre_archivo;
-            $data['nombre_hoja'] = 'links';
-            $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
+            $data['destination_form'] = 'recursos/links_importar_e';
+            $data['template_file_name'] = $template_file_name;
+            $data['sheet_name'] = 'links';
+            $data['url_file'] = base_url("assets/formatos_cargue/{$template_file_name}");
             
         //Variables generales
-            $data['titulo_pagina'] = 'Links';
-            $data['subtitulo_pagina'] = 'Importar links';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'recursos/links/explorar_menu_v';
+            $data['head_title'] = 'Links';
+            $data['head_subtitle'] = 'Importar';
+            $data['view_a'] = 'common/import_v';
+            $data['nav_2'] = 'recursos/links/explore/menu_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
      * Importar links, (e) ejecutar.
      */
-    function importar_links_e()
+    function links_importar_e()
     {
-        
         //Proceso
             $this->load->model('Pcrn_excel');
             $no_importados = array();

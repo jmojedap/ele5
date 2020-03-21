@@ -180,6 +180,144 @@ class Recurso_Model extends CI_Model{
         $carpeta = RUTA_UPLOADS . $this->Pcrn->campo_id('item', $tipo_archivo_id, 'slug') . '/';
         return $carpeta;
     }
+
+// GESTIÓN DE RECURSOS LINKS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Array con los datos para la vista de exploración
+     */
+    function links_explore_data($num_page)
+    {
+        //Data inicial, de la tabla
+            $data = $this->links_get($num_page);
+        
+        //Elemento de exploración
+            $data['controller'] = 'recursos';                      //Nombre del controlador
+            $data['cf'] = 'recursos/links/';                      //Nombre del controlador
+            $data['views_folder'] = 'recursos/links/explore/';           //Carpeta donde están las vistas de exploración
+            
+        //Vistas
+            $data['head_title'] = 'Links';
+            $data['head_subtitle'] = $data['search_num_rows'];
+            $data['view_a'] = $data['views_folder'] . 'explore_v';
+            $data['nav_2'] = $data['views_folder'] . 'menu_v';
+        
+        return $data;
+    }
+
+    function links_get($num_page)
+    {
+        //Referencia
+            $per_page = 10;                             //Cantidad de registros por página
+            $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
+
+        //Búsqueda y Resultados
+            $this->load->model('Search_model');
+            $data['filters'] = $this->Search_model->filters();
+            $elements = $this->links_search($data['filters'], $per_page, $offset);    //Resultados para página
+        
+        //Cargar datos
+            $data['list'] = $elements->result();
+            $data['str_filters'] = $this->Search_model->str_filters();
+            $data['search_num_rows'] = $this->links_search_num_rows($data['filters']);
+            $data['max_page'] = ceil($this->pml->if_zero($data['search_num_rows'],1) / $per_page);   //Cantidad de páginas
+
+        return $data;
+    }
+    
+    /**
+     * String con condición WHERE SQL para filtrar post
+     * 
+     * @param type $filters
+     * @return type
+     */
+    function links_search_condition($filters)
+    {
+        $condition = NULL;
+        
+        //Tipo de post
+        if ( $filters['a'] != '' ) { $condition .= "area_id = {$filters['a']} AND "; }
+        if ( $filters['n'] != '' ) { $condition .= "nivel = {$filters['n']} AND "; }
+        
+        if ( strlen($condition) > 0 )
+        {
+            $condition = substr($condition, 0, -5);
+        }
+        
+        return $condition;
+    }
+    
+    function links_search($filters, $per_page = NULL, $offset = NULL)
+    {
+        //Construir consulta
+            $select = 'recurso.id, titulo, url, tema_id, tema.nombre_tema, area_id, nivel, palabras_clave';
+            $this->db->select($select);
+            $this->db->join('tema', 'tema.id = recurso.tema_id');
+        
+        //Crear array con términos de búsqueda
+            $words_condition = $this->Search_model->words_condition($filters['q'], array('titulo', 'url'));
+            if ( $words_condition )
+            {
+                $this->db->where($words_condition);
+            }
+            
+        //Orden
+            if ( $filters['o'] != '' )
+            {
+                $order_type = $this->pml->if_strlen($filters['ot'], 'DESC');
+                $this->db->order_by($filters['o'], $order_type);
+            } else {
+                $this->db->order_by('recurso.editado', 'DESC');
+            }
+            
+        //Filtros
+            $this->db->where('tipo_recurso_id', 2); //Recurso Tipo link
+            $search_condition = $this->links_search_condition($filters);
+            if ( $search_condition ) { $this->db->where($search_condition);}
+            
+        //Obtener resultados
+        if ( is_null($per_page) )
+        {
+            $query = $this->db->get('recurso'); //Resultados totales
+        } else {
+            $query = $this->db->get('recurso', $per_page, $offset); //Resultados por página
+        }
+        
+        return $query;
+        
+    }
+    
+    /**
+     * Devuelve la cantidad de registros encontrados en la tabla con los filtros
+     * establecidos en la búsqueda
+     * 
+     * @param type $filters
+     * @return type
+     */
+    function links_search_num_rows($filters)
+    {
+        $query = $this->links_search($filters); //Para calcular el total de resultados
+        return $query->num_rows();
+    }
+    
+    /**
+     * Array con options para ordenar el listado de post en la vista de
+     * exploración
+     * 
+     * @return string
+     */
+    function links_options_order()
+    {
+        $options_order = array(
+            '' => '[ Ordenar por ]',
+            'editado' => 'Fecha de edición',
+            'area_id' => 'Área',
+            'nivel' => 'Nivel'
+        );
+        
+        return $options_order;
+    }
     
 // PROCESOS
 //---------------------------------------------------------------------------------------------------------

@@ -1192,7 +1192,7 @@ class Tema_Model extends CI_Model{
      */
     function links($tema_id)
     {
-        $this->db->select('id, titulo, url');
+        $this->db->select('id, titulo, url, palabras_clave, componente_id');
         $this->db->where('tema_id', $tema_id);
         $this->db->where('tipo_recurso_id', 2);
         $links = $this->db->get('recurso');
@@ -1212,6 +1212,7 @@ class Tema_Model extends CI_Model{
         //Construir registro
             $arr_row['titulo'] = $this->input->post('titulo');
             $arr_row['url'] = $this->input->post('url');
+            $arr_row['palabras_clave'] = $this->input->post('palabras_clave');
             $arr_row['tema_id'] = $tema_id;
             $arr_row['tipo_recurso_id'] = 2;    //Link
             $arr_row['editado'] = date('Y-m-d H:i:s');

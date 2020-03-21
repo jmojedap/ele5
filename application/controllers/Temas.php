@@ -429,6 +429,7 @@ class Temas extends CI_Controller{
         
         //Archivos
             $data['links'] = $this->Tema_model->links($tema_id);
+            $data['options_componente'] = $this->Item_model->opciones_id('categoria_id = 8', 'Seleccione el componente');
             
         //Solicitar vista
             $data['head_subtitle'] = 'Links';
@@ -447,9 +448,7 @@ class Temas extends CI_Controller{
 
         $data['links'] = $links->result();
 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
