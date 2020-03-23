@@ -49,7 +49,8 @@ class App extends CI_Controller{
             redirect($destino);
             
         } else {
-            $this->login();
+            //$this->login();
+            $this->mantenimiento();
         }
     }
     
@@ -154,7 +155,8 @@ class App extends CI_Controller{
     
     function mantenimiento()
     {
-        $data['titulo_pagina'] = NOMBRE_APP;
+        $data['head_title'] = NOMBRE_APP;
+        $data['view_a'] = 'app/mantenimiento_v';
         $this->load->view('app/mantenimiento_v', $data);
     }
     

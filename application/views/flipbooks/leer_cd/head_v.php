@@ -11,7 +11,6 @@
     <link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Ubuntu:500,300'>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
     <link rel="stylesheet" href="<?php echo URL_RESOURCES ?>css/style_add.css">
-    <link rel="stylesheet" href="<?php echo URL_RESOURCES ?>css/flipbook_v4.css">
     
     <!--Bootstrap Submenú-->
     <link rel="stylesheet" href="<?= URL_ASSETS ?>bootstrap_submenu/dist/css/bootstrap-submenu.min.css">
@@ -21,6 +20,8 @@
 <!--    <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
     <script src="<?php //echo URL_RESOURCES ?>js/jquery.ui.touch-punch.min.js"></script>-->
+    
+    <link rel="stylesheet" href="<?php echo URL_RESOURCES ?>css/flipbook_bs4.css">
 
     <script type="text/javascript" src="<?php echo URL_RESOURCES ?>js/pcrn.js"></script> <!--Funciones especiales-->
     

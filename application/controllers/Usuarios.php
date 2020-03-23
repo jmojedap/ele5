@@ -1598,7 +1598,9 @@ class Usuarios extends CI_Controller{
     }
     
     /**
-     * 
+     * Modifica los campos nombre, apellidos, de la tabla usuario, quitando  los * asteriscos de 
+     * los usuarios que cambiaron su nombre y no quitaron el asterisco por defecto.
+     * 2020-03-21
      */
     function quitar_asteriscos()
     {
@@ -1607,19 +1609,19 @@ class Usuarios extends CI_Controller{
             $consultas_sql[] = "UPDATE usuario SET apellidos = REPLACE(apellidos, '*', '') WHERE CHAR_LENGTH(apellidos) > 1 AND apellidos LIKE '%*%';";
             
         //Ejecutar
-            $cant_modificados = 0;
+            $data = array('status' => 0, 'qty_affected' => '0');
             foreach ( $consultas_sql as $sql )
             {
                 $this->db->query($sql);
-                $cant_modificados += $this->db->affected_rows();
+                $data['qty_affected'] += $this->db->affected_rows();
             }
             
         //Construir array de resultado
-            $resultado['mensaje'] = 'Campos modificados: ' . $cant_modificados;
-            $resultado['clase'] = 'alert-info';
-            $this->session->set_flashdata('resultado', $resultado);
+            $data['message'] = 'Registros modificados: ' . $data['qty_affected'];
+            if ( $data['qty_affected'] >= 0 ) { $data['status'] = 1; }
         
-        redirect('develop/procesos');
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
 //---------------------------------------------------------------------------------------------------

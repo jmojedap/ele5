@@ -46,6 +46,7 @@ class Acceso {
         $funciones_publicas[] = 'app/no_permitido';
         $funciones_publicas[] = 'app/login';
         $funciones_publicas[] = 'app/test';
+        $funciones_publicas[] = 'app/mantenimiento';
         
         $funciones_publicas[] = 'app/registro';
         $funciones_publicas[] = 'app/validar_login';

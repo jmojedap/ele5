@@ -17,7 +17,8 @@
     
     $arr_sexo = $this->Item_model->arr_item(59);
     
-    if ( $this->session->userdata('rol_id')> 2 ){
+    //Se excluye a directivo,  (2020-03-21)
+    if ( in_array($this->session->userdata('rol_id'), array(2,3,5)) ){
         $opciones_proceso = array(
             'p3' => 'Restaurar contraseña'
         );
@@ -147,22 +148,25 @@
 <?php $this->load->view('grupos/submenu_estudiantes_v') ?>
 
 <form accept-charset="utf-8" method="POST" id="estudiantes_form">
-    
-    <div class="sep1">
-        <div class="row mb-2">
-            <div class="col-md-2">
-                <?php echo  form_dropdown('proceso', $opciones_proceso, set_value('proceso'), 'class="form-control"') ?>
-            </div>
-            <div class="col-md-2">
-                <button class="btn btn-primary btn-block" type="submit">
-                    Aplicar
-                </button>
-            </div>
-            <div class="col-md-8">
-                A los estudiantes que se seleccionen se les ejecutará el proceso elegido. Al desactivar un usuario también se <span class="resaltar">restaurará su contraseña</span> al valor por defecto.
+
+    <?php if ( in_array($this->session->userdata('rol_id'), array(0,1,2,3,5,8)) ) { ?>
+        <div class="sep1">
+            <div class="row mb-2">
+                <div class="col-md-2">
+                    <?php echo  form_dropdown('proceso', $opciones_proceso, set_value('proceso'), 'class="form-control"') ?>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary btn-block" type="submit">
+                        Aplicar
+                    </button>
+                </div>
+                <div class="col-md-8">
+                    A los estudiantes que se seleccionen se les ejecutará el proceso elegido. Al desactivar un usuario también se <span class="resaltar">restaurará su contraseña</span> al valor por defecto.
+                </div>
             </div>
         </div>
-    </div>
+    <?php } ?>
+    
 
     <table class="table table-default bg-blanco" cellspacing="0">
         <thead>

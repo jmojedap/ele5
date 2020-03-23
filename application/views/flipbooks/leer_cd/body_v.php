@@ -164,7 +164,7 @@
                                     class="link_indice float-left"
                                     v-on:click="ir_a_pagina(pagina.num_pagina)"
                                     >
-                                    <span class="badge badge-primary">{{ parseInt(pagina.num_pagina) + 1 }}</span>
+                                    <span class="badge badge-primary w1">{{ parseInt(pagina.num_pagina) + 1 }}</span>
                                     <span class="a5_no">{{ pagina.nombre_tema }}</span>
                                 </a>    
                             </div>
