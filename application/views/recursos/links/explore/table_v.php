@@ -35,12 +35,7 @@
                 </td>
                 <td class="<?php echo $cl_col['title'] ?>">
                     <p v-html="element.titulo"></p>
-                    <p>
-                        <span class="etiqueta nivel w1">{{ element.nivel }}</span>
-                        <span class="etiqueta_a w3" v-bind:class="`etiqueta_a` + element.area_id">
-                            {{ element.area_id | area_name }}
-                        </span>
-                    </p>
+                    
                 </td>
 
                 <td class="<?php echo $cl_col['tema'] ?>">
@@ -50,6 +45,12 @@
                 </td>
 
                 <td class="<?php echo $cl_col['info'] ?>">
+                    <p>
+                        <span class="etiqueta nivel w1">{{ element.nivel }}</span>
+                        <span class="etiqueta_a w3" v-bind:class="`etiqueta_a` + element.area_id">
+                            {{ element.area_id | area_name }}
+                        </span>
+                    </p>
                     <div>
                         <span class="text-muted">Palabras clave:</span>
                         <span>{{ element.palabras_clave }}</span>
@@ -57,7 +58,7 @@
                 </td>
                 
                 <td>
-                    <button class="btn btn-light btn-sm w27p" data-toggle="modal" data-target="#detail_modal" @click="set_current(key)">
+                    <button class="btn btn-light btn-sm btn-sm-square" data-toggle="modal" data-target="#detail_modal" @click="set_current(key)">
                         <i class="fa fa-info"></i>
                     </button>
                 </td>

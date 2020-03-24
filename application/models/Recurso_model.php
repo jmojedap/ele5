@@ -251,7 +251,7 @@ class Recurso_Model extends CI_Model{
     function links_search($filters, $per_page = NULL, $offset = NULL)
     {
         //Construir consulta
-            $select = 'recurso.id, titulo, url, tema_id, tema.nombre_tema, area_id, nivel, palabras_clave';
+            $select = 'recurso.id, titulo, url, tema_id, tema.nombre_tema, area_id, nivel, palabras_clave, recurso.descripcion';
             $this->db->select($select);
             $this->db->join('tema', 'tema.id = recurso.tema_id');
         

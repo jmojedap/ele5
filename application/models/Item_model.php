@@ -383,7 +383,6 @@ class Item_model extends CI_Model{
         $arr_config['order_type'] = 'ASC';
         $arr_config['campo_valor'] = 'item';
         
-        
         switch ($estilo) {
             case 'id':
                 //id, ordenado alfabéticamente
@@ -410,7 +409,6 @@ class Item_model extends CI_Model{
                 $arr_config['order_by'] = 'id';
                 $arr_config['str'] = FALSE;
                 break;
-            
         }
         
         return $arr_config;

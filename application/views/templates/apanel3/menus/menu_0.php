@@ -352,13 +352,13 @@
                 <li><a href="<?= base_url()?>recursos/archivos" class="<?= $clase_sm['archivos'] ?>"><i class="fa fa-folder"></i><span>archivos</span></a></li> <!-- subitem -->
                 <li>
                     <a href="<?= base_url()?>recursos/links" class="<?= $clase_sm['links'] ?>">
-                        <i class="fa fa-globe"></i>
+                        <i class="fa fa-link"></i>
                         <span>links</span>
                     </a>
                 </li>
                 <li>
                     <a href="<?= base_url('posts/explorar')?>" class="<?= $clase_sm['recursos-posts'] ?>">
-                        <i class="fa fa-newspaper-o"></i>
+                        <i class="fa fa-edit"></i>
                         <span>posts</span>
                     </a>
                 </li>
@@ -382,8 +382,8 @@
                         <span>cuestionarios</span>
                     </a>
                 </li>
-                <li><a href="<?= base_url()?>datos/enunciados" class="<?= $clase_sm['enunciados'] ?>"><i class="fa fa-quote-left"></i><span>lecturas</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url()?>preguntas/explorar" class="<?= $clase_sm['preguntas'] ?>"><i class="fa fa-question"></i><span>preguntas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url()?>datos/enunciados" class="<?= $clase_sm['enunciados'] ?>"><i class="fa fa-quote-left"></i><span>lecturas</span></a></li>
+                <li><a href="<?php echo base_url()?>preguntas/explorar/?tp=01" class="<?= $clase_sm['preguntas'] ?>"><i class="fa fa-question"></i><span>preguntas</span></a></li>
             </ul>
 
         </li>

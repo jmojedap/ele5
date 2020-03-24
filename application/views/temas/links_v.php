@@ -7,17 +7,23 @@
                     <tr v-for="(link, key) in links" v-bind:class="{'table-success': key == link_key}">
                         <td>
                             <dl class="row">
-                                <dt class="col-md-3">Título</dt>
-                                <dd class="col-md-9">{{ link.titulo }}</dd>
+                                <dt class="col-md-3"></dt>
+                                <dd class="col-md-9"><h3>{{ link.titulo }}</h3></dd>
 
                                 <dt class="col-md-3">Link</dt>
                                 <dd class="col-md-9">
-                                    <a v-bind:href="`<?php echo base_url("temas/explore/?list=") ?>` + link.id" class="clase">
+                                    <a v-bind:href="link.url" target="_blank">
                                         {{ link.url }}
                                     </a>
                                 </dd>
+                                <dt class="col-md-3">Descripción</dt>
+                                <dd class="col-md-9">{{ link.descripcion }}</dd>
+                                
                                 <dt class="col-md-3">Palabras clave</dt>
                                 <dd class="col-md-9">{{ link.palabras_clave }}</dd>
+
+                                <dt class="col-md-3">Componente</dt>
+                                <dd class="col-md-9">{{ link.componente_id | componente_name}}</dd>
                             </dl>
                         </td>
                         
@@ -43,7 +49,6 @@
             <div class="card">
                 <div class="card-body">
                     <form accept-charset="utf-8" method="POST" id="link_form" @submit.prevent="save_link">
-                        <input type="hidden" name="id" v-bind:value="form_values.id">
                         <div class="form-group row">
                             <label for="titulo" class="col-md-4 col-form-label text-right">Título</label>
                             <div class="col-md-8">
@@ -75,6 +80,23 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="descripcion" class="col-md-4 col-form-label text-right">Descripción</label>
+                            <div class="col-md-8">
+                                <textarea
+                                    type="text"
+                                    id="field-descripcion"
+                                    name="descripcion"
+                                    required
+                                    class="form-control"
+                                    placeholder="Descripción"
+                                    title="Descripción"
+                                    v-bind:value="form_values.descripcion"
+                                    rows="3"
+                                    ></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="palabras_clave" class="col-md-4 col-form-label text-right">Palabras clave</label>
                             <div class="col-md-8">
                                 <input
@@ -93,7 +115,7 @@
                         <div class="form-group row">
                             <label for="componente_id" class="col-md-4 col-form-label text-right">Componente</label>
                             <div class="col-md-8">
-                                <?php echo form_dropdown('componente_id', $options_componente, '0', 'class="form-control" v-model="form_values.componente_id"') ?>
+                                <?php echo form_dropdown('componente_id', $options_componente, '0', 'class="form-control" v-bind:value="form_values.componente_id"') ?>
                             </div>
                         </div>
 
@@ -114,6 +136,20 @@
 </div>
 
 <script>
+// Variables
+//-----------------------------------------------------------------------------
+    var arr_componentes = <?php echo json_encode($arr_componentes); ?>
+
+// Filters
+//-----------------------------------------------------------------------------
+    Vue.filter('componente_name', function (value) {
+        if (!value) return '';
+        value = arr_componentes[value];
+        return value;
+    });
+
+// Vue App
+//-----------------------------------------------------------------------------
 new Vue({
     el: '#links_app',
     created: function() {
@@ -125,15 +161,9 @@ new Vue({
         links: [],
         link: {},
         form_values: {
-            id: 0,
-            name: '',
-            palabras_clave: '',
-            componente_id: ''
-        },
-        form_values_new: {
-            id: 0,
             titulo: '',
             url: '',
+            descripcion: '',
             palabras_clave: '',
             componente_id: ''
         },
@@ -153,32 +183,48 @@ new Vue({
         new_link: function() {
             this.link_key = -1;
             this.link_id = 0;
-            this.form_values = this.form_values_new;
+            this.clean_form();
             $('#field-titulo').focus();
         },
         set_current: function(key) {
             this.link_key = key;
             this.link_id = this.links[key].id;
-            this.form_values = this.links[key];
+            this.form_values.titulo = this.links[key].titulo;
+            this.form_values.url = this.links[key].url;
+            this.form_values.descripcion = this.links[key].descripcion;
+            this.form_values.palabras_clave = this.links[key].palabras_clave;
             this.form_values.componente_id = '0' + this.links[key].componente_id;
         },
         save_link: function() {
             axios.post(this.app_url + 'temas/save_link/' + this.tema_id + '/' + this.link_id, $('#link_form').serialize())
                 .then(response => {
-                    toastr["success"](response.data.message);
+                    if ( response.data.status == 1 ) {
+                        toastr['success']('Guardado');
+                    }
                     this.get_list();
-                    this.form_values = this.form_values_new;
+                    this.clean_form();
                 })
                 .catch(function(error) {
                     console.log(error);
                 });
         },
+        clean_form: function(){
+            this.form_values.titulo = '';
+            this.form_values.url = '';
+            this.form_values.descripcion = '';
+            this.form_values.palabras_clave = '';
+            this.form_values.componente_id = '';
+        },
         delete_element: function() {
             axios.get(this.app_url + 'temas/delete_link/' + this.tema_id + '/' + this.link_id)
                 .then(response => {
-                    toastr['info'](response.data.message);
-                    this.get_list();
-                    this.new_link();
+                    if ( response.data.status == 1 ) {
+                        toastr['info']('Link eliminado');
+                        this.get_list();
+                        this.new_link();
+                    } else {
+                        toastr['error']('Ocurrió un error al eliminar');
+                    }
                 })
                 .catch(function(error) {
                     console.log(error);

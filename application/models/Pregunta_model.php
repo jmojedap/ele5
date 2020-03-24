@@ -167,7 +167,11 @@ class Pregunta_model extends CI_Model{
         {
             $condition = 'id > 0';
         } elseif ( in_array($row_usuario->rol_id, array(3,4,5)) ) {    //Usuarios institucionales
-            $condition = "creado_usuario_id = {$usuario_id}";
+            //Preguntas propias O las de En Línea Editores
+            $condition = "(creado_usuario_id = {$row_usuario->id}) OR (tipo_pregunta_id = 1)";
+        } elseif ( in_array($row_usuario->rol_id, array(3,4,5)) ) {    //Usuarios institucionales
+            //Preguntas propias O las de En Línea Editores
+            $condition = "(creado_usuario_id = {$row_usuario->id}) OR (tipo_pregunta_id = 1)";
         }
         
         return $condition;
