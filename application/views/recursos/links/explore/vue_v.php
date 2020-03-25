@@ -4,6 +4,7 @@
 //-----------------------------------------------------------------------------
     var arr_areas = <?php echo json_encode($arr_areas); ?>;
     var arr_tipos = <?php echo json_encode($arr_tipos); ?>;
+    var arr_componentes = <?php echo json_encode($arr_componentes); ?>;
 
 // Filtros
 //-----------------------------------------------------------------------------
@@ -22,6 +23,12 @@
     Vue.filter('tipo_name', function (value) {
         if (!value) return '';
         value = arr_tipos[value];
+        return value;
+    });
+
+    Vue.filter('componente_name', function (value) {
+        if (!value) return '';
+        value = arr_componentes[value];
         return value;
     });
 // App

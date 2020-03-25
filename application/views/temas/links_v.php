@@ -7,22 +7,22 @@
                     <tr v-for="(link, key) in links" v-bind:class="{'table-success': key == link_key}">
                         <td>
                             <dl class="row">
-                                <dt class="col-md-3"></dt>
+                                <dt class="col-md-3 text-right"></dt>
                                 <dd class="col-md-9"><h3>{{ link.titulo }}</h3></dd>
 
-                                <dt class="col-md-3">Link</dt>
+                                <dt class="col-md-3 text-right">Link</dt>
                                 <dd class="col-md-9">
                                     <a v-bind:href="link.url" target="_blank">
                                         {{ link.url }}
                                     </a>
                                 </dd>
-                                <dt class="col-md-3">Descripción</dt>
+                                <dt class="col-md-3 text-right">Descripción</dt>
                                 <dd class="col-md-9">{{ link.descripcion }}</dd>
                                 
-                                <dt class="col-md-3">Palabras clave</dt>
+                                <dt class="col-md-3 text-right">Palabras clave</dt>
                                 <dd class="col-md-9">{{ link.palabras_clave }}</dd>
 
-                                <dt class="col-md-3">Componente</dt>
+                                <dt class="col-md-3 text-right">Componente</dt>
                                 <dd class="col-md-9">{{ link.componente_id | componente_name}}</dd>
                             </dl>
                         </td>

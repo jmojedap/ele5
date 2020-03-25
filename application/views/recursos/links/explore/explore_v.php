@@ -33,6 +33,7 @@
     </div>
 
     <?php $this->load->view('common/modal_delete_v'); ?>
+    <?php $this->load->view($views_folder . '/modal_schedule_v'); ?>
 </div>
 
 <?php $this->load->view($views_folder . 'vue_v') ?>

@@ -287,10 +287,12 @@ class Recursos extends CI_Controller{
         //Opciones de filtros de búsqueda
             $data['options_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
             $data['options_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Todos');
+            $data['options_componente'] = $this->Item_model->opciones_id('categoria_id = 8', 'Todos');
             
         //Arrays con valores para contenido en la tabla
             $data['arr_areas'] = $this->Item_model->arr_item('1', 'id_nombre_corto');
             $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 156');
+            $data['arr_componentes'] = $this->Item_model->arr_item('categoria_id = 8', 'id');
             
         //Cargar vista
             $this->App_model->view(TPL_ADMIN, $data);

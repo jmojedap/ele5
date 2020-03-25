@@ -228,22 +228,18 @@ class Recurso_Model extends CI_Model{
     
     /**
      * String con condición WHERE SQL para filtrar post
-     * 
-     * @param type $filters
-     * @return type
      */
     function links_search_condition($filters)
     {
         $condition = NULL;
         
-        //Tipo de post
+        //Revisar cada filtro
         if ( $filters['a'] != '' ) { $condition .= "area_id = {$filters['a']} AND "; }
         if ( $filters['n'] != '' ) { $condition .= "nivel = {$filters['n']} AND "; }
+        if ( $filters['cpnt'] != '' ) { $condition .= "recurso.componente_id = {$filters['cpnt']} AND "; }
         
-        if ( strlen($condition) > 0 )
-        {
-            $condition = substr($condition, 0, -5);
-        }
+        //Quitar AND final
+        if ( strlen($condition) > 0 ) { $condition = substr($condition, 0, -5); }
         
         return $condition;
     }
@@ -251,7 +247,7 @@ class Recurso_Model extends CI_Model{
     function links_search($filters, $per_page = NULL, $offset = NULL)
     {
         //Construir consulta
-            $select = 'recurso.id, titulo, url, tema_id, tema.nombre_tema, area_id, nivel, palabras_clave, recurso.descripcion';
+            $select = 'recurso.id, titulo, url, tema_id, tema.nombre_tema, area_id, nivel, palabras_clave, recurso.descripcion, recurso.componente_id';
             $this->db->select($select);
             $this->db->join('tema', 'tema.id = recurso.tema_id');
         

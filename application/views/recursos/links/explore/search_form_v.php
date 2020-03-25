@@ -44,5 +44,11 @@
             </div>
             <label for="n" class="col-md-3 col-form-label">Nivel</label>
         </div>
+        <div class="form-group row">
+            <div class="col-md-9">
+                <?php echo form_dropdown('cpnt', $options_componente, $filters['cpnt'], 'class="form-control" title="Filtrar por componente" v-model="filters.cpnt"'); ?>
+            </div>
+            <label for="cpnt" class="col-md-3 col-form-label">Componente</label>
+        </div>
     </div>
 </form>
