@@ -1,6 +1,10 @@
 <?php $this->load->view('assets/momentjs') ?>
 <script src="<?php echo URL_RESOURCES . 'js/pcrn_en.js' ?>"></script>
 
+<p>
+    <?php echo $str_grupos ?>
+</p>
+
 <div id="app_explore">
     <div class="row">
         <div class="col-md-6 d-none d-md-table-cell d-lg-table-cell">

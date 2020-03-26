@@ -1206,7 +1206,6 @@ class App_model extends CI_Model {
      */
     function opciones_grupo($condicion, $formato = 1)
     {
-
         $this->db->select("CONCAT('0', grupo.id) as grupo_id, CONCAT(anio_generacion, ' | ' ,nombre_institucion, ' | ', nombre_grupo) AS formato_1, nivel AS formato_2", FALSE);
         $this->db->where($condicion);
         $this->db->join('institucion', 'grupo.institucion_id = institucion.id');

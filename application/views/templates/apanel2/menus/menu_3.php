@@ -65,9 +65,14 @@
         $opciones_menus['mensajes/conversacion'] = array('mensajes', '', '');
         $opciones_menus['mensajes/explorar'] = array('mensajes', '', '');
 
-        //Panel de control
-        $opciones_menus['estadisticas/login_usuarios'] = array('panel_control', 'estadisticas', 'estadísticas');
-        $opciones_menus['tickets/creados'] = array('panel_control', 'tickets', 'requerimientos');
+        //Estadisticas
+        $opciones_menus['estadisticas/login_usuarios'] = array('estadisticas', 'estadisticas', 'estadísticas');
+        $opciones_menus['estadisticas/login_diario'] = array('estadisticas', 'estadisticas', 'estadísticas');
+        $opciones_menus['estadisticas/login_nivel'] = array('estadisticas', 'estadisticas', 'estadísticas');
+        $opciones_menus['estadisticas/flipbooks_nivel'] = array('estadisticas', 'estadisticas', 'estadísticas');
+        $opciones_menus['estadisticas/flipbooks_area'] = array('estadisticas', 'estadisticas', 'estadísticas');
+        $opciones_menus['estadisticas/quices_area'] = array('estadisticas', 'estadisticas', 'estadísticas');
+        $opciones_menus['estadisticas/quices_nivel'] = array('estadisticas', 'estadisticas', 'estadísticas');
 
         //Contraseña
         $opciones_menus['usuarios/contrasena'] = array('mi_cuenta', '', '');
@@ -127,28 +132,20 @@
 
         </li>
         
-        <li class="has_submenu"> <!-- contenedor item con submenu -->
-            <a href="#" class="<?= $clase_m['panel_control'] ?>"><i class="fa fa-2x fa-dashboard"></i><span>panel de control</span></a>
-            <?php if ( $m_current['menu'] == 'panel_control' ){ ?>
-                <span class="gossip"><?= $m_current['submenu_show'] ?></span>
-            <?php } ?>
-
-            <ul class="sub_nav"><!-- SUBMENU -->
-                <li><a href="<?= base_url()?>estadisticas/login_usuarios" class="<?= $clase_sm['estadisticas'] ?>"><i class="fa fa-bar-chart-o"></i><span>estadísticas</span></a></li> <!-- subitem -->
-            </ul>
+        <li title="Links para asingar y programar a grupos de estudiantes">
+            <a href="<?php echo base_url('recursos/links') ?>" class="<?php echo $clase_m['recursos'] ?>"><i class="fa fa-2x fa-link"></i><span>links</span></a>
+        </li>
+        <li title="Estadísticas de uso y desempeño en la plataforma">
+            <a href="<?php echo base_url('estadisticas/login_usuarios') ?>" class="<?php echo $clase_m['estadisticas'] ?>"><i class="fa fa-2x fa fa-bar-chart-o"></i><span>estadísticas</span></a>
         </li>
         
-        <li class="">
+        <li>
             <a href="<?= base_url() . 'mensajes/conversacion/0'?>" class="<?= $clase_m['mensajes'] ?>">
                 <?= $this->load->view('plantilla_apanel/menu_mensajes_v'); ?>
             </a>
         </li>
         
-        <li class="">
-            <a href="<?= base_url() . 'usuarios/contrasena'?>" class="<?= $clase_m['mi_cuenta'] ?>"><i class="fa fa-2x fa-user"></i><span>mi cuenta</span></a>
-        </li>
-        
-        <li class="">
+        <li>
             <a href="<?= base_url() . 'datos/ayudas/' ?>" class="<?= $clase_m['ayuda'] ?>" ><i class="fa fa-2x fa-question-circle"></i><span>ayuda</span></a>
         </li>
         

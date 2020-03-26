@@ -22,6 +22,9 @@
         $opciones_menus['flipbooks/nuevo_cuestionario'] = array('cuestionarios', '', '');
         $opciones_menus['flipbooks/aperturas'] = array('biblioteca', '', '');
 
+    //Recursos
+        $opciones_menus['recursos/links'] = array('recursos', 'recursos-links', '');
+
     //Cuestionarios
         $opciones_menus['cuestionarios/explorar'] = array('cuestionarios', 'cuestionarios-cuestionarios', 'cuestionarios');
         $opciones_menus['cuestionarios/nuevo'] = array('cuestionarios', 'cuestionarios-cuestionarios', 'cuestionarios');
@@ -103,14 +106,14 @@
 
         </li>
         
+        <li title="Links para asingar y programar a grupos de estudiantes">
+            <a href="<?php echo base_url('recursos/links') ?>" class="<?php echo $clase_m['recursos'] ?>"><i class="fa fa-2x fa-link"></i><span>links</span></a>
+        </li>
+
         <li class="">
             <a href="<?= base_url() . 'mensajes/conversacion'?>" class="<?= $clase_m['mensajes'] ?>">
                 <?= $this->load->view('plantilla_apanel/menu_mensajes_v'); ?>
             </a>
-        </li>
-        
-        <li class="">
-            <a href="<?= base_url() . 'usuarios/contrasena'?>" class="<?= $clase_m['contrasena'] ?>"><i class="fa fa-2x fa-lock"></i><span>contraseña</span></a>
         </li>
         
         <li class="">

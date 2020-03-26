@@ -847,8 +847,7 @@ class Evento_Model extends CI_Model{
 //---------------------------------------------------------------------------------------------------------
     
     /**
-     * Temas programados para un grupo
-     * @return type
+     * Links personalizados (4) programados a un grupo
      */
     function evs_links($busqueda)
     {
@@ -868,6 +867,32 @@ class Evento_Model extends CI_Model{
         
         $this->db->select('*');
         $this->db->where('tipo_id', 4); //Tipo 4 => programacion de links
+        $query = $this->db->get('evento');
+        
+        return $query;
+    }
+
+
+    /**
+     * Links internos asignados (5) programados a un grupo
+     * 2020-03-25
+     */
+    function evs_links_internos($busqueda)
+    {
+        //Filtros
+        if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
+        if ( $busqueda['g'] != '' ) { $this->db->where('grupo_id', $busqueda['g']); }    //Grupo
+        
+        if ( $this->session->userdata('rol_id') == 6 ) {
+            //Estudiante
+            $this->db->where('grupo_id', $this->session->userdata('grupo_id'));
+        } else {
+            //Los que corresponden a sus grupos
+            $str_grupos = implode(',', $this->session->userdata('arr_grupos'));
+            $this->db->where("grupo_id IN ($str_grupos)");
+        }
+        
+        $this->db->where('tipo_id', 5); //Tipo 5 => programacion de links internos
         $query = $this->db->get('evento');
         
         return $query;

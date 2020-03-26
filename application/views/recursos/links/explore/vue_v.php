@@ -50,6 +50,7 @@
             all_selected: false,
             filters: <?php echo json_encode($filters) ?>,
             showing_filters: false,
+            group_id: 0
         },
         methods: {
             get_list: function(){
@@ -122,7 +123,25 @@
             toggle_filters: function(){
                 this.showing_filters = !this.showing_filters;
                 $('#adv_filters').toggle('fast');
-            }
+            },
+            //Especiales
+            //Programación de link a grupo en calendario 
+            send_schedule_form: function(){
+                axios.post(app_url + 'recursos/links_programar/', $('#schedule_form').serialize())
+                .then(response => {
+                    console.log(response.data);
+                    if ( response.data.saved_id > 0) {
+                        toastr['success']('Link asignado al grupo');
+                        $('#btn_calendar').show('slow');
+                    } else {
+                        toastr['error']('No se asignó el link');
+                    }
+                    console.log('tp=05&g=' + this.group_id);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
         }
     });
 </script>

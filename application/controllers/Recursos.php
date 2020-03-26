@@ -293,6 +293,11 @@ class Recursos extends CI_Controller{
             $data['arr_areas'] = $this->Item_model->arr_item('1', 'id_nombre_corto');
             $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 156');
             $data['arr_componentes'] = $this->Item_model->arr_item('categoria_id = 8', 'id');
+
+        //Especiales
+            $str_grupos = ( count($this->session->userdata('arr_grupos')) > 0 ) ? implode(',', $this->session->userdata('arr_grupos')) : '0' ;
+            //$data['str_grupos'] = $str_grupos;
+            $data['options_grupo'] = $this->App_model->opciones_grupo("grupo.id IN ({$str_grupos})");
             
         //Cargar vista
             $this->App_model->view(TPL_ADMIN, $data);
@@ -307,43 +312,11 @@ class Recursos extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
-    
-    /**
-     * Exploración de recursos tipo link externo
-     */    
-    function links_ant()
+    function links_programar()
     {
-        $this->load->model('Busqueda_model');
-        $this->load->helper('text');
-        
-        //Datos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
-            $resultados_total = $this->Recurso_model->links($busqueda); //Para calcular el total de resultados
-        
-        //Paginación
-            $this->load->library('pagination');
-            $config = $this->App_model->config_paginacion(2);
-            $config['base_url'] = base_url("recursos/links/?{$busqueda_str}");
-            $config['total_rows'] = $resultados_total->num_rows();
-            $this->pagination->initialize($config);
-            
-        //Generar resultados para mostrar
-            $offset = $this->input->get('per_page');
-            $resultados = $this->Recurso_model->links($busqueda, $config['per_page'], $offset);
-        
-        //Variables para vista
-            $data['cant_resultados'] = $config['total_rows'];
-            $data['busqueda'] = $busqueda;
-            $data['busqueda_str'] = $busqueda_str;
-            $data['resultados'] = $resultados;
-        
-        //Solicitar vista
-            $data['titulo_pagina'] = 'Links';
-            $data['subtitulo_pagina'] = number_format($data['cant_resultados'],0,',', '.');
-            $data['vista_a'] = 'recursos/links/explorar_v';
-            $data['vista_menu'] = 'recursos/links/explorar_menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+        $data = $this->Recurso_model->links_programar();
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**

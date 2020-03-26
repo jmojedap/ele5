@@ -25,9 +25,7 @@
         $opciones_menus['programas/nuevo'] = array('recursos', 'programas', 'programas');
         $opciones_menus['programas/temas'] = array('recursos', 'programas', 'programas');
         $opciones_menus['programas/editar'] = array('recursos', 'programas', 'programas');
-        ;
         $opciones_menus['programas/editar_temas'] = array('recursos', 'programas', 'programas');
-        ;
 
         //Grupos
         $opciones_menus['grupos/quices'] = array('institucional', '', '');
@@ -60,6 +58,9 @@
         $opciones_menus['preguntas/detalle'] = array('cuestionarios', 'cuestionarios-preguntas', 'preguntas');
         $opciones_menus['preguntas/cuestionarios'] = array('cuestionarios', 'cuestionarios-preguntas', 'preguntas');
         $opciones_menus['preguntas/editar'] = array('cuestionarios', 'cuestionarios-preguntas', 'preguntas');
+
+        //Recursos
+        $opciones_menus['recursos/links'] = array('recursos', 'recursos-links', '');
 
         //Mensajes
         $opciones_menus['mensajes/conversacion'] = array('mensajes', '', '');
@@ -126,16 +127,12 @@
             </ul>
 
         </li>
-        
-        <li class="has_submenu"> <!-- contenedor item con submenu -->
-            <a href="#" class="<?= $clase_m['panel_control'] ?>"><i class="fa fa-2x fa-sliders-h"></i><span>panel de control</span></a>
-            <?php if ( $m_current['menu'] == 'panel_control' ){ ?>
-                <span class="gossip"><?= $m_current['submenu_show'] ?></span>
-            <?php } ?>
 
-            <ul class="sub_nav"><!-- SUBMENU -->
-                <li><a href="<?= base_url()?>estadisticas/login_usuarios" class="<?= $clase_sm['estadisticas'] ?>"><i class="fa fa-chart-line"></i><span>estadísticas</span></a></li> <!-- subitem -->
-            </ul>
+        <li title="Links para asingar y programar a grupos de estudiantes">
+            <a href="<?php echo base_url('recursos/links') ?>" class="<?php echo $clase_m['recursos'] ?>"><i class="fa fa-2x fa-link"></i><span>links</span></a>
+        </li>
+        <li title="Estadísticas de uso y desempeño en la plataforma">
+            <a href="<?php echo base_url('estadisticas/login_usuarios') ?>" class="<?php echo $clase_m['estadisticas'] ?>"><i class="fa fa-2x fa-chart-line"></i><span>estadísticas</span></a>
         </li>
         
         <li class="">
@@ -144,9 +141,7 @@
             </a>
         </li>
         
-        <li class="">
-            <a href="<?= base_url() . 'usuarios/contrasena'?>" class="<?= $clase_m['mi_cuenta'] ?>"><i class="fa fa-2x fa-user"></i><span>mi cuenta</span></a>
-        </li>
+        
         
         <li class="">
             <a href="<?= base_url() . 'datos/ayudas/' ?>" class="<?= $clase_m['ayuda'] ?>" ><i class="fa fa-2x fa-question-circle"></i><span>ayuda</span></a>

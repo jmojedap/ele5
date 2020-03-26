@@ -242,7 +242,7 @@
         </li>
 
         <li class="has_submenu"> <!-- contenedor item con submenu -->
-            <a href="#" class="<?= $clase_m['recursos'] ?>"><i class="fa fa-2x fa-book"></i><span>recursos académicos</span></a>
+            <a href="#" class="<?= $clase_m['recursos'] ?>"><i class="fa fa-2x fa-book"></i><span>recursos</span></a>
             <?php if ( $m_current['menu'] == 'recursos' ){ ?>
                 <span class="gossip"><?= $m_current['submenu_show'] ?></span>
             <?php } ?>

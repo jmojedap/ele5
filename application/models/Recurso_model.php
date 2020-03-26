@@ -58,7 +58,6 @@ class Recurso_Model extends CI_Model{
      */
     function buscar_archivos($busqueda, $per_page = NULL, $offset = NULL)
     {
-
         //Construir búsqueda
         
             //Texto búsqueda
@@ -77,7 +76,6 @@ class Recurso_Model extends CI_Model{
                 if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_archivo_id', $busqueda['tp']); }  //Tipo archivo
                 if ( $busqueda['e'] != '' ) { $this->db->where('recurso.editado', $busqueda['e']); }  //Editado
                 
-                
             //Otros
                 $this->db->select('*, recurso.id AS recurso_id');
                 $this->db->join('tema', 'recurso.tema_id = tema.id');
@@ -85,11 +83,11 @@ class Recurso_Model extends CI_Model{
                 $this->db->order_by('nombre_archivo', 'ASC');
             
         //Obtener resultados
-        if ( is_null($per_page) ){
-            $query = $this->db->get('recurso'); //Resultados totales
-        } else {
-            $query = $this->db->get('recurso', $per_page, $offset); //Resultados por página
-        }
+            if ( is_null($per_page) ){
+                $query = $this->db->get('recurso'); //Resultados totales
+            } else {
+                $query = $this->db->get('recurso', $per_page, $offset); //Resultados por página
+            }
         
         return $query;
     }    
@@ -313,6 +311,29 @@ class Recurso_Model extends CI_Model{
         );
         
         return $options_order;
+    }
+
+    function links_programar()
+    {
+        //Datos referencia
+            $row_link = $this->Db_model->row_id('recurso', $this->input->post('referente_id'));
+            $row_tema = $this->Db_model->row_id('tema', $row_link->tema_id);
+
+        //Construir registro
+            $arr_row = $this->input->post();
+            $arr_row['tipo_id'] = 5;    //Link interno asignado
+            $arr_row['url'] = $row_link->url;
+            $arr_row['referente_2_id'] = $row_link->tema_id;
+            $arr_row['institucion_id'] = $this->session->userdata('institucion_id');
+            $arr_row['area_id'] = $row_tema->area_id;
+            $arr_row['nivel'] = $row_tema->nivel;
+            $arr_row['c_usuario_id'] = $this->session->userdata('usuario_id');
+
+        //Guardar
+            $condition = "tipo_id = {$arr_row['tipo_id']} AND referente_id = {$arr_row['referente_id']} AND grupo_id = {$arr_row['grupo_id']}";
+            $data['saved_id'] = $this->Db_model->save('evento', $condition, $arr_row);
+            
+        return $data;
     }
     
 // PROCESOS

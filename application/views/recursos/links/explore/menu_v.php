@@ -33,6 +33,9 @@
     sections_rol.dvlp = ['links', 'links_importar'];
     sections_rol.admn = ['links', 'links_importar'];
     sections_rol.edtr = ['links'];
+    sections_rol.ains = ['links'];
+    sections_rol.dirc = ['links'];
+    sections_rol.prof = ['links'];
     
     //Recorrer el sections del rol actual y cargarlos en el menú
     for ( key_section in sections_rol[app_r]) 
