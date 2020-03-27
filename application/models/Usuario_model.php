@@ -1808,21 +1808,32 @@ class Usuario_model extends CI_Model{
     
     /**
      * Restaura la contraseña de un usuario a la que se ha definido por defecto.
-     * 
-     * @param type $usuario_id 
+     * 2020-03-27
      */
     function restaurar_contrasena($usuario_id)
     {
         $dpw = $this->App_model->valor_opcion(10);  //Contraseña por defecto
         $this->cambiar_contrasena($usuario_id, $dpw);
+
+        //Función temporal
+            //Al restarar contraseña de un usuario se crea un evento, tipo 110
+            $row_usuario = $this->Pcrn->registro_id('usuario', $usuario_id);
+            if ( ! is_null($row_usuario) )
+            {
+                $this->load->model('Evento_model');
+                $arr_row['tipo_id'] = 110; //Restauración de contraseña
+                $arr_row['referente_id'] = $usuario_id;
+                $arr_row['grupo_id'] = $row_usuario->grupo_id;
+                $arr_row['institucion_id'] = $row_usuario->institucion_id;
+                $arr_row['descripcion'] = 'IP ' . $this->input->ip_address();
+                $arr_row['usuario_id'] = $usuario_id;
+
+                $this->Evento_model->guardar_evento($arr_row);
+            }
     }
     
     /**
-     * Cambia el estado de un usuario
-     * 
-     * @param type $usuario_id
-     * @param type $valor
-     * @param type $rapido 
+     * Cambia el estado de activación de un usuario
      */
     function cambiar_activacion($usuario_id, $valor)
     {
