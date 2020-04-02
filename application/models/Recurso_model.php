@@ -335,6 +335,81 @@ class Recurso_Model extends CI_Model{
             
         return $data;
     }
+
+    /**
+     * Query links programados por el usuario en sesión
+     * 2020-03-27
+     */
+    function links_programados()
+    {
+        $this->db->where('tipo_id', 5);
+        $this->db->where('c_usuario_id', $this->session->userdata('usuario_id'));
+        $links = $this->db->get('evento', 500);
+
+        return $links;
+    }
+
+    /**
+     * Importa recursos links a la base de datos
+     * 2020-04-02
+     */
+    function links_importar($arr_sheet)
+    {
+        $data = array('qty_imported' => 0, 'results' => array());
+        
+        foreach ( $arr_sheet as $key => $row_data )
+        {
+            $data_import = $this->importar_link($row_data);
+            $data['qty_imported'] += $data_import['status'];
+            $data['results'][$key + 2] = $data_import;
+        }
+        
+        return $data;
+    }
+
+    /**
+     * Realiza la importación de una fila del archivo excel. Valida los campos, crea registro
+     * en la tabla recurso.
+     * 2020-04-02
+     */
+    function importar_link($row_data)
+    {
+        //Validar
+            $error_text = '';
+                            
+            if ( strlen($row_data[0]) == 0 ) { $error_text .= 'La casilla <b>Cód. tema</b> está vacía. '; }
+            if ( strlen($row_data[1]) == 0 ) { $error_text .= 'La casilla <b>título</b> está vacía. '; }
+            if ( strlen($row_data[2]) == 0 ) { $error_text .= 'La casilla <b>URL</b> está vacía. '; }
+
+        //Identificar tema
+            $row_tema = $this->Db_model->row('tema', "cod_tema = '{$row_data[0]}'");
+            if ( is_null($row_tema) ) { $error_text .= 'El código de tema (' . $row_data[0] . ') es incorrecto o no existe. '; }
+
+        //Si no hay error
+            if ( $error_text == '' )
+            {
+                $arr_row['tema_id'] = $row_tema->id;
+                $arr_row['titulo'] = $row_data[1];
+                $arr_row['url'] = $row_data[2];
+                $arr_row['descripcion'] = $row_data[3];
+                $arr_row['palabras_clave'] = $row_data[4];
+                $arr_row['componente_id'] = ( strlen($row_data[5]) > 0 ) ? $row_data[5] : 0 ;
+                $arr_row['tipo_recurso_id'] = 2;    //Recurso tipo link
+                $arr_row['fecha_subida'] = date('Y-m-d H:i:s');
+                $arr_row['editado'] = date('Y-m-d H:i:s');
+                $arr_row['usuario_id'] = $this->session->userdata('usuario_id');
+
+                //Guardar en tabla recurso
+                $condition = "tema_id = {$arr_row['tema_id']} AND tipo_recurso_id = {$arr_row['tipo_recurso_id']} AND url = '{$arr_row['url']}'";
+                $saved_id = $this->Db_model->save('recurso', $condition, $arr_row);
+
+                $data = array('status' => 1, 'text' => '', 'imported_id' => $saved_id);
+            } else {
+                $data = array('status' => 0, 'text' => $error_text, 'imported_id' => 0);
+            }
+
+        return $data;
+    }
     
 // PROCESOS
 //---------------------------------------------------------------------------------------------------------

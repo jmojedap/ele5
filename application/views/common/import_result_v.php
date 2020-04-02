@@ -17,9 +17,8 @@
     );
 ?>
 
-<a href="<?php echo base_url($back_destination) ?>" class="btn btn-secondary">
-    <i class="fa fa-arrow-circle-left"></i>
-    Volver
+<a href="<?php echo base_url($back_destination) ?>" class="btn btn-secondary mb-2 w120p">
+    <i class="fa fa-arrow-left"></i> Volver
 </a>
 
 <h4>Resultado importación</h4>
@@ -27,7 +26,7 @@
 <table class="table bg-white">
     <tbody>
         <tr>
-            <td>Nombre hoja cálculo</td>
+            <td width="200px">Nombre hoja cálculo</td>
             <td width="50px"></td>
             <td><?php echo $sheet_name ?></td>
         </tr>

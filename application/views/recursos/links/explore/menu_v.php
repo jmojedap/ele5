@@ -5,7 +5,7 @@
     $cl_nav_2['recursos_links_importar'] = '';
     
     $cl_nav_2[$app_cf_index] = 'active';
-    if ( $app_cf_index == 'recursos_import_e' ) { $cl_nav_2['recursos_import'] = 'active'; }
+    if ( $app_cf_index == 'recursos_links_importar_e' ) { $cl_nav_2['recursos_links_importar'] = 'active'; }
 ?>
 
 <script>

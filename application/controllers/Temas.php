@@ -1318,7 +1318,6 @@ class Temas extends CI_Controller{
      */
     function importar_lecturas_dinamicas_e()
     {
-        
         //Proceso
             $this->load->model('Pcrn_excel');
             $no_importados = array();

@@ -356,22 +356,43 @@ class Recursos extends CI_Controller{
                 $this->load->view(PTL_ADMIN, $data);
             }
     }
+
+    /**
+     * Vista gestión links programados por el usuario en sesión a sus grupos
+     * 2020-03-27
+     */
+    function links_programados()
+    {
+        $data['view_a'] = 'recursos/links/programados_v';
+        $data['nav_2'] = 'recursos/links/explore/menu_v';
+        $data['title_head'] = 'Links';
+        $data['subtitle_head'] = 'Programados';
+        $this->App_model->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * JSON lista links programados por el usuario en sesión a sus grupos
+     */
+    function get_links_programados()
+    {
+        $links = $this->Recurso_model->links_programados();
+        $data['list'] = $links->result();
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
     
     /**
      * Mostrar formulario de importación de links mediante archivo MS Excel.
      * El resultado del formulario se envía a 'recursos/importar_links_e'
-     * 
-     * @param type $programa_id
+     * 2020-04-02
      */
     function links_importar()
     {
-        
         //Iniciales
             $template_file_name = '06_formato_cargue_links.xlsx';
             $help_tips = array();
         
         //Instructivo
-            $data['titulo_ayuda'] = '¿Cómo importar links?';
             $data['help_note'] = 'Se importarán recursos tipo link a la Plataforma.';
             $data['help_tips'] = $help_tips;
         
@@ -392,35 +413,33 @@ class Recursos extends CI_Controller{
     
     /**
      * Importar links, (e) ejecutar.
+     * 2020-04-02
      */
     function links_importar_e()
     {
         //Proceso
-            $this->load->model('Pcrn_excel');
-            $no_importados = array();
-            $letra_columna = 'C';   //Última columna con datos
-            
-            $resultado = $this->Pcrn_excel->array_hoja_default($letra_columna);
-
-            if ( $resultado['valido'] )
-            {
-                $this->load->model('Tema_model');
-                $no_importados = $this->Recurso_model->importar_links($resultado['array_hoja']);
-            }
+        $this->load->library('excel_new');            
+        $imported_data = $this->excel_new->arr_sheet_default($this->input->post('sheet_name'));
         
+        if ( $imported_data['status'] == 1 )
+        {
+            $data = $this->Recurso_model->links_importar($imported_data['arr_sheet']);
+        }
+
         //Cargue de variables
-            $data['valido'] = $resultado['valido'];
-            $data['mensaje'] = $resultado['mensaje'];
-            $data['array_hoja'] = $resultado['array_hoja'];
-            $data['nombre_hoja'] = $this->input->post('nombre_hoja');
-            $data['no_importados'] = $no_importados;
-            $data['destino_volver'] = "programas/explorar/";
+            $data['status'] = $imported_data['status'];
+            $data['message'] = $imported_data['message'];
+            $data['arr_sheet'] = $imported_data['arr_sheet'];
+            $data['sheet_name'] = $this->input->post('sheet_name');
+            $data['back_destination'] = "recursos/links/";
+            $data['cf_open'] = 'users/info/';
         
         //Cargar vista
-            $data['titulo_pagina'] = 'Links';
-            $data['subtitulo_pagina'] = 'Resultado importación';
-            $data['vista_a'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'recursos/links/explorar_menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_title'] = 'Links';
+            $data['head_subtitle'] = 'Resultado importación';
+            $data['view_a'] = 'common/import_result_v';
+            $data['nav_2'] = 'recursos/links/explore/menu_v';
+
+        $this->App_model->view(TPL_ADMIN, $data);
     }
 }

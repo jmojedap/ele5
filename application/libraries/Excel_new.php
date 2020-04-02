@@ -5,7 +5,7 @@ require 'vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-class Excel {
+class Excel_new {
 
     /**
      * Convierte un listado de una hoja de cálculo en un array
