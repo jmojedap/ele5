@@ -285,6 +285,16 @@ class Eventos extends CI_Controller{
         $cant_registros = $this->Evento_model->eliminar($evento_id);
         $this->output->set_content_type('application/json')->set_output(json_encode($cant_registros));
     }
+
+    /**
+     * AJAX, elimina un evento
+     * 2020-04-03
+     */
+    function delete($evento_id)
+    {
+        $data['qty_deleted'] = $this->Evento_model->eliminar($evento_id);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
     
     /**
      * AJAX, envía un objeto JSON con el html de noticias adicionales para mostrarse

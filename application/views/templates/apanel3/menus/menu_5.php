@@ -24,6 +24,7 @@
 
     //Recursos
         $opciones_menus['recursos/links'] = array('recursos', 'recursos-links', '');
+        $opciones_menus['recursos/links_programados'] = array('recursos', 'recursos-links', '');
 
     //Cuestionarios
         $opciones_menus['cuestionarios/explorar'] = array('cuestionarios', 'cuestionarios-cuestionarios', 'cuestionarios');

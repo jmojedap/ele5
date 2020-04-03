@@ -59,6 +59,9 @@
     $opciones_menus['preguntas/cuestionarios'] = array('cuestionarios', 'cuestionarios-preguntas', 'preguntas');
     $opciones_menus['preguntas/editar'] = array('cuestionarios', 'cuestionarios-preguntas', 'preguntas');
 
+    $opciones_menus['recursos/links'] = array('recursos', 'links', 'links');
+    $opciones_menus['recursos/links_programados'] = array('recursos', 'recursos-links', '');
+
     //Mensajes
     $opciones_menus['mensajes/conversacion'] = array('mensajes', '', '');
     $opciones_menus['mensajes/explorar'] = array('mensajes', '', '');

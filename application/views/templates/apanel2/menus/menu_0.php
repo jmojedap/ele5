@@ -165,8 +165,8 @@
         $opciones_menus['recursos/archivos_no_asignados'] = array('recursos', 'archivos', 'archivos');
         
         $opciones_menus['recursos/links'] = array('recursos', 'links', 'links');
-        $opciones_menus['recursos/importar_links'] = array('recursos', 'links', 'links');
-        $opciones_menus['recursos/importar_links_e'] = array('recursos', 'links', 'links');
+        $opciones_menus['recursos/links_importar'] = array('recursos', 'links', 'links');
+        $opciones_menus['recursos/links_importar_e'] = array('recursos', 'links', 'links');
 
         $opciones_menus['instituciones/flipbooks'] = array('recursos', 'flipbooks', 'flipbooks');
 
@@ -396,7 +396,7 @@
                 </li>
                 
                 <li><a href="<?= base_url() ?>develop/procesos" class="<?= $clase_sm['ajustes/procesos'] ?>"><i class="fa fa-tasks"></i><span>procesos</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url('develop/tablas/item') ?>" class="<?= $clase_sm['ajustes/database'] ?>"><i class="fa fa-database"></i><span>base de datos</span></a></li>
+                <li><a href="<?php echo base_url('sincro/panel') ?>" class="<?= $clase_sm['ajustes/database'] ?>"><i class="fa fa-database"></i><span>base de datos</span></a></li>
                 <li>
                     <a href="<?= base_url('posts/bitacora') ?>" class="<?= $clase_sm['ajustes_bitacora'] ?>">
                         <i class="fa fa-clipboard"></i>

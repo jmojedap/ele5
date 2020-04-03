@@ -313,6 +313,10 @@ class Recurso_Model extends CI_Model{
         return $options_order;
     }
 
+    /**
+     * Programar en el calendario de un grupo, un link en una fecha determinada
+     * 2020-03-25
+     */
     function links_programar()
     {
         //Datos referencia
@@ -342,11 +346,47 @@ class Recurso_Model extends CI_Model{
      */
     function links_programados()
     {
+        $this->db->select('evento.id, recurso.titulo, fecha_inicio, grupo_id, evento.url, nivel, area_id, tema_id');
         $this->db->where('tipo_id', 5);
         $this->db->where('c_usuario_id', $this->session->userdata('usuario_id'));
+        $this->db->join('recurso', 'evento.referente_id = recurso.id');
+        $this->db->order_by('fecha_inicio', 'ASC');
         $links = $this->db->get('evento', 500);
 
         return $links;
+    }
+
+    /**
+     * Actualiza el campo pregunta.palabras_clave, que está vacío, con el nombre del tema asociado
+     * 2020-03-16
+     */
+    function links_update_palabras_clave_auto()
+    {
+        $this->db->select('recurso.id, nombre_tema');
+        $this->db->join('tema', 'recurso.tema_id = tema.id');
+        $this->db->where('recurso.palabras_clave = ""');
+        $this->db->where('tipo_recurso_id', 2); //Recurso tipo link
+        $preguntas = $this->db->get('recurso');
+
+        $data = array('status' => 1, 'message' => 'Se actualizaron 0 registros', 'qty_affected' => 0);
+
+        foreach ( $preguntas->result() as $row )
+        {
+            $arr_row['palabras_clave'] = $row->nombre_tema;
+            $this->db->where('id', $row->id);
+            $this->db->update('recurso', $arr_row);
+
+            $data['qty_affected'] += 1;
+        }
+
+        $data['qty_affected'] = $preguntas->num_rows();
+        if ( $data['qty_affected'] > 0 )
+        {
+            $data['status'] = 1;
+            $data['message'] = 'Registros modificados: ' . $data['qty_affected'];
+        }
+
+        return $data;
     }
 
     /**

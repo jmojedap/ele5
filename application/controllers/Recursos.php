@@ -363,10 +363,17 @@ class Recursos extends CI_Controller{
      */
     function links_programados()
     {
-        $data['view_a'] = 'recursos/links/programados_v';
-        $data['nav_2'] = 'recursos/links/explore/menu_v';
-        $data['title_head'] = 'Links';
-        $data['subtitle_head'] = 'Programados';
+        //Arrays con valores para contenido en la tabla
+            $data['arr_areas'] = $this->Item_model->arr_item('1', 'id_nombre_corto');
+            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 156');
+            $data['arr_componentes'] = $this->Item_model->arr_item('categoria_id = 8', 'id');
+
+        //Variables vista
+            $data['view_a'] = 'recursos/links/programados_v';
+            $data['nav_2'] = 'recursos/links/explore/menu_v';
+            $data['head_title'] = 'Links';
+            $data['head_subtitle'] = 'Programados';
+            
         $this->App_model->view(TPL_ADMIN, $data);
     }
 
@@ -377,6 +384,16 @@ class Recursos extends CI_Controller{
     {
         $links = $this->Recurso_model->links_programados();
         $data['list'] = $links->result();
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * Actualiza el campo recurso.palabras_clave de forma automática
+     */
+    function links_update_palabras_clave_auto()
+    {
+        $data = $this->Recurso_model->links_update_palabras_clave_auto();
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }

@@ -28,14 +28,22 @@
         'cf': 'recursos/links_importar',
         'anchor': true
     };
+
+    sections.links_programados = {
+        'icon': 'far fa-calendar-alt',
+        'text': 'Programados',
+        'class': '<?php echo $cl_nav_2['recursos_links_programados'] ?>',
+        'cf': 'recursos/links_programados',
+        'anchor': true
+    };
     
     //Secciones para cada rol
     sections_rol.dvlp = ['links', 'links_importar'];
     sections_rol.admn = ['links', 'links_importar'];
     sections_rol.edtr = ['links'];
-    sections_rol.ains = ['links'];
-    sections_rol.dirc = ['links'];
-    sections_rol.prof = ['links'];
+    sections_rol.ains = ['links', 'links_programados'];
+    sections_rol.dirc = ['links', 'links_programados'];
+    sections_rol.prof = ['links', 'links_programados'];
     
     //Recorrer el sections del rol actual y cargarlos en el menú
     for ( key_section in sections_rol[app_r]) 

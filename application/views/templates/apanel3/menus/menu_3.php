@@ -61,6 +61,7 @@
 
         //Recursos
         $opciones_menus['recursos/links'] = array('recursos', 'recursos-links', '');
+        $opciones_menus['recursos/links_programados'] = array('recursos', 'recursos-links', '');
 
         //Mensajes
         $opciones_menus['mensajes/conversacion'] = array('mensajes', '', '');

@@ -12,12 +12,9 @@
         </div>
 
         <div class="col">
-            <!-- <a href="<?php //echo base_url("preguntas/exportar/?{$str_filters}") ?>" class="btn btn-light" title="Exportar registros encontrados a Excel">
-                <i class="fa fa-download"></i>
-            </a> -->
             <button class="btn btn-secondary"
                 id="btn_delete_selected"
-                title="Eliminar preguntas seleccionadas"
+                title="Eliminar links seleccionados"
                 data-toggle="modal"
                 data-target="#modal_delete"
                 v-show="selected.length > 0"

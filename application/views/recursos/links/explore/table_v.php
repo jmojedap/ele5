@@ -1,4 +1,7 @@
 <?php
+    $cl_col['selector'] = '';
+    if ( $this->session->userdata('role') > 2 ) { $cl_col['selector'] = 'd-none'; }
+
     $cl_col['title'] = '';
     $cl_col['open'] = 'd-none d-md-table-cell d-lg-table-cell';
     $cl_col['tema'] = 'd-none d-md-table-cell d-lg-table-cell';
@@ -8,7 +11,7 @@
 <div class="table-responsive">
     <table class="table table-hover bg-white">
         <thead>
-            <th width="46px">
+            <th width="46px" class="<?php echo $cl_col['selector'] ?>">
                 <div class="form-check abc-checkbox abc-checkbox-primary">
                     <input class="form-check-input" type="checkbox" id="checkbox_all_selected" @click="select_all" v-model="all_selected">
                     <label class="form-check-label" for="checkbox_all_selected"></label>
@@ -22,7 +25,7 @@
         </thead>
         <tbody>
             <tr v-for="(element, key) in list" v-bind:id="`row_` + element.id">
-                <td>
+                <td class="<?php echo $cl_col['selector'] ?>">
                     <div class="form-check abc-checkbox abc-checkbox-primary">
                         <input class="form-check-input" type="checkbox" v-bind:id="`check_` + element.id" v-model="selected" v-bind:value="element.id">
                         <label class="form-check-label" v-bind:for="`check_` + element.id"></label>

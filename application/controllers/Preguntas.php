@@ -646,6 +646,9 @@ class Preguntas extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
+    /**
+     * Actualiza el campo pregunta.palabras_clave de forma automática
+     */
     function update_palabras_clave_auto()
     {
         $data = $this->Pregunta_model->update_palabras_clave_auto();

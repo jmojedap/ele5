@@ -123,8 +123,8 @@
         $opciones_menus['recursos/archivos_no_asignados'] = array('recursos', 'archivos', 'archivos');
         
         $opciones_menus['recursos/links'] = array('recursos', 'links', 'links');
-        $opciones_menus['recursos/importar_links'] = array('recursos', 'links', 'links');
-        $opciones_menus['recursos/importar_links_e'] = array('recursos', 'links', 'links');
+        $opciones_menus['recursos/links_importar'] = array('recursos', 'links', 'links');
+        $opciones_menus['recursos/links_importar_e'] = array('recursos', 'links', 'links');
 
         $opciones_menus['instituciones/flipbooks'] = array('recursos', 'flipbooks', 'flipbooks');
 

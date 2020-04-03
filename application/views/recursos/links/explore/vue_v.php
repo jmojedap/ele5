@@ -142,6 +142,9 @@
                     console.log(error);
                 });
             },
+            clean_schedule_form: function(){
+                $('#btn_calendar').hide();
+            },
         }
     });
 </script>

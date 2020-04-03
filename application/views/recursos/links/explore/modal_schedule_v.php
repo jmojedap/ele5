@@ -37,7 +37,7 @@
                 Ver en calendario
             </a>
             <button type="submit" class="btn btn-primary w120p">Programar</button>
-            <button type="button" class="btn btn-secondary w120p" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-secondary w120p" data-dismiss="modal" v-on:click="clean_schedule_form">Cerrar</button>
           </div>
         </div>
       </div>

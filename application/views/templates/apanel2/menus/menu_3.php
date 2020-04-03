@@ -25,9 +25,10 @@
         $opciones_menus['programas/nuevo'] = array('recursos', 'programas', 'programas');
         $opciones_menus['programas/temas'] = array('recursos', 'programas', 'programas');
         $opciones_menus['programas/editar'] = array('recursos', 'programas', 'programas');
-        ;
         $opciones_menus['programas/editar_temas'] = array('recursos', 'programas', 'programas');
-        ;
+
+
+        
 
         //Grupos
         $opciones_menus['grupos/quices'] = array('institucional', '', '');
@@ -60,6 +61,9 @@
         $opciones_menus['preguntas/detalle'] = array('cuestionarios', 'cuestionarios-preguntas', 'preguntas');
         $opciones_menus['preguntas/cuestionarios'] = array('cuestionarios', 'cuestionarios-preguntas', 'preguntas');
         $opciones_menus['preguntas/editar'] = array('cuestionarios', 'cuestionarios-preguntas', 'preguntas');
+
+        $opciones_menus['recursos/links'] = array('recursos', 'links', 'links');
+        $opciones_menus['recursos/links_programados'] = array('recursos', 'recursos-links', '');
 
         //Mensajes
         $opciones_menus['mensajes/conversacion'] = array('mensajes', '', '');
