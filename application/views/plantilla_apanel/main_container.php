@@ -15,6 +15,6 @@
             <span style="font-size: 0.7em; color: #333; padding-left: 10px;" ><?= $subtitulo_pagina ?></span>
         <?php endif ?>
     </h1>
-     <?= $this->load->view($vista_a) ?>
+     <?php $this->load->view($vista_a) ?>
 </div>
 <footer class="main_footer">En Línea Editores &copy; 2015</footer>

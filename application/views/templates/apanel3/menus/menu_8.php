@@ -201,7 +201,7 @@
         
         <li class="">
             <a href="<?= base_url() . 'mensajes/conversacion/0'?>" class="<?= $clase_m['mensajes'] ?>">
-                <?= $this->load->view('plantilla_apanel/menu_mensajes_v'); ?>
+                <?php $this->load->view('plantilla_apanel/menu_mensajes_v'); ?>
             </a>
         </li>
     </ul>

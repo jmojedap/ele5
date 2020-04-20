@@ -12,10 +12,10 @@
 
 <aside class="main_nav_col">
     
-    <?= $this->load->view('plantilla_apanel/encabezado') ?>
+    <?php $this->load->view('plantilla_apanel/encabezado') ?>
     <ul class="main_nav">	
 
-        <?= $this->load->view('plantilla_apanel/form_busqueda') ?>
+        <?php $this->load->view('plantilla_apanel/form_busqueda') ?>
 
         <li class="has_submenu"> <!-- contenedor del item -->
             <a href="#" class="<?= $clase_m['institucional'] ?>"> <!-- link del item -->

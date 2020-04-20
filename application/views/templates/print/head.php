@@ -6,7 +6,7 @@
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         
         <!-- Bootstrap-->
-        <?= $this->load->view('head_includes/bootstrap') ?>
+        <?php $this->load->view('head_includes/bootstrap') ?>
         
         <link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Ubuntu:500,300'>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">

@@ -256,7 +256,7 @@
         <div class="card mb-2">
             <div class="card-body">
                 <?php if (strlen($imagen['src']) == 0) { ?>
-                    <?= $this->load->view('quices/construir/form_imagen_v') ?>
+                    <?php $this->load->view('quices/construir/form_imagen_v') ?>
                 <?php } else { ?>
                     <?= $this->Pcrn->anchor_confirm("quices/eliminar_archivo/{$quiz_id}/{$imagenes->row()->id_alfanumerico}", '<i class="fa fa-trash-o"></i> Eliminar', 'class="btn btn-warning" title="Eliminar imagen"', '¿Confirma la eliminación de esta imagen?') ?>
                         <div id="quiz-container" style="width: 804px; height: 604px; border: 1px solid #DDD; padding: 2px; position: relative;" class="sep2">

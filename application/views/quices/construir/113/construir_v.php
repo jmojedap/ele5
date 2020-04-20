@@ -27,7 +27,7 @@
     <div class="card mb-2">
         <div class="card-body">
             <?php if (strlen($imagen['src']) == 0) { ?>
-                <?= $this->load->view('quices/construir/form_imagen_v') ?>
+                <?php $this->load->view('quices/construir/form_imagen_v') ?>
             <?php } else { ?>
                 <a href="<?php echo base_url("quices/eliminar_archivo/{$quiz_id}/{$imagenes->row()->id_alfanumerico}") ?>"
                     class="btn btn-warning"

@@ -98,7 +98,7 @@
     }
 </script>
 
-<?= $this->load->view('recursos/menu_archivos_v') ?>
+<?php $this->load->view('recursos/menu_archivos_v') ?>
     
 <h4 class="" id="mensaje_resultado"></h4>
     

@@ -13,7 +13,7 @@
         if ( is_null($area_id) ) { $clase_areas = 'btn-primary'; }
 ?>
 
-<?= $this->load->view('grupos/cuestionarios/submenu_v'); ?>
+<?php $this->load->view('grupos/cuestionarios/submenu_v'); ?>
 
 <div class="sep1">
     <div class="btn-group" role="group" aria-label="...">

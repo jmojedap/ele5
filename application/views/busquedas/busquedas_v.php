@@ -44,7 +44,7 @@
     
 </div>
 
-<?= $this->load->view($vista_b)?>
+<?php $this->load->view($vista_b)?>
 
 
 

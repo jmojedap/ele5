@@ -7,7 +7,7 @@
 
 ?>
 
-<?= $this->load->view('instituciones/submenu_cuestionarios_v'); ?>
+<?php $this->load->view('instituciones/submenu_cuestionarios_v'); ?>
 
 Cuestionario: <?= $cuestionarios_grupos->num_rows() ?>
 

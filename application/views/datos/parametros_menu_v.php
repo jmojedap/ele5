@@ -60,4 +60,4 @@
     
 ?>
 
-<?= $this->load->view('app/menu_v', $data_menu)?>
+<?php $this->load->view('app/menu_v', $data_menu)?>

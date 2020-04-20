@@ -278,10 +278,10 @@
 
 <aside class="main_nav_col">
     
-    <?= $this->load->view('templates/apanel2/encabezado') ?>
+    <?php $this->load->view('templates/apanel2/encabezado') ?>
     <ul class="main_nav">	
 
-        <?= $this->load->view('templates/apanel2/form_busqueda') ?>
+        <?php $this->load->view('templates/apanel2/form_busqueda') ?>
 
         <li>
             <a href="<?= base_url('eventos/noticias') ?>" class="<?= $clase_m[''] ?>">
@@ -421,7 +421,7 @@
         
         <li class="">
             <a href="<?= base_url('mensajes/conversacion/0')?>" class="<?= $clase_m['mensajes'] ?>">
-                <?= $this->load->view('plantilla_apanel/menu_mensajes_v'); ?>
+                <?php $this->load->view('plantilla_apanel/menu_mensajes_v'); ?>
             </a>
         </li>
         

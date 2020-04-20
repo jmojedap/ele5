@@ -7,7 +7,7 @@
         <script type="text/javascript" src="<?php echo URL_RESOURCES ?>templates/apanel2/actions.js"></script>
         
         <!-- Bootstrap-->
-        <?= $this->load->view('head_includes/bootstrap_online') ?>
+        <?php $this->load->view('head_includes/bootstrap_online') ?>
         
         <link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Ubuntu:500,300'>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">

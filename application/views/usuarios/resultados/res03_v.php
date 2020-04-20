@@ -83,7 +83,7 @@ $(function () {
 });
 </script>
 
-<?= $this->load->view('usuarios/cuestionarios_submenu_v'); ?>
+<?php $this->load->view('usuarios/cuestionarios_submenu_v'); ?>
 
 <div class="btn-group sep1" role="group">
     <?php foreach ($areas->result() as $row_area) : ?>

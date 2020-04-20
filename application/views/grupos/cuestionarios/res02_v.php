@@ -84,7 +84,7 @@ $(function () {
 });
 </script>
 
-<?= $this->load->view('grupos/submenu_cuestionarios_v'); ?>
+<?php $this->load->view('grupos/submenu_cuestionarios_v'); ?>
 
 <div class="div2">
     <p>

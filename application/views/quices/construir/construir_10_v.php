@@ -197,7 +197,7 @@
         
                 <div class="sep3">
                     <?php if ( $imagenes->num_rows() == 0 ){ ?>
-                        <?= $this->load->view('quices/construir/form_imagen_v') ?>
+                        <?php $this->load->view('quices/construir/form_imagen_v') ?>
                     <?php } else { ?>
                         <?= $this->Pcrn->anchor_confirm("quices/eliminar_archivo/{$quiz_id}/{$imagenes->row()->id_alfanumerico}", 'Eliminar', 'class="btn btn-warning" title="Eliminar imagen"', '¿Confirma la eliminación de esta imagen?') ?>
                         <div style="max-width: 800px;" class="sep2">

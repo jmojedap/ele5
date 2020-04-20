@@ -76,7 +76,7 @@ $(function () {
 });
 </script>
 
-<?= $this->load->view('instituciones/submenu_cuestionarios_v'); ?>
+<?php $this->load->view('instituciones/submenu_cuestionarios_v'); ?>
 
 <div class="sep2">
     <?php foreach ($areas->result() as $row_area) : ?>

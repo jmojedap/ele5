@@ -78,7 +78,7 @@
                 
                 //Diferencia
                 $att_dif['valor'] = $row_tabla->cant_registros - $row_tabla->cant_registros_servidor;
-                if ( $row_tabla->metodo_id == 2 ) { $att_dif['valor'] = $row_tabla->max_id - $row_tabla->max_ids; }
+                //if ( $row_tabla->metodo_id == 2 ) { $att_dif['valor'] = $row_tabla->max_id - $row_tabla->max_ids; }
                 
                 $att_dif['clase'] = '';
                 if ( $att_dif['valor'] < 0 ) { $att_dif['clase'] = 'warning'; }

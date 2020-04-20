@@ -1,5 +1,5 @@
-<?= $this->load->view('assets/chosen_jquery'); ?>
-<?= $this->load->view('assets/icheck'); ?>
+<?php $this->load->view('assets/chosen_jquery'); ?>
+<?php $this->load->view('assets/icheck'); ?>
 
 <?php
 
@@ -254,4 +254,4 @@
     </table>
 </div>
 
-<?= $this->load->view('app/modal_eliminar'); ?>
+<?php $this->load->view('app/modal_eliminar'); ?>
