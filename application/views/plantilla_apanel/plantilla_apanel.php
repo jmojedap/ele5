@@ -12,10 +12,10 @@
 
 <aside class="main_nav_col">
     
-    <?= $this->load->view('plantilla_apanel/encabezado') ?>
+    <?php $this->load->view('plantilla_apanel/encabezado') ?>
     <ul class="main_nav">	
 
-        <?= $this->load->view('plantilla_apanel/form_busqueda') ?>
+        <?php $this->load->view('plantilla_apanel/form_busqueda') ?>
 
         <li class=""> <!-- contenedor del item -->
             <a href="<?= base_url() ?>instituciones/explorar" class="<?= $clase_m['institucional'] ?>"> <!-- link del item -->
@@ -82,7 +82,7 @@
         
         <li class="">
             <a href="<?= base_url() . 'mensajes/conversacion/0'?>" class="<?= $clase_m['mensajes'] ?>">
-                <?= $this->load->view('plantilla_apanel/menu_mensajes_v'); ?>
+                <?php $this->load->view('plantilla_apanel/menu_mensajes_v'); ?>
             </a>
         </li>
         

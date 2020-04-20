@@ -65,7 +65,7 @@ $(function () {
 });
 </script>
 
-<?= $this->load->view('grupos/cuestionarios/submenu_v'); ?>
+<?php $this->load->view('grupos/cuestionarios/submenu_v'); ?>
 
 <div class="section gruop">
     <p>

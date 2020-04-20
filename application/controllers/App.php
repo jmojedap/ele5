@@ -49,8 +49,8 @@ class App extends CI_Controller{
             redirect($destino);
             
         } else {
-            //$this->login();
-            $this->mantenimiento();
+            $this->login();
+            //$this->mantenimiento();
         }
     }
     

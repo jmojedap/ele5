@@ -1,5 +1,5 @@
-<?= $this->load->view('assets/chosen_jquery'); ?>
-<?= $this->load->view('assets/icheck'); ?>
+<?php $this->load->view('assets/chosen_jquery'); ?>
+<?php $this->load->view('assets/icheck'); ?>
 
 <?php
 
@@ -118,7 +118,7 @@
     
 </script>
 
-<?= $this->load->view($vista_menu) ?>
+<?php $this->load->view($vista_menu) ?>
 
 <div class="">
     <div class="row">
@@ -228,4 +228,4 @@
     </table>    
 </div>
 
-<?= $this->load->view('app/modal_eliminar'); ?>
+<?php $this->load->view('app/modal_eliminar'); ?>

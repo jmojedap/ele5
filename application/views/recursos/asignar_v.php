@@ -4,7 +4,7 @@
     );
 ?>
 
-<?= $this->load->view('recursos/menu_archivos_v') ?>
+<?php $this->load->view('recursos/menu_archivos_v') ?>
 
 <?= form_open_multipart("recursos/procesar_asignar", $att_form) ?>
 

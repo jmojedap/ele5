@@ -23,6 +23,6 @@
             </div>
         </div>
     </div>
-     <?php echo $this->load->view($vista_a) ?>
+     <?php $this->load->view($vista_a) ?>
 </div>
 <footer class="main_footer">En Línea Editores &copy; 2018</footer>

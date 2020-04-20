@@ -1,4 +1,4 @@
-<?= $this->load->view('datos/parametros_menu_v') ?>
+<?php $this->load->view('datos/parametros_menu_v') ?>
 
 <div class="bs-caja">
     <ul class="nav nav-pills">

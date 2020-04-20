@@ -311,4 +311,4 @@
     </div>
 </div>
 
-<?= $this->load->view('comunes/bs4/modal_eliminar_v'); ?>
+<?php $this->load->view('comunes/bs4/modal_eliminar_v'); ?>

@@ -42,11 +42,11 @@
         </div>
     <?php } ?>
 
-    <?php echo $this->load->view($view_a) ?>
+    <?php $this->load->view($view_a) ?>
 
     <?php if ( ! is_null($view_b) ) { ?>
         <div id="view_b">
-            <?php echo $this->load->view($view_b) ?>
+            <?php $this->load->view($view_b) ?>
         </div>
     <?php } ?>
 

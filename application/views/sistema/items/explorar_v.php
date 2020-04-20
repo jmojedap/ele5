@@ -113,7 +113,7 @@
 </script>
 
 
-<?= $this->load->view('sistema/items/explorar_menu_v'); ?>
+<?php $this->load->view('sistema/items/explorar_menu_v'); ?>
 
 <!--HERRAMIENTAS-->
 <!------------------------------------------------------------------------------------------->
@@ -185,4 +185,4 @@
     </table>
 </div>
 
-<?= $this->load->view('app/modal_eliminar'); ?>
+<?php $this->load->view('app/modal_eliminar'); ?>

@@ -24,7 +24,7 @@
         $this->load->helper('text');
 ?>
 
-<?= $this->load->view('datos/enunciados/explorar_menu_v') ?>
+<?php $this->load->view('datos/enunciados/explorar_menu_v') ?>
 
 <div class="sep2" style="overflow: hidden;">
     <?= form_open($destino_form, $att_form) ?>

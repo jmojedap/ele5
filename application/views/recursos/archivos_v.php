@@ -60,7 +60,7 @@
         $clases_col['editado'] = 'hidden-xs hidden-sm';
 ?>
 
-<?= $this->load->view('recursos/menu_archivos_v') ?>
+<?php $this->load->view('recursos/menu_archivos_v') ?>
 
 <script>
     //Variables
@@ -228,4 +228,4 @@
     </tbody>
 </table>
 
-<?= $this->load->view('app/modal_eliminar'); ?>
+<?php $this->load->view('app/modal_eliminar'); ?>

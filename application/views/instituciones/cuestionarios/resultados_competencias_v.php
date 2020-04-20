@@ -23,7 +23,7 @@
             <span class="resaltar"><?= $row_cuestionario->num_preguntas ?></span> |
         </p>
         <div>
-            <?php echo $this->load->view($menu_sub) ?>
+            <?php $this->load->view($menu_sub) ?>
         </div>
     </div>
     <div class="col col-md-8">

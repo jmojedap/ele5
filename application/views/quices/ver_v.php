@@ -19,7 +19,7 @@
     <?= $row->texto_enunciado ?>
 </h4>
 
-<?= $this->load->view($vista_c) ?>
+<?php $this->load->view($vista_c) ?>
 
 
 

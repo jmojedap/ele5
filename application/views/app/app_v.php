@@ -1,1 +1,1 @@
-<?= $this->load->view($contenido_b) ?>
+<?php $this->load->view($contenido_b) ?>

@@ -22,7 +22,7 @@
 
 ?>
 
-<?php echo $this->load->view('temas/agregar_pregunta_menu_v'); ?>
+<?php $this->load->view('temas/agregar_pregunta_menu_v'); ?>
 
 <div class="row">
     <div class="col-md-4">

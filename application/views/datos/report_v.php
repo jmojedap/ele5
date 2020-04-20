@@ -46,6 +46,6 @@
     </div>
 
     <div class="col-md-9">
-        <?= $this->load->view($vista_b); ?>
+        <?php $this->load->view($vista_b); ?>
     </div>
 </div>
