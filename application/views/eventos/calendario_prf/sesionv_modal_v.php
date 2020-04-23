@@ -1,24 +1,8 @@
 <?php
-    //Selección de grupos
-    $str_grupos = '0';
-    $arr_grupos = $this->session->userdata('arr_grupos');
-    if ( count($arr_grupos) > 0 ) { $str_grupos = implode(',', $arr_grupos); }
-    $condicion_grupos = 'grupo.id IN (' . $str_grupos . ')';
-    $opciones_grupo = $this->App_model->opciones_grupo($condicion_grupos);
-
     $default_date = date('Y-m-d');
 
-    $options_hour = array();
-    for ($i=0; $i < 24; $i++) { 
-        $value = substr('0' . $i,-2) . ' am';
-        if ( $i > 12 ) { $value = substr('0' . ($i-12),-2) . ' pm'; }
-        $options_hour[$i] = $value;
-    }
-
-    $options_minute = array();
-    for ($i=0; $i < 60; $i += 5) { 
-        $options_minute[$i] = substr('0' . $i,-2);
-    }
+    $opciones_hora = $this->Evento_model->opciones_hora();
+    $opciones_minuto = $this->Evento_model->opciones_minuto(15);
 ?>
 
 <div class="modal" tabindex="-1" role="dialog" id="sesionv_modal">
@@ -48,10 +32,10 @@
                                 class="form-control bs_datepicker">
                         </div>
                         <div class="col-md-3">
-                            <?php echo form_dropdown('hour', $options_hour, '9', 'class="form-control" title="Hora de inicio"') ?>
+                            <?php echo form_dropdown('hour', $opciones_hora, '9', 'class="form-control" title="Hora de inicio"') ?>
                         </div>
                         <div class="col-md-3">
-                            <?php echo form_dropdown('minute', $options_minute, '0', 'class="form-control" title="Minuto de inicio"') ?>
+                            <?php echo form_dropdown('minute', $opciones_minuto, '0', 'class="form-control" title="Minuto de inicio"') ?>
                         </div>
                         
                     </div>

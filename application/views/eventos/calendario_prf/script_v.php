@@ -1,7 +1,3 @@
-<?php
-    $colores_evento = $this->App_model->arr_item(13, 'color');
-?>
-
 <script>
 // VARIABLES
 //---------------------------------------------------------------------------------------------------------
@@ -24,7 +20,6 @@ $(document).ready(function(){
         plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'bootstrap' ],
         themeSystem: 'bootstrap',
         defaultView: 'dayGridMonth',
-        //defaultDate: '2019-01-05',
         defaultDate: '<?php echo date('Y-m-d') ?>',
         header: {
             left: 'prev,next today',
@@ -219,7 +214,10 @@ $(document).ready(function(){
                 };
                 //console.log(event);
                 $('#sesionv_modal').modal('toggle');
-                calendar.addEvent(event);
+                if ( evento_id == 0 ) {
+                    console.log(evento_id);
+                    calendar.addEvent(event);
+                }
             }
         });
         return false;
@@ -284,6 +282,7 @@ $(document).ready(function(){
 
     function limpiar_sesionv()
     {
+        evento_id = 0;
         $('#sesionv-url').val('');
         $('#sesionv-fecha_inicio').val('<?= date('Y-m-d') ?>');
         $('#sesionv-grupo_id').val('');

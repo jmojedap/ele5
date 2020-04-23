@@ -1226,6 +1226,22 @@ class App_model extends CI_Model {
         return $opciones;
     }
 
+    /**
+     * Opciones para select, de los grupos que un usuario institucional tiene asignados
+     * 2020-04-23
+     */
+    function opciones_mis_grupos($formato = 1)
+    {
+        //Selección de grupos
+        $str_grupos = '0';
+        $arr_grupos = $this->session->userdata('arr_grupos');
+        if ( count($arr_grupos) > 0 ) { $str_grupos = implode(',', $arr_grupos); }
+        $condicion_grupos = 'grupo.id IN (' . $str_grupos . ')';
+        $opciones_grupo = $this->opciones_grupo($condicion_grupos, $formato);
+
+        return $opciones_grupo;
+    }
+
     function opciones_nivel($campo, $texto_vacio = NULL)
     {
 

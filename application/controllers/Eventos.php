@@ -160,6 +160,8 @@ class Eventos extends CI_Controller{
         $data['grupos'] = $this->Usuario_model->grupos_usuario($this->session->userdata('usuario_id'));
         $data['busqueda'] = $busqueda;
         $data['destino_filtros'] = "eventos/calendario/";
+        $data['opciones_grupo'] = $this->App_model->opciones_mis_grupos();
+        $data['colores_evento'] = $this->App_model->arr_item(13, 'color');
 
         $data['head_title'] = 'Programador';
         $data['nav_2'] = 'usuarios/biblioteca_menu_v';
@@ -421,7 +423,6 @@ class Eventos extends CI_Controller{
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
-    
     
 //PROGRAMACIÓN DE TEMAS
 //---------------------------------------------------------------------------------------------------

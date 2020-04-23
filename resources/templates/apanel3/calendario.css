@@ -1,0 +1,15 @@
+/* ESTILO para vista eventos/calendario */
+
+.logo_mvl{
+    display: inline;
+    max-width: 135px;
+}
+
+.new_sesionv{
+    border: 1px solid #DDD;
+    cursor: pointer;
+}
+
+.new_sesionv:hover{
+    border: 1px solid #AAA;
+}

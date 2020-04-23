@@ -956,5 +956,38 @@ class Evento_Model extends CI_Model{
         return $evento_id;
         
     }
+
+// AYUDAS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Array con opciones para select, de horas del día
+     * 2020-04-23
+     */
+    function opciones_hora()
+    {
+        $opciones_hora = array();
+        for ($i=0; $i < 24; $i++) { 
+            $value = substr('0' . $i,-2) . ' am';
+            if ( $i > 12 ) { $value = substr('0' . ($i-12),-2) . ' pm'; }
+            $opciones_hora[$i] = $value;
+        }
+
+        return $opciones_hora;
+    }
+
+    /**
+     * Array con opciones para select, de minutos de una hora
+     * 2020-04-23
+     */
+    function opciones_minuto($lapse = 5)
+    {
+        $opciones_minuto = array();
+        for ($i=0; $i < 60; $i += $lapse) { 
+            $opciones_minuto[$i] = substr('0' . $i,-2);
+        }
+
+        return $opciones_minuto;
+    }
     
 }

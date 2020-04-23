@@ -1,26 +1,11 @@
 <?php $this->load->view('assets/fullcalendar4'); ?>
 <?php $this->load->view('assets/bootstrap_datepicker'); ?>
-<?php $this->load->view('assets/clockpicker'); ?>
 
 <?php    
     $get_print = $this->Pcrn->get_str(); //Get para link print 
 ?>
 
-<style>
-    .logo_mvl{
-        display: inline;
-        max-width: 135px;
-    }
-
-    .new_sesionv{
-        border: 1px solid #DDD;
-        cursor: pointer;
-    }
-
-    .new_sesionv:hover{
-        border: 1px solid #AAA;
-    }
-</style>
+<link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/calendario.css">
 
 <?php $this->load->view('eventos/calendario_prf/script_v') ?>
 

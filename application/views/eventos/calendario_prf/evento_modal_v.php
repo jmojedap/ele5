@@ -1,14 +1,3 @@
-<?php
-    //Selección de grupos
-    $str_grupos = '0';
-    $arr_grupos = $this->session->userdata('arr_grupos');
-    if ( count($arr_grupos) > 0 ) { $str_grupos = implode(',', $arr_grupos); }
-    $condicion_grupos = 'grupo.id IN (' . $str_grupos . ')';
-    $opciones_grupo = $this->App_model->opciones_grupo($condicion_grupos);
-
-    //
-?>
-
 <div class="modal" tabindex="-1" role="dialog" id="evento_modal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -43,7 +32,7 @@
                         </button>
                     </div>
 
-                    <button id="eliminar_link" class="btn btn-warning" type="button">
+                    <button class="btn btn-warning eliminar_link" type="button">
                         <i class="fa fa-trash"></i> Eliminar
                     </button>
 

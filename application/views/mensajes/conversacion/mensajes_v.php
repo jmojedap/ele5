@@ -1,22 +1,3 @@
-<style>
-    .url_mensaje{
-        margin-top: 1.5em;
-    }
-
-    .url_mensaje a{
-        font-weight: bold;
-        padding: 2px;
-        padding-left: 1.5em;
-        display: block;
-        color: #2196f3;
-        border-radius: 3px;
-    }
-
-    .url_mensaje a:hover{
-        background-color: #e3f2fd;
-    }
-</style>
-
 <?php if ( $mensajes->num_rows() > 0 ){ ?>
     <div id="mensajes">
         <?php if ( $cant_no_mostrados > 0 ) { ?>
