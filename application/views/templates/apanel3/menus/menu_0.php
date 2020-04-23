@@ -171,8 +171,8 @@
         $opciones_menus['recursos/archivos_no_asignados'] = array('recursos', 'archivos', 'archivos');
         
         $opciones_menus['recursos/links'] = array('recursos', 'links', 'links');
-        $opciones_menus['recursos/importar_links'] = array('recursos', 'links', 'links');
-        $opciones_menus['recursos/importar_links_e'] = array('recursos', 'links', 'links');
+        $opciones_menus['recursos/links_importar'] = array('recursos', 'links', 'links');
+        $opciones_menus['recursos/links_importar_e'] = array('recursos', 'links', 'links');
 
         $opciones_menus['instituciones/flipbooks'] = array('recursos', 'flipbooks', 'flipbooks');
 
@@ -352,13 +352,13 @@
                 <li><a href="<?= base_url()?>recursos/archivos" class="<?= $clase_sm['archivos'] ?>"><i class="fa fa-folder"></i><span>archivos</span></a></li> <!-- subitem -->
                 <li>
                     <a href="<?= base_url()?>recursos/links" class="<?= $clase_sm['links'] ?>">
-                        <i class="fa fa-globe"></i>
+                        <i class="fa fa-link"></i>
                         <span>links</span>
                     </a>
                 </li>
                 <li>
                     <a href="<?= base_url('posts/explorar')?>" class="<?= $clase_sm['recursos-posts'] ?>">
-                        <i class="fa fa-newspaper-o"></i>
+                        <i class="fa fa-edit"></i>
                         <span>posts</span>
                     </a>
                 </li>
@@ -382,8 +382,8 @@
                         <span>cuestionarios</span>
                     </a>
                 </li>
-                <li><a href="<?= base_url()?>datos/enunciados" class="<?= $clase_sm['enunciados'] ?>"><i class="fa fa-quote-left"></i><span>lecturas</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url()?>preguntas/explorar" class="<?= $clase_sm['preguntas'] ?>"><i class="fa fa-question"></i><span>preguntas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url()?>datos/enunciados" class="<?= $clase_sm['enunciados'] ?>"><i class="fa fa-quote-left"></i><span>lecturas</span></a></li>
+                <li><a href="<?php echo base_url()?>preguntas/explorar/?tp=01" class="<?= $clase_sm['preguntas'] ?>"><i class="fa fa-question"></i><span>preguntas</span></a></li>
             </ul>
 
         </li>
@@ -404,7 +404,7 @@
                 </li>
                 
                 <li><a href="<?= base_url() ?>develop/procesos" class="<?= $clase_sm['ajustes/procesos'] ?>"><i class="fa fa-tasks"></i><span>procesos</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url('develop/tablas/item') ?>" class="<?= $clase_sm['ajustes/database'] ?>"><i class="fa fa-database"></i><span>base de datos</span></a></li>
+                <li><a href="<?php echo base_url('sincro/panel') ?>" class="<?= $clase_sm['ajustes/database'] ?>"><i class="fa fa-database"></i><span>base de datos</span></a></li>
                 <li>
                     <a href="<?= base_url('posts/bitacora') ?>" class="<?= $clase_sm['ajustes_bitacora'] ?>">
                         <i class="far fa-clipboard"></i>

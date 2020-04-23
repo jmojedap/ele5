@@ -14,62 +14,56 @@ class App_model extends CI_Model {
 
 //SISTEMA
 //---------------------------------------------------------------------------------------------------------
-
+        
     /**
-     * Carga la vista solicitada, si por get se solicita una vista específica
-     * se devuelve el html de la vista por JSON.
+     * Carga la view solicitada, si por get se solicita una view específica
+     * se devuelve por secciones el html de la view, por JSON.
      * 
-     * @param type $vista
+     * @param type $view
      * @param type $data
      */
-    function vista($vista, $data)
+    function view($view, $data)
     {
-        if ( $this->input->get('json') == 1 )
-        {   
-            //HTML de $vista_a (solo contenido) por JSON
-            $resultado['titulo_pagina'] = $data['titulo_pagina'];
+        if ( $this->input->get('json') )
+        {
+            //Sende sections JSON
+            $result['head_title'] = $data['head_title'];
+            $result['head_subtitle'] = '';
+            $result['nav_2'] = '';
+            $result['nav_3'] = '';
+            $result['view_a'] = '';
             
-            $resultado['menu_a'] = '';
-            $resultado['vista_a'] = '';
+            if ( isset($data['head_subtitle']) ) { $result['head_subtitle'] = $data['head_subtitle']; }
+            if ( isset($data['view_a']) ) { $result['view_a'] = $this->load->view($data['view_a'], $data, TRUE); }
+            if ( isset($data['nav_2']) ) { $result['nav_2'] = $this->load->view($data['nav_2'], $data, TRUE); }
+            if ( isset($data['nav_3']) ) { $result['nav_3'] = $this->load->view($data['nav_3'], $data, TRUE); }
             
-            if ( isset($data['menu_a']) )
-            {
-                $resultado['menu_a'] = $this->load->view($data['menu_a'], $data, TRUE);
-            }
-            
-            if ( isset($data['vista_a']) )
-            {
-                $resultado['vista_a'] = $this->load->view($data['vista_a'], $data, TRUE);
-            }
-            
-            
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode($resultado));
+            $this->output->set_content_type('application/json')->set_output(json_encode($result));
+            //echo trim(json_encode($result));
         } else {
-            //Cargar página completa
-            $this->load->view($vista, $data);
+            //Cargar view completa de forma normal
+            $this->load->view($view, $data);
         }
     }
 
     /**
      * Ejecución de procesos automáticos al inició de sesión en un rango de horas
-     * determinado: antes de las 5:59am.
-     * 2019-06-26
+     * determinado: antes de las 6:59am.
+     * 2020-03-06
      */
     function cron_jobs()
     {
-        $cron_id = 0;
+        $arr_crons = array();
 
         //Si la hora (G) es menor o igual a las 6 (am)
         if ( date('G') <= 6 )
         {
             $this->load->model('Develop_model');
-            $data_cron = $this->Develop_model->cron(12537);
-            if ( $data_cron['status'] ) { $cron_id = $data_cron['event_id']; }
+            $arr_crons['actualizar_dw_up'] = $this->Develop_model->cron('actualizar_dw_up');
+            $arr_crons['update_pregunta_totals'] = $this->Develop_model->cron('update_pregunta_totals');
         }
 
-        return $cron_id;
+        return $arr_crons;
     }
     
     function menu_current($controlador, $funcion)
@@ -1212,7 +1206,6 @@ class App_model extends CI_Model {
      */
     function opciones_grupo($condicion, $formato = 1)
     {
-
         $this->db->select("CONCAT('0', grupo.id) as grupo_id, CONCAT(anio_generacion, ' | ' ,nombre_institucion, ' | ', nombre_grupo) AS formato_1, nivel AS formato_2", FALSE);
         $this->db->where($condicion);
         $this->db->join('institucion', 'grupo.institucion_id = institucion.id');
@@ -1231,6 +1224,22 @@ class App_model extends CI_Model {
         $opciones = array_merge($opciones_vacio, $this->Pcrn->query_to_array($query, $campo_valor, $campo_indice));
 
         return $opciones;
+    }
+
+    /**
+     * Opciones para select, de los grupos que un usuario institucional tiene asignados
+     * 2020-04-23
+     */
+    function opciones_mis_grupos($formato = 1)
+    {
+        //Selección de grupos
+        $str_grupos = '0';
+        $arr_grupos = $this->session->userdata('arr_grupos');
+        if ( count($arr_grupos) > 0 ) { $str_grupos = implode(',', $arr_grupos); }
+        $condicion_grupos = 'grupo.id IN (' . $str_grupos . ')';
+        $opciones_grupo = $this->opciones_grupo($condicion_grupos, $formato);
+
+        return $opciones_grupo;
     }
 
     function opciones_nivel($campo, $texto_vacio = NULL)

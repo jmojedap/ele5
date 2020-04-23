@@ -94,9 +94,7 @@ class Cuestionarios extends CI_Controller{
         
         $resultado = array('ejecutado' => 1, 'mensaje' =>  count($seleccionados) . ' cuestionarios eliminados');
 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($resultado));
+        $this->output->set_content_type('application/json')->set_output(json_encode($resultado));
     }
     
     /**
@@ -1496,5 +1494,44 @@ class Cuestionarios extends CI_Controller{
         $this->output
         ->set_content_type('application/json')
         ->set_output(json_encode($data));
+    }
+
+// SelectorP Conctructor de Pregunta
+//-----------------------------------------------------------------------------
+
+    /**
+     * Toma el listado de preguntas en la variable de sesión {arr_selectorp}
+     * y crea un nuevo cuestionario, con los datos provenientes en POST de preguntas/selectorp
+     * 2020-03-17
+     */
+    function selectorp_create()
+    {
+        //Valores iniciales
+            $data['qty_preguntas'] = 0;
+
+        //Crear cuestionario
+            $data_cuestionario = $this->Cuestionario_model->insert();
+            $data['cuestionario_id'] = $data_cuestionario['saved_id'];
+
+        //Agregar preguntas al cuestionario creado
+            $str_preguntas = $this->input->post('str_preguntas');
+            $arr_preguntas = explode(',', $str_preguntas);
+
+            $arr_row['cuestionario_id'] = $data_cuestionario['saved_id'];
+            
+            foreach ( $arr_preguntas as $orden => $pregunta_id ) 
+            {
+                $arr_row['pregunta_id'] = $pregunta_id;
+                $arr_row['orden'] = $orden;
+                $data_cp = $this->Cuestionario_model->insertar_cp($arr_row);   
+
+                $data['qty_preguntas'] += $data_cp['status'];
+            }
+
+        //Quitar listado de preguntas de datos de sesión
+        if ( $data['qty_preguntas']) { $this->session->unset_userdata('arr_selectorp'); }
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 }

@@ -177,8 +177,8 @@
         $opciones_menus['recursos/archivos_no_asignados'] = array('recursos', 'archivos', 'archivos');
         
         $opciones_menus['recursos/links'] = array('recursos', 'links', 'links');
-        $opciones_menus['recursos/importar_links'] = array('recursos', 'links', 'links');
-        $opciones_menus['recursos/importar_links_e'] = array('recursos', 'links', 'links');
+        $opciones_menus['recursos/links_importar'] = array('recursos', 'links', 'links');
+        $opciones_menus['recursos/links_importar_e'] = array('recursos', 'links', 'links');
 
         $opciones_menus['instituciones/flipbooks'] = array('recursos', 'flipbooks', 'flipbooks');
 
@@ -362,7 +362,7 @@
                     </a>
                 </li>
                 <li><a href="<?= base_url()?>datos/enunciados" class="<?= $clase_sm['enunciados'] ?>"><i class="fa fa-quote-left"></i><span>lecturas</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url()?>preguntas/explorar" class="<?= $clase_sm['preguntas'] ?>"><i class="fa fa-question"></i><span>preguntas</span></a></li> <!-- subitem -->
+                <li><a href="<?php echo base_url()?>preguntas/explorar/?tp=01" class="<?= $clase_sm['preguntas'] ?>"><i class="fa fa-question"></i><span>preguntas</span></a></li>
             </ul>
 
         </li>

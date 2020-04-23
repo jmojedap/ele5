@@ -83,6 +83,40 @@
                         color : '<?= $colores_evento[4] ?>'
                     },
                 <?php endforeach ?>
+
+                //Eventos, programación de links internos (5)
+                <?php foreach ($eventos[5]->result() as $row_evento) : ?>
+                    <?php
+                        $color = $colores_evento[5];
+                    ?>
+                    {
+                        id: <?= $row_evento->id ?>,
+                        title: 'LINK >> <?= $this->Pcrn->texto_url($row_evento->url) ?>',
+                        start: '<?= $row_evento->fecha_inicio ?>',
+                        end: '<?= $row_evento->fecha_inicio ?>',
+                        url: '<?php echo $row_evento->url ?>',
+                        color : '<?= $color ?>',
+                        tipo: 'link_interno',
+                        fecha_inicio: '<?php echo $row_evento->fecha_inicio ?>',
+                        grupo_id: '0<?php echo $row_evento->grupo_id ?>'
+                    },
+                <?php endforeach ?>
+
+                //Eventos, programación de sesiones virtuales (6)
+                <?php foreach ($eventos[6]->result() as $row_evento) : ?>
+                    {
+                        id: <?= $row_evento->id ?>,
+                        title: 'Sesión Virtual >> <?= $this->Pcrn->texto_url($row_evento->url) ?>',
+                        start: '<?= $row_evento->fecha_inicio ?>',
+                        end: '<?= $row_evento->fecha_inicio ?>',
+                        url: '<?= $row_evento->url ?>',
+                        color : '<?= $colores_evento[6] ?>',
+                        tipo: 'sesion_virtual',
+                        descripcion: '<?php echo $row_evento->descripcion ?>',
+                        fecha_inicio: '<?php echo $row_evento->fecha_inicio ?>',
+                        grupo_id: '0<?php echo $row_evento->grupo_id ?>'
+                    },
+                <?php endforeach ?>
             ],
             eventClick: function(info) {
                 info.jsEvent.preventDefault(); // don't let the browser navigate

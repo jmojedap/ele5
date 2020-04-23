@@ -1192,7 +1192,7 @@ class Tema_Model extends CI_Model{
      */
     function links($tema_id)
     {
-        $this->db->select('id, titulo, url');
+        $this->db->select('id, titulo, url, descripcion, palabras_clave, componente_id');
         $this->db->where('tema_id', $tema_id);
         $this->db->where('tipo_recurso_id', 2);
         $links = $this->db->get('recurso');
@@ -1207,11 +1207,10 @@ class Tema_Model extends CI_Model{
     function save_link($tema_id, $link_id)
     {
         //Resultado inicial por defecto
-            $data = array('status' => 0, 'message' => 'El link no fue guardado');
+            $data = array('status' => 0, 'saved_id' => '0');
 
         //Construir registro
-            $arr_row['titulo'] = $this->input->post('titulo');
-            $arr_row['url'] = $this->input->post('url');
+            $arr_row = $this->input->post();
             $arr_row['tema_id'] = $tema_id;
             $arr_row['tipo_recurso_id'] = 2;    //Link
             $arr_row['editado'] = date('Y-m-d H:i:s');
@@ -1223,7 +1222,7 @@ class Tema_Model extends CI_Model{
         
             if ( $saved_id > 0 )
             {
-                $data = array('status' => 1, 'message' => 'Los datos del link fueron guardados', 'link_id' => $saved_id);
+                $data = array('status' => 1, 'saved_id' => $saved_id);
             }
     
         return $data;
@@ -1235,17 +1234,17 @@ class Tema_Model extends CI_Model{
      */
     function delete_link($tema_id, $link_id)
     {
-        $data = array('status' => 0, 'message' => 'No se pudo eliminar el link');
+        $data = array('status' => 0, 'qty_deleted' => '0');
     
         $this->db->where('id', $link_id);
         $this->db->where('tema_id', $tema_id);
         $this->db->delete('recurso');
         
-        $quan_deleted = $this->db->affected_rows();
+        $data['qty_deleted'] = $this->db->affected_rows();
     
-        if ( $quan_deleted > 0 )
+        if ( $data['qty_deleted'] > 0 )
         {
-            $data = array('status' => 1, 'message' => 'Link eliminado');
+            $data['status'] = 1;
         }
     
         return $data;

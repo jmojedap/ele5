@@ -9,32 +9,28 @@
     <div class="row mb-1" v-for="(pregunta, key) in lista">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body" id="pregunta_detail">
                     <p>
                         <span class="badge badge-primary">Pregunta {{ key + 1 }}</span>
                     </p>
                     
                     <p v-html="pregunta.texto_pregunta"></p>
                     <ul style="list-style: none;">
-                        <li>
-                            <span class="badge badge-success">A</span>
+                        <li v-bind:class="{'right_answer': pregunta.clv == 1 }">
+                            <span class="badge badge-secondary">A</span>
                             <span v-html="pregunta.opcion_1"></span> 
-                            <span class="badge badge-success" v-if="pregunta.clv == 1">Correcta</span>
                         </li>
-                        <li>
-                            <span class="badge badge-success">B</span>
+                        <li v-bind:class="{'right_answer': pregunta.clv == 2 }">
+                            <span class="badge badge-secondary">B</span>
                             <span v-html="pregunta.opcion_2"></span> 
-                            <span class="badge badge-success" v-if="pregunta.clv == 2">Correcta</span>
                         </li>
-                        <li>
-                            <span class="badge badge-success">C</span>
+                        <li v-bind:class="{'right_answer': pregunta.clv == 3 }">
+                            <span class="badge badge-secondary">C</span>
                             <span v-html="pregunta.opcion_3"></span> 
-                            <span class="badge badge-success" v-if="pregunta.clv == 3">Correcta</span>
                         </li>
-                        <li>
-                            <span class="badge badge-success">D</span>
+                        <li v-bind:class="{'right_answer': pregunta.clv == 4 }">
+                            <span class="badge badge-secondary">D</span>
                             <span v-html="pregunta.opcion_4"></span> 
-                            <span class="badge badge-success" v-if="pregunta.clv == 4">Correcta</span>
                         </li>
                     </ul>
 

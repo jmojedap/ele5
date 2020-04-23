@@ -24,156 +24,178 @@ class Pregunta_model extends CI_Model{
     
 // EXPLORACIÓN
 //-----------------------------------------------------------------------------
-    
+
     /**
      * Array con los datos para la vista de exploración
-     * 
-     * @return string
      */
-    function data_explorar($num_pagina)
+    function explore_data($num_page)
     {
         //Data inicial, de la tabla
-            $data = $this->data_tabla_explorar($num_pagina);
+            $data = $this->get($num_page);
         
         //Elemento de exploración
-            $data['controlador'] = 'preguntas';                      //Nombre del controlador
-            $data['carpeta_vistas'] = 'preguntas/explorar/';         //Carpeta donde están las vistas de exploración
-            $data['head_title'] = 'Preguntas';
-            $data['el_plural'] = 'preguntas';
-            $data['el_singular'] = 'pregunta';
-                
-        //Otros
-            $data['arr_filtros'] = array('a', 'n', 'tp', 'f1');
+            $data['controller'] = 'preguntas';                      //Nombre del controlador
+            $data['cf'] = 'preguntas/explorar/';                      //Nombre del controlador
+            $data['views_folder'] = 'preguntas/explore/';           //Carpeta donde están las vistas de exploración
             
         //Vistas
-            $data['head_subtitle'] = number_format($data['cant_resultados'], 0, ',', '.');
-            $data['view_a'] = $data['carpeta_vistas'] . 'explorar_v';
-            $data['nav_2'] = $data['carpeta_vistas'] . 'menu_v';
+            $data['head_title'] = 'Preguntas';
+            $data['head_subtitle'] = $data['search_num_rows'];
+            $data['view_a'] = $data['views_folder'] . 'explore_v';
+            $data['nav_2'] = $data['views_folder'] . 'menu_v';
         
+        return $data;
+    }
+
+    function get($num_page)
+    {
+        //Referencia
+            $per_page = 10;                             //Cantidad de registros por página
+            $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
+
+        //Búsqueda y Resultados
+            $this->load->model('Search_model');
+            $data['filters'] = $this->Search_model->filters();
+            $elements = $this->search($data['filters'], $per_page, $offset);    //Resultados para página
+        
+        //Cargar datos
+            $data['list'] = $elements->result();
+            $data['str_filters'] = $this->Search_model->str_filters();
+            $data['search_num_rows'] = $this->search_num_rows($data['filters']);
+            $data['max_page'] = ceil($this->pml->if_zero($data['search_num_rows'],1) / $per_page);   //Cantidad de páginas
+
         return $data;
     }
     
     /**
-     * Array con los datos para la tabla de la vista de exploración
+     * String con condición WHERE SQL para filtrar post
      * 
-     * @param type $num_pagina
-     * @return string
-     */
-    function data_tabla_explorar($num_pagina)
-    {
-        //Elemento de exploración
-            $data['cf'] = 'preguntas/explorar/';     //CF Controlador Función
-        
-        //Paginación
-            $data['num_pagina'] = $num_pagina;                  //Número de la página de datos que se está consultado
-            $data['per_page'] = 10;                             //Cantidad de registros por página
-            $offset = ($num_pagina - 1) * $data['per_page'];    //Número de la página de datos que se está consultado
-        
-        //Búsqueda y Resultados
-            $this->load->model('Busqueda_model');
-            $data['busqueda'] = $this->Busqueda_model->busqueda_array();
-            $data['busqueda_str'] = $this->Busqueda_model->busqueda_str();
-            $data['resultados'] = $this->buscar($data['busqueda'], $data['per_page'], $offset);    //Resultados para página
-            
-        //Otros
-            $data['cant_resultados'] = $this->cant_resultados($data['busqueda']);
-            $data['max_pagina'] = ceil($this->Pcrn->si_cero($data['cant_resultados'],1) / $data['per_page']);   //Cantidad de páginas
-            $data['seleccionados_todos'] = '-'. $this->Pcrn->query_to_str($data['resultados'], 'id');           //Para selección masiva de todos los elementos de la página
-            
-        return $data;
-    }
-
-    /**
-     * Búsqueda de cuestionarios
-     * 
-     * @param type $busqueda
-     * @param type $per_page
-     * @param type $offset
+     * @param type $filters
      * @return type
      */
-    function buscar($busqueda, $per_page = NULL, $offset = NULL)
+    function search_condition($filters)
     {
-        //Filtro según el rol de usuario que se tenga
-            $filtro_rol = $this->filtro_rol();
-
-        //Condición con palabras contenidas en el texto de búsqueda (q)
-            $words_condition = $this->Busqueda_model->words_condition($busqueda['q'], array('cod_pregunta', 'texto_pregunta'));
-            if ( $words_condition ) { $this->db->where($words_condition); }
+        $condition = NULL;
+        
+        //Tipo de post
+        if ( $filters['a'] != '' ) { $condition .= "area_id = {$filters['a']} AND "; }
+        if ( $filters['n'] != '' ) { $condition .= "nivel = {$filters['n']} AND "; }
+        if ( $filters['tp'] != '' ) { $condition .= "tipo_pregunta_id = {$filters['tp']} AND "; }
+        if ( $filters['f1'] == '1' ) { $condition .= 'version_id > 0 AND tipo_pregunta_id = 1 AND '; }      //Si la pregunta tiene una versión propuesta
+        if ( $filters['f2'] != '' ) { $condition .= "difficulty_level = {$filters['f2']} AND "; }
+        
+        
+        if ( strlen($condition) > 0 )
+        {
+            $condition = substr($condition, 0, -5);
+        }
+        
+        return $condition;
+    }
+    
+    function search($filters, $per_page = NULL, $offset = NULL)
+    {
+        
+        $role_filter = $this->role_filter($this->session->userdata('post_id'));
 
         //Construir consulta
-            $this->db->select('id, texto_pregunta, nivel, area_id, editado, editado_usuario_id, estado, tipo_pregunta_id, version_id');
+            $select = 'id, ';
+            $select .= 'texto_pregunta, enunciado_2, opcion_1, opcion_2, opcion_3, opcion_4, enunciado_id, version_id, respuesta_correcta, nivel, area_id, ';
+            $select .= 'qty_answers, qty_right, difficulty, difficulty_level, palabras_clave, ';
+            $select .= 'CONCAT("' . URL_UPLOADS . 'preguntas/", (archivo_imagen)) AS url_imagen_pregunta, archivo_imagen' ;
+            $this->db->select($select);
+        
+        //Crear array con términos de búsqueda
+            $words_condition = $this->Search_model->words_condition($filters['q'], array('texto_pregunta', 'enunciado_2', 'palabras_clave'));
+            if ( $words_condition )
+            {
+                $this->db->where($words_condition);
+            }
             
-        //Otros filtros
-            if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
-            if ( $busqueda['n'] != '' ) { $this->db->where('nivel', $busqueda['n']); }      //Nivel
-            if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_pregunta_id', $busqueda['tp']); }      //Tipo
-            if ( $busqueda['est'] != '' ) { $this->db->where('estado', $busqueda['est']); }      //Estado de la pregunta
-            if ( $busqueda['f1'] == '1' ) { $this->db->where('version_id > 0 AND tipo_pregunta_id = 1'); }      //Si la pregunta tiene una versión propuesta
+        //Orden
+            if ( $filters['o'] != '' )
+            {
+                $order_type = $this->pml->if_strlen($filters['ot'], 'DESC');
+                $this->db->order_by($filters['o'], $order_type);
+            } else {
+                $this->db->order_by('editado', 'DESC');
+            }
             
-        //Otros
+        //Filtros
+            $this->db->where($role_filter); //Filtro según el rol de post en sesión
             $this->db->where('tipo_pregunta_id < 20');  //Tipos de pregunta, no incluir versiones propuestas
-            $this->db->where($filtro_rol);  //Filtro por rol
-            $this->db->order_by('id', 'DESC');    
+            $search_condition = $this->search_condition($filters);
+            if ( $search_condition ) { $this->db->where($search_condition);}
             
         //Obtener resultados
-        if ( is_null($per_page) ){
+        if ( is_null($per_page) )
+        {
             $query = $this->db->get('pregunta'); //Resultados totales
         } else {
             $query = $this->db->get('pregunta', $per_page, $offset); //Resultados por página
         }
         
         return $query;
+        
     }
     
     /**
      * Devuelve la cantidad de registros encontrados en la tabla con los filtros
      * establecidos en la búsqueda
      * 
-     * @param type $busqueda
+     * @param type $filters
      * @return type
      */
-    function cant_resultados($busqueda)
+    function search_num_rows($filters)
     {
-        //Filtro según el rol de usuario que se tenga
-        $filtro_rol = $this->filtro_rol();
-
-        //Condición con palabras contenidas en el texto de búsqueda (q)
-            $words_condition = $this->Busqueda_model->words_condition($busqueda['q'], array('cod_pregunta', 'texto_pregunta'));
-            if ( $words_condition ) { $this->db->where($words_condition); }
-
-        //Construir consulta
-            $this->db->select('id');
-            
-        //Otros filtros
-            if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
-            if ( $busqueda['n'] != '' ) { $this->db->where('nivel', $busqueda['n']); }      //Nivel
-                
-        //Otros
-            $this->db->where($filtro_rol);  //Filtro por rol
-            
-        //Obtener resultados
-            $query = $this->db->get('pregunta'); //Resultados totales
-        
+        $query = $this->search($filters); //Para calcular el total de resultados
         return $query->num_rows();
     }
     
-    function filtro_rol($usuario_id = NULL)
+    /**
+     * Devuelve segmento SQL
+     * 
+     * @param type $post_id
+     * @return type 
+     */
+    function role_filter()
     {
-        
-        if ( is_null($usuario_id) ){ $usuario_id = $this->session->userdata('usuario_id'); }
-        
-        $row_usuario = $this->Pcrn->registro_id('usuario', $usuario_id);
-        $condicion = "id = 0";  //Valor por defecto, ningún usuario, se obtendrían cero resultados.
+        $row_usuario = $this->Db_model->row_id('usuario', $this->session->userdata('usuario_id'));
+        $condition = "id = 0";  //Valor por defecto, ningún usuario, se obtendrían cero resultados.
         
         if ( $row_usuario->rol_id <= 2 )            //Usuarios internos
         {
-            $condicion = 'id > 0';
+            $condition = 'id > 0';
         } elseif ( in_array($row_usuario->rol_id, array(3,4,5)) ) {    //Usuarios institucionales
-            $condicion = "creado_usuario_id = {$usuario_id}";
+            //Preguntas propias O las de En Línea Editores
+            $condition = "(creado_usuario_id = {$row_usuario->id}) OR (tipo_pregunta_id = 1)";
+        } elseif ( in_array($row_usuario->rol_id, array(3,4,5)) ) {    //Usuarios institucionales
+            //Preguntas propias O las de En Línea Editores
+            $condition = "(creado_usuario_id = {$row_usuario->id}) OR (tipo_pregunta_id = 1)";
         }
         
-        return $condicion;
+        return $condition;
+    }
+    
+    /**
+     * Array con options para ordenar el listado de post en la vista de
+     * exploración
+     * 
+     * @return string
+     */
+    function options_order()
+    {
+        $options_order = array(
+            '' => '[ Ordenar por ]',
+            'editado' => 'Fecha de edición',
+            'area_id' => 'Área',
+            'nivel' => 'Nivel',
+            'qty_answers' => 'Veces respondida',
+            'qty_right' => 'Respuestas correctas',
+            'difficulty' => 'Dificultad',
+        );
         
+        return $options_order;
     }
     
 // EDICIÓN
@@ -1509,4 +1531,123 @@ class Pregunta_model extends CI_Model{
 
         return $eventos;
     }
+
+// TOTALES PREGUNTAS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Actualiza los campos de totales de la tabla preguntas
+     * 2020-03-06
+     */
+    function update_totals()
+    {
+        //Totales numéricos
+        $sql = 'UPDATE pregunta ';
+        $sql .= 'INNER JOIN ';
+        $sql .= '(SELECT pregunta_id, COUNT(id) AS qty_answers, SUM(resultado) AS qty_right, (100*SUM(resultado)/COUNT(id)) AS pct_right, (100-100*SUM(resultado)/COUNT(id)) AS difficulty FROM usuario_pregunta GROUP BY pregunta_id) AS src ';
+        $sql .= 'ON pregunta.id = src.pregunta_id ';
+        $sql .= 'SET pregunta.qty_answers = src.qty_answers, pregunta.qty_right = src.qty_right, pregunta.pct_right = src.pct_right, pregunta.difficulty = src.difficulty;';
+        $this->db->query($sql);
+
+        $qty_affected = $this->db->affected_rows();
+
+        //Si se modificaron números
+        if ( $qty_affected >= 0 ) { $this->update_difficulty_level(); }
+
+        return $qty_affected;
+    }
+
+    /**
+     * Actualiza el campo pregunta.difficulty_level según rangos valor pregunta.difficulty
+     * 2020-03-16
+     */
+    function update_difficulty_level()
+    {
+        $sql = "UPDATE pregunta ";
+        $sql .= "SET difficulty_level = IF(difficulty > 60,4,IF(difficulty > 40,3,IF(difficulty > 20,2,1))) ";
+        $sql .= "WHERE qty_answers > 0";
+        $this->db->query($sql);
+
+        return $this->db->affected_rows();
+    }
+
+    /**
+     * Actualiza el campo pregunta.palabras_clave, que está vacío, con el nombre del tema asociado
+     * 2020-03-16
+     */
+    function update_palabras_clave_auto()
+    {
+        $this->db->select('pregunta.id, nombre_tema');
+        $this->db->join('tema', 'pregunta.tema_id = tema.id');
+        $this->db->where('palabras_clave = ""');
+        $preguntas = $this->db->get('pregunta');
+
+        $data = array('status' => 1, 'message' => 'Se actualizaron 0 registros', 'qty_affected' => 0);
+
+        foreach ( $preguntas->result() as $row )
+        {
+            $arr_row['palabras_clave'] = $row->nombre_tema;
+            $this->db->where('id', $row->id);
+            $this->db->update('pregunta', $arr_row);
+
+            $data['qty_affected'] += 1;
+        }
+
+        $data['qty_affected'] = $preguntas->num_rows();
+        if ( $data['qty_affected'] > 0 )
+        {
+            $data['status'] = 1;
+            $data['message'] = 'Registros modificados: ' . $data['qty_affected'];
+        }
+
+        return $data;
+    }
+
+// SELECTOR DE PREGUNTAS selectrp
+//-----------------------------------------------------------------------------
+
+    function selectorp_preguntas()
+    {
+        $arr_selectorp = $this->session->userdata('arr_selectorp');
+        $data['str_preguntas'] = '0';
+        if ( count($arr_selectorp) > 0 ) {
+            $data['str_preguntas'] = implode(',',$arr_selectorp);
+        }
+
+        //Query preguntas
+        $select = 'id, ';
+        $select .= 'texto_pregunta, enunciado_2, opcion_1, opcion_2, opcion_3, opcion_4, enunciado_id, version_id, respuesta_correcta, nivel, area_id, ';
+        $select .= 'difficulty, palabras_clave, qty_answers, qty_right, ';
+        $select .= 'CONCAT("' . URL_UPLOADS . 'preguntas/", (archivo_imagen)) AS url_imagen_pregunta, archivo_imagen' ;
+        $this->db->select($select);
+        $this->db->where("id IN ({$data['str_preguntas']})");
+        $preguntas = $this->db->get('pregunta');
+
+        return $preguntas;
+    }
+
+    function selectorp_avg_difficulty($preguntas)
+    {
+        $sum_difficulty = 0;
+        $qty_questions = 0;
+        $avg_difficulty = 0;
+        foreach ($preguntas->result() as $row_pregunta) 
+        {
+            if ( $row_pregunta->qty_answers > 0 )
+            {
+                $sum_difficulty += $row_pregunta->difficulty;
+                $qty_questions += 1;
+            }
+        }
+
+        //Calcular resultado
+        if ( $sum_difficulty > 0 )
+        {
+            $avg_difficulty = $this->Pcrn->dividir($sum_difficulty, $qty_questions);
+            $avg_difficulty = number_format($avg_difficulty,0);
+        }
+
+        return $avg_difficulty;
+    }
+
 }

@@ -1237,5 +1237,4 @@ class Pcrn extends CI_Model{
         $atributos_total = $atributos . ' onclick="return confirm (' . "'{$texto_confirmacion}'". ');"';
         return anchor($enlace, $contenido, $atributos_total);
     }
-    
 }

@@ -135,18 +135,22 @@ class Eventos extends CI_Controller{
         if ( $this->session->userdata('srol') =='estudiante' ) 
         {
             //Estudiante
-            $tipos_evento = '1,2,3';
+            $tipos_evento = '1,2,3,4,5,6';
             $eventos[1] = $this->Evento_model->evs_cuestionarios_ant($busqueda);    //Asignación de cuestionarios
             $eventos[2] = $this->Evento_model->evs_temas($busqueda);                //Programación de temas
             $eventos[3] = $this->Evento_model->evs_quices($busqueda);               //Programación de quices
             $eventos[4] = $this->Evento_model->evs_links($busqueda);                //Programación de links
+            $eventos[5] = $this->Evento_model->evs_links_internos($busqueda);        //Programación de links internos
+            $eventos[6] = $this->Evento_model->evs_sesionv($busqueda);               //Sesiones virtuales programadas
             $view_a = 'eventos/calendario/calendario_v';
         } else {
             //Los demás usuarios
-            $tipos_evento = '2,4,22';
+            $tipos_evento = '2,4,5,6,22';
             $eventos[2] = $this->Evento_model->evs_temas($busqueda);                 //Programación de temas
-            $eventos[4] = $this->Evento_model->evs_links($busqueda);                 //Programación de links
-            $eventos[22] = $this->Evento_model->evs_cuestionarios_prf($busqueda);     //Asignación de cuestionarios
+            $eventos[4] = $this->Evento_model->evs_links($busqueda);                 //Programación de links personalizados
+            $eventos[5] = $this->Evento_model->evs_links_internos($busqueda);        //Programación de links internos
+            $eventos[6] = $this->Evento_model->evs_sesionv($busqueda);               //Sesiones virtuales programadas
+            $eventos[22] = $this->Evento_model->evs_cuestionarios_prf($busqueda);    //Asignación de cuestionarios
             $view_a = 'eventos/calendario_prf/calendario_prf_v';
         }
         
@@ -156,6 +160,8 @@ class Eventos extends CI_Controller{
         $data['grupos'] = $this->Usuario_model->grupos_usuario($this->session->userdata('usuario_id'));
         $data['busqueda'] = $busqueda;
         $data['destino_filtros'] = "eventos/calendario/";
+        $data['opciones_grupo'] = $this->App_model->opciones_mis_grupos();
+        $data['colores_evento'] = $this->App_model->arr_item(13, 'color');
 
         $data['head_title'] = 'Programador';
         $data['nav_2'] = 'usuarios/biblioteca_menu_v';
@@ -283,6 +289,16 @@ class Eventos extends CI_Controller{
         $cant_registros = $this->Evento_model->eliminar($evento_id);
         $this->output->set_content_type('application/json')->set_output(json_encode($cant_registros));
     }
+
+    /**
+     * AJAX, elimina un evento
+     * 2020-04-03
+     */
+    function delete($evento_id)
+    {
+        $data['qty_deleted'] = $this->Evento_model->eliminar($evento_id);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
     
     /**
      * AJAX, envía un objeto JSON con el html de noticias adicionales para mostrarse
@@ -363,6 +379,43 @@ class Eventos extends CI_Controller{
             $condicion = "id = {$evento_id}";
             $data['saved_id'] = $this->Pcrn->guardar('evento', $condicion, $arr_row);
         }
+
+        //Comprobar resultado
+        $data['status'] = ( $data['saved_id'] > 0 ) ? 1 : 0 ;
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * Recibe los datos del formulario de eventos/calendario
+     * Guarda registro de evento de programación de sesión virtual
+     * 2020-04-20
+     */
+    function guardar_ev_sesionv($evento_id = 0)
+    {  
+        $data['saved_id'] = 0;
+
+        $arr_row['tipo_id'] = 6;   //Sesión virtual de clases
+        $arr_row['fecha_inicio'] = $this->input->post('fecha_inicio');
+        $arr_row['hora_inicio'] = substr('0' . $this->input->post('hour'), -2) . ':' . substr('0' . $this->input->post('minute'), -2);   //Link asignado
+        $arr_row['referente_id'] = time();   //Para identificarlo, marca de tiempo
+        $arr_row['referente_2_id'] = $this->input->post('referente_2_id');
+        $arr_row['descripcion'] = $this->input->post('descripcion');
+        $arr_row['url'] = $this->input->post('url');
+        $arr_row['institucion_id'] = $this->session->userdata('institucion_id');
+        $arr_row['grupo_id'] = $this->input->post('grupo_id');
+        $arr_row['c_usuario_id'] = $this->session->userdata('usuario_id');
+        
+        if ( $evento_id == 0 ) {
+            $data['saved_id'] = $this->Evento_model->guardar_evento($arr_row);
+        } else {
+            $data['saved_id'] = $this->Db_model->save('evento', "id = {$evento_id}", $arr_row);
+        }
+        
+        //Enviar mensaje automático a usuarios del grupo
+        $this->load->model('Mensaje_model');
+        $data['conversacion_id'] = $this->Mensaje_model->automatico_sesionv($evento_id, $arr_row);   
 
         //Comprobar resultado
         $data['status'] = ( $data['saved_id'] > 0 ) ? 1 : 0 ;

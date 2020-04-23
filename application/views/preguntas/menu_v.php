@@ -26,13 +26,6 @@
             'atributos' => 'title="Cuestionarios que incluyen la pregunta"'
         );
             
-        $arr_menus['estadisticas'] = array(
-            'icono' => '<i class="fa fa-chart-bar"></i>',
-            'texto' => 'Estadísticas',
-            'link' => "preguntas/estadisticas/{$row->id}",
-            'atributos' => 'title="Estadísticas de la pregunta"'
-        );
-            
         $arr_menus['editar'] = array(
             'icono' => '<i class="fa fa-pencil-alt"></i>',
             'texto' => 'Editar',
@@ -55,14 +48,14 @@
         );
         
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('explorar', 'detalle', 'cuestionarios', 'estadisticas', 'editar', 'version', 'historial');
-        $elementos_rol[1] = array('explorar', 'detalle', 'cuestionarios', 'estadisticas', 'editar', 'version', 'historial');
-        $elementos_rol[2] = array('explorar', 'detalle', 'cuestionarios', 'estadisticas', 'editar', 'version', 'historial');
-        $elementos_rol[3] = array('explorar', 'detalle', 'estadisticas');
-        $elementos_rol[4] = array('explorar', 'detalle', 'estadisticas');
-        $elementos_rol[5] = array('explorar', 'detalle', 'estadisticas');
-        $elementos_rol[7] = array('explorar', 'detalle', 'cuestionarios', 'estadisticas', 'version');
-        $elementos_rol[8] = array('explorar', 'detalle', 'cuestionarios', 'estadisticas', 'editar');
+        $elementos_rol[0] = array('explorar', 'detalle', 'cuestionarios', 'editar', 'version', 'historial');
+        $elementos_rol[1] = array('explorar', 'detalle', 'cuestionarios', 'editar', 'version', 'historial');
+        $elementos_rol[2] = array('explorar', 'detalle', 'cuestionarios', 'editar', 'version', 'historial');
+        $elementos_rol[3] = array('explorar', 'detalle');
+        $elementos_rol[4] = array('explorar', 'detalle');
+        $elementos_rol[5] = array('explorar', 'detalle');
+        $elementos_rol[7] = array('explorar', 'detalle', 'cuestionarios', 'version');
+        $elementos_rol[8] = array('explorar', 'detalle', 'cuestionarios', 'editar');
         
         if ( $editable ) 
         {

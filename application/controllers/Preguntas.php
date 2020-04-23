@@ -27,63 +27,45 @@ class Preguntas extends CI_Controller{
 //EXLPORACIÓN
 //------------------------------------------------------------------------------------------
 
-    /**
-     * Exploración y búsqueda
-     */
-    function explorar($num_pagina = 1)
-    {
+    /** Exploración de Preguntas */
+    function explorar()
+    {        
         //Datos básicos de la exploración
-            $this->load->helper('text');
-            $data = $this->Pregunta_model->data_explorar($num_pagina);
+            $data = $this->Pregunta_model->explore_data(1);
         
         //Opciones de filtros de búsqueda
-            
-            $data['opciones_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
-            $data['opciones_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Nivel');
-            $data['opciones_tipo'] = $this->Item_model->opciones('categoria_id = 156', 'Todos');
-            $data['opciones_estado'] = $this->Item_model->opciones('categoria_id = 157', 'Todos');
+            $data['options_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
+            $data['options_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Todos');
+            $data['options_tipo'] = $this->Item_model->opciones('categoria_id = 156 AND id_interno < 50', 'Todos');
+            $data['options_estado'] = $this->Item_model->opciones('categoria_id = 157', 'Todos');
+            $data['options_difficulty_level'] = $this->Item_model->opciones('categoria_id = 158', 'Todos');
+            $data['options_order'] = $this->Pregunta_model->options_order();
+            $data['options_order_type'] = array('ASC' => 'Ascendente', 'DESC' => 'Descendente');
             
         //Arrays con valores para contenido en la tabla
+            $data['arr_areas'] = $this->Item_model->arr_item('1', 'id_nombre_corto');
             $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 156');
             $data['arr_estados'] = $this->Item_model->arr_interno('categoria_id = 157');
+            $data['arr_difficulty_level'] = $this->Item_model->arr_item('158', 'id_interno_num');
             $data['arr_nivel'] = $this->Item_model->arr_interno('categoria_id = 3');
-        
+
+        //Especiales
+            $data['qty_selectorp'] = 0;
+            if ( ! is_null($this->session->userdata('arr_selectorp')) ) {
+                $data['qty_selectorp'] = count($this->session->userdata('arr_selectorp'));
+            }
+            
         //Cargar vista
-            $this->load->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN, $data);
     }
 
     /**
-     * AJAX
-     * 
-     * Devuelve JSON, que incluye string HTML de la tabla de exploración para la
-     * página $num_pagina, y los filtros enviados por post
-     * 
-     * @param type $num_pagina
+     * Listado de Pregunas, filtrados por búsqueda, JSON
      */
-    function tabla_explorar($num_pagina = 1)
+    function get($num_page = 1)
     {
-        $this->load->helper('text');
-
-        //Datos básicos de la exploración
-            $data_pre = $this->Pregunta_model->data_tabla_explorar($num_pagina);
-        
-        //Arrays con valores para contenido en lista
-            $data_pre['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 156');
-            $data_pre['arr_estados'] = $this->Item_model->arr_interno('categoria_id = 157');
-            $data_pre['arr_nivel'] = $this->Item_model->arr_interno('categoria_id = 3');
-        
-        //Preparar respuesta
-            $data['html'] = $this->load->view('preguntas/explorar/tabla_v', $data_pre, TRUE);
-            $data['seleccionados_todos'] = $data_pre['seleccionados_todos'];
-            $data['num_pagina'] = $num_pagina;
-            $data['busqueda_str'] = $data_pre['busqueda_str'];
-            $data['cant_resultados'] = $data_pre['cant_resultados'];
-            $data['max_pagina'] = $data_pre['max_pagina'];
-        
-        //Salida
-            $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($data));
+        $data = $this->Pregunta_model->get($num_page);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**
@@ -95,12 +77,13 @@ class Preguntas extends CI_Controller{
         set_time_limit(120);    //120 segundos, 2 minutos para el proceso
         //Cargando
             $this->load->model('Busqueda_model');
+            $this->load->model('Search_model');
             $this->load->model('Pcrn_excel');
         
         //Datos de consulta, construyendo array de búsqueda
             $busqueda = $this->Busqueda_model->busqueda_array();
             $busqueda_str = $this->Busqueda_model->busqueda_str();
-            $resultados_total = $this->Pregunta_model->buscar($busqueda); //Para calcular el total de resultados
+            $resultados_total = $this->Pregunta_model->search($busqueda); //Para calcular el total de resultados
             $max_reg_export = 10000;
         
             if ( $resultados_total->num_rows() <= $max_reg_export ) 
@@ -117,10 +100,10 @@ class Preguntas extends CI_Controller{
 
                 $this->load->view('app/descargar_phpexcel_v', $data);
             } else {
-                $data['titulo_pagina'] = 'Plataforma Enlace';
-                $data['mensaje'] = "El número de registros es de {$resultados_total->num_rows()}. El máximo permitido es de " . $max_reg_export . " registros. Puede filtrar los datos por algún criterio para poder exportarlos.";
+                $data['head_title'] = 'Plataforma En Línea';
+                $data['mensaje'] = "El número de registros que quiere exportar es de {$resultados_total->num_rows()}. El máximo permitido es de " . $max_reg_export . " registros. Puede filtrar los datos por algún criterio para poder exportarlos.";
                 $data['link_volver'] = "preguntas/explorar/?{$busqueda_str}";
-                $data['vista_a'] = 'app/mensaje_v';
+                $data['view_a'] = 'app/mensaje_v';
                 
                 $this->load->view(TPL_ADMIN, $data);
             }
@@ -198,9 +181,7 @@ class Preguntas extends CI_Controller{
     {
         $data = $this->Pregunta_model->save($pregunta_id);
 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -211,10 +192,7 @@ class Preguntas extends CI_Controller{
     function set_image($pregunta_id)
     {
         $data = $this->Pregunta_model->set_image($pregunta_id);
-
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -235,9 +213,7 @@ class Preguntas extends CI_Controller{
         $data = $this->Pregunta_model->upload_image();
         $data['src'] = URL_UPLOADS . 'preguntas/' . $data['upload_data']['file_name'];
 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
 // IMPORTAR
@@ -619,10 +595,7 @@ class Preguntas extends CI_Controller{
     function create_version($pregunta_id)
     {
         $data = $this->Pregunta_model->create_version($pregunta_id);
-
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -632,10 +605,7 @@ class Preguntas extends CI_Controller{
     function save_version($version_id)
     {
         $data = $this->Pregunta_model->save($version_id);
-
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -646,10 +616,7 @@ class Preguntas extends CI_Controller{
     function approve_version($pregunta_id, $version_id)
     {
         $data = $this->Pregunta_model->approve_version($pregunta_id, $version_id);
-        
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -660,6 +627,121 @@ class Preguntas extends CI_Controller{
     {
         $data = $this->Pregunta_model->delete_version($pregunta_id, $version_id);
         
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+// CÁLCULO DE TOTALES Y PARÁMETROS DE PREGUNTAS
+//-----------------------------------------------------------------------------
+
+    function update_totals()
+    {
+        $data = array('status' => 0, 'affected_rows' => '0', 'message' => 'Mensaje no ejecutado');
+
+        $data['affected_rows'] = $this->Pregunta_model->update_totals();
+        if ( $data['affected_rows'] >= 0 )
+        {
+            $data['status'] = 1;
+            $data['message'] = "Preguntas actualizadas: " . $data['affected_rows'];
+        }
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * Actualiza el campo pregunta.palabras_clave de forma automática
+     */
+    function update_palabras_clave_auto()
+    {
+        $data = $this->Pregunta_model->update_palabras_clave_auto();
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+// SELECTORP (Seleccionador de preguntas)
+//-----------------------------------------------------------------------------
+
+    /**
+     * Vista herramienta construcción de cuestionario, muestra preguntas seleccionadas en lista
+     * para ordenar. Botón para crear nuevo cuestionario.
+     * 2020-03-17
+     */
+    function selectorp()
+    {
+        $data['preguntas'] = $this->Pregunta_model->selectorp_preguntas();
+        $data['avg_difficulty'] = $this->Pregunta_model->selectorp_avg_difficulty($data['preguntas']);
+        $data['str_preguntas'] = implode(',', $this->session->userdata('arr_selectorp'));
+
+        //Opciones formulario
+        $data['options_nivel'] = $this->Item_model->opciones('categoria_id = 3', 'Nivel');
+        $data['options_area'] = $this->Item_model->opciones_id('categoria_id = 1 AND item_grupo = 1', 'Área');
+
+        $data['arr_areas'] = $this->Item_model->arr_item('1', 'id_nombre_corto');
+        $data['arr_difficulty_level'] = $this->Item_model->arr_item('158', 'id_interno_num');
+
+        $data['head_title'] = 'Preguntas';
+        $data['head_subtitle'] = 'Selector';
+        $data['view_a'] = 'preguntas/selectorp/selectorp_v';
+        $this->App_model->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * Agregar pregunta o grupo de preguntas al listado en variables de sesión para
+     * construir un nuevo cuestionario.
+     * 2020-03-16
+     */
+    function selectorp_add($pregunta_id = 0)
+    {
+        $arr_selectorp_pre = $this->session->userdata('arr_selectorp');
+        
+        if ( $pregunta_id > 0 ) {
+            $selected = array($pregunta_id);    //Pregunta individual
+        } else {
+            $selected = explode(',', $this->input->post('selected'));   //Preguntas seleccionadas en listado explorar
+        }
+        
+        foreach ( $selected as $pregunta_id ) 
+        {
+            $arr_selectorp_pre[] = $pregunta_id;
+        }
+
+        $arr_selectorp = array_unique($arr_selectorp_pre);   //Solo elementos únicos
+        $this->session->set_userdata('arr_selectorp', $arr_selectorp);      //Cargar en variable de sesión 
+
+        $data['qty_selectorp'] = count($arr_selectorp);
+        $data['qty_added'] = count($arr_selectorp) - count($arr_selectorp_pre);
+
+        //Establecer resultado
+        $data['status'] = 0;
+        if ( $data['qty_added'] >= 0 ) { $data['status'] = 1; }
+        $data['arr_selectorp'] = $arr_selectorp;
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * Quita una pregunta del listado en las variables de sesión. Devuelve listado de preguntas
+     * y calcula el nuevo nivel de dificultad.
+     * 2020-03-17
+     */
+    function selectorp_remove($pregunta_id)
+    {
+        $arr_selectorp_pre = $this->session->userdata('arr_selectorp');
+
+        $arr_selectorp = array_diff($arr_selectorp_pre, array($pregunta_id));
+
+        $this->session->set_userdata('arr_selectorp', $arr_selectorp);
+
+        $data = array('status' => 0);
+        if ( count($arr_selectorp_pre) - count($arr_selectorp) )
+        {
+            $preguntas = $this->Pregunta_model->selectorp_preguntas();
+
+            $data['preguntas'] = $preguntas->result();
+            $data['avg_difficulty'] = $this->Pregunta_model->selectorp_avg_difficulty($preguntas);
+            $data['status'] = 1;
+        }
+
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }

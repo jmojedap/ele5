@@ -110,6 +110,16 @@
         </tr>
         <tr>
             <td>
+                <?php if ( $row->palabras_clave != $row_version->palabras_clave ) { ?>
+                    <?php echo $advertencia ?>
+                <?php } ?>
+            </td>
+            <td>Palabras clave</td>
+            <td><?php echo $row->palabras_clave ?></td>
+            <td><?php echo $row_version->palabras_clave ?></td>
+        </tr>
+        <tr>
+            <td>
                 <?php if ( $row->enunciado_id != $row_version->enunciado_id ) { ?>
                     <?php echo $advertencia ?>
                 <?php } ?>

@@ -79,6 +79,8 @@
     $opciones_menus['flipbooks/anotaciones'] = array('recursos', 'flipbooks', 'flipbooks');
     $opciones_menus['flipbooks/copiar_flipbook'] = array('recursos', 'flipbooks', 'flipbooks');
     $opciones_menus['flipbooks/editar'] = array('recursos', 'flipbooks', 'flipbooks');
+
+    $opciones_menus['recursos/links'] = array('recursos', 'recursos-links', 'links');
     
     //Cuestionarios
     $opciones_menus['cuestionarios/explorar'] = array('cuestionarios', 'cuestionarios', 'cuestionarios');
@@ -153,7 +155,7 @@
         </li>
         
         <li class="has_submenu"> <!-- contenedor item con submenu -->
-            <a href="#" class="<?= $clase_m['recursos'] ?>"><i class="fa fa-2x fa-book"></i><span>recursos académicos</span></a>
+            <a href="#" class="<?= $clase_m['recursos'] ?>"><i class="fa fa-2x fa-book"></i><span>recursos</span></a>
             <?php if ( $m_current['menu'] == 'recursos' ){ ?>
                 <span class="gossip"><?= $m_current['submenu_show'] ?></span>
             <?php } ?>
@@ -161,6 +163,7 @@
             <ul class="sub_nav"><!-- SUBMENU -->
                 <li><a href="<?= base_url('programas/explorar') ?>" class="<?= $clase_sm['programas'] ?>"><i class="fa fa-sitemap"></i><span>programas</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url('flipbooks/explorar')?>" class="<?= $clase_sm['flipbooks'] ?>"><i class="fa fa-book"></i><span>contenidos</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url('recursos/links')?>" class="<?= $clase_sm['recursos-links'] ?>"><i class="fa fa-link"></i><span>links</span></a></li>
             </ul>
         </li>
         

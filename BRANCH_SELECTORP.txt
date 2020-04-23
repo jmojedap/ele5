@@ -1,0 +1,16 @@
+**Banco de links asignables
+Funcionamiento general: Los profesores tendrán a disposición un banco de links o enlaces que podrán asignar y programar a los estudiantes de sus grupos. Estos links aparecerán en el calendario programador de los estudiantes y profesores.
+Los links serán creados o cargados por el equipo de En Línea Editores.
+Podrán ser links diferentes y adicionales a los ya existentes en los temas actuales.
+Se le agregará al link el dato "componente" para describir, para seleccionar y filtrar los links.
+Se enriquecerá la herramienta actual de exploración de links.
+Tiempo estimado de desarrollo: 1.5 semanas | Precio: $770.000
+
+**Selector de preguntas
+Funcionamiento general: Los profesores tendrán a disposición el listado de preguntas que podrán seleccionar para construir un cuestionario y asignarlo.
+Se adicionará la casilla "Palabras clave" en las preguntas para facilitar y mejorar las búsquedas.
+Se podrán buscar preguntas por diferentes criterios y agregar a una especie de "Carrito de compras" de preguntas, que dará un resumen del número de preguntas seleccionadas y la dificultad total estimada del cuestionario en construcción.
+Se desarrollará una funcionalidad para calcular periódicamente la dificultad de cada pregunta, considerando los datos históricos de los cuestionarios ya utilizados, con esto se aprovechará comercial y funcionalmente el dataset disponible de respuesta de preguntas (Cerca de 3.5 millones de registros al año).
+Antes de crear el cuestionario, el usuario hará una revisión final del cuestionario, en cuanto al orden de las preguntas, tiempo estimado de respuesta, y palabras clave acumuladas.
+Al finalizar el usuario hará clic en el botón [Crear] y el cuestionario quedará creado y listo para asignar.
+Se enriquecerá la herramienta actual de exploración de preguntas.

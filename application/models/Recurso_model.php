@@ -58,7 +58,6 @@ class Recurso_Model extends CI_Model{
      */
     function buscar_archivos($busqueda, $per_page = NULL, $offset = NULL)
     {
-
         //Construir búsqueda
         
             //Texto búsqueda
@@ -77,7 +76,6 @@ class Recurso_Model extends CI_Model{
                 if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_archivo_id', $busqueda['tp']); }  //Tipo archivo
                 if ( $busqueda['e'] != '' ) { $this->db->where('recurso.editado', $busqueda['e']); }  //Editado
                 
-                
             //Otros
                 $this->db->select('*, recurso.id AS recurso_id');
                 $this->db->join('tema', 'recurso.tema_id = tema.id');
@@ -85,11 +83,11 @@ class Recurso_Model extends CI_Model{
                 $this->db->order_by('nombre_archivo', 'ASC');
             
         //Obtener resultados
-        if ( is_null($per_page) ){
-            $query = $this->db->get('recurso'); //Resultados totales
-        } else {
-            $query = $this->db->get('recurso', $per_page, $offset); //Resultados por página
-        }
+            if ( is_null($per_page) ){
+                $query = $this->db->get('recurso'); //Resultados totales
+            } else {
+                $query = $this->db->get('recurso', $per_page, $offset); //Resultados por página
+            }
         
         return $query;
     }    
@@ -179,6 +177,278 @@ class Recurso_Model extends CI_Model{
     {
         $carpeta = RUTA_UPLOADS . $this->Pcrn->campo_id('item', $tipo_archivo_id, 'slug') . '/';
         return $carpeta;
+    }
+
+// GESTIÓN DE RECURSOS LINKS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Array con los datos para la vista de exploración
+     */
+    function links_explore_data($num_page)
+    {
+        //Data inicial, de la tabla
+            $data = $this->links_get($num_page);
+        
+        //Elemento de exploración
+            $data['controller'] = 'recursos';                      //Nombre del controlador
+            $data['cf'] = 'recursos/links/';                      //Nombre del controlador
+            $data['views_folder'] = 'recursos/links/explore/';           //Carpeta donde están las vistas de exploración
+            
+        //Vistas
+            $data['head_title'] = 'Links';
+            $data['head_subtitle'] = $data['search_num_rows'];
+            $data['view_a'] = $data['views_folder'] . 'explore_v';
+            $data['nav_2'] = $data['views_folder'] . 'menu_v';
+        
+        return $data;
+    }
+
+    function links_get($num_page)
+    {
+        //Referencia
+            $per_page = 10;                             //Cantidad de registros por página
+            $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
+
+        //Búsqueda y Resultados
+            $this->load->model('Search_model');
+            $data['filters'] = $this->Search_model->filters();
+            $elements = $this->links_search($data['filters'], $per_page, $offset);    //Resultados para página
+        
+        //Cargar datos
+            $data['list'] = $elements->result();
+            $data['str_filters'] = $this->Search_model->str_filters();
+            $data['search_num_rows'] = $this->links_search_num_rows($data['filters']);
+            $data['max_page'] = ceil($this->pml->if_zero($data['search_num_rows'],1) / $per_page);   //Cantidad de páginas
+
+        return $data;
+    }
+    
+    /**
+     * String con condición WHERE SQL para filtrar post
+     */
+    function links_search_condition($filters)
+    {
+        $condition = NULL;
+        
+        //Revisar cada filtro
+        if ( $filters['a'] != '' ) { $condition .= "area_id = {$filters['a']} AND "; }
+        if ( $filters['n'] != '' ) { $condition .= "nivel = {$filters['n']} AND "; }
+        if ( $filters['cpnt'] != '' ) { $condition .= "recurso.componente_id = {$filters['cpnt']} AND "; }
+        
+        //Quitar AND final
+        if ( strlen($condition) > 0 ) { $condition = substr($condition, 0, -5); }
+        
+        return $condition;
+    }
+    
+    function links_search($filters, $per_page = NULL, $offset = NULL)
+    {
+        //Construir consulta
+            $select = 'recurso.id, titulo, url, tema_id, tema.nombre_tema, area_id, nivel, palabras_clave, recurso.descripcion, recurso.componente_id';
+            $this->db->select($select);
+            $this->db->join('tema', 'tema.id = recurso.tema_id');
+        
+        //Crear array con términos de búsqueda
+            $words_condition = $this->Search_model->words_condition($filters['q'], array('titulo', 'url'));
+            if ( $words_condition )
+            {
+                $this->db->where($words_condition);
+            }
+            
+        //Orden
+            if ( $filters['o'] != '' )
+            {
+                $order_type = $this->pml->if_strlen($filters['ot'], 'DESC');
+                $this->db->order_by($filters['o'], $order_type);
+            } else {
+                $this->db->order_by('recurso.editado', 'DESC');
+            }
+            
+        //Filtros
+            $this->db->where('tipo_recurso_id', 2); //Recurso Tipo link
+            $search_condition = $this->links_search_condition($filters);
+            if ( $search_condition ) { $this->db->where($search_condition);}
+            
+        //Obtener resultados
+        if ( is_null($per_page) )
+        {
+            $query = $this->db->get('recurso'); //Resultados totales
+        } else {
+            $query = $this->db->get('recurso', $per_page, $offset); //Resultados por página
+        }
+        
+        return $query;
+        
+    }
+    
+    /**
+     * Devuelve la cantidad de registros encontrados en la tabla con los filtros
+     * establecidos en la búsqueda
+     * 
+     * @param type $filters
+     * @return type
+     */
+    function links_search_num_rows($filters)
+    {
+        $query = $this->links_search($filters); //Para calcular el total de resultados
+        return $query->num_rows();
+    }
+    
+    /**
+     * Array con options para ordenar el listado de post en la vista de
+     * exploración
+     * 
+     * @return string
+     */
+    function links_options_order()
+    {
+        $options_order = array(
+            '' => '[ Ordenar por ]',
+            'editado' => 'Fecha de edición',
+            'area_id' => 'Área',
+            'nivel' => 'Nivel'
+        );
+        
+        return $options_order;
+    }
+
+    /**
+     * Programar en el calendario de un grupo, un link en una fecha determinada
+     * 2020-03-25
+     */
+    function links_programar()
+    {
+        //Datos referencia
+            $row_link = $this->Db_model->row_id('recurso', $this->input->post('referente_id'));
+            $row_tema = $this->Db_model->row_id('tema', $row_link->tema_id);
+
+        //Construir registro
+            $arr_row = $this->input->post();
+            $arr_row['tipo_id'] = 5;    //Link interno asignado
+            $arr_row['url'] = $row_link->url;
+            $arr_row['referente_2_id'] = $row_link->tema_id;
+            $arr_row['institucion_id'] = $this->session->userdata('institucion_id');
+            $arr_row['area_id'] = $row_tema->area_id;
+            $arr_row['nivel'] = $row_tema->nivel;
+            $arr_row['c_usuario_id'] = $this->session->userdata('usuario_id');
+
+        //Guardar
+            $condition = "tipo_id = {$arr_row['tipo_id']} AND referente_id = {$arr_row['referente_id']} AND grupo_id = {$arr_row['grupo_id']}";
+            $data['saved_id'] = $this->Db_model->save('evento', $condition, $arr_row);
+            
+        return $data;
+    }
+
+    /**
+     * Query links programados por el usuario en sesión
+     * 2020-03-27
+     */
+    function links_programados()
+    {
+        $this->db->select('evento.id, recurso.titulo, fecha_inicio, grupo_id, evento.url, nivel, area_id, tema_id');
+        $this->db->where('tipo_id', 5);
+        $this->db->where('c_usuario_id', $this->session->userdata('usuario_id'));
+        $this->db->join('recurso', 'evento.referente_id = recurso.id');
+        $this->db->order_by('fecha_inicio', 'ASC');
+        $links = $this->db->get('evento', 500);
+
+        return $links;
+    }
+
+    /**
+     * Actualiza el campo pregunta.palabras_clave, que está vacío, con el nombre del tema asociado
+     * 2020-03-16
+     */
+    function links_update_palabras_clave_auto()
+    {
+        $this->db->select('recurso.id, nombre_tema');
+        $this->db->join('tema', 'recurso.tema_id = tema.id');
+        $this->db->where('recurso.palabras_clave = ""');
+        $this->db->where('tipo_recurso_id', 2); //Recurso tipo link
+        $preguntas = $this->db->get('recurso');
+
+        $data = array('status' => 1, 'message' => 'Se actualizaron 0 registros', 'qty_affected' => 0);
+
+        foreach ( $preguntas->result() as $row )
+        {
+            $arr_row['palabras_clave'] = $row->nombre_tema;
+            $this->db->where('id', $row->id);
+            $this->db->update('recurso', $arr_row);
+
+            $data['qty_affected'] += 1;
+        }
+
+        $data['qty_affected'] = $preguntas->num_rows();
+        if ( $data['qty_affected'] > 0 )
+        {
+            $data['status'] = 1;
+            $data['message'] = 'Registros modificados: ' . $data['qty_affected'];
+        }
+
+        return $data;
+    }
+
+    /**
+     * Importa recursos links a la base de datos
+     * 2020-04-02
+     */
+    function links_importar($arr_sheet)
+    {
+        $data = array('qty_imported' => 0, 'results' => array());
+        
+        foreach ( $arr_sheet as $key => $row_data )
+        {
+            $data_import = $this->importar_link($row_data);
+            $data['qty_imported'] += $data_import['status'];
+            $data['results'][$key + 2] = $data_import;
+        }
+        
+        return $data;
+    }
+
+    /**
+     * Realiza la importación de una fila del archivo excel. Valida los campos, crea registro
+     * en la tabla recurso.
+     * 2020-04-02
+     */
+    function importar_link($row_data)
+    {
+        //Validar
+            $error_text = '';
+                            
+            if ( strlen($row_data[0]) == 0 ) { $error_text .= 'La casilla <b>Cód. tema</b> está vacía. '; }
+            if ( strlen($row_data[1]) == 0 ) { $error_text .= 'La casilla <b>título</b> está vacía. '; }
+            if ( strlen($row_data[2]) == 0 ) { $error_text .= 'La casilla <b>URL</b> está vacía. '; }
+
+        //Identificar tema
+            $row_tema = $this->Db_model->row('tema', "cod_tema = '{$row_data[0]}'");
+            if ( is_null($row_tema) ) { $error_text .= 'El código de tema (' . $row_data[0] . ') es incorrecto o no existe. '; }
+
+        //Si no hay error
+            if ( $error_text == '' )
+            {
+                $arr_row['tema_id'] = $row_tema->id;
+                $arr_row['titulo'] = $row_data[1];
+                $arr_row['url'] = $row_data[2];
+                $arr_row['descripcion'] = $row_data[3];
+                $arr_row['palabras_clave'] = $row_data[4];
+                $arr_row['componente_id'] = ( strlen($row_data[5]) > 0 ) ? $row_data[5] : 0 ;
+                $arr_row['tipo_recurso_id'] = 2;    //Recurso tipo link
+                $arr_row['fecha_subida'] = date('Y-m-d H:i:s');
+                $arr_row['editado'] = date('Y-m-d H:i:s');
+                $arr_row['usuario_id'] = $this->session->userdata('usuario_id');
+
+                //Guardar en tabla recurso
+                $condition = "tema_id = {$arr_row['tema_id']} AND tipo_recurso_id = {$arr_row['tipo_recurso_id']} AND url = '{$arr_row['url']}'";
+                $saved_id = $this->Db_model->save('recurso', $condition, $arr_row);
+
+                $data = array('status' => 1, 'text' => '', 'imported_id' => $saved_id);
+            } else {
+                $data = array('status' => 0, 'text' => $error_text, 'imported_id' => 0);
+            }
+
+        return $data;
     }
     
 // PROCESOS

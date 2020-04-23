@@ -427,8 +427,10 @@ class Temas extends CI_Controller{
         //Cargando datos básicos
             $data = $this->Tema_model->basico($tema_id);
         
-        //Archivos
+        //Variables
             $data['links'] = $this->Tema_model->links($tema_id);
+            $data['options_componente'] = $this->Item_model->opciones_id('categoria_id = 8', 'Seleccione el componente');
+            $data['arr_componentes'] = $this->Item_model->arr_item(8, 'id');
             
         //Solicitar vista
             $data['head_subtitle'] = 'Links';
@@ -447,9 +449,7 @@ class Temas extends CI_Controller{
 
         $data['links'] = $links->result();
 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -460,9 +460,7 @@ class Temas extends CI_Controller{
     {
         $data = $this->Tema_model->save_link($tema_id, $link_id);
 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -472,10 +470,7 @@ class Temas extends CI_Controller{
     function delete_link($tema_id, $link_id)
     {
         $data = $this->Tema_model->delete_link($tema_id, $link_id);
-        
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
 // CARGA MASIVA DE TEMAS
@@ -1323,7 +1318,6 @@ class Temas extends CI_Controller{
      */
     function importar_lecturas_dinamicas_e()
     {
-        
         //Proceso
             $this->load->model('Pcrn_excel');
             $no_importados = array();

@@ -847,8 +847,7 @@ class Evento_Model extends CI_Model{
 //---------------------------------------------------------------------------------------------------------
     
     /**
-     * Temas programados para un grupo
-     * @return type
+     * Links personalizados (4) programados a un grupo
      */
     function evs_links($busqueda)
     {
@@ -868,6 +867,58 @@ class Evento_Model extends CI_Model{
         
         $this->db->select('*');
         $this->db->where('tipo_id', 4); //Tipo 4 => programacion de links
+        $query = $this->db->get('evento');
+        
+        return $query;
+    }
+
+
+    /**
+     * Links internos asignados (5) programados a un grupo
+     * 2020-03-25
+     */
+    function evs_links_internos($busqueda)
+    {
+        //Filtros
+        if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
+        if ( $busqueda['g'] != '' ) { $this->db->where('grupo_id', $busqueda['g']); }    //Grupo
+        
+        if ( $this->session->userdata('rol_id') == 6 ) {
+            //Estudiante
+            $this->db->where('grupo_id', $this->session->userdata('grupo_id'));
+        } else {
+            //Los que corresponden a sus grupos
+            $str_grupos = implode(',', $this->session->userdata('arr_grupos'));
+            $this->db->where("grupo_id IN ($str_grupos)");
+        }
+        
+        $this->db->where('tipo_id', 5); //Tipo 5 => programacion de links internos
+        $query = $this->db->get('evento');
+        
+        return $query;
+    }
+
+    /**
+     * Sesiones virtuales programadas (6)
+     * 2020-04-21
+     */
+    function evs_sesionv($busqueda)
+    {
+        //Filtros
+        if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
+        if ( $busqueda['g'] != '' ) { $this->db->where('grupo_id', $busqueda['g']); }    //Grupo
+        if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_id', $busqueda['tp']); }    //Tipo, filtro adicional
+        
+        if ( $this->session->userdata('rol_id') == 6 ) {
+            //Estudiante
+            $this->db->where('grupo_id', $this->session->userdata('grupo_id'));
+        } else {
+            //Los que corresponden a sus grupos
+            $str_grupos = implode(',', $this->session->userdata('arr_grupos'));
+            $this->db->where("grupo_id IN ($str_grupos)");
+        }
+        
+        $this->db->where('tipo_id', 6); //Tipo 6 => sesión virtual programada
         $query = $this->db->get('evento');
         
         return $query;
@@ -904,6 +955,39 @@ class Evento_Model extends CI_Model{
         
         return $evento_id;
         
+    }
+
+// AYUDAS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Array con opciones para select, de horas del día
+     * 2020-04-23
+     */
+    function opciones_hora()
+    {
+        $opciones_hora = array();
+        for ($i=0; $i < 24; $i++) { 
+            $value = substr('0' . $i,-2) . ' am';
+            if ( $i > 12 ) { $value = substr('0' . ($i-12),-2) . ' pm'; }
+            $opciones_hora[$i] = $value;
+        }
+
+        return $opciones_hora;
+    }
+
+    /**
+     * Array con opciones para select, de minutos de una hora
+     * 2020-04-23
+     */
+    function opciones_minuto($lapse = 5)
+    {
+        $opciones_minuto = array();
+        for ($i=0; $i < 60; $i += $lapse) { 
+            $opciones_minuto[$i] = substr('0' . $i,-2);
+        }
+
+        return $opciones_minuto;
     }
     
 }

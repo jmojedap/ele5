@@ -17,13 +17,19 @@
     }
 
     .bitacora h2{
-        color: #FFF;
-        background-color: #4fc3f7;
-        padding: 3px;
+        color: #1565c0;
+        padding-left: 0px;
     }
 
     .bitacora h3{
         color: #89CB4E;
+        padding-left: 1em;
+    }
+
+    .bitacora .bitacora_post{
+        margin-bottom: 1em;
+        border-bottom: 1px solid #CCC;
+        padding-bottom: 1em;
     }
 </style>
 
@@ -104,34 +110,34 @@
                     <?php
                         $cl_costo = ( $row_bitacora->costo > 0) ? 'alert-info' : 'alert-success';
                     ?>
-                    <?php if ( $row_bitacora->modulo != $modulo_ant ) { ?>
-                        <h2><?php echo $row_bitacora->modulo ?></h2>
-                    <?php } ?>
-                    <h3>
-                        <?php echo $row_bitacora->elemento ?>: <?php echo $row_bitacora->nombre_post ?>
-                    </h3>
-                    
-                    <p>
-                        <?php echo $this->Pcrn->fecha_formato($row_bitacora->fecha, 'Y-M-d') ?>
-                    </p>
-                    <?php echo $row_bitacora->contenido ?>
-                    <br>
-
-                        <?php if ( $row_bitacora->costo > 0 ) { ?>
-                            <div class="alert <?php echo $cl_costo ?>">
-                                Costo: <b>$<?php echo number_format($row_bitacora->costo, 0) ?></b>
-                            </div>
-                        <?php } else { ?>
-                            <div class="alert <?php echo $cl_costo ?>">
-                                Costo: <b>$0</b> (Costo incluído en pagos del contrato de soporte permanente)
-                            </div>
+                    <div class="bitacora_post">
+                        <?php if ( $row_bitacora->modulo != $modulo_ant ) { ?>
+                            <h2><?php echo $row_bitacora->modulo ?></h2>
                         <?php } ?>
+                        <h3>
+                            <?php echo $row_bitacora->elemento ?>: <?php echo $row_bitacora->nombre_post ?>
+                        </h3>
+                        
+                        <p>
+                            <?php echo $this->Pcrn->fecha_formato($row_bitacora->fecha, 'Y-M-d') ?>
+                        </p>
+                        <?php echo $row_bitacora->contenido ?>
+                        <br>
+
+                            <?php if ( $row_bitacora->costo > 0 ) { ?>
+                                <div class="alert <?php echo $cl_costo ?>">
+                                    Costo: <b>$<?php echo number_format($row_bitacora->costo, 0) ?></b>
+                                </div>
+                            <?php } else { ?>
+                                <div class="alert <?php echo $cl_costo ?>">
+                                    Costo: <b>$0</b> (Costo incluído en pagos del contrato de soporte permanente)
+                                </div>
+                            <?php } ?>
 
 
-                    <br/>
-                    <a href="<?php echo base_url("posts/editar/{$row_bitacora->id}") ?>" class="btn btn-success btn-sm" target="_blank">Editar</a>
-                    <br/>
-                    <hr>
+                        <br/>
+                        <a href="<?php echo base_url("posts/editar/{$row_bitacora->id}") ?>" class="btn btn-success btn-sm" target="_blank">Editar</a>
+                    </div>
                 <?php
                     $modulo_ant = $row_bitacora->modulo;
                 ?>

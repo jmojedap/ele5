@@ -35,11 +35,6 @@ class Recursos extends CI_Controller{
         redirect("recursos/{$elemento}/?{$busqueda_str}");
     }
     
-    function explorar()
-    {
-        
-    }
-    
 //ARCHIVOS
 //---------------------------------------------------------------------------------------------------
     
@@ -279,49 +274,55 @@ class Recursos extends CI_Controller{
     
 //LINKS
 //---------------------------------------------------------------------------------------------------
-    
+
     /**
-     * Exploración de recursos tipo link externo
-     */    
+     * Exploración de links
+     * 2020-03-21
+     */
     function links()
     {
-        $this->load->model('Busqueda_model');
-        $this->load->helper('text');
-        
-        //Datos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
-            $resultados_total = $this->Recurso_model->links($busqueda); //Para calcular el total de resultados
-        
-        //Paginación
-            $this->load->library('pagination');
-            $config = $this->App_model->config_paginacion(2);
-            $config['base_url'] = base_url("recursos/links/?{$busqueda_str}");
-            $config['total_rows'] = $resultados_total->num_rows();
-            $this->pagination->initialize($config);
+        //Datos básicos de la exploración
+        $data = $this->Recurso_model->links_explore_data(1);
+                
+        //Opciones de filtros de búsqueda
+            $data['options_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
+            $data['options_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Todos');
+            $data['options_componente'] = $this->Item_model->opciones_id('categoria_id = 8', 'Todos');
             
-        //Generar resultados para mostrar
-            $offset = $this->input->get('per_page');
-            $resultados = $this->Recurso_model->links($busqueda, $config['per_page'], $offset);
-        
-        //Variables para vista
-            $data['cant_resultados'] = $config['total_rows'];
-            $data['busqueda'] = $busqueda;
-            $data['busqueda_str'] = $busqueda_str;
-            $data['resultados'] = $resultados;
-        
-        //Solicitar vista
-            $data['titulo_pagina'] = 'Links';
-            $data['subtitulo_pagina'] = number_format($data['cant_resultados'],0,',', '.');
-            $data['vista_a'] = 'recursos/links/explorar_v';
-            $data['vista_menu'] = 'recursos/links/explorar_menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+        //Arrays con valores para contenido en la tabla
+            $data['arr_areas'] = $this->Item_model->arr_item('1', 'id_nombre_corto');
+            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 156');
+            $data['arr_componentes'] = $this->Item_model->arr_item('categoria_id = 8', 'id');
+
+        //Especiales
+            $str_grupos = ( count($this->session->userdata('arr_grupos')) > 0 ) ? implode(',', $this->session->userdata('arr_grupos')) : '0' ;
+            //$data['str_grupos'] = $str_grupos;
+            $data['options_grupo'] = $this->App_model->opciones_grupo("grupo.id IN ({$str_grupos})");
+            
+        //Cargar vista
+            $this->App_model->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * Listado de links, filtrados por búsqueda, JSON
+     */
+    function links_get($num_page = 1)
+    {
+        $data = $this->Recurso_model->links_get($num_page);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    function links_programar()
+    {
+        $data = $this->Recurso_model->links_programar();
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**
      * Exporta el resultado de la búsqueda a un archivo de Excel
      */
-    function exportar_links()
+    function links_exportar()
     {
         set_time_limit(120);    //120 segundos, 2 minutos para el proceso
         //Cargando
@@ -355,72 +356,107 @@ class Recursos extends CI_Controller{
                 $this->load->view(PTL_ADMIN, $data);
             }
     }
+
+    /**
+     * Vista gestión links programados por el usuario en sesión a sus grupos
+     * 2020-03-27
+     */
+    function links_programados()
+    {
+        //Arrays con valores para contenido en la tabla
+            $data['arr_areas'] = $this->Item_model->arr_item('1', 'id_nombre_corto');
+            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 156');
+            $data['arr_componentes'] = $this->Item_model->arr_item('categoria_id = 8', 'id');
+
+        //Variables vista
+            $data['view_a'] = 'recursos/links/programados_v';
+            $data['nav_2'] = 'recursos/links/explore/menu_v';
+            $data['head_title'] = 'Links';
+            $data['head_subtitle'] = 'Programados';
+            
+        $this->App_model->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * JSON lista links programados por el usuario en sesión a sus grupos
+     */
+    function get_links_programados()
+    {
+        $links = $this->Recurso_model->links_programados();
+        $data['list'] = $links->result();
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * Actualiza el campo recurso.palabras_clave de forma automática
+     */
+    function links_update_palabras_clave_auto()
+    {
+        $data = $this->Recurso_model->links_update_palabras_clave_auto();
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
     
     /**
      * Mostrar formulario de importación de links mediante archivo MS Excel.
      * El resultado del formulario se envía a 'recursos/importar_links_e'
-     * 
-     * @param type $programa_id
+     * 2020-04-02
      */
-    function importar_links()
+    function links_importar()
     {
-        
         //Iniciales
-            $nombre_archivo = '06_formato_cargue_links.xlsx';
-            $parrafos_ayuda = array();
+            $template_file_name = '06_formato_cargue_links.xlsx';
+            $help_tips = array();
         
         //Instructivo
-            $data['titulo_ayuda'] = '¿Cómo importar links?';
-            $data['nota_ayuda'] = 'Se importarán recursos tipo link a la Plataforma.';
-            $data['parrafos_ayuda'] = $parrafos_ayuda;
+            $data['help_note'] = 'Se importarán recursos tipo link a la Plataforma.';
+            $data['help_tips'] = $help_tips;
         
         //Variables específicas
-            $data['destino_form'] = 'recursos/importar_links_e';
-            $data['nombre_archivo'] = $nombre_archivo;
-            $data['nombre_hoja'] = 'links';
-            $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
+            $data['destination_form'] = 'recursos/links_importar_e';
+            $data['template_file_name'] = $template_file_name;
+            $data['sheet_name'] = 'links';
+            $data['url_file'] = base_url("assets/formatos_cargue/{$template_file_name}");
             
         //Variables generales
-            $data['titulo_pagina'] = 'Links';
-            $data['subtitulo_pagina'] = 'Importar links';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'recursos/links/explorar_menu_v';
+            $data['head_title'] = 'Links';
+            $data['head_subtitle'] = 'Importar';
+            $data['view_a'] = 'common/import_v';
+            $data['nav_2'] = 'recursos/links/explore/menu_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
      * Importar links, (e) ejecutar.
+     * 2020-04-02
      */
-    function importar_links_e()
+    function links_importar_e()
     {
-        
         //Proceso
-            $this->load->model('Pcrn_excel');
-            $no_importados = array();
-            $letra_columna = 'C';   //Última columna con datos
-            
-            $resultado = $this->Pcrn_excel->array_hoja_default($letra_columna);
-
-            if ( $resultado['valido'] )
-            {
-                $this->load->model('Tema_model');
-                $no_importados = $this->Recurso_model->importar_links($resultado['array_hoja']);
-            }
+        $this->load->library('excel_new');            
+        $imported_data = $this->excel_new->arr_sheet_default($this->input->post('sheet_name'));
         
+        if ( $imported_data['status'] == 1 )
+        {
+            $data = $this->Recurso_model->links_importar($imported_data['arr_sheet']);
+        }
+
         //Cargue de variables
-            $data['valido'] = $resultado['valido'];
-            $data['mensaje'] = $resultado['mensaje'];
-            $data['array_hoja'] = $resultado['array_hoja'];
-            $data['nombre_hoja'] = $this->input->post('nombre_hoja');
-            $data['no_importados'] = $no_importados;
-            $data['destino_volver'] = "programas/explorar/";
+            $data['status'] = $imported_data['status'];
+            $data['message'] = $imported_data['message'];
+            $data['arr_sheet'] = $imported_data['arr_sheet'];
+            $data['sheet_name'] = $this->input->post('sheet_name');
+            $data['back_destination'] = "recursos/links/";
+            $data['cf_open'] = 'users/info/';
         
         //Cargar vista
-            $data['titulo_pagina'] = 'Links';
-            $data['subtitulo_pagina'] = 'Resultado importación';
-            $data['vista_a'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'recursos/links/explorar_menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_title'] = 'Links';
+            $data['head_subtitle'] = 'Resultado importación';
+            $data['view_a'] = 'common/import_result_v';
+            $data['nav_2'] = 'recursos/links/explore/menu_v';
+
+        $this->App_model->view(TPL_ADMIN, $data);
     }
 }

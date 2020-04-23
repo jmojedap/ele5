@@ -274,6 +274,31 @@ class Cuestionario_model extends CI_Model
     
 //CRUD CUESTIONARIOS
 //---------------------------------------------------------------------------------------------------
+
+    function insert()
+    {
+        $arr_row['nombre_cuestionario'] = $this->input->post('nombre_cuestionario');
+        $arr_row['anio_generacion'] = date('Y');
+        $arr_row['nivel'] = $this->input->post('nivel');
+        $arr_row['area_id'] = $this->input->post('area_id');
+        $arr_row['tiempo_minutos'] = 120;
+        $arr_row['institucion_id'] = $this->session->userdata('institucion_id');
+        $arr_row['tipo_id'] = 4;
+        $arr_row['interno'] = 0;   //No es de En Línea Editores
+        $arr_row['privado'] = 1;
+        $arr_row['prueba_periodica'] = 0;
+        $arr_row['descripcion'] = 'Creado con SelectorP';
+        $arr_row['creado'] = date('Y-m-d H:i:s');
+        $arr_row['editado'] = date('Y-m-d H:i:s');
+        $arr_row['creado_usuario_id'] = $this->session->userdata('usuario_id');
+        $arr_row['editado_usuario_id'] = $this->session->userdata('usuario_id');
+        
+        $this->db->insert('cuestionario', $arr_row);
+        $data['saved_id']  = $this->db->insert_id();
+        
+        return $data;
+    }
+
     /**
      * Elimina registro en la tabla cuestionario, y los registro en tablas relacionadas
      */
@@ -3012,4 +3037,10 @@ class Cuestionario_model extends CI_Model
         return $objeto_archivo;
                 
     }
+
+// SelectorP - Constructor de cuestionarios
+//-----------------------------------------------------------------------------
+
+
+
 }

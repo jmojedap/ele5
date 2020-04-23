@@ -270,18 +270,17 @@ class Mensaje_model extends CI_Model{
         
         $conversacion_id = $this->db->insert_id();
         
-        $this->agregar_usuario($conversacion_id, $registro['usuario_id']);
+        $this->agregar_usuario($conversacion_id, $registro['usuario_id']);  //Agrega al usuario creador de la conversación
         
-        return $conversacion_id;
-        
+        return $conversacion_id;   
     }
     
-    function nuevo_grupal($grupo_id)
+    function nuevo_grupal($grupo_id, $arr_row = null)
     {       
-        $registro['tipo_id'] = 2;   //Grupal
-        $registro['referente_id'] = $grupo_id;
+        $arr_row['tipo_id'] = 2;   //Grupal
+        $arr_row['referente_id'] = $grupo_id;
                 
-        $conversacion_id = $this->nuevo($registro);
+        $conversacion_id = $this->nuevo($arr_row);
         
         $this->db->where('grupo_id', $grupo_id);
         $usuarios = $this->db->get('usuario_grupo');
@@ -444,34 +443,40 @@ class Mensaje_model extends CI_Model{
      * 
      * @return type
      */
-    function guardar()
+    function guardar($arr_row = null)
     {
-        $registro['conversacion_id'] = $this->input->post('conversacion_id');
-        $registro['texto_mensaje'] = $this->input->post('texto_mensaje');
-        $registro['url'] = $this->input->post('url');
-        $registro['usuario_id'] = $this->session->userdata('usuario_id');
-        $registro['enviado'] = date('Y-m-d H:i:s');
+        if ( is_null($arr_row) )
+        {
+            $arr_row['conversacion_id'] = $this->input->post('conversacion_id');
+            $arr_row['texto_mensaje'] = $this->input->post('texto_mensaje');
+            $arr_row['url'] = $this->input->post('url');
+        }
+        $arr_row['usuario_id'] = $this->session->userdata('usuario_id');
+        $arr_row['enviado'] = date('Y-m-d H:i:s');
         
-        $this->db->insert('mensaje', $registro);
+        $this->db->insert('mensaje', $arr_row);
         
         return $this->db->insert_id();
     }
     
     /**
      * Enviar el mensaje a todos los usuarios asociados a la conversación
-     * 
-     * @param type $mensaje_id
+     * 2020-04-22
      */
-    function enviar($mensaje_id)
+    function enviar($mensaje_id, $conversacion_id = 0)
     {
-        $conversacion_id = $this->input->post('conversacion_id');
+        if ( $conversacion_id == 0 ) 
+        {
+            $conversacion_id = $this->input->post('conversacion_id');
+        }
         
         $registro['mensaje_id'] = $mensaje_id;
         $registro['estado']= 0; //Se envía con estado 0, no leído
         
         $usuarios = $this->destinatarios($conversacion_id);
         
-        foreach ($usuarios->result() as $row_usuario) {
+        foreach ($usuarios->result() as $row_usuario)
+        {
             $registro['usuario_id'] = $row_usuario->usuario_id;
             $this->db->insert('mensaje_usuario', $registro);
         }
@@ -599,5 +604,30 @@ class Mensaje_model extends CI_Model{
                 $this->db->delete('mensaje_usuario');
             }
         }
+    }
+
+    /**
+     * Enviar mensaje automático sobre la programación de un evento tipo sesión virtual (6)
+     * Se envia mensaje a los estudiantes de todo el grupo.
+     * 2020-04-22
+     */
+    function automatico_sesionv($evento_id, $arr_evento)
+    {
+        //Crear conversación
+        $arr_conversacion['asunto'] = 'Tienes una sesión virtual: ' . $this->pml->date_format($arr_evento['fecha_inicio'], 'd/M') . ' ' . $arr_evento['hora_inicio'];
+        $conversacion_id = $this->nuevo_grupal($arr_evento['grupo_id'], $arr_conversacion);
+
+        //Crear y enviar mensaje
+        $arr_mensaje['conversacion_id'] = $conversacion_id;
+        $arr_mensaje['texto_mensaje'] = 'Programé una sesión virtual para tu grupo, se realizará el ';
+        $arr_mensaje['texto_mensaje'] .= $this->pml->date_format($arr_evento['fecha_inicio'], 'd/M') . ' a las ';
+        $arr_mensaje['texto_mensaje'] .= $arr_evento['hora_inicio'] . '. La sesión virtual tratará: ';
+        $arr_mensaje['texto_mensaje'] .= $arr_evento['descripcion'] . '. ';
+        $arr_mensaje['texto_mensaje'] .= 'Para acceder a la sesión virtual haz clic en siguiente enlace: ';
+        $arr_mensaje['url'] = $arr_evento['url'];
+        $mensaje_id = $this->guardar($arr_mensaje);
+        $this->enviar($mensaje_id, $conversacion_id);
+
+        return $conversacion_id;
     }
 }

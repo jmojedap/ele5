@@ -14,6 +14,5 @@
             language: "es",
             weekStart: 0 // day of the week start. 0 for Sunday - 6 for Saturday
         });
-        
     });
 </script>

@@ -1,7 +1,3 @@
-<?php
-    $colores_evento = $this->App_model->arr_item(13, 'color');
-?>
-
 <script>
 // VARIABLES
 //---------------------------------------------------------------------------------------------------------
@@ -24,7 +20,6 @@ $(document).ready(function(){
         plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'bootstrap' ],
         themeSystem: 'bootstrap',
         defaultView: 'dayGridMonth',
-        //defaultDate: '2019-01-05',
         defaultDate: '<?php echo date('Y-m-d') ?>',
         header: {
             left: 'prev,next today',
@@ -66,7 +61,7 @@ $(document).ready(function(){
                 },
             <?php endforeach ?>
             
-            //Eventos, programación de links
+            //Eventos, programación de links personalizados
             <?php foreach ($eventos[4]->result() as $row_evento) : ?>
                 <?php
                     $color = $colores_evento[4];
@@ -83,6 +78,40 @@ $(document).ready(function(){
                     grupo_id: '0<?php echo $row_evento->grupo_id ?>'
                 },
             <?php endforeach ?>
+
+            //Eventos, programación de links internos (5)
+            <?php foreach ($eventos[5]->result() as $row_evento) : ?>
+                <?php
+                    $color = $colores_evento[5];
+                ?>
+                {
+                    id: <?= $row_evento->id ?>,
+                    title: 'LINK >> <?= $this->Pcrn->texto_url($row_evento->url) ?>',
+                    start: '<?= $row_evento->fecha_inicio ?>',
+                    end: '<?= $row_evento->fecha_inicio ?>',
+                    url: '<?php echo $row_evento->url ?>',
+                    color : '<?= $color ?>',
+                    tipo: 'link_interno',
+                    fecha_inicio: '<?php echo $row_evento->fecha_inicio ?>',
+                    grupo_id: '0<?php echo $row_evento->grupo_id ?>'
+                },
+            <?php endforeach ?>
+
+            //Eventos, programación de sesiones virtuales (6)
+            <?php foreach ($eventos[6]->result() as $row_evento) : ?>
+                {
+                    id: <?= $row_evento->id ?>,
+                    title: 'Sesión Virtual >> <?= $this->Pcrn->texto_url($row_evento->url) ?>',
+                    start: '<?= $row_evento->fecha_inicio ?>',
+                    end: '<?= $row_evento->fecha_inicio ?>',
+                    url: '<?= $row_evento->url ?>',
+                    color : '<?= $colores_evento[6] ?>',
+                    tipo: 'sesion_virtual',
+                    descripcion: '<?php echo $row_evento->descripcion ?>',
+                    fecha_inicio: '<?php echo $row_evento->fecha_inicio ?>',
+                    grupo_id: '0<?php echo $row_evento->grupo_id ?>'
+                },
+            <?php endforeach ?>
         ],
         eventClick: function(info) {
             info.jsEvent.preventDefault(); // don't let the browser navigate
@@ -92,6 +121,11 @@ $(document).ready(function(){
                 evento_id = info.event.id;
                 cargar();
                 $('#evento_modal').modal('toggle');
+                return false;
+            } else if ( info.event.extendedProps.tipo === 'sesion_virtual' ) {
+                evento_id = info.event.id;
+                cargar_sesionv();
+                $('#sesionv_modal').modal('toggle');
                 return false;
             } else {
                 window.open(info.event.url, "_blank");
@@ -126,7 +160,7 @@ $(document).ready(function(){
     /** Guardar evento */
     $('#evento_form').submit(function(){
         
-        $.ajax({        
+        $.ajax({     
             type: 'POST',
             url: base_url + 'eventos/guardar_ev_link/' + evento_id,
             data: $('#evento_form').serialize(),
@@ -151,8 +185,46 @@ $(document).ready(function(){
         return false;
     });
 
+    $('.new_sesionv').click(function(){
+        //console.log($(this).data('mvl'));
+        $('#sesionv_img').attr('src', $(this).data('src'));
+        $('#sesionv-referente_2_id').val($(this).data('mvl'));
+        limpiar_sesionv();
+    });
+
+    /** Guardar evento programar sesión virtual */
+    $('#sesionv_form').submit(function(){
+        
+        $.ajax({     
+            type: 'POST',
+            url: base_url + 'eventos/guardar_ev_sesionv/' + evento_id,
+            data: $('#sesionv_form').serialize(),
+            success: function(response){
+                toastr['success']('Evento guardado');
+                var event = {
+                    id: response.saved_id,
+                    title: 'Sesión Virtual >> ' + $('#sesionv-url').val(),
+                    start: $('#sesionv-fecha_inicio').val(),
+                    end: $('#sesionv-fecha_inicio').val(),
+                    url: $('#sesionv-url').val(),
+                    color: '<?php echo $colores_evento[6] ?>',
+                    grupo_id: '0' + $('#sesionv-grupo_id').val(),
+                    fecha_inicio: $('#sesionv-fecha_inicio').val(),
+                    tipo: 'sesion_virtual'
+                };
+                //console.log(event);
+                $('#sesionv_modal').modal('toggle');
+                if ( evento_id == 0 ) {
+                    console.log(evento_id);
+                    calendar.addEvent(event);
+                }
+            }
+        });
+        return false;
+    });
+
     /** Eliminar Evento Link */
-    $('#eliminar_link').click(function(){
+    $('.eliminar_link').click(function(){
         
         $.ajax({
            type: 'POST',
@@ -167,7 +239,8 @@ $(document).ready(function(){
                     $('#field-fecha_inicio').val('');
                     $('#field-grupo_id').val('');
                     
-                    $('#evento_modal').modal('toggle');
+                    $('#evento_modal').modal('hide');
+                    $('#sesionv_modal').modal('hide');
                     toastr['info']('Evento eliminado');
                 }
             }
@@ -187,7 +260,35 @@ $(document).ready(function(){
         $('#field-grupo_id').val(event.extendedProps.grupo_id);
         $('#link_evento_actual').attr('href', event.url);            
         $('#link_evento_actual').show();
-        $('#eliminar_link').show();
+        $('.eliminar_link').show();
+    }
+
+    /**
+    * Cargar valores de evento enlace en formulario sesión virtual
+    */
+    function cargar_sesionv()
+    {
+        var event = calendar.getEventById(evento_id);
+
+        //Formulario
+        $('#sesionv-url').val(event.url);
+        $('#sesionv-fecha_inicio').val(event.extendedProps.fecha_inicio);
+        $('#sesionv-grupo_id').val(event.extendedProps.grupo_id);
+        $('#sesionv-descripcion').val(event.extendedProps.descripcion);
+        $('#sesionv_link_evento_actual').attr('href', event.url);            
+        $('#sesionv_link_evento_actual').show();
+        $('.eliminar_link').show();
+    }
+
+    function limpiar_sesionv()
+    {
+        evento_id = 0;
+        $('#sesionv-url').val('');
+        $('#sesionv-fecha_inicio').val('<?= date('Y-m-d') ?>');
+        $('#sesionv-grupo_id').val('');
+        $('#sesionv-descripcion').val('');
+        $('.eliminar_link').hide();
+        $('#sesionv_link_evento_actual').hide();
     }
 
     $('.fc-next-button').click(function() { act_mes_actual(); });
