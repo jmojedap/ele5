@@ -897,6 +897,32 @@ class Evento_Model extends CI_Model{
         
         return $query;
     }
+
+    /**
+     * Sesiones virtuales programadas (6)
+     * 2020-04-21
+     */
+    function evs_sesionv($busqueda)
+    {
+        //Filtros
+        if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
+        if ( $busqueda['g'] != '' ) { $this->db->where('grupo_id', $busqueda['g']); }    //Grupo
+        if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_id', $busqueda['tp']); }    //Tipo, filtro adicional
+        
+        if ( $this->session->userdata('rol_id') == 6 ) {
+            //Estudiante
+            $this->db->where('grupo_id', $this->session->userdata('grupo_id'));
+        } else {
+            //Los que corresponden a sus grupos
+            $str_grupos = implode(',', $this->session->userdata('arr_grupos'));
+            $this->db->where("grupo_id IN ($str_grupos)");
+        }
+        
+        $this->db->where('tipo_id', 6); //Tipo 6 => sesión virtual programada
+        $query = $this->db->get('evento');
+        
+        return $query;
+    }
     
 // GESTIÓN DE EVENTO LOGIN
 //-----------------------------------------------------------------------------

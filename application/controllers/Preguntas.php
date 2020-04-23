@@ -50,7 +50,10 @@ class Preguntas extends CI_Controller{
             $data['arr_nivel'] = $this->Item_model->arr_interno('categoria_id = 3');
 
         //Especiales
-            $data['qty_selectorp'] = count($this->session->userdata('arr_selectorp'));
+            $data['qty_selectorp'] = 0;
+            if ( ! is_null($this->session->userdata('arr_selectorp')) ) {
+                $data['qty_selectorp'] = count($this->session->userdata('arr_selectorp'));
+            }
             
         //Cargar vista
             $this->App_model->view(TPL_ADMIN, $data);
