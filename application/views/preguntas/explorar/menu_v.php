@@ -9,7 +9,7 @@
         $arr_menus['explorar'] = array(
             'icono' => '<i class="fa fa-list-alt"></i>',
             'texto' => 'Explorar',
-            'link' => "preguntas/explorar/",
+            'link' => "preguntas/explorar/?tp=01",
             'atributos' => 'title="Explorar grupos"'
         );
             

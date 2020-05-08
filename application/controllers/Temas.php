@@ -827,10 +827,10 @@ class Temas extends CI_Controller{
             $data = $this->Tema_model->basico($tema_id, $orden);
 
         //Ejecutar búsqueda
-            $this->load->model('Busqueda_model');
-            $busqueda = $this->Busqueda_model->busqueda_array();
+            $this->load->model('Search_model');
+            $filters = $this->Search_model->filters();
             $this->load->model('Pregunta_model');
-            $resultados = $this->Pregunta_model->buscar($busqueda, 100, 0);
+            $resultados = $this->Pregunta_model->search($filters, 100, 0);
             
         //Grocery crud para agregar nueva pregunta
             $this->session->set_userdata('tema_id', $tema_id);
@@ -845,7 +845,7 @@ class Temas extends CI_Controller{
             if ( $proceso == 'add' ){ $data['view_a'] = 'temas/agregar_pregunta_add_v'; }
             
         //Variables
-            $data['busqueda'] = $busqueda;
+            $data['filters'] = $filters;
             $data['proceso'] = $proceso;
             $data['orden'] = $orden;
             $data['orden_mostrar'] = $orden + 1;

@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 
         <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/style.css">
-        <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/style_add.css">
+        <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/style_add_01.css">
         <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>css/pel.css">
         <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES . 'css/abc_checkbox.css' ?>">
 

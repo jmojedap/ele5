@@ -59,8 +59,8 @@
             </a>
         </li>
         
-        <li class="">
-            <a href="<?= base_url() ?>usuarios/contrasena/" class="<?= $clase_m['contrasena'] ?>"><i class="fa fa-2x fa-lock"></i><span>contrasena</span></a>
+        <li>
+            <a href="<?php echo base_url("usuarios/contrasena") ?>" class="<?= $clase_m['contrasena'] ?>"><i class="fa fa-2x fa-lock"></i><span>contraseña</span></a>
         </li>
         
         <li class="">

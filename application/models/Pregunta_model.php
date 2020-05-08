@@ -142,13 +142,26 @@ class Pregunta_model extends CI_Model{
     /**
      * Devuelve la cantidad de registros encontrados en la tabla con los filtros
      * establecidos en la búsqueda
-     * 
-     * @param type $filters
-     * @return type
+     * 2020-04-28 (Modificación esperando evitar cargue de memoria)
      */
     function search_num_rows($filters)
     {
-        $query = $this->search($filters); //Para calcular el total de resultados
+        $role_filter = $this->role_filter($this->session->userdata('post_id'));
+
+        $words_condition = $this->Search_model->words_condition($filters['q'], array('texto_pregunta', 'enunciado_2', 'palabras_clave'));
+        if ( $words_condition )
+        {
+            $this->db->where($words_condition);
+        }
+
+        $this->db->select('id');
+        $this->db->where($role_filter); //Filtro según el rol de post en sesión
+        $this->db->where('tipo_pregunta_id < 20');  //Tipos de pregunta, no incluir versiones propuestas
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+
+        $query = $this->db->get('pregunta'); //Resultados totales
+
         return $query->num_rows();
     }
     

@@ -127,7 +127,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="<?= base_url('preguntas/explorar')?>" class="<?= $clase_sm['cuestionarios-preguntas'] ?>">
+                    <a href="<?= base_url('preguntas/explorar/?tp=01')?>" class="<?= $clase_sm['cuestionarios-preguntas'] ?>">
                         <i class="fa fa-question"></i>
                         <span>preguntas</span>
                     </a>
@@ -136,7 +136,10 @@
 
         </li>
         
-        <li title="Links para asingar y programar a grupos de estudiantes">
+        <li title="Links para asingar y programar a grupos de estudiantes" class="d-none hidden">
+            <a href="<?php echo base_url('recursos/links') ?>" class="<?php echo $clase_m['recursos'] ?>"><i class="fa fa-2x fa-link"></i><span>links</span></a>
+        </li>
+        <li title="Links para asingar y programar a grupos de estudiantes" class="d-none hidden">
             <a href="<?php echo base_url('recursos/links') ?>" class="<?php echo $clase_m['recursos'] ?>"><i class="fa fa-2x fa-link"></i><span>links</span></a>
         </li>
         <li title="Estadísticas de uso y desempeño en la plataforma">
@@ -147,6 +150,10 @@
             <a href="<?= base_url() . 'mensajes/conversacion/0'?>" class="<?= $clase_m['mensajes'] ?>">
                 <?php $this->load->view('plantilla_apanel/menu_mensajes_v'); ?>
             </a>
+        </li>
+
+        <li>
+            <a href="<?php echo base_url("usuarios/contrasena") ?>" class="<?= $clase_m['contrasena'] ?>"><i class="fa fa-2x fa-lock"></i><span>contraseña</span></a>
         </li>
         
         <li>

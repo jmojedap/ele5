@@ -82,42 +82,22 @@
                         </button>
                     <?php } ?>
 
-                    <?php $this->load->view('flipbooks/leer_cd/preguntas_abiertas_v') ?>
-
-                    <!-- LECTURA ESPECIAL -->
-                    <a 
-                        class="btn btn-light btn-block"
-                        title=""
-                        href="#"
-                        data-toggle="modal"
-                        data-target="#lectura_modal"
-                        v-on:click="cargar_lectura"
-                        v-for="lectura in data.lecturas"
-                        v-show='num_pagina == lectura.num_pagina'
-                        >
-                        <img src="<?php echo $carpeta_iconos . 'cd_lectura.png' ?>">
-                    </a>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="lectura_modal" tabindex="-1" role="dialog" aria-labelledby="lectura_modal" aria-hidden="true">
-                        <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Lectura Especial</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body" style="min-height: 350px;">
-                                <div id="lectura_modal_contenido"></div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary btn_stop_ledin" data-dismiss="modal">Cerrar</button>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
+                    <?php $this->load->view('flipbooks/leer_ut/preguntas_abiertas_v') ?>
                 
+                    <!-- EVIDENCIAS -->
+                    <div id="listado_quices" class="collapse_no sep2">
+                        <a
+                            class="btn btn-light btn-block"
+                            title="Evidencia de aprendizaje sobre este tema"
+                            target="_blank"
+                            v-for="quiz in data.quices"
+                            v-bind:href="`<?= base_url('quices/iniciar/') ?>` + quiz.quiz_id"
+                            v-show='num_pagina == quiz.num_pagina'
+                            >
+                            <img src="<?= URL_IMG ?>flipbook/quices_v5.png" alt="Imagen acceso a evidencia de aprendizaje">
+                        </a>
+                    </div>
+
                     <!-- LINKS -->
                     <div id="listado_links" class="collapse_no sep2">
                         <a
@@ -128,13 +108,87 @@
                             v-bind:href="link.url"
                             v-show='num_pagina == link.num_pagina'
                             >
-                            <span v-if="link.titulo">{{ link.titulo }}</span>
-                            <span v-else>
-                                <i class="fas fa-external-link-alt"></i>
-                                Enlace
-                            </span>
+                            <img src="<?= URL_IMG ?>flipbook/link_v5.png" alt="Imagen acceso a evidencia de aprendizaje">
                         </a>
                     </div>
+
+                    <!--HERRAMIENTAS ADICIONALES-->
+                    <?php if ( $elementos_fb['herramientas_adicionales'] ){ ?>
+                        <div class="dropdown sep2">
+                            <button class="btn btn-light btn-block" type="button" data-toggle="dropdown" data-submenu="" aria-expanded="false">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </button>
+
+                            <ul class="dropdown-menu">
+                                <?php if ( $elementos_fb['crear_cuestionario'] ){ ?>
+                                    <a class="dropdown-item" href="<?php echo base_url("flipbooks/crear_cuestionario/{$row->id}") ?>" title="Crear cuestionario a partir de los temas de este libro" target="_blank">
+                                        <i class="fa fa-plus"></i>
+                                        Cuestionario
+                                    </a>
+                                <?php } ?>
+
+                                <?php if ( $elementos_fb['programar_temas'] ){ ?>
+                                    <a class="dropdown-item" href="<?php echo base_url("flipbooks/programar_temas/{$row->id}") ?>" title="Programar temas de contenido" target="_blank">
+                                        <i class="far fa-calendar"></i> Programar
+                                    </a>
+                                <?php } ?>
+
+                                <?php if ( $elementos_fb['plan_aula'] ){ ?>
+                                    <a
+                                        class="dropdown-item recurso"
+                                        title="Ver plan de aula"
+                                        target="_blank"
+                                        v-for="plan_aula in data.planes_aula"
+                                        v-bind:href="'<?php echo URL_UPLOADS ?>' + plan_aula.ubicacion"
+                                        v-show='num_pagina == plan_aula.num_pagina'
+                                        >
+                                        <i class="fa fa-book"></i> Planeador de clases
+                                    </a>
+                                <?php } ?>
+
+                                <!--TEMAS RELACIONADOS-->
+                                <?php if ( $elementos_fb['temas_relacionados'] ){ ?>
+
+                                    <li class="dropdown-divider"></li>
+                                    <li class="dropdown-header">Saberes previos</li>
+                                    
+                                    <a
+                                        class="dropdown-item"
+                                        v-for="tema in data.relacionados[1]"
+                                        v-show='num_pagina == tema.num_pagina'
+                                        v-bind:href="'<?php echo base_url('temas/leer/') ?>' + tema.relacionado_id"
+                                        target="_blank">
+                                        {{ tema.nombre_tema_relacionado }}
+                                    </a>
+
+                                    <li class="dropdown-divider"></li>
+                                    <li class="dropdown-header">Complementa</li>
+                                    <a
+                                        class="dropdown-item"
+                                        v-for="tema in data.relacionados[2]"
+                                        v-show='num_pagina == tema.num_pagina'
+                                        v-bind:href="'<?php echo base_url('temas/leer/') ?>' + tema.relacionado_id"
+                                        target="_blank">
+                                        {{ tema.nombre_tema_relacionado }}
+                                    </a>
+
+                                    <li class="dropdown-divider"></li>
+                                    <li class="dropdown-header">Profundiza</li>
+                                    <a
+                                        class="dropdown-item"
+                                        v-for="tema in data.relacionados[3]"
+                                        v-show='num_pagina == tema.num_pagina'
+                                        v-bind:href="'<?php echo base_url('temas/leer/') ?>' + tema.relacionado_id"
+                                        target="_blank">
+                                        {{ tema.nombre_tema_relacionado }}
+                                    </a>
+                                <?php } ?>
+                                <!--FIN TEMAS RELACIONADOS-->
+                            </ul>
+                        </div>
+
+                    <?php } ?>
+                    <!--FIN HERRAMIENTAS ADICIONALES-->
                 </div>
             </div>
             
@@ -175,38 +229,6 @@
             
             <!-- HERRAMIENTAS DERECHA -->
             <div class="col-md-3">
-                <?php if ( $es_profesor ) { ?>
-                    <a class="btn btn-light btn-block" href="<?php echo base_url("flipbooks/programar_temas/{$row->id}") ?>" title="Programar fechas a los temas de este contenido">
-                        <img src="<?php echo URL_IMG ?>flipbook/cd_programar_temas.png" alt="Imagen programador">
-                    </a>
-                    <a class="btn btn-light btn-block" href="<?php echo base_url("flipbooks/crear_cuestionario/{$row->id}") ?>" target="_blank" title="Crear un cuestionario con los temas de este contenido">
-                        <img src="<?php echo URL_IMG ?>flipbook/cd_cuestionario.png" alt="Imagen cuestionario">
-                    </a>
-                    <a class="btn btn-light btn-block mb-2" href="<?php echo base_url('eventos/calendario') ?>" title="Calendario programador">
-                        <img src="<?php echo URL_IMG ?>flipbook/cd_programador.png" alt="Imagen programador">
-                    </a>
-                    <a
-                        class="btn btn-light btn-block mb-2"
-                        v-for="plan_aula in data.planes_aula"
-                        v-show="plan_aula.num_pagina == num_pagina && plan_aula.recurso_tipo_id == 854"
-                        v-bind:href="`<?php echo URL_UPLOADS ?>` + plan_aula.ubicacion"
-                        target="_blank"
-                        title="Plan de aula"
-                        >
-                        <img src="<?php echo URL_IMG ?>flipbook/cd_plan_aula.png" alt="Imagen programador">
-                    <a
-                        class="btn btn-light btn-block mb-2"
-                        v-for="plan_aula in data.planes_aula"
-                        v-show="plan_aula.num_pagina == num_pagina && plan_aula.recurso_tipo_id == 1007"
-                        v-bind:href="`<?php echo URL_UPLOADS ?>` + plan_aula.ubicacion"
-                        title="Descargar planeador de clases"
-                        download
-                        >
-                        <img src="<?php echo URL_IMG ?>flipbook/cd_plan_aula_descargable.png" alt="Imagen Descargar">
-                    </a>
-                    
-                <?php } ?>
-                
                 <div
                     class="alert alert-info"
                     v-for="pa_asignada in pa_asignadas"
@@ -240,5 +262,5 @@
             </div>
         </div>
     </div>
-    <?php $this->load->view('flipbooks/leer_cd/vue_v'); ?>
+    <?php $this->load->view('flipbooks/leer_ut/vue_v'); ?>
 </body>

@@ -182,7 +182,7 @@
                     </a>
                 </li>
                 <li><a href="<?= base_url('datos/enunciados')?>" class="<?= $clase_sm['enunciados'] ?>"><i class="fa fa-quote-left"></i><span>lecturas</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url('preguntas/explorar')?>" class="<?= $clase_sm['preguntas'] ?>"><i class="fa fa-question"></i><span>preguntas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url('preguntas/explorar/?tp=01')?>" class="<?= $clase_sm['preguntas'] ?>"><i class="fa fa-question"></i><span>preguntas</span></a></li> <!-- subitem -->
             </ul>
 
         </li>

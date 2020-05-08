@@ -17,7 +17,7 @@
         'icon': 'fa fa-search',
         'text': 'Explorar',
         'class': '<?php echo $cl_nav_2['preguntas_explorar'] ?>',
-        'cf': 'preguntas/explorar',
+        'cf': 'preguntas/explorar/?tp=01',
         'anchor': true
     };
 

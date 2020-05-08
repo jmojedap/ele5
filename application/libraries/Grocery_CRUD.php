@@ -1082,7 +1082,7 @@ class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
 							&& is_array($this->unset_edit_fields)
 							&& in_array($field_name,$this->unset_edit_fields)
 						) {
-								continue;
+								break; /*MOD PML 2020-04-23*/
 						}
 
 						$relation_data = isset( $post_data[$field_name] ) ? $post_data[$field_name] : array() ;
@@ -2708,13 +2708,13 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 				case 'invisible':
 					unset($this->add_fields[$field_num]);
 					unset($fields[$field_num]);
-					continue;
+					break; /*MOD PML 2020-04-23*/
 				break;
 				case 'hidden':
 					$this->add_hidden_fields[] = $field_input;
 					unset($this->add_fields[$field_num]);
 					unset($fields[$field_num]);
-					continue;
+					break; /*MOD PML 2020-04-23*/
 				break;
 			}
 
@@ -2751,13 +2751,13 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 				case 'invisible':
 					unset($this->edit_fields[$field_num]);
 					unset($fields[$field_num]);
-					continue;
+					break; /*MOD PML 2020-04-23*/
 				break;
 				case 'hidden':
 					$this->edit_hidden_fields[] = $field_input;
 					unset($this->edit_fields[$field_num]);
 					unset($fields[$field_num]);
-					continue;
+					break; /*MOD PML 2020-04-23*/
 				break;
 			}
 
@@ -2779,7 +2779,7 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 			if (!empty($this->change_field_type)
 					&& isset($this->change_field_type[$field->field_name])
 					&& $this->change_field_type[$field->field_name]->type == 'hidden') {
-				continue;
+				break; /*MOD PML 2020-04-23*/
 			}
 			$this->field_type($field->field_name, 'readonly');
 		}
@@ -2809,13 +2809,13 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 			    case 'invisible':
 			    	unset($this->read_fields[$field_num]);
 			    	unset($fields[$field_num]);
-			    	continue;
+			    	break; /*MOD PML 2020-04-23*/
 			    	break;
 			    case 'hidden':
 			    	$this->read_hidden_fields[] = $field_input;
 			    	unset($this->read_fields[$field_num]);
 			    	unset($fields[$field_num]);
-			    	continue;
+			    	break; /*MOD PML 2020-04-23*/
 			    	break;
 			}
 
@@ -4186,7 +4186,7 @@ class Grocery_CRUD extends grocery_CRUD_States
 				{
 					//Check if an unset_add_field is initialize for this field name
 					if($this->unset_add_fields !== null && is_array($this->unset_add_fields) && in_array($field->name,$this->unset_add_fields))
-						continue;
+						break; /*MOD PML 2020-04-23*/
 
 					if( (!isset($field->db_extra) || $field->db_extra != 'auto_increment') )
 					{
@@ -4229,7 +4229,7 @@ class Grocery_CRUD extends grocery_CRUD_States
 				{
 					//Check if an unset_edit_field is initialize for this field name
 					if($this->unset_edit_fields !== null && is_array($this->unset_edit_fields) && in_array($field->name,$this->unset_edit_fields))
-						continue;
+						break; /*MOD PML 2020-04-23*/
 
 					if(!isset($field->db_extra) || $field->db_extra != 'auto_increment')
 					{
@@ -4272,7 +4272,7 @@ class Grocery_CRUD extends grocery_CRUD_States
 				{
 					//Check if an unset_read_field is initialize for this field name
 					if($this->unset_read_fields !== null && is_array($this->unset_read_fields) && in_array($field->name,$this->unset_read_fields))
-						continue;
+						break; /*MOD PML 2020-04-23*/
 
 					if(!isset($field->db_extra) || $field->db_extra != 'auto_increment')
 					{

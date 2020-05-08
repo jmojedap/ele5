@@ -626,12 +626,13 @@ class Flipbooks extends CI_Controller{
      * Seleccionar función con la cual se abre el flipbook para vista lectura
      * 2020-02-03
      */
-    function abrir($flipbook_id, $num_pagina = NULL)
+    function abrir($flipbook_id, $num_pagina = NULL, $tema_id = NULL)
     {
         $row = $this->Pcrn->registro_id('flipbook', $flipbook_id);
         $destino = "flipbooks/leer/{$flipbook_id}/{$num_pagina}";
 
         //Clase dinámica
+        if ( $row->tipo_flipbook_id == 3 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         if ( $row->tipo_flipbook_id == 4 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         if ( $row->tipo_flipbook_id == 5 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         
@@ -650,8 +651,7 @@ class Flipbooks extends CI_Controller{
 
     /**
      * Registra el evento de abrir el flipbook y redirige a la lectura
-     * 
-     * @param type $flipbook_id
+     * 2020-04-24
      */
     function abrir_flipbook($flipbook_id, $num_pagina = NULL, $tema_id = NULL)
     {
@@ -663,19 +663,28 @@ class Flipbooks extends CI_Controller{
             if ( ! is_null($tema_id) ) {
                 $this->Evento_model->guardar_lectura_tema($flipbook_id, $tema_id);
             }
+
+        //Datos básicos
+        $row = $this->Pcrn->registro_id('flipbook', $flipbook_id);
+        $destino = "flipbooks/leer/{$flipbook_id}/{$num_pagina}"; //Por defecto
+
+        //Según el tipo de flipbook
+        if ( $row->tipo_flipbook_id == 3 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
+        if ( $row->tipo_flipbook_id == 4 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
+        if ( $row->tipo_flipbook_id == 5 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
             
-        //Redirigir
+        //Si el navegador es antiguo
             $this->load->model('Esp');
             $navegador = $this->Esp->navegador();
             $navegadores_ant = array('Internet Explorer', 'Safari');
 
-            $destino = "flipbooks/leer/{$flipbook_id}/{$num_pagina}";
             if ( in_array($navegador, $navegadores_ant) )
             {
                 $destino = "flipbooks/leer_v3/{$flipbook_id}/{$num_pagina}";
             }
 
-            redirect($destino);
+        //Redirigir
+        redirect($destino);
     }
     
     /**
@@ -775,7 +784,7 @@ class Flipbooks extends CI_Controller{
             $data['elementos_fb'] = $this->Flipbook_model->elementos_fb($data['row']);
             
         //Cargar vista
-        $this->load->view('flipbooks/leer/leer_v', $data);
+        $this->load->view('flipbooks/leer_ut/leer_v', $data);
     }
 
     /**
@@ -881,9 +890,8 @@ class Flipbooks extends CI_Controller{
 
         //Seleccionar vista
             $main_view = 'flipbooks/leer_cd/leer_v';
-            if ( $data['row']->tipo_flipbook_id == 5 ) {
-                $main_view = 'flipbooks/leer_lectura/leer_v';
-            }
+            if ( $data['row']->tipo_flipbook_id == 3 ) { $main_view = 'flipbooks/leer_ut/leer_v';}
+            if ( $data['row']->tipo_flipbook_id == 5 ) { $main_view = 'flipbooks/leer_lectura/leer_v';}
             
         //Cargar vista
         $this->load->view($main_view, $data);

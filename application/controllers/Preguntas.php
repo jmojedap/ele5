@@ -30,6 +30,7 @@ class Preguntas extends CI_Controller{
     /** Exploración de Preguntas */
     function explorar()
     {        
+        $this->output->enable_profiler(TRUE);
         //Datos básicos de la exploración
             $data = $this->Pregunta_model->explore_data(1);
         

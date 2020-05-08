@@ -24,6 +24,7 @@ class Instituciones extends CI_Controller{
     
     function explorar()
     {
+        $this->output->enable_profiler(TRUE);
         $this->load->model('Busqueda_model');
         
         //Datos de consulta, construyendo array de búsqueda

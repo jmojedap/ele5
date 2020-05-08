@@ -107,7 +107,7 @@ $(document).ready(function(){
                     url: '<?= $row_evento->url ?>',
                     color : '<?= $colores_evento[6] ?>',
                     tipo: 'sesion_virtual',
-                    descripcion: '<?php echo $row_evento->descripcion ?>',
+                    descripcion: '<?php echo json_encode($row_evento->descripcion) ?>',
                     fecha_inicio: '<?php echo $row_evento->fecha_inicio ?>',
                     grupo_id: '0<?php echo $row_evento->grupo_id ?>'
                 },

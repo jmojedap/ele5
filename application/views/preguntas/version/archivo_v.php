@@ -26,8 +26,7 @@
 <script>
 // Variables
 //-----------------------------------------------------------------------------
-    app_url = '<?php echo base_url(); ?>';
-    pregunta_id = '<?php echo $row_version->id ?>';
+    var pregunta_id = '<?php echo $row_version->id ?>';
 
 // Document Ready
 //-----------------------------------------------------------------------------
