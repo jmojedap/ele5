@@ -29,7 +29,7 @@ $(document).ready(function(){
         firstDay: 0,
         eventLimit: true, // allow "more" link when too many events
         events: [
-            //Eventos, programación de cuestionarios
+            //Eventos, programación de cuestionarios (22)
             <?php foreach ($eventos[22]->result() as $row_evento) : ?>
                 <?php
                     $url = base_url("cuestionarios/grupos/{$row_evento->referente_id}/{$row_evento->institucion_id}/{$row_evento->grupo_id}");
@@ -37,7 +37,7 @@ $(document).ready(function(){
                     $color = $colores_evento[1];
                 ?>
                 {
-                    id: <?php echo $row_evento->referente_id ?>,
+                    id: <?php echo $row_evento->max_evento_id ?>,
                     title: "Cuestionario: <?php echo $nombre_cuestionario ?>",
                     start: '<?= $row_evento->fecha_inicio ?>',
                     end: '<?= $this->Pcrn->suma_fecha($row_evento->fecha_fin) ?>',

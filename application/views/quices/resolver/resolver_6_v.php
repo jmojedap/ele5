@@ -6,9 +6,9 @@
     $att_img = array(
         'id' => 'imagen_quiz',
         'src' => $imagen['src'],
-        'width' => '100%',
-        'style' => 'position: absolute; max-width: 800px',
-        'class' =>  'principal'
+        'width' => '',
+        'style' => '',
+        'class' =>  ''
     );
     
     //Imagen quiz
@@ -174,18 +174,17 @@
     }
 </style>
 
-<?php if ( strlen($imagen['src']) > 0 ){ ?>
-    <div class="div2" style="text-align: center;">
-        <?php $att_img['src'] = $imagen['src'] ?>
-        <?= img($att_img) ?>
-    </div>
-<?php } ?>
-
 
 <div class="quiz-container">
     
     <div style="position: relative" class="div3">
         <p>Arrastra las etiquetas a su posición correcta</p>
+        <?php if ( strlen($imagen['src']) > 0 ){ ?>
+            <div>
+                <?php $att_img['src'] = $imagen['src'] ?>
+                <?= img($att_img) ?>
+            </div>
+        <?php } ?>
         <?php foreach ($array_elementos as $str_elemento) : ?>
             <?php
                 $array_elemento = explode('|', $str_elemento);
@@ -219,6 +218,4 @@
     
 </div>
 
-<p id="respuesta">
-    
-</p>
+<p id="respuesta"></p>

@@ -650,21 +650,21 @@ class Quiz_Model extends CI_Model{
     
     function cargar_imagen()
     {
-        $results = array();
+        $data = array();
         
         $config = $this->config_upload();
         $this->load->library('upload', $config);
 
         if ( ! $this->upload->do_upload('archivo')) {
-            $results['status'] = 0;
-            $results['html'] = $this->upload->display_errors('<div class="alert alert-danger">', '</div>');
+            $data['status'] = 0;
+            $data['html'] = $this->upload->display_errors('<div class="alert alert-danger">', '</div>');
         } else {
-            $results['status'] = 1;
-            $results['html'] = '';
-            $results['upload_data'] = $this->upload->data();
+            $data['status'] = 1;
+            $data['html'] = '';
+            $data['upload_data'] = $this->upload->data();
         }
         
-        return $results;
+        return $data;
         
     }
     

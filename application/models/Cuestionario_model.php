@@ -834,12 +834,12 @@ class Cuestionario_model extends CI_Model
      * 2018-09-21
      * Crea el registro de asignación de cuestionario a un grupo en la tabla 
      * evento
-     * 
-     * @param type $cuestionario_id
-     * @return type
+     * 2020-05-26 Se le agrega registro de área al evento
      */
     function asignar($cuestionario_id)
     {
+        $row_cuestionario = $this->Db_model->row_id('cuestionario', $cuestionario_id);
+
         $registro['fecha_inicio'] = $this->input->post('fecha_inicio');
         $registro['hora_inicio'] = '00:00:00';
         $registro['fecha_fin'] = $this->input->post('fecha_fin');
@@ -847,6 +847,7 @@ class Cuestionario_model extends CI_Model
         $registro['tipo_id'] = 22;  //Asignación de cuestionario a grupo
         $registro['referente_id'] = $cuestionario_id;
         $registro['grupo_id'] = $this->input->post('grupo_id');
+        $registro['area_id'] = $row_cuestionario->area_id;
         $registro['institucion_id'] = $this->Pcrn->campo_id('grupo', $this->input->post('grupo_id'), 'institucion_id');
         $registro['entero_1'] = $this->input->post('tiempo_minutos');
         

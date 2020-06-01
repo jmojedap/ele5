@@ -44,6 +44,8 @@
 
 <link rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/biblioteca.css">
 
+<?php //$this->load->view('app/saludo_especial_v') ?>
+
 <article style="background:url(<?php echo URL_IMG ?>app/bookshelf.png) no-repeat;" class="library">
     <h1 class="estante" style="background-color: #DD5044">
         Contenidos

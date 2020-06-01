@@ -44,7 +44,7 @@
     {
         $('#campo-flipbook_id').change(function(){
             flipbook_id = $('#campo-flipbook_id').val();
-            window.location = base_url + 'grupos/quices/' + grupo_id + '/' + flipbook_id + '/' + quiz_id;
+            window.location = base_url + 'grupos/quices/' + grupo_id + '/' + flipbook_id;
         });
         
         $('#campo-quiz_id').change(function(){

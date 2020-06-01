@@ -513,16 +513,13 @@ class Cuestionarios extends CI_Controller{
             $resultado['cg_id'] = $cg_id;
         }
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($resultado));
+        $this->output->set_content_type('application/json')->set_output(json_encode($resultado));
     }
     
     /**
      * JSON
      * Lista de grupos asignados a un cuestionario
      * 
-     * @param type $cuestionario_id
      */
     function lista_grupos($cuestionario_id, $institucion_id, $nivel = null)
     {
@@ -530,9 +527,7 @@ class Cuestionarios extends CI_Controller{
         
         $data['lista'] = $grupos->result();
         
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**
@@ -1533,5 +1528,42 @@ class Cuestionarios extends CI_Controller{
 
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * PROCESO TEMPORAL ELIMINAR
+     * 2020-05-26
+     * Actualiza el campo evento.area_id, para asignaciones de cuestionario
+     */
+    function ajuste_ev22()
+    {
+        $arr_eventos = array();
+
+        $this->db->select('id, creado, referente_id');
+        $this->db->where('tipo_id', 22);
+        $this->db->order_by('id', 'DESC');
+        $eventos = $this->db->get('evento', 10000);
+
+        foreach ( $eventos->result() as $row_evento )
+        {
+            $row_cuestionario = $this->Db_model->row_id('cuestionario', $row_evento->referente_id);
+            if ( ! is_null($row_cuestionario) )
+            {
+                $arr_row['area_id'] = $row_cuestionario->area_id;
+
+                $this->db->where('id', $row_evento->id);
+                $this->db->update('evento', $arr_row);
+                
+                $arr_eventos[] = $row_evento;
+                
+            }
+        }
+
+        $data['arr_eventos'] = $arr_eventos;
+        $data['cant_eventos'] = $eventos->num_rows();
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        
     }
 }

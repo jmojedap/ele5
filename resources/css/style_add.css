@@ -199,3 +199,18 @@ span.suave{
 .sortable_handle{
     cursor: move;
 }
+
+/* DISPLAY PANTALLAS GRANES Y PEQUEÑAS */
+/* 2020-05-23 */
+
+@media (min-width: 731px) {
+    .only-sm {
+        display: none;
+    }
+}
+
+@media (max-width: 730px) {
+    .only-lg {
+        display: none;
+    }
+}

@@ -35,9 +35,10 @@
 
 <link rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/biblioteca.css">
 
+<?php //$this->load->view('app/saludo_especial_v') ?>
+
 <div style="width: 100%;">
     <div class="library" style="background:url(<?php echo URL_IMG ?>app/bookshelf.png) no-repeat;">
-
         <h1 class="estante" style="background-color: #DD5044">Contenidos</h1>
 
         <div class="flipbooks_wrapper" style="height: 154px; overflow-x: <?= $att_flipbooks['overflow_x'] ?>; overflow-y: hidden; width: 715px; margin: 0px auto;">
@@ -95,4 +96,5 @@
         </div>
     </div>
 </div>
+
 

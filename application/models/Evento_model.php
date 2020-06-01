@@ -599,7 +599,7 @@ class Evento_Model extends CI_Model{
         if ( $busqueda['tp'] != '' ) { $this->db->where('evento.tipo_id', $busqueda['tp']); }    //Tipo evento
         
         //Consulta
-        $this->db->select('*');
+        //$this->db->select('evento.id, nombre_cuestionario, fecha_inicio, fecha_fin');
         $this->db->where('usuario_id', $this->session->userdata('usuario_id'));
         $this->db->where('evento.tipo_id', 1); //Tipo 1 => asignación de cuestionario
         $this->db->where('estado', 1); //Estado 1  => sin responder
@@ -636,7 +636,6 @@ class Evento_Model extends CI_Model{
      * Cuestionarios programados por el usuario
      * Profesores
      * 
-     * @return type
      */
     function evs_cuestionarios_prf($busqueda)
     {
@@ -645,7 +644,7 @@ class Evento_Model extends CI_Model{
         if ( $busqueda['g'] != '' ) { $this->db->where('grupo_id', $busqueda['g']); }    //Grupo
         if ( $busqueda['tp'] != '' ) { $this->db->where('evento.tipo_id', $busqueda['tp']); }    //Tipo evento
         
-        $this->db->select('nombre_evento, fecha_inicio, fecha_fin, referente_id, institucion_id, grupo_id');
+        $this->db->select('MAX(id) AS max_evento_id, nombre_evento, fecha_inicio, fecha_fin, referente_id, institucion_id, grupo_id');
         $this->db->where('c_usuario_id', $this->session->userdata('usuario_id'));
         $this->db->where('tipo_id', 22); //Tipo 2 => asignación de cuestionario a grupo
         $this->db->group_by('nombre_evento, fecha_inicio, fecha_fin, referente_2_id, institucion_id, grupo_id');

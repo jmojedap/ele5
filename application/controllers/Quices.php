@@ -380,12 +380,12 @@ class Quices extends CI_Controller{
     
     function cargar_imagen($quiz_id)
     {
-        $results = $this->Quiz_model->cargar_imagen();
+        $data = $this->Quiz_model->cargar_imagen();
         
         //Cargue exitoso, se crea registro asociado
-            if ( $results['status'] ) { $this->Quiz_model->guardar_imagen($results['upload_data']); }
+            if ( $data['status'] ) { $this->Quiz_model->guardar_imagen($data['upload_data']); }
         
-        $this->session->set_flashdata('html', $results['html']);
+        $this->session->set_flashdata('html', $data['html']);
         redirect("quices/construir/{$quiz_id}");
     }
     
@@ -402,14 +402,15 @@ class Quices extends CI_Controller{
     
     function cargar_imagen_elemento($quiz_id)
     {
-        $results = $this->Quiz_model->cargar_imagen();
+        $data = $this->Quiz_model->cargar_imagen();
         
-        if ( $results['result'] ) { 
+        if ( $data['status'] )
+        { 
             $elemento_id = $this->input->post('elemento_id');
-            $this->Quiz_model->asignar_archivo($elemento_id, $results['upload_data']); 
+            $this->Quiz_model->asignar_archivo($elemento_id, $data['upload_data']); 
         }
         
-        $this->session->set_flashdata('html', $results['html']);
+        $this->session->set_flashdata('html', $data['html']);
         redirect("quices/construir/{$quiz_id}");
         
     }

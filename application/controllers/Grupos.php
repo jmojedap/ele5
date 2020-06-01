@@ -334,7 +334,7 @@ class Grupos extends CI_Controller{
             $quices = $this->Flipbook_model->quices_total($flipbook_id);
             
         //Identificar $quiz_id
-            if ( count($quices) > 0 ) { $quiz_id = $this->Pcrn->si_cero($quiz_id, $quices[0]['id']); }  //Si es cero, el primer quiz del array
+            if ( count($quices) > 0 ) { $quiz_id = '0' . $this->Pcrn->si_cero($quiz_id, $quices[0]['id']); }  //Si es cero, el primer quiz del array
         
         //Cargando datos básicos (_basico)
             $data = $this->Grupo_model->basico($grupo_id);
