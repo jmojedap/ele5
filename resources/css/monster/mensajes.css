@@ -1,0 +1,24 @@
+#mensajes{
+    border-top: 1px solid #eaeaea;
+    background: #fafafa;
+    height: 450px;
+    overflow: scroll;
+    overflow-x: hidden;
+    padding: 20px;
+}
+
+.mensaje{
+    padding: 10px;
+    width: 95%;
+    border: 1px solid #eaeaea;
+    background: #FFF;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.mensaje_propio{
+    background: #f3f8fc;
+    border: 1px solid #d2e3f2;
+}

@@ -1,0 +1,52 @@
+.library{
+    margin: 0 auto;
+    padding-top: 40px;
+    width: 786px;
+    height: 1017px;
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.35);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.35);
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.35);
+}
+
+p.estante{
+    font-size: 13px;
+    color: #FFF;
+    text-shadow: none;
+    width: 200px;
+    margin: 3px 0px 12px 24px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-align: center;
+    background: #fd353a
+}
+
+.flipbook_container{
+    background:#EEE; 
+    background: rgba(228,228,228, 0.75);
+    display: inline-block;
+    width: 100px;
+    padding: 1px;
+    border: 1px solid #EEE;
+    text-align: center;
+    margin-right: 10px;
+    margin-left: 10px;
+    width: 106px;
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.35);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.35);
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.35);
+}
+
+.flipbook_container:hover{
+    background: #ffeb3b;
+    border: 1px solid #ffeb3b;
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.55);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.55);
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.55);
+}
+
+
+.flipbook_container a{
+    position: relative;
+    color: #069;
+    display: block;
+}

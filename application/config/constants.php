@@ -110,3 +110,4 @@ define('LAT_CHAT', 5000);                       //Latencia del chat, milisegudos
 define('APP_NAME', 'Plataforma en Línea');    //Nombre de la aplicación
 define('URL_RESOURCES', 'http://localhost/ele/resources/');   //URL carpeta contenido
 define('TPL_ADMIN', 'templates/apanel3/main_v');   //Vista plantilla de administración
+define('TPL_ADMIN_NEW', 'templates/monster/main_v');   //Vista plantilla de administración

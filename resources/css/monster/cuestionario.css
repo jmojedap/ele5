@@ -1,0 +1,36 @@
+/* 
+    Created on : 28/11/2013, 12:34:43 PM
+    Author     : ragan
+*/
+
+#the_final_countdown_v4{
+    background: #fffde7;
+    color: #444;
+    font-weight: bold;
+    padding: 10px;
+    width: 100%;
+    height: 70px;
+    margin-bottom: 10px;
+    border: 1px solid #fff59d;
+}
+
+div.opcion_seleccionada{
+   background: #5bc0de;
+   color: white;
+   font-weight: bold;
+}
+
+div.opcion_correcta{
+   background: #89cb4e;
+   color: white;
+   font-weight: bold;
+}
+
+div.opcion_respuesta{
+    cursor: pointer;
+}
+
+div.opcion_respuesta:hover{
+    background: #5bc0de;
+    color: white;
+}
