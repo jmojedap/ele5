@@ -167,9 +167,7 @@ class Pregunta_model extends CI_Model{
     
     /**
      * Devuelve segmento SQL
-     * 
-     * @param type $post_id
-     * @return type 
+     * 2020-06-01 (Filtro únidad temática)
      */
     function role_filter()
     {
@@ -180,11 +178,9 @@ class Pregunta_model extends CI_Model{
         {
             $condition = 'id > 0';
         } elseif ( in_array($row_usuario->rol_id, array(3,4,5)) ) {    //Usuarios institucionales
-            //Preguntas propias O las de En Línea Editores
-            $condition = "(creado_usuario_id = {$row_usuario->id}) OR (tipo_pregunta_id = 1)";
-        } elseif ( in_array($row_usuario->rol_id, array(3,4,5)) ) {    //Usuarios institucionales
-            //Preguntas propias O las de En Línea Editores
-            $condition = "(creado_usuario_id = {$row_usuario->id}) OR (tipo_pregunta_id = 1)";
+            //Preguntas propias -ó- las de En Línea Editores, que sean de Unidad Temáica (tipo 2)
+            $condition = "(creado_usuario_id = {$row_usuario->id}) OR (tipo_pregunta_id = 1 AND tema_id IN (SELECT id FROM tema WHERE tema.tipo_id = 2))";
+            //$condition = "(creado_usuario_id = {$row_usuario->id}) OR (tipo_pregunta_id = 1)";
         }
         
         return $condition;

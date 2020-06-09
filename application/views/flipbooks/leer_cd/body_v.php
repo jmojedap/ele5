@@ -117,6 +117,20 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- EVIDENCIAS -->
+                    <div id="listado_quices" class="collapse_no sep2">
+                        <a
+                            class="btn btn-light btn-block"
+                            title="Evidencia de aprendizaje sobre este tema"
+                            target="_blank"
+                            v-for="quiz in data.quices"
+                            v-bind:href="`<?= base_url('quices/iniciar/') ?>` + quiz.quiz_id"
+                            v-show='num_pagina == quiz.num_pagina'
+                            >
+                            <img src="<?= URL_IMG ?>flipbook/quices_v5.png" alt="Imagen acceso a evidencia de aprendizaje">
+                        </a>
+                    </div>
                 
                     <!-- LINKS -->
                     <div id="listado_links" class="collapse_no sep2">

@@ -32,6 +32,7 @@
 
         <img src="<?php echo URL_IMG ?>medios_videollamadas/zoom.png" alt="Logo zoom" class="rounded mb-2 new_sesionv" data-toggle="modal" data-target="#sesionv_modal" data-mvl="10" data-src="<?= URL_IMG ?>medios_videollamadas/zoom.png">
         <img src="<?php echo URL_IMG ?>medios_videollamadas/meet.png" alt="Logo meet" class="rounded mb-2 new_sesionv" data-toggle="modal" data-target="#sesionv_modal" data-mvl="20" data-src="<?= URL_IMG ?>medios_videollamadas/meet.png">
+        <img src="<?php echo URL_IMG ?>medios_videollamadas/teams.png" alt="Logo meet" class="rounded mb-2 new_sesionv" data-toggle="modal" data-target="#sesionv_modal" data-mvl="40" data-src="<?= URL_IMG ?>medios_videollamadas/teams.png">
     </div>
     <div class="col-md-9">
         <div id='calendar'></div>
