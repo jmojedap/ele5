@@ -108,6 +108,11 @@ define('NOMBRE_APP', 'Plataforma en Línea');    //Nombre de la aplicación
 define('LAT_CHAT', 5000);                       //Latencia del chat, milisegudos actualización de mensajes chat
 
 define('APP_NAME', 'Plataforma en Línea');    //Nombre de la aplicación
+define('PATH_UPLOADS', 'content/uploads/');    //Nombre de la aplicación
 define('URL_RESOURCES', 'http://localhost/ele/resources/');   //URL carpeta contenido
 define('TPL_ADMIN', 'templates/apanel3/main_v');   //Vista plantilla de administración
 define('TPL_ADMIN_NEW', 'templates/monster/main_v');   //Vista plantilla de administración
+
+define('K_PUAK', 'PU12345');   //PayU ApiKey
+define('K_PUMI', 'PU569884');   //PayU merchantId
+define('K_PUAI', 'PU572534');   //PayU accountId

@@ -223,6 +223,7 @@ class Login_model extends CI_Model{
                 'nombre_completo'    =>  "{$row_usuario->nombre} {$row_usuario->apellidos}",
                 'nombre_corto'    =>  $row_usuario->nombre,
                 'usuario_id'    =>  $row_usuario->id,
+                'user_id'    =>  $row_usuario->id,
                 'rol_id'    => $row_usuario->rol_id,
                 'rol_abrv'    => $this->Pcrn->campo('item', "categoria_id = 58 AND id_interno = {$row_usuario->rol_id}", 'abreviatura'),
                 'role'    => $row_usuario->rol_id,

@@ -1,0 +1,78 @@
+/* Elementos fijos */
+
+.center_box{
+    margin: 0 auto;
+}
+.center_box_450{
+    max-width: 450px; 
+    margin: 0 auto;
+}
+.center_box_750{
+    max-width: 750px; margin: 0 auto;
+}
+
+/* Ahchos en Pixeles */
+.w30p { width: 30px; }
+.w31p { width: 31px; }
+.w33p { width: 33px; }
+.w50p { width: 50px; }
+.w75p { width: 75px; }
+.w100p { width: 100px; }
+.w120p { width: 120px; }
+.w240p { width: 240px; }
+
+.w100pc { width: 100%; }
+
+.mw750p { max-width: 750px; }
+
+
+
+/* LINKS Y BOTONES */
+.a4{
+    font-size: 0.8em;
+    height: 2em;
+    width: 2.6em;
+    cursor: pointer;
+    background-color: #fafafa;
+    border: 1px solid #eaeaea;
+    color: #333;
+    border-radius: 2px;
+}
+
+.a4:hover{
+    background-color: #eaeaea;
+    border: 1px solid #eaeaea;
+}
+
+/*ETIQUETAS TAG*/
+
+.tag {
+    color: white;
+    background-color: #999;
+    padding: 2px 8px;
+    margin-bottom: 4px;
+    font-size: 1em;
+    line-height: 1.2em;
+    border-radius: 3px;
+    margin-right: 4px;
+    display: inline-block;
+}
+
+.tag-primary{
+    background-color: #F37062;
+}
+
+/* DISPLAY PANTALLAS GRANDES Y PEQUEÑAS */
+/* 2020-05-23 */
+
+@media (min-width: 731px) {
+    .only-sm {
+        display: none;
+    }
+}
+
+@media (max-width: 730px) {
+    .only-lg {
+        display: none;
+    }
+}

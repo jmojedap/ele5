@@ -462,5 +462,79 @@ class Item_model extends CI_Model{
         
         return $arr_item;
     }
+
+// FUNCIONES EN ÍNGLES PARA COMPATIBILIDAD
+//-----------------------------------------------------------------------------
+
+    /**
+     * Array con options de item, para elementos select de formularios.
+     * La variable $condition es una condición WHERE de SQL para filtrar los items.
+     * En el array el índice corresponde al cod y el value del array al
+     * field item. La variable $empty_value se pone al principio del array
+     * cuando el field select está vacío, sin ninguna opción seleccionada.
+     */
+    function options($condition, $empty_value = NULL)
+    {
+        
+        $select = 'CONCAT("0", (id_interno)) AS str_cod, item AS field_value';
+        
+        $this->db->select($select);
+        $this->db->where($condition);
+        $this->db->order_by('id_interno', 'ASC');
+        $this->db->order_by('orden', 'ASC');
+        $query = $this->db->get('item');
+        
+        $options_pre = $this->pml->query_to_array($query, 'field_value', 'str_cod');
+        
+        if ( ! is_null($empty_value) ) 
+        {
+            $options = array_merge(array('' => '[ ' . $empty_value . ' ]'), $options_pre);
+        } else {
+            $options = $options_pre;
+        }
+        
+        return $options;
+    }
+
+// Arrays
+//-----------------------------------------------------------------------------
+    
+    /**
+     * Devuelve un array con índice y value para una categoría específica de items
+     * Dadas unas características definidas en el array $config
+     */
+    function arr_cod($condition)
+    {   
+        $this->db->select('id_interno AS cod, item AS item_name');
+        $this->db->where($condition);
+        $this->db->order_by('orden', 'ASC');
+        $this->db->order_by('id_interno', 'ASC');
+        $query = $this->db->get('item');
+        
+        $arr_item = $this->pml->query_to_array($query, 'item_name', 'cod');
+        
+        return $arr_item;
+    }
+
+    /**
+     * Devuelve el name de un item con el formato correspondiente.
+     * 
+     */
+    function name($category_id, $cod, $field = 'item')
+    {
+        $name = 'ND';
+        
+        $this->db->select("{$field} as field");
+        $this->db->where('id_interno', $cod);
+        $this->db->where('categoria_id', $category_id);
+        $query = $this->db->get('item');
+        
+        if ( $query->num_rows() > 0 ) 
+        {
+            $name = $query->row()->field;
+        }
+        
+        return $name;
+    }
     
 }

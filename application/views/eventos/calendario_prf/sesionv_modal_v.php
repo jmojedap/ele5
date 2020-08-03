@@ -17,7 +17,7 @@
             <div class="modal-body">
                 <form accept-charset="utf-8" method="POST" id="sesionv_form">
                     <input class="d-none" type="text" name="referente_2_id" id="sesionv-referente_2_id" value="10">
-                    <div class="row">
+                    <div class="row d-none">
                         <div class="col-md-3">
                             <p>Sesión virtual en:</p>
                         </div>

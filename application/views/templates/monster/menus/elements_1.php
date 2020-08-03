@@ -1,17 +1,16 @@
 <script>
     var nav_1_elements = [
             {
-                id: 'nav_1_usuarios',
                 text: 'Usuarios',
                 active: false,
                 style: '',
                 icon: 'fa fa-user',
                 cf: 'usuarios/explorar',
                 submenu: false,
-                subelements: []
+                subelements: [],
+                sections: []
             },
             {
-                id: 'nav_1_institucional',
                 text: 'Instituciones',
                 active: false,
                 style: '',
@@ -23,18 +22,20 @@
                         text: 'Instituciones',
                         active: false,
                         icon: 'fa fa-university',
-                        cf: 'instituciones/explorar'
+                        cf: 'instituciones/explorar',
+                        sections: []
                     },
                     {
                         text: 'Grupos',
                         active: false,
                         icon: 'fa fa-users',
-                        cf: 'grupos/explorar'
+                        cf: 'grupos/explorar',
+                        sections: []
                     }
-                ]
+                ],
+                sections: []
             },
             {
-                id: 'nav_1_recursos',
                 text: 'Recursos',
                 active: false,
                 style: '',
@@ -46,60 +47,76 @@
                         text: 'Kits',
                         active: false,
                         icon: 'fa fa-suitcase',
-                        cf: 'kits/explorar'
+                        cf: 'kits/explorar',
+                        sections: []
                     },
                     {
                         text: 'Programas',
                         active: false,
                         icon: 'fa fa-sitemap',
-                        cf: 'programas/explorar'
+                        cf: 'programas/explorar',
+                        sections: []
                     },
                     {
                         text: 'Contenidos',
                         active: false,
                         icon: 'fa fa-book',
-                        cf: 'flipbooks/explorar'
+                        cf: 'flipbooks/explorar',
+                        sections: []
                     },
                     {
                         text: 'Temas',
                         active: false,
                         icon: 'fa fa-bars',
-                        cf: 'temas/explorar'
+                        cf: 'temas/explorar',
+                        sections: []
                     },
                     {
                         text: 'Contenidos AP',
                         active: false,
                         icon: 'fa fa-book',
-                        cf: 'posts/ap_explorar'
+                        cf: 'posts/ap_explorar',
+                        sections: []
                     },
                     {
                         text: 'Quices',
                         active: false,
                         icon: 'fa fa-question',
-                        cf: 'quices/explorar'
+                        cf: 'quices/explorar',
+                        sections: []
                     },
                     {
                         text: 'Páginas',
                         active: false,
                         icon: 'far fa-file',
-                        cf: 'paginas/explorar'
+                        cf: 'paginas/explorar',
+                        sections: []
                     },
                     {
                         text: 'Archivos',
                         active: false,
                         icon: 'far fa-folder',
-                        cf: 'recursos/archivos'
+                        cf: 'recursos/archivos',
+                        sections: []
                     },
                     {
                         text: 'Links',
                         active: false,
                         icon: 'fa fa-globe',
-                        cf: 'recursos/links'
+                        cf: 'recursos/links',
+                        sections: []
                     },
-                ]
+                    {
+                        text: 'Posts',
+                        active: false,
+                        icon: 'fa fa-newspaper',
+                        cf: 'posts/explorar',
+                        sections: []
+                    },
+                ],
+                sections: []
             },
             {
-                id: 'nav_1_cuestionarios',
                 text: 'Cuestionarios',
                 active: false,
                 style: '',
@@ -111,24 +128,59 @@
                         text: 'Cuestionarios',
                         active: false,
                         icon: 'fa fa-book',
-                        cf: 'cuestionarios/explorar'
+                        cf: 'cuestionarios/explorar',
+                        sections: []
                     },
                     {
                         text: 'Lecturas',
                         active: false,
                         icon: 'fa fa-quote-left',
-                        cf: 'datos/enunciados'
+                        cf: 'datos/enunciados',
+                        sections: []
                     },
                     {
                         text: 'Preguntas',
                         active: false,
                         icon: 'fa fa-question',
-                        cf: 'preguntas/explorar'
+                        cf: 'preguntas/explorar',
+                        sections: []
                     }
-                ]
+                ],
+                sections: []
             },
             {
-                id: 'nav_1_ajustes',
+                text: 'Comercial',
+                active: false,
+                style: '',
+                icon: 'fa fa-shopping-cart',
+                cf: '',
+                submenu: true,
+                subelements: [
+                    {
+                        text: 'Ventas',
+                        active: false,
+                        icon: 'fa fa-shopping-cart',
+                        cf: 'orders/explore',
+                        sections: []
+                    },
+                    {
+                        text: 'Productos',
+                        active: false,
+                        icon: 'fa fa-book',
+                        cf: 'products/explore',
+                        sections: ['products/explore', 'products/import', 'products/import_e', 'products/add', 'products/info']
+                    },
+                    {
+                        text: 'Catálogo',
+                        active: false,
+                        icon: 'fa fa-book',
+                        cf: 'products/catalog',
+                        sections: ['products/catalog', 'products/detail']
+                    }
+                ],
+                sections: ['products/info']
+            },
+            {
                 text: 'Ajustes',
                 active: false,
                 style: '',
@@ -140,51 +192,60 @@
                         text: 'Parámetros',
                         active: false,
                         icon: 'fa fa-cog',
-                        cf: 'datos/sis_opcion'
+                        cf: 'datos/sis_opcion',
+                        sections: []
                     },
                     {
                         text: 'Ítems',
                         active: false,
                         icon: 'fa fa-bars',
-                        cf: 'items/listado'
+                        cf: 'items/listado',
+                        sections: []
                     },
                     {
                         text: 'Procesos',
                         active: false,
                         icon: 'fa fa-tasks',
-                        cf: 'develop/procesos'
+                        cf: 'develop/procesos',
+                        sections: []
                     },
                     {
                         text: 'Base de datos',
                         active: false,
                         icon: 'fa fa-database',
-                        cf: 'develop/tablas/item'
+                        cf: 'develop/tablas/item',
+                        sections: []
                     },
                     {
                         text: 'Bitácora',
                         active: false,
                         icon: 'fa fa-clipboard',
-                        cf: 'posts/bitacora'
+                        cf: 'posts/bitacora',
+                        sections: []
                     },
                     {
                         text: 'Estadísticas',
                         active: false,
                         icon: 'fa fa-chart-line',
-                        cf: 'estadisticas/ctn_correctas_incorrectas'
+                        cf: 'estadisticas/ctn_correctas_incorrectas',
+                        sections: []
                     },
                     {
                         text: 'Lugares',
                         active: false,
                         icon: 'fa fa-map-marker-alt',
-                        cf: 'lugares/explorar'
+                        cf: 'lugares/explorar',
+                        sections: []
                     },
                     {
                         text: 'Ayuda',
                         active: false,
                         icon: 'fa fa-question-circle',
-                        cf: 'datos/ayudas_explorar'
+                        cf: 'datos/ayudas_explorar',
+                        sections: []
                     }
-                ]
+                ],
+                sections: []
             },
         ];
 </script>

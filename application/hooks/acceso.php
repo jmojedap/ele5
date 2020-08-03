@@ -60,6 +60,7 @@ class Acceso {
         $funciones_publicas[] = 'usuarios/activar_e';
         $funciones_publicas[] = 'usuarios/restaurar';
         $funciones_publicas[] = 'usuarios/restaurar_e';
+        $funciones_publicas[] = 'usuarios/get_by_username';
         
         $funciones_publicas[] = 'posts/leer';
         
@@ -68,6 +69,19 @@ class Acceso {
         $funciones_publicas[] = 'sincro/json_estado_tablas';
         $funciones_publicas[] = 'sincro/test_ajax';
         $funciones_publicas[] = 'sincro/cant_registros';
+
+        $funciones_publicas[] = 'instituciones/get_by_cod';
+
+        $funciones_publicas[] = 'orders/pays';
+        $funciones_publicas[] = 'orders/add_product';
+        $funciones_publicas[] = 'orders/checkout';
+        $funciones_publicas[] = 'orders/update';
+        $funciones_publicas[] = 'orders/result';
+
+
+
+
+        $funciones_publicas[] = 'products/get_by_institution';
 
         $funciones_publicas[] = 'respuestas/cargar_json_remoto';
         

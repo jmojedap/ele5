@@ -81,55 +81,7 @@ div.pf_datos{
 /* VÍNCULOS
 ----------------------------------------------------------------------------------------------------*/
 
-.a2{
-    cursor: pointer;
-    /*cursor: hand;*/
-    color: #89cb4f;
-    display: inline-block;
-    border: 1px solid #dedede;
-    /*border: 1px solid red;*/
-    padding-left: 5px;
-    padding-right: 5px;
-    text-align: center;
-    line-height: 2em;
-    background: #fff;
-    margin-bottom: 3px;
-}
 
-.a2:hover{
-    text-decoration: none;
-    background: #89cb4f;
-    color: white;
-    border: 1px solid #89cb4f;
-}
-
-.a2.actual{
-    border: 1px solid #89cb4f;
-    background: #89cb4f;
-    color: white;
-}
-
-.a3{
-    cursor: pointer;
-    color: #777;
-    padding-left: 5px;
-    padding-right: 5px;
-    text-align: left;
-    line-height: 2.3em;
-    background: white;
-    display: block;
-}
-
-.a3:hover{
-    text-decoration: none;
-    color: white;
-    background: #89cb4e;
-}
-
-.a3.actual{
-    background: #89cb4f;
-    color: white;
-}
 
 .a4{
     display: inline-block;
@@ -147,36 +99,8 @@ div.pf_datos{
     background: #f1f1f1;
 }
 
-.a5{
-    cursor: pointer;
-    color: #428bca;
-    display: inline-block;
-    width: 90%;
-    padding-left: 5px;
-}
-
-.a5:hover{
-    background: #d5eeff;
-    font-weight: bold;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    color: #666;
-}
-
-.a6{
-    color: #555;
-    display: block;
-    border-top: 1px solid #f1f1f1;
-    padding: 5px;
-}
-
-.a6:hover{
-    background: #d2e3f2;
-}
-
-.a6.actual{
-    font-weight: bold;
-    background: #d2e3f2;
+.btn-sm-square{
+    width: 28px;
 }
 
 /* TEXTO
@@ -255,25 +179,6 @@ div.pf_datos{
     margin-top: 2px;
 }
 
-/* TABLAS
-----------------------------------------------------------------------------------------------------*/
-
-table.tabla-transparente {
-    border: 0px;
-    border-collapse: collapse;
-}
-
-table.tabla-transparente td {
-    border: 0px;
-    padding: 4px 10px 0px 0px;
-    vertical-align: middle;
-}
-
-table.tabla-transparente th {
-    text-align: center;
-    padding: 5px 10px 5px 10px;
-}
-
 /* ADAPTACIÓN BOOTSTRAP
 ----------------------------------------------------------------------------------------------------*/
 
@@ -291,4 +196,11 @@ table.tabla-transparente th {
 .table-section{
     margin-left: 1%;
     width: 98%;
+}
+
+/* Comercial */
+/*-----------------------------------------------------------------------------*/
+
+.price {
+    font-weight: bold;
 }

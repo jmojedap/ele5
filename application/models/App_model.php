@@ -1139,32 +1139,20 @@ class App_model extends CI_Model {
         return $opciones_item;
     }
 
-    /* Devuelve un array con las opciones de la tabla place, limitadas por una condición definida
-     * en un formato ($formato) definido
-     */
-
-    function opciones_place($condicion, $formato = 1)
+    /** Devuelve un array con las opciones de la tabla place, limitadas por una condición definida
+    * en un formato ($format) definido    
+    */
+    function options_place($condition, $value_field = 'full_name', $empty_text = 'Lugar')
     {
-
-        $this->db->select("CONCAT('0', place.id) AS place_id, CONCAT(place.lugar_nombre, ', ', tabla1.lugar_nombre) AS lugar_padre", FALSE);
-        $this->db->where($condicion);
-        $this->db->order_by('place.lugar_nombre', 'ASC');
-        $this->db->join('place AS tabla1', 'place.parent_id = tabla1.id');
-        $query = $this->db->get('place');
-
-        $campo_indice = "place_id";
-
-        if ($formato == 1) {
-            $campo_valor = "lugar_padre";
-        }
-
-        $opciones_place = array(
-            "" => "(Vacío)"
-        );
-
-        $opciones_place = array_merge($opciones_place, $this->Pcrn->query_to_array($query, $campo_valor, $campo_indice));
-
-        return $opciones_place;
+        
+        $this->db->select("CONCAT('0', lugar.id) AS place_id, nombre_lugar AS place_name, nombre_completo AS full_name, CONCAT((nombre_lugar), ', ', (region)) AS cr", FALSE); 
+        $this->db->where($condition);
+        $this->db->order_by('lugar.nombre_lugar', 'ASC');
+        $query = $this->db->get('lugar');
+        
+        $options_place = array_merge(array('' => '[ ' . $empty_text . ' ]'), $this->pml->query_to_array($query, $value_field, 'place_id'));
+        
+        return $options_place;
     }
 
     /* Devuelve un array con las opciones de la tabla usuario, limitadas por una condición definida

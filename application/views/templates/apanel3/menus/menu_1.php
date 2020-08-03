@@ -364,7 +364,32 @@
                 <li><a href="<?= base_url()?>datos/enunciados" class="<?= $clase_sm['enunciados'] ?>"><i class="fa fa-quote-left"></i><span>lecturas</span></a></li> <!-- subitem -->
                 <li><a href="<?php echo base_url()?>preguntas/explorar/?tp=01" class="<?= $clase_sm['preguntas'] ?>"><i class="fa fa-question"></i><span>preguntas</span></a></li>
             </ul>
+        </li>
 
+        <li class="has_submenu">
+            <a href="#" class="<?= $clase_m['comercial'] ?>">
+                <i class="fa fa-2x fa-shopping-cart"></i>
+                <span>comercial</span>
+            </a>
+            
+            <?php if ( $m_current['menu'] == 'comercial' ){ ?>
+                <span class="gossip"><?= $m_current['submenu_show'] ?></span>
+            <?php } ?>
+
+            <ul class="sub_nav">
+                <li>
+                    <a href="<?php echo base_url('orders/explore') ?>" class="<?php echo $clase_sm['ventas'] ?>">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span>ventas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo base_url('products/explore') ?>" class="<?php echo $clase_sm['productos'] ?>">
+                        <i class="fa fa-book"></i>
+                        <span>productos</span>
+                    </a>
+                </li>
+            </ul>
         </li>
         
         <li class="has_submenu">

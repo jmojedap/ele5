@@ -73,6 +73,7 @@ class Db_model extends CI_Model{
     */
     function num_rows($table, $condition)
     {    
+        $this->db->select('id');
         $this->db->where($condition);
         $query = $this->db->get($table);
         return $query->num_rows();

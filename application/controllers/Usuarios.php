@@ -70,46 +70,6 @@ class Usuarios extends CI_Controller{
             ->set_content_type('application/json')
             ->set_output(json_encode($respuesta));
     }
-
-    function ant_explorar()
-    {   
-        $this->load->model('Busqueda_model');
-        $this->load->helper('text');
-        
-        //Datos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
-            $resultados_total = $this->Usuario_model->buscar($busqueda); //Para calcular el total de resultados
-        
-        //Paginación
-            $this->load->library('pagination');
-            $config = $this->App_model->config_paginacion(2);
-            $config['base_url'] = base_url() . "usuarios/explorar/?{$busqueda_str}";
-            $config['total_rows'] = $resultados_total->num_rows();
-            $this->pagination->initialize($config);
-            
-        //Generar resultados para mostrar
-            $offset = $this->input->get('per_page');
-            $resultados = $this->Usuario_model->buscar($busqueda, $config['per_page'], $offset);
-            
-        //Instituciones
-            $this->db->order_by('nombre_institucion', 'ASC');
-            $instituciones = $this->db->get('institucion');
-        
-        //Variables para vista
-            $data['cant_resultados'] = $config['total_rows'];
-            $data['busqueda'] = $busqueda;
-            $data['busqueda_str'] = $busqueda_str;
-            $data['resultados'] = $resultados;
-            $data['instituciones'] = $instituciones;
-        
-        //Solicitar vista
-            $data['head_title'] = 'Usuarios';
-            $data['head_subtitle'] = number_format($data['cant_resultados'],0,',', '.');
-            $data['view_a'] = 'usuarios/explorar_v';
-            $data['nav_2'] = 'usuarios/explorar_menu_v';
-            $this->load->view(TPL_ADMIN, $data);
-    }
     
     /**
      * Exporta el resultado de la búsqueda a un archivo de Excel
@@ -1640,6 +1600,24 @@ class Usuarios extends CI_Controller{
         } else {
             return FALSE;
         }
+    }
+
+    /**
+     * Listado de usuarios por username
+     */
+    function get_by_username()
+    {
+        $this->db->select('usuario.id, nombre, apellidos, usuario.institucion_id, grupo_id, username, nombre_institucion, grupo.nivel AS level');
+        $this->db->join('institucion', 'institucion.id = usuario.institucion_id');
+        $this->db->join('grupo', 'grupo.id = usuario.grupo_id');
+        $this->db->where('username', $this->input->post('username'));
+        $this->db->where('rol_id > 2');
+        $users = $this->db->get('usuario', 10);
+
+        $data['users'] = $users->result();
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
 }

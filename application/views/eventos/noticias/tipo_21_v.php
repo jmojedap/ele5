@@ -2,7 +2,7 @@
     $row_cuestionario = $this->Pcrn->registro_id('cuestionario', $row_noticia->referente_id);
     $href = base_url("cuestionarios/vista_previa/{$row_noticia->referente_id}");
     
-    $tiempo_hace = $this->Pcrn->tiempo_hace($row_noticia->creado);
+    $tiempo_hace = $this->Pcrn->tiempo_hace($row_noticia->editado);
 ?>
 <b>
     <?= anchor("usuarios/actividad/{$row_noticia->usuario_id}", $this->App_model->nombre_usuario($row_noticia->c_usuario_id, 2)) ?>

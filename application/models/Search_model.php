@@ -56,7 +56,10 @@ class Search_model extends CI_Model{
             'f1',       //Filtro 1
             'f2',       //Filtro 2
             'f3',       //Filtro 3
-            'condicion' //Condición SQL Where adicional
+            'condicion', //Condición SQL Where adicional
+            'type',     //Tipo
+            'status',   //Status
+            'condition' //Condición SQL Where adicional
         );
         
         return $search_indexes;

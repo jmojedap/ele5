@@ -1,4 +1,4 @@
-<?php $this->load->view('templates/monster/menus/elements_' . $this->session->userdata('rol_id')) ?>
+<?php $this->load->view('templates/monster/menus/elements_' . $this->session->userdata('role')) ?>
 <?php //$this->load->view('templates/monster/menus/elements_6'); ?>
 
 <!-- ============================================================== -->
@@ -40,6 +40,26 @@
 <!-- ============================================================== -->
 
 <script>
+//Activación inicial de elementos actuales
+//-----------------------------------------------------------------------------
+    nav_1_elements.forEach(element => {
+            //Activar elemento actual, si está en las secciones
+            if ( element.sections.includes(app_cf) ) { element.active = true; }
+            //Activar subelemento actual, si está en las secciones
+            if ( element.subelements )
+            {
+                element.subelements.forEach(subelement => {
+                    if ( subelement.sections.includes(app_cf) )
+                    {
+                        element.active = true;
+                        subelement.active = true;
+                    }
+                });
+            }
+        });
+
+// VueApp nav_1
+//-----------------------------------------------------------------------------
     new Vue({
         el: '#nav_1',
         data: {

@@ -1,6 +1,6 @@
 <?php
     
-    $cant_login = $this->Institucion_model->cant_login($row->id);
+    /*$cant_login = $this->Institucion_model->cant_login($row->id);
     $cant_estudiantes = $this->Institucion_model->cant_estudiantes($row->id);
     $cant_pagaron = $this->Institucion_model->cant_estudiantes($row->id, 'pago = 1');
     
@@ -8,11 +8,25 @@
     if ( $cant_estudiantes > 0 ) { $porcentaje_pagaron = 100 * $cant_pagaron / $cant_estudiantes; }
 
     $promedio_login = 0;
-    if ( $cant_login > 0 ) { $promedio_login = $cant_login / $cant_estudiantes; } 
+    if ( $cant_login > 0 ) { $promedio_login = $cant_login / $cant_estudiantes; } */
+
+    $cant_login = 0;
+    $cant_estudiantes = $this->Institucion_model->cant_estudiantes($row->id);
+    $cant_pagaron = $this->Institucion_model->cant_estudiantes($row->id, 'pago = 1');
+    
+    $porcentaje_pagaron = 0; 
+    if ( $cant_estudiantes > 0 ) { $porcentaje_pagaron = 100 * $cant_pagaron / $cant_estudiantes; }
+
+    $promedio_login = 0;
+    //if ( $cant_login > 0 ) { $promedio_login = $cant_login / $cant_estudiantes; } 
 ?>
 
 <div class="sep1">
     <p>
+        <span class="suave"><i class="fa fa-users"></i> Cód</span>
+        <span class="resaltar"><?= $row->cod ?></span>
+        <span class="suave"> | </span>
+
         <span class="resaltar"><?= $row->lugar_nombre ?></span>
         <span class="suave"> | </span>
         
@@ -21,13 +35,13 @@
         <span class="suave"> | </span>
         
 
-        <span class="suave">Login</span>
+        <!-- <span class="suave">Login</span>
         <span class="resaltar"><?= $cant_login ?></span>
-        <span class="suave"> | </span>
+        <span class="suave"> | </span> -->
 
-        <span class="suave">Promedio login</span>
+        <!-- <span class="suave">Promedio login</span>
         <span class="resaltar"><?= number_format($promedio_login, 1) ?></span>
-        <span class="suave"> | </span>
+        <span class="suave"> | </span> -->
         
         <?php if ( in_array($this->session->userdata('rol_id'), array(0,1,2,8)) ) : ?>                
             <span class="suave">Pagaron</span>

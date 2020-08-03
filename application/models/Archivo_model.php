@@ -336,7 +336,6 @@ class Archivo_model extends CI_Model{
      * Realiza el upload de un archivo al servidor, crea el registro asociado en
      * la tabla "archivo".
      * 
-     * @return type
      */
     function cargar($archivo_id = NULL)
     {

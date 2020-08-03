@@ -28,7 +28,11 @@
                     this.nav_3[i].class = '';
                 }
                 this.nav_3[key].class = 'active';   //Elemento actual
-                this.load_view_a(key);
+                if ( this.nav_3[key].anchor ) {
+                    window.location = app_url + this.nav_3[key].cf;
+                } else {
+                    this.load_view_a(key);
+                }
             },
             load_view_a: function(key){
                 app_cf = this.nav_3[key].cf;

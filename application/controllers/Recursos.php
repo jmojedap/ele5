@@ -334,7 +334,7 @@ class Recursos extends CI_Controller{
             $busqueda_str = $this->Busqueda_model->busqueda_str();
             $resultados_total = $this->Recurso_model->links($busqueda); //Para calcular el total de resultados
         
-            if ( $resultados_total->num_rows() <= MAX_REG_EXPORT )
+            if ( $resultados_total->num_rows() <= 10000 )
             {
                 //Preparar datos
                     $datos['nombre_hoja'] = 'Links';

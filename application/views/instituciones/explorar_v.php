@@ -155,6 +155,7 @@
             <tr class="">
                 <th width="10px;"><?= form_checkbox($att_check_todos) ?></th>
                 <th width="60px;">ID</th>
+                <th width="10px;">Cód</th>
 
                 <th class="<?= $clases_col['institucion'] ?>">Institución</th>
                 <th class="<?= $clases_col['informacion'] ?>">Información</th>
@@ -173,7 +174,7 @@
                     //Checkbox
                         $att_check['data-id'] = $row_resultado->id;
                         
-                    $cant_login = $this->Institucion_model->cant_login($row_resultado->id);
+                    /*$cant_login = $this->Institucion_model->cant_login($row_resultado->id);
                     $cant_estudiantes = $this->Institucion_model->cant_estudiantes($row_resultado->id);
                     $cant_pagaron = $this->Institucion_model->cant_estudiantes($row_resultado->id, 'pago = 1');
 
@@ -181,7 +182,17 @@
                     if ( $cant_estudiantes > 0 ) { $porcentaje_pagaron = 100 * $cant_pagaron / $cant_estudiantes; }
 
                     $promedio_login = 0;
-                    if ( $cant_login > 0 ) { $promedio_login = $cant_login / $cant_estudiantes; } 
+                    if ( $cant_login > 0 ) { $promedio_login = $cant_login / $cant_estudiantes; } */
+
+                    $cant_login = 0;
+                    $cant_estudiantes = 0;
+                    $cant_pagaron = 0;
+
+                    $porcentaje_pagaron = 0; 
+                    //if ( $cant_estudiantes > 0 ) { $porcentaje_pagaron = 100 * $cant_pagaron / $cant_estudiantes; }
+
+                    $promedio_login = 0;
+                    //if ( $cant_login > 0 ) { $promedio_login = $cant_login / $cant_estudiantes; }
 
                 ?>
                 <tr>
@@ -189,7 +200,9 @@
                         <?= form_checkbox($att_check) ?>
                     </td>
 
+
                     <td class="warning text-right"><?= $row_resultado->id ?></td>
+                    <td><?= $row_resultado->cod ?></td>
 
                     <td>
                         <?= $link_elemento ?>

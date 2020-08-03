@@ -77,6 +77,7 @@ class Institucion_model extends CI_Model{
             $crud->where('institucion.id', 0);
         
         //Títulos de los campos
+            $crud->display_as('cod', 'Código');
             $crud->display_as('direccion','Dirección');
             $crud->display_as('telefono','Teléfono');
             $crud->display_as('pagina_web','Página web');
@@ -92,10 +93,10 @@ class Institucion_model extends CI_Model{
             $crud->set_relation('lugar_id', 'lugar', '{nombre_lugar}, {region}', 'pais_id = 51 AND tipo_id = 4');
 
         //Formulario Edit
-            $crud->edit_fields('nombre_institucion', 'lugar_id', 'direccion', 'telefono', 'pagina_web', 'ejecutivo_id', 'cat_1', 'vencimiento_cartera', 'acumulador', 'email', 'notas');
+            $crud->edit_fields('cod', 'nombre_institucion', 'lugar_id', 'direccion', 'telefono', 'pagina_web', 'ejecutivo_id', 'cat_1', 'vencimiento_cartera', 'acumulador', 'email', 'notas');
 
         //Formulario Add
-            $crud->add_fields('nombre_institucion', 'lugar_id', 'direccion', 'telefono', 'pagina_web', 'ejecutivo_id', 'cat_1', 'vencimiento_cartera', 'acumulador', 'email', 'notas');
+            $crud->add_fields('cod', 'nombre_institucion', 'lugar_id', 'direccion', 'telefono', 'pagina_web', 'ejecutivo_id', 'cat_1', 'vencimiento_cartera', 'acumulador', 'email', 'notas');
             
         //Funciones
             /*$crud->callback_after_update(array($this, 'gc_after_save'));
@@ -104,7 +105,7 @@ class Institucion_model extends CI_Model{
             $crud->field_type('cat_1','dropdown',array('1' => 'Sí', '2' => 'No'));
 
         //Reglas de validación
-            $crud->required_fields('nombre_institucion', 'area_id', 'nivel', 'acumulador');
+            $crud->required_fields('nombre_institucion', 'area_id', 'nivel', 'acumulador', 'cod');
             
         //Valores por defecto
             $crud->field_type('editado', 'hidden', date('Y-m-d H:i:s'));
@@ -832,5 +833,21 @@ class Institucion_model extends CI_Model{
         
         return $query->num_rows();
     }
-    
+
+// PAGOS Y COMPRAS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Query con instituciones según el código
+     * 2020-07-13
+     */
+    function get_by_cod($cod)
+    {
+        $this->db->select('id, nombre_institucion AS name');
+        $this->db->where('cod', $cod);
+        $institutions = $this->db->get('institucion');
+
+        return $institutions;
+    }
+
 }

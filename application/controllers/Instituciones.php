@@ -24,7 +24,6 @@ class Instituciones extends CI_Controller{
     
     function explorar()
     {
-        $this->output->enable_profiler(TRUE);
         $this->load->model('Busqueda_model');
         
         //Datos de consulta, construyendo array de búsqueda
@@ -1454,6 +1453,19 @@ class Instituciones extends CI_Controller{
             $data['ayuda_id'] = 119;
 
         $this->load->view(PTL_ADMIN, $data);
+    }
+
+// Pagos y compras
+//-----------------------------------------------------------------------------
+
+    /**
+     * Listado de instituciones a través del código
+     */
+    function get_by_cod($cod)
+    {
+        $institutions = $this->Institucion_model->get_by_cod($cod);
+        $data['list'] = $institutions->result();
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
 }

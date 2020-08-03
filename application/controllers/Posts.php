@@ -347,6 +347,7 @@ class Posts extends CI_Controller{
 
         //$data['view_a'] = 'posts/bitacora/print_v';
         $data['view_a'] = 'posts/bitacora/bitacora_v';
+        if ( $this->input->get('print') == 1 ) { $data['view_a'] = 'posts/bitacora/print_v'; }
         $data['head_title'] = 'Bitacora';
         $this->load->view(TPL_ADMIN_NEW, $data);
     }

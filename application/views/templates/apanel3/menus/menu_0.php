@@ -387,6 +387,32 @@
             </ul>
 
         </li>
+
+        <li class="has_submenu">
+            <a href="#" class="<?= $clase_m['comercial'] ?>">
+                <i class="fa fa-2x fa-shopping-cart"></i>
+                <span>comercial</span>
+            </a>
+            
+            <?php if ( $m_current['menu'] == 'comercial' ){ ?>
+                <span class="gossip"><?= $m_current['submenu_show'] ?></span>
+            <?php } ?>
+
+            <ul class="sub_nav">
+                <li>
+                    <a href="<?php echo base_url('orders/explore') ?>" class="<?php echo $clase_sm['ventas'] ?>">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span>ventas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo base_url('products/explore') ?>" class="<?php echo $clase_sm['productos'] ?>">
+                        <i class="fa fa-book"></i>
+                        <span>productos</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
         
         <li class="has_submenu">
             <a href="#" class="<?= $clase_m['ajustes'] ?>"><i class="fa fa-2x fa-sliders-h"></i><span>ajustes</span></a>

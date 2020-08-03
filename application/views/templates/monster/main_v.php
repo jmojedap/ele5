@@ -7,16 +7,17 @@
 <html lang="es">
     <head>
         <?php $this->load->view('templates/monster/parts/head_v') ?>
+        <?php $this->load->view('templates/monster/parts/routes_script_v') ?>
     </head>
 
     <body class="fix-header card-no-border fix-sidebar">
         <!-- ============================================================== -->
         <!-- Preloader - style you can find in spinners.css -->
         <!-- ============================================================== -->
-        <div class="preloader">
+        <!-- <div class="preloader">
             <svg class="circular" viewBox="25 25 50 50">
                 <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" /> </svg>
-        </div>
+        </div> -->
 
         <div id="main-wrapper">
             <?php $this->load->view('templates/monster/parts/header_v') ?>

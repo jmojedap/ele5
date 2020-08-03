@@ -53,11 +53,17 @@
             <?php } ?>
         </li>
         
-        <li class="">
+        <li>
             <a href="<?= base_url() . 'mensajes/conversacion'?>" class="<?= $clase_m['mensajes'] ?>">
                 <?php $this->load->view('plantilla_apanel/menu_mensajes_v'); ?>
             </a>
         </li>
+
+        <?php if ( $this->session->userdata('institucion_id') == 41 ) { ?>
+            <li class="">
+                <a href="<?= base_url('products/catalog') ?>" class="<?= $clase_m['comercial'] ?>"><i class="fa fa-2x fa-shopping-cart"></i><span>tienda</span></a>
+            </li>
+        <?php } ?>
         
         <li class="">
             <a href="<?= base_url() ?>usuarios/contrasena/" class="<?= $clase_m['contrasena'] ?>"><i class="fa fa-2x fa-lock"></i><span>contrasena</span></a>

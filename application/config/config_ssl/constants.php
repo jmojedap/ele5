@@ -105,5 +105,11 @@ define('NOMBRE_APP', 'Plataforma en Línea');            //Nombre de la aplicaci
 define('LAT_CHAT', 5000);                               //Latencia del chat, milisegudos actualización de mensajes chat
 
 define('APP_NAME', 'Plataforma en Línea');              //Nombre de la aplicación
+define('PATH_UPLOADS', '../v3/assets/uploads/');        //Ruta servidor para cargue de archivos aplicación
 define('URL_RESOURCES', 'https://www.plataformaenlinea.com/2017/resources/');   //URL carpeta contenido
 define('TPL_ADMIN', 'templates/apanel3/main_v');        //Vista plantilla de administración
+define('TPL_ADMIN_NEW', 'templates/monster/main_v');   //Vista plantilla de administración
+
+define('K_PUAK', 'PU12345');   //PayU ApiKey
+define('K_PUMI', 'PU569884');   //PayU merchantId
+define('K_PUAI', 'PU572534');   //PayU accountId

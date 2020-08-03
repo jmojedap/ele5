@@ -433,6 +433,23 @@ class Kit_Model extends CI_Model{
         
         return $no_importados;
     }
+
+    /**
+     * Opciones de kits para dropdowns
+     * 2020-07-13
+     */
+    function options($condition = 'id > 0')
+    {
+        $this->db->select("CONCAT('0', id) AS kit_id, nombre_kit AS full_name");
+        $this->db->where($condition);
+        $this->db->order_by('nombre_kit', 'ASC');
+        $kits = $this->db->get('kit', 500);
+
+        $options = array('' => ' [Seleccione el Kit] ');
+        $options = array_merge($options, $this->pml->query_to_array($kits, 'full_name', 'kit_id'));
+
+        return $options;
+    }
     
     
 }
