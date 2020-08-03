@@ -15,7 +15,7 @@ application/logs/*
 !application/logs/index.html
 !application/logs/.htaccess
 /vendor/
-application/config/*
+application/config/
 
 #pml
 /content/
