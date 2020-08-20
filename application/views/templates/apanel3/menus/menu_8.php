@@ -195,7 +195,7 @@
 
             <ul class="sub_nav">
                 <li><a href="<?= base_url()?>estadisticas/login_usuarios" class="<?= $clase_sm['estadisticas'] ?>"><i class="fa fa-chart-line"></i><span>estadísticas</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url() ?>datos/ayudas_explorar" class="<?= $clase_sm['ayuda'] ?>"><i class="fa fa-question-circle"></i><span>ayuda</span></a></li>
+                <li><a href="<?= base_url() ?>datos/ayudas" class="<?= $clase_sm['ayuda'] ?>"><i class="fa fa-question-circle"></i><span>ayuda</span></a></li>
             </ul>
         </li>
         

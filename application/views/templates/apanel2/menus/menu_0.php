@@ -206,7 +206,7 @@
 
         //$opciones_menus['usuarios/cuestionarios'] = array('cuestionarios', 'cuestionarios', 'cuestionarios');
     //Ajustes
-        $opciones_menus['datos/ayudas_explorar'] = array('ajustes', 'ayuda', 'ayuda');
+        $opciones_menus['datos/ayudas'] = array('ajustes', 'ayuda', 'ayuda');
         $opciones_menus['datos/ayudas_nuevo'] = array('ajustes', 'ayuda', 'ayuda');
         $opciones_menus['datos/ayudas_editar'] = array('ajustes', 'ayuda', 'ayuda');
         $opciones_menus['datos/ayudas'] = array('ajustes', 'ayuda', 'ayuda');
@@ -396,6 +396,11 @@
                 </li>
                 
                 <li><a href="<?= base_url() ?>develop/procesos" class="<?= $clase_sm['ajustes/procesos'] ?>"><i class="fa fa-tasks"></i><span>procesos</span></a></li> <!-- subitem -->
+                <li>
+                    <a href="<?= base_url('eventos/explore') ?>" class="<?= $clase_sm['ajustes_eventos'] ?>">
+                        <i class="far fa-calendar"></i> <span>Eventos</span>
+                    </a>
+                </li>
                 <li><a href="<?php echo base_url('sincro/panel') ?>" class="<?= $clase_sm['ajustes/database'] ?>"><i class="fa fa-database"></i><span>base de datos</span></a></li>
                 <li>
                     <a href="<?= base_url('posts/bitacora') ?>" class="<?= $clase_sm['ajustes_bitacora'] ?>">
@@ -415,7 +420,7 @@
                         <span>lugares</span>
                     </a>
                 </li>
-                <li><a href="<?= base_url() ?>datos/ayudas_explorar" class="<?= $clase_sm['ayuda'] ?>"><i class="fa fa-question-circle"></i><span>ayuda</span></a></li>
+                <li><a href="<?= base_url() ?>datos/ayudas" class="<?= $clase_sm['ayuda'] ?>"><i class="fa fa-question-circle"></i><span>ayuda</span></a></li>
             </ul>
         </li>
         

@@ -190,8 +190,43 @@ class Datos extends CI_Controller {
             $data['vista_menu'] = 'datos/ayudas/explorar_menu_v';
             $this->load->view(PTL_ADMIN, $data);
     }
+
+    /**
+     * Exploración y búsqueda de posts cat 20 ayudas
+     */
+    function ayudas($num_page = 1)
+    {
+            $data['controller'] = 'posts';                      //Nombre del controlador
+            $data['cf'] = 'datos/ayudas/';                      //Nombre del controlador
+            $data['views_folder'] = 'datos/ayudas/';           //Carpeta donde están las vistas de exploración
+            $data['search_num_rows'] = 0;
+            
+        //Vistas
+            $data['head_title'] = 'Artículos de ayuda';
+            $data['view_a'] = $data['views_folder'] . 'explore_v';
+            $data['head_subtitle'] = $data['search_num_rows'];
+            //$data['nav_2'] = $data['views_folder'] . 'menu_v';
+        
+        //Cargar vista
+            $this->App_model->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * Listado de Artículos de ayuda, filtrados por búsqueda, JSON
+     */
+    function ayudas_get($num_page = 1)
+    {
+        $this->load->model('Post_model');
+        $this->load->model('Search_model');
+        $filters = $this->Search_model->filters();
+        $filters['tp'] = 20;
+        $filters['f1'] = $this->session->userdata('role');    //Filtrar por rol de usuario
+
+        $data = $this->Post_model->get($filters, $num_page);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
     
-    function ayudas()
+    function z_ayudas()
     {
         //$this->output->enable_profiler(TRUE);
         $this->load->model('Busqueda_model');

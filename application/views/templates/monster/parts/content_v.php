@@ -40,7 +40,9 @@
                     </div>
                 <?php } ?>
 
-                <?php $this->load->view($view_a) ?>
+                    <div id="view_a">
+                        <?php $this->load->view($view_a) ?>
+                    </div>
 
                 <?php if ( ! is_null($view_b) ) { ?>
                     <div id="view_b">

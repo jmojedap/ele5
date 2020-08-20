@@ -111,7 +111,7 @@
                         active: false,
                         icon: 'fa fa-newspaper',
                         cf: 'posts/explorar',
-                        sections: []
+                        sections: ['posts/explorar', 'posts/editar', 'posts/nuevo', 'posts/leer']
                     },
                 ],
                 sections: []
@@ -181,7 +181,7 @@
                 sections: ['products/info']
             },
             {
-                text: 'Ajustes',
+                text: 'Administración',
                 active: false,
                 style: '',
                 icon: 'fa fa-sliders-h',
@@ -208,6 +208,13 @@
                         icon: 'fa fa-tasks',
                         cf: 'develop/procesos',
                         sections: []
+                    },
+                    {
+                        text: 'Eventos',
+                        active: false,
+                        icon: 'far fa-calendar',
+                        cf: 'eventos/explore',
+                        sections: ['eventos/explore']
                     },
                     {
                         text: 'Base de datos',
@@ -241,8 +248,8 @@
                         text: 'Ayuda',
                         active: false,
                         icon: 'fa fa-question-circle',
-                        cf: 'datos/ayudas_explorar',
-                        sections: []
+                        cf: 'datos/ayudas',
+                        sections: ['datos/ayudas']
                     }
                 ],
                 sections: []

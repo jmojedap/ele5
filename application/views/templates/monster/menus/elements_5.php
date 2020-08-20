@@ -109,7 +109,7 @@
                         text: 'Ayuda',
                         active: false,
                         icon: 'fa fa-question-circle',
-                        cf: 'datos/ayudas_explorar'
+                        cf: 'datos/ayudas'
                     }
                 ]
             },

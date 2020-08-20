@@ -25,70 +25,58 @@ class Posts extends CI_Controller{
 
 //CRUD
 //---------------------------------------------------------------------------------------------------
-
     
     /**
      * Exploración y búsqueda de posts
      */
-    function explorar($num_pagina = 0)
+    function explorar($num_page = 1)
     {
+        //Identificar filtros de búsqueda
+            $this->load->model('Search_model');
+            $filters = $this->Search_model->filters();
+
         //Datos básicos de la exploración
-            $data = $this->Post_model->data_explorar($num_pagina);
+            $data = $this->Post_model->explore_data($filters, $num_page);
         
         //Opciones de filtros de búsqueda
-            $data['arr_filtros'] = array('tp', 'o');
-            $data['opciones_tipo'] = $this->Item_model->opciones('categoria_id = 33', 'Todos');
+            $data['options_type'] = $this->Item_model->opciones('categoria_id = 33', 'Todos');
             
         //Arrays con valores para contenido en la tabla
-            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 33');
+            $data['arr_types'] = $this->Item_model->arr_interno('categoria_id = 33');
         
         //Cargar vista
-            $this->load->view(PTL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
-     * AJAX
-     * 
-     * Devuelve JSON, que incluye string HTML de la tabla de exploración para la
-     * página $num_pagina, y los filtros enviados por post
-     * 
-     * @param type $num_pagina
+     * Listado de Projects, filtrados por búsqueda, JSON
      */
-    function tabla_explorar($num_pagina = 0)
+    function get($num_page = 1)
     {
-        //Datos básicos de la exploración
-            $data = $this->Post_model->data_tabla_explorar($num_pagina);
-        
-        //Arrays con valores para contenido en lista
-            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 33');
-        
-        //Preparar respuesta
-            $respuesta['html'] = $this->load->view('posts/explorar/tabla_v', $data, TRUE);
-            $respuesta['seleccionados_todos'] = $data['seleccionados_todos'];
-            $respuesta['num_pagina'] = $num_pagina;
-        
-        //Salida
-            $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($respuesta));
+        $this->load->model('Search_model');
+        $filters = $this->Search_model->filters();
+
+        $data = $this->Post_model->get($filters, $num_page);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**
-     * AJAX
-     * Eliminar un grupo de posts seleccionados
+     * AJAX JSON
+     * Eliminar un conjunto de projects seleccionados
      */
-    function eliminar_seleccionados()
+    function delete_selected()
     {
-        $str_seleccionados = $this->input->post('seleccionados');
+        $selected = explode(',', $this->input->post('selected'));
+        $data['qty_deleted'] = 0;
         
-        $seleccionados = explode('-', $str_seleccionados);
-        
-        foreach ( $seleccionados as $elemento_id ) 
+        foreach ( $selected as $row_id ) 
         {
-            $this->Post_model->eliminar($elemento_id);
+            $data['qty_deleted'] += $this->Post_model->eliminar($row_id);
         }
-        
-        $this->output->set_content_type('application/json')->set_output(json_encode($seleccionados));
+
+        //Establecer resultado
+        if ( $data['qty_deleted'] > 0 ) { $data['status'] = 1; }
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -135,27 +123,125 @@ class Posts extends CI_Controller{
         $this->load->view('app/descargar_phpexcel_v', $data);
             
     }
-    
+
+// INFORMACÍON LECTURA Y APERTURA
+//-----------------------------------------------------------------------------
+
     /**
-     * Formulario para la creación de un registro en la tabla post,
-     * Después de crear el post, es redirigido al
-     * formulario de edición.
-     * 
-     * @param type $institucion_id
+     * Abrir o redireccionar a la vista pública de un post
      */
-    function nuevo()
+    function open($post_id)
     {
-        //Cargando datos básicos
-            $data['destino_form'] = "posts/guardar/nuevo";
-            $data['valores_form'] = $this->Pcrn->valores_form(NULL, 'post');
-            
-        //Solicitar vista
-            $data['titulo_pagina'] = 'Posts';
-            $data['subtitulo_pagina'] = 'Nuevo';
-            $data['vista_a'] = 'posts/formulario_v';
-            $data['vista_menu'] = 'posts/explorar/menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+        $row = $this->Db_model->row_id('post', $post_id);
+        $destination = "posts/read/{$post_id}";
+        //if ( $row->type_id == 8 ) { $destination = "books/read/{$row->code}/0"; }
+
+        redirect($destination);
     }
+
+    /**
+     * Mostrar post en vista lectura
+     */
+    function read($post_id)
+    {
+        //Datos básicos
+        $data = $this->Post_model->basic($post_id);
+        unset($data['nav_2']);
+        $data['view_a'] = $this->Post_model->type_folder($data['row']) . 'read_v';
+
+        $this->App_model->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * Información general del post
+     */
+    function info($post_id)
+    {        
+        //Datos básicos
+        $data = $this->Post_model->basic($post_id);
+        $data['view_a'] = 'posts/info_v';
+
+        //if ( $data['row']->type_id == 8 ) { $data['view_a'] = 'posts/types/book/info_v'; }
+
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
+    }
+
+    /**
+     * Información detallada del post desde la perspectiva de base de datos
+     * 2020-08-18
+     */
+    function details($post_id)
+    {        
+        //Datos básicos
+        $data = $this->Post_model->basic($post_id);
+        $data['view_a'] = 'posts/details_v';
+        $data['fields'] = $this->db->list_fields('post');
+
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
+    }
+    
+// CREACIÓN DE UN POST
+//-----------------------------------------------------------------------------
+
+    /**
+     * Vista Formulario para la creación de un nuevo post
+     */
+    function add($tipo_id = '')
+    {
+        //Variables generales
+            $data['tipo_id'] = $tipo_id;
+            $data['head_title'] = 'Post';
+            $data['head_subtitle'] = 'Nuevo';
+            $data['nav_2'] = 'posts/explore/menu_v';
+            $data['view_a'] = 'posts/add/add_v';
+
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
+    }
+
+    /**
+     * Crea un nuevo registro en la tabla post
+     * 2019-11-29
+     */
+    function insert()
+    {
+        $data = $this->Post_model->insert();
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+// EDICIÓN Y ACTUALIZACIÓN
+//-----------------------------------------------------------------------------
+
+    /**
+     * Formulario para la edición de los datos de un user. Los datos que se
+     * editan dependen de la $section elegida.
+     */
+    function edit($post_id)
+    {
+        //Datos básicos
+        $data = $this->Post_model->basic($post_id);
+
+        $data['options_type'] = $this->Item_model->options('categoria_id = 33', 'Todos');
+        
+        //Array data espefícicas
+            $data['nav_2'] = 'posts/menu_v';
+            $data['head_subtitle'] = 'Editar';
+            $data['view_a'] = $this->Post_model->type_folder($data['row']) . 'edit_v';
+        
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
+    }
+
+    /**
+     * Guardar un registro en la tabla post, si post_id = 0, se crea nuevo registro
+     * 2019-11-29
+     */
+    function update($post_id)
+    {
+        $data = $this->Post_model->update($post_id);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+// FUNCIONES ANTERIORES
+//-----------------------------------------------------------------------------
     
     /**
      * POST REDIRECT
@@ -194,7 +280,7 @@ class Posts extends CI_Controller{
         $this->load->model('Esp');
         
         //Datos básicos
-            $data = $this->Post_model->basico($post_id);
+            $data = $this->Post_model->basic($post_id);
         
         //Array data espefícicas
             $data['view_description'] = 'posts/post_v';
@@ -237,7 +323,7 @@ class Posts extends CI_Controller{
     function ver($post_id)
     {
         
-        $data = $this->Post_model->basico($post_id);    
+        $data = $this->Post_model->basic($post_id);    
         $data['detalle'] = $this->Post_model->detalle($post_id);
         $data['extras'] = $this->Post_model->extras($post_id);
         $data['row_ciudad'] = $this->Pcrn->registro_id('lugar', $data['row']->ciudad_id);
@@ -257,7 +343,7 @@ class Posts extends CI_Controller{
     
     function leer($post_id)
     {
-        $data = $this->Post_model->basico($post_id);    
+        $data = $this->Post_model->basic($post_id);    
         
         //Variables
             $data['post_id'] = $post_id;
@@ -288,7 +374,7 @@ class Posts extends CI_Controller{
             $this->load->model('Esp');
             
         //Datos básicos
-            $data = $this->Post_model->basico($post_id);
+            $data = $this->Post_model->basic($post_id);
         
         //Variables
             $tabla_id = $data['row']->referente_1_id;
@@ -486,7 +572,7 @@ class Posts extends CI_Controller{
         $this->load->model('Esp');
         
         //Datos básicos
-            $data = $this->Post_model->basico($post_id);
+            $data = $this->Post_model->basic($post_id);
         
         //Array data espefícicas
             $data['vista_a'] = 'posts/contenidos_ap/contenido_ap_v';
@@ -497,7 +583,7 @@ class Posts extends CI_Controller{
     
     function ap_leer($post_id)
     {
-        $data = $this->Post_model->basico($post_id);    
+        $data = $this->Post_model->basic($post_id);    
         
         //Variables
             $data['post_id'] = $post_id;
@@ -591,7 +677,7 @@ class Posts extends CI_Controller{
         //$this->output->enable_profiler(TRUE);
         
         //Datos básicos
-        $data = $this->Post_model->basico($post_id);
+        $data = $this->Post_model->basic($post_id);
         
         //Variables especificas
         $data['instituciones'] = $this->Post_model->instituciones($post_id);

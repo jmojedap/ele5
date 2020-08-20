@@ -68,22 +68,18 @@ class Search_model extends CI_Model{
     /**
      * Array de búsqueda con valor NULL para todos los índices
      * Valor inicial antes de evaluar contenido de POST y GET
-     * @return null
      */
     function default_filters()
     {
         $search_indexes = $this->search_indexes();
-        
         foreach ($search_indexes as $index) { $search[$index] = NULL; }
-        
         return $search;
     }
     
     /**
      * Array con los parámetros de una búsqueda, respuesta para los dos métodos
      * de solicitud POST y GET.
-     * 
-     * @return type
+     * 2020-07-28
      */
     function filters()
     {
@@ -109,29 +105,33 @@ class Search_model extends CI_Model{
     }
     
     /**
-     * String con la cadena para URL tipo GET, con los valores de la búsqueda
-     * @return type
+     * String con la cadena para URL tipo GET, con los valores de filtros de la búsqueda
+     * 2020-07-15
      */
-    function str_filters()
+    function str_filters($filters = NULL)
     {
-        $filters = $this->filters();
+
+        if ( is_null($filters) ) { $filters = $this->filters(); }   //Si no están definidos
+
         $search_indexes = $this->search_indexes();
         $str_filters = '';
         
         foreach ( $search_indexes as $index ) 
         {
-            if ( $filters[$index] != '' ) { $str_filters .= "{$index}={$filters[$index]}&"; }
+            $value = $filters[$index];
+            if ( $filters[$index] != '' ) { $str_filters .= "{$index}={$value}&"; }
         }
+
+        //Preparar
+        $str_filters = str_replace(' ','+',$str_filters);               //Reemplazar espacios por signo +
+        $str_filters = str_replace(array('<','>','?'),'',$str_filters); //Quitar caractéres especiales*/
         
         return $str_filters;
-    } 
-    
+    }
     
     /**
-     * Devuelve string con segmento sql de fields con el condicional para concatenar
-     * 
-     * @param type $fields
-     * @return type
+     * String con segmento SQL con campos concatenados para realizar una búsqueda conjunta
+     * 2020-07-28
      */
     function concat_fields($fields)
     {
@@ -145,22 +145,25 @@ class Search_model extends CI_Model{
         return substr($concat_fields, 0, -2);
     }
     
+    /**
+     * String SQL WHERE buscando cada palabra de un texto, en una concatenación de campos de una tabla
+     * 2020-07-28 
+     */
     function words_condition($text_search, $fields)
     {
         $condition = NULL;
         
         if ( strlen($text_search) > 2 )
         {
-            $concat_fields = $this->concat_fields($fields);
-            $words = $this->words($text_search);
+            $concat_fields = $this->concat_fields($fields); //Campos concatenados
+            $words = $this->words($text_search);            //Array con palabras buscadas (q)
 
             foreach ($words as $word) 
             {
                 $condition .= "CONCAT({$concat_fields}) LIKE '%{$word}%' AND ";
             }
             
-            $condition = substr($condition, 0, -5);
-            
+            $condition = substr($condition, 0, -5); //Quitar el último segmento ' AND ', no utilizado
         }
         
         return $condition;

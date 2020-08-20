@@ -99,7 +99,7 @@
                     </p>
                     <?php if ( $this->session->userdata('rol_id') == 0 ) { ?>
                         <p>
-                            <a href="<?php echo base_url("posts/editar/{$pago_id}") ?>" class="btn btn-primary" target="_blank">
+                            <a href="<?php echo base_url("posts/edit/{$pago_id}") ?>" class="btn btn-primary" target="_blank">
                                 <i class="fa fa-pencil-alt"></i>
                                 Editar
                             </a>
@@ -136,7 +136,7 @@
 
 
                         <br/>
-                        <a href="<?php echo base_url("posts/editar/{$row_bitacora->id}") ?>" class="btn btn-success btn-sm" target="_blank">Editar</a>
+                        <a href="<?php echo base_url("posts/edit/{$row_bitacora->id}") ?>" class="btn btn-success btn-sm" target="_blank">Editar</a>
                     </div>
                 <?php
                     $modulo_ant = $row_bitacora->modulo;

@@ -29,3 +29,9 @@
 
         <!-- Google Analytics -->
         <?php //$this->load->view('head_includes/google_analytics'); ?>
+
+        <!-- PML Tools -->
+        <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES . 'css/style_pml.css' ?>">
+        <script>
+                const app_url = '<?php echo base_url() ?>'; const url_app = '<?php echo URL_API ?>'; const url_api = '<?php echo URL_API ?>';
+        </script>

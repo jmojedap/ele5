@@ -56,7 +56,7 @@ class App_model extends CI_Model {
         $arr_crons = array();
 
         //Si la hora (G) es menor o igual a las 6 (am)
-        if ( date('G') <= 6 )
+        if ( date('G') <= 6 && VER_LOCAL == FALSE)
         {
             $this->load->model('Develop_model');
             $arr_crons['actualizar_dw_up'] = $this->Develop_model->cron('actualizar_dw_up');

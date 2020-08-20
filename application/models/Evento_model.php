@@ -12,6 +12,186 @@ class Evento_Model extends CI_Model{
         
         return $basico;
     }
+
+// EXPLORE FUNCTIONS - users/explore
+//-----------------------------------------------------------------------------
+    
+    /**
+     * Array con los datos para la vista de exploración
+     */
+    function explore_data($filters, $num_page)
+    {
+        //Data inicial, de la tabla
+            $data = $this->get($filters, $num_page);
+        
+        //Elemento de exploración
+            $data['controller'] = 'eventos';                      //Nombre del controlador
+            $data['cf'] = 'eventos/explore/';                      //Nombre del controlador
+            $data['views_folder'] = 'eventos/explore/';           //Carpeta donde están las vistas de exploración
+            
+        //Vistas
+            $data['head_title'] = 'Eventos';
+            $data['head_subtitle'] = $data['search_num_rows'];
+            $data['view_a'] = $data['views_folder'] . 'explore_v';
+            $data['nav_2'] = $data['views_folder'] . 'menu_v';
+        
+        return $data;
+    }
+
+    /**
+     * Array con listado de eventos, filtrados por búsqueda y num página, más datos adicionales sobre
+     * la búsqueda, filtros aplicados, total resultados, página máxima.
+     * 2020-08-07
+     */
+    function get($filters, $num_page, $per_page = 12)
+    {
+        //Referencia
+            $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
+
+        //Búsqueda y Resultados
+            $elements = $this->search($filters, $per_page, $offset);    //Resultados para página
+        
+        //Cargar datos
+            $data['filters'] = $filters;
+            //$data['list'] = $this->list($filters, $per_page, $offset);    //Resultados para página
+            $data['list'] = $elements->result();
+            $data['str_filters'] = $this->Search_model->str_filters();      //String con filtros en formato GET de URL
+            $data['search_num_rows'] = $this->search_num_rows($data['filters']);
+            $data['max_page'] = ceil($this->pml->if_zero($data['search_num_rows'],1) / $per_page);   //Cantidad de páginas
+
+        return $data;
+    }
+    
+    /**
+     * Query de eventos, filtrados según búsqueda, limitados por página
+     * 2020-08-01
+     */
+    function search($filters, $per_page = NULL, $offset = NULL)
+    {
+        //Construir consulta
+            $this->db->select('evento.*, CONCAT((fecha_inicio), (" "), (hora_inicio)) AS inicio, usuario.username, institucion.nombre_institucion');
+            $this->db->join('usuario', 'usuario.id = evento.c_usuario_id');
+            $this->db->join('institucion', 'evento.institucion_id = institucion.id', 'left');
+            
+            
+        //Orden
+            if ( $filters['o'] != '' )
+            {
+                $order_type = $this->pml->if_strlen($filters['ot'], 'ASC');
+                $this->db->order_by($filters['o'], $order_type);
+            } else {
+                $this->db->order_by('evento.id', 'DESC');
+            }
+            
+        //Filtros
+            $search_condition = $this->search_condition($filters);
+            if ( $search_condition ) { $this->db->where($search_condition);}
+            
+        //Obtener resultados
+            $query = $this->db->get('evento', $per_page, $offset); //Resultados por página
+        
+        return $query;
+    }
+
+    /**
+     * String con condición WHERE SQL para filtrar users
+     * 2020-08-01
+     */
+    function search_condition($filters)
+    {
+        $condition = NULL;
+
+        $condition .= $this->role_filter() . ' AND ';
+
+        //q words condition
+        $words_condition = $this->Search_model->words_condition($filters['q'], array('nombre_evento', 'descripcion', 'url'));
+        if ( $words_condition )
+        {
+            $condition .= $words_condition . ' AND ';
+        }
+        
+        //Otros filtros
+        if ( $filters['tp'] != '' ) { $condition .= "tipo_id = {$filters['tp']} AND "; }
+        if ( $filters['fi'] != '' ) { $condition .= "creado >= '{$filters['fi']} 00:00:00' AND "; }
+        if ( $filters['ff'] != '' ) { $condition .= "creado <= '{$filters['ff']} 23:59:59' AND "; }
+        if ( $filters['i'] != '' ) { $condition .= "evento.institucion_id = '{$filters['i']}' AND "; }
+        if ( $filters['g'] != '' ) { $condition .= "evento.grupo_id = '{$filters['g']}' AND "; }
+        
+        //Quitar cadena final de ' AND '
+        if ( strlen($condition) > 0 ) { $condition = substr($condition, 0, -5);}
+        
+        return $condition;
+    }
+
+    /**
+     * Array Listado elemento resultado de la búsqueda (filtros).
+     * 2020-06-19
+     */
+    /*function list($filters, $per_page = NULL, $offset = NULL)
+    {
+        $query = $this->search($filters, $per_page, $offset);
+        $list = array();
+
+        foreach ($query->result() as $row)
+        {
+            
+            $list[] = $row;
+        }
+
+        return $list;
+    }*/
+    
+    /**
+     * Devuelve la cantidad de registros encontrados en la tabla con los filtros
+     * establecidos en la búsqueda
+     */
+    function search_num_rows($filters)
+    {
+        /*$this->db->select('id');
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+        $query = $this->db->get('evento'); //Para calcular el total de resultados
+
+        return $query->num_rows();*/
+        return 5000000;
+    }
+    
+    /**
+     * Devuelve segmento SQL, para filtrar listado de usuarios según el rol del usuario en sesión
+     * 2020-08-01
+     */
+    function role_filter()
+    {
+        $role = $this->session->userdata('role');
+        $condition = 'evento.id = 0';  //Valor por defecto, ningún user, se obtendrían cero user.
+        
+        if ( $role <= 2 ) 
+        {   //Desarrollador, todos los user
+            $condition = 'evento.id > 0';
+        }
+        
+        return $condition;
+    }
+    
+    /**
+     * Array con options para ordenar el listado de user en la vista de
+     * exploración
+     * 
+     */
+    function order_options()
+    {
+        $order_options = array(
+            '' => '[ Ordenar por ]',
+            'id' => 'ID Evento',
+            'nombre_evento' => 'Nombre',
+            'fecha_inicio' => 'Fecha inicio',
+        );
+        
+        return $order_options;
+    }
+
+// Separador
+//-----------------------------------------------------------------------------
     
     /**
      * Determina si un usuario tiene el permiso para eliminar un registro de evento

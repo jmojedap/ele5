@@ -160,7 +160,7 @@
 
         //$opciones_menus['usuarios/cuestionarios'] = array('cuestionarios', 'cuestionarios', 'cuestionarios');
     //Ajustes
-        $opciones_menus['datos/ayudas_explorar'] = array('ajustes', 'ayuda', 'ayuda');
+        $opciones_menus['datos/ayudas'] = array('ajustes', 'ayuda', 'ayuda');
         $opciones_menus['datos/ayudas_nuevo'] = array('ajustes', 'ayuda', 'ayuda');
         $opciones_menus['datos/ayudas_editar'] = array('ajustes', 'ayuda', 'ayuda');
         $opciones_menus['datos/ayudas'] = array('ajustes', 'ayuda', 'ayuda');

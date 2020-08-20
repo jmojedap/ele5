@@ -38,3 +38,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
 
     <?php $this->load->view('assets/toastr') ?>
+
+    <!-- PML Tools -->
+    <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES . 'css/style_pml.css' ?>">
+    <script src="<?php echo URL_RESOURCES . 'js/pcrn_en.js' ?>"></script>
+    <script>
+        const app_url = '<?php echo base_url() ?>'; const url_app = '<?php echo URL_API ?>'; const url_api = '<?php echo URL_API ?>';
+    </script>

@@ -1,16 +1,239 @@
 <?php
 class Post_Model extends CI_Model{
     
-    function basico($post_id)
+    function basic($post_id)
     {
-        $row = $this->Pcrn->registro_id('post', $post_id);
+        $row = $this->Db_model->row_id('post', $post_id);
         
-        $basico['row'] = $row;
-        $basico['nombre_post'] = $this->Pcrn->si_strlen($row->nombre_post, 'Post ' . $row->id);
-        $basico['head_title'] = $basico['nombre_post'];
+        $data['row'] = $row;
+        $data['nombre_post'] = $this->pml->if_strlen($row->nombre_post, 'Post ' . $row->id);
+        $data['head_title'] = $data['nombre_post'];
+        $data['nav_2'] = 'posts/menu_v';
         
-        return $basico;
+        return $data;
     }
+
+// EXPLORE FUNCTIONS - posts/explore
+//-----------------------------------------------------------------------------
+
+    /**
+     * Array con los datos para la vista de exploración
+     */
+    function explore_data($filters, $num_page)
+    {
+        //Data inicial, de la tabla
+            $data = $this->get($filters, $num_page);
+        
+        //Elemento de exploración
+            $data['controller'] = 'posts';                      //Nombre del controlador
+            $data['cf'] = 'posts/explorar/';                      //Nombre del controlador
+            $data['views_folder'] = 'posts/explore/';           //Carpeta donde están las vistas de exploración
+            
+        //Vistas
+            $data['head_title'] = 'Posts';
+            $data['view_a'] = $data['views_folder'] . 'explore_v';
+            $data['head_subtitle'] = $data['search_num_rows'];
+            $data['nav_2'] = $data['views_folder'] . 'menu_v';
+        
+        return $data;
+    }
+
+    /**
+     * Conjunto de variables de una búsqueda, incluido el listado de resultados
+     */
+    function get($filters, $num_page, $per_page = 10)
+    {
+        //Referencia
+            $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
+
+        //Query resultados página
+            $query = $this->search($filters, $per_page, $offset);    //Resultados para página
+            //$list = $this->list($filters, $per_page, $offset);
+        
+        //Cargar datos
+            $data['filters'] = $filters;
+            $data['list'] = $query->result();
+            $data['str_filters'] = $this->Search_model->str_filters($filters);      //String de filtros tipo GET
+            $data['search_num_rows'] = $this->search_num_rows($filters);            //Total resultados
+            $data['max_page'] = ceil($this->pml->if_zero($data['search_num_rows'],1) / $per_page);   //Cantidad de páginas
+
+        return $data;
+    }
+
+    /**
+     * Query con resultados de pictures filtrados, por página y offset
+     * 2020-07-15
+     */
+    function search($filters, $per_page = NULL, $offset = NULL)
+    {
+        //Construir consulta
+            $this->db->select('*');
+            
+        //Orden
+            if ( $filters['o'] != '' )
+            {
+                $order_type = $this->pml->if_strlen($filters['ot'], 'ASC');
+                $this->db->order_by($filters['o'], $order_type);
+            } else {
+                $this->db->order_by('post.editado', 'DESC');
+            }
+            
+        //Filtros
+            $search_condition = $this->search_condition($filters);
+            if ( $search_condition ) { $this->db->where($search_condition);}
+            
+        //Obtener resultados
+            $query = $this->db->get('post', $per_page, $offset); //Resultados por página
+        
+        return $query;
+    }
+    
+    /**
+     * String con condición WHERE SQL para filtrar file
+     */
+    function search_condition($filters)
+    {
+        $condition = NULL;
+
+        //$condition .= 'is_image = 1 AND ';   //Es imagen
+
+        //$condition .= $this->role_filter() . ' AND ';
+
+        //q words condition
+        $words_condition = $this->Search_model->words_condition($filters['q'], array('nombre_post', 'contenido', 'resumen'));
+        if ( $words_condition )
+        {
+            $condition .= $words_condition . ' AND ';
+        }
+        
+        //Filtros
+        if ( strlen($filters['tp']) > 0 ) $condition .= "tipo_id = {$filters['tp']} AND ";
+        if ( strlen($filters['f1']) > 0 ) $condition .= "texto_3 LIKE '%-{$filters['f1']}-%' AND ";
+        
+        //Quitar cadena final de ' AND '
+        if ( strlen($condition) > 0 ) { $condition = substr($condition, 0, -5);}
+        
+        return $condition;
+    }
+
+    /**
+     * Devuelve segmento SQL, con filtro según el rol
+     */
+    function role_filter()
+    {
+        $role = $this->session->userdata('role');
+        $condition = 'post.id > 0';  //Valor por defecto, ningún file, se obtendrían cero file.
+        
+        if ( $role <= 2 ) 
+        {   //Desarrollador, todos los file
+            $condition = 'post.id > 0';
+        }
+        
+        return $condition;
+    }
+    
+    /**
+     * Cantidad total registros encontrados en la tabla con los filtros
+     * establecidos en la búsqueda
+     */
+    function search_num_rows($filters)
+    {
+        $this->db->select('id');
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+        $query = $this->db->get('post'); //Para calcular el total de resultados
+
+        return $query->num_rows();
+    }
+    
+    /**
+     * Array con options para ordenar el listado de file en la vista de
+     * exploración
+     */
+    function order_options()
+    {
+        $order_options = array(
+            '' => '[ Ordenar por ]',
+            'id' => 'ID Post',
+            'post_name' => 'Nombre'
+        );
+        
+        return $order_options;
+    }
+
+// CRUD
+//-----------------------------------------------------------------------------
+    
+    /**
+     * Insertar un registro en la tabla post.
+     * 2020-02-22
+     */
+    function insert($arr_row = NULL)
+    {
+        if ( is_null($arr_row) ) { $arr_row = $this->arr_row('insert'); }
+
+        $data = array('status' => 0);
+        
+        //Insert in table
+            $this->db->insert('post', $arr_row);
+            $data['saved_id'] = $this->db->insert_id();
+
+        if ( $data['saved_id'] > 0 ) { $data['status'] = 1; }
+        
+        return $data;
+    }
+
+    /**
+     * Actualiza un registro en la tabla post
+     * 2020-02-22
+     */
+    function update($post_id)
+    {
+        $data = array('status' => 0);
+
+        //Guardar
+            $arr_row = $this->Db_model->arr_row($post_id);
+            $saved_id = $this->Db_model->save('post', "id = {$post_id}", $arr_row);
+
+        //Actualizar resultado
+            if ( $saved_id > 0 ){ $data = array('status' => 1); }
+        
+        return $data;
+    }
+
+    /**
+     * Nombre de la vista con el formulario para la edición del post. Puede cambiar dependiendo
+     * del tipo (type_id).
+     * 2020-02-23
+     */
+    function type_folder($row)
+    {
+        $type_folder = 'posts/';
+        if ( $row->tipo_id == 20 ) $type_folder = 'posts/types/ayuda/';
+        if ( $row->tipo_id == 30 ) $type_folder = 'posts/types/bitacora/';
+
+        return $type_folder;
+    }
+
+// VALIDATION
+//-----------------------------------------------------------------------------
+
+    function arr_row($process = 'update')
+    {
+        $arr_row = $this->input->post();
+        $arr_row['editor_id'] = $this->session->userdata('user_id');
+        
+        if ( $process == 'insert' )
+        {
+            $arr_row['slug'] = $this->Db_model->unique_slug($arr_row['nombre_post'], 'post');
+            $arr_row['usuario_id'] = $this->session->userdata('user_id');
+        }
+        
+        return $arr_row;
+    }
+
+// VISTA
+//-----------------------------------------------------------------------------
     
     /**
      * Nombre de la vista para la edición de un post, dependiendo del tipo:
@@ -57,123 +280,8 @@ class Post_Model extends CI_Model{
         return $vista_leer;
     }
     
-// EXPLORACIÓN
+// CRUD
 //-----------------------------------------------------------------------------
-    
-    /**
-     * Array con los datos para la vista de exploración
-     * 
-     * @return string
-     */
-    function data_explorar($num_pagina)
-    {
-        //Data inicial, de la tabla
-            $data = $this->data_tabla_explorar($num_pagina);
-        
-        //Elemento de exploración
-            $data['controlador'] = 'posts';                      //Nombre del controlador
-            $data['carpeta_vistas'] = 'posts/explorar/';         //Carpeta donde están las vistas de exploración
-            $data['titulo_pagina'] = 'Posts';
-                
-        //Otros
-            $data['cant_resultados'] = $this->Post_model->cant_resultados($data['busqueda']);
-            $data['max_pagina'] = ceil($this->Pcrn->si_cero($data['cant_resultados'],1) / $data['per_page']) - 1;   //Cantidad de páginas, menos 1 por iniciar en cero
-
-        //Vistas
-            $data['vista_a'] = $data['carpeta_vistas'] . 'explorar_v';
-            $data['vista_menu'] = $data['carpeta_vistas'] . 'menu_v';
-        
-        return $data;
-    }
-    
-    /**
-     * Array con los datos para la tabla de la vista de exploración
-     * 
-     * @param type $num_pagina
-     * @return string
-     */
-    function data_tabla_explorar($num_pagina)
-    {
-        //Elemento de exploración
-            $data['cf'] = 'posts/explorar/';     //CF Controlador Función
-        
-        //Paginación
-            $data['num_pagina'] = $num_pagina;              //Número de la página de datos que se está consultado
-            $data['per_page'] = 20;                          //Cantidad de registros por página
-            $offset = $num_pagina * $data['per_page'];      //Número de la página de datos que se está consultado
-        
-        //Búsqueda y Resultados
-            $this->load->model('Busqueda_model');
-            $data['busqueda'] = $this->Busqueda_model->busqueda_array();
-            $data['busqueda_str'] = $this->Busqueda_model->busqueda_str();
-            $data['resultados'] = $this->buscar($data['busqueda'], $data['per_page'], $offset);    //Resultados para página
-            
-        //Otros
-            $data['seleccionados_todos'] = '-'. $this->Pcrn->query_to_str($data['resultados'], 'id');               //Para selección masiva de todos los elementos de la página
-            
-        return $data;
-    }
-    
-    /**
-     * Búsqueda de posts
-     * 
-     * @param type $busqueda
-     * @param type $per_page
-     * @param type $offset
-     * @return type
-     */
-    function buscar($busqueda, $per_page = NULL, $offset = NULL)
-    {
-        //Construir búsqueda
-        //Crear array con términos de búsqueda
-            if ( strlen($busqueda['q']) > 2 )
-            {
-                
-                $campos_posts = array('nombre_post', 'contenido', 'resumen', 'editado', 'creado');
-                
-                $concat_campos = $this->Busqueda_model->concat_campos($campos_posts);
-                $palabras = $this->Busqueda_model->palabras($busqueda['q']);
-
-                foreach ($palabras as $palabra) {
-                    $this->db->like("CONCAT({$concat_campos})", $palabra);
-                }
-            }
-        
-        //Especificaciones de consulta
-            $this->db->select('post.*');
-            $this->db->order_by('id', 'DESC');
-            
-        //Otros filtros
-            if ( $busqueda['e'] != '' ) { $this->db->where('editado', $busqueda['e']); }                //Editado
-            if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_id', $busqueda['tp']); }              //Tipo de post
-            if ( $busqueda['f1'] != '' ) { $this->db->where('referente_1_id', $busqueda['f1']); }       //Filtro 1
-            if ( $busqueda['f2'] != '' ) { $this->db->where('referente_2_id', $busqueda['f2']); }       //Filtro 2
-            if ( $busqueda['f3'] != '' ) { $this->db->where('referente_3_id', $busqueda['f3']); }       //Filtro 3
-            if ( $busqueda['condicion'] != '' ) { $this->db->where($busqueda['condicion']); }           //Condición especial
-            
-        //Obtener resultados
-        if ( is_null($per_page) ){
-            $query = $this->db->get('post'); //Resultados totales
-        } else {
-            $query = $this->db->get('post', $per_page, $offset); //Resultados por página
-        }
-        
-        return $query;
-        
-    }
-    
-    /**
-     * Devuelve la cantidad de registros encontrados en la tabla con los filtros
-     * establecidos en la búsqueda
-     * 
-     * @param type $busqueda
-     * @return type
-     */
-    function cant_resultados($busqueda)
-    {
-        $resultados = $this->buscar($busqueda); //Para calcular el total de resultados
-        return $resultados->num_rows();
-    }
     
     function crud_basico()
     {

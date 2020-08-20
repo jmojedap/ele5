@@ -16,107 +16,66 @@ class Eventos extends CI_Controller{
     {   
         $this->explorar($evento_id);
     }
-
-//INFORMACIÓN DE EVENTOS
+    
+//EXPLORE
 //---------------------------------------------------------------------------------------------------
     
-    function explorar()
-    {
-        $this->load->model('Busqueda_model');
-        
-        //Datos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
-            $resultados_total = $this->Busqueda_model->eventos($busqueda); //Para calcular el total de resultados
-        
-        //Paginación
-            $this->load->library('pagination');
-            $config = $this->App_model->config_paginacion(3);
-            $config['base_url'] = base_url() . "eventos/explorar/?{$busqueda_str}";
-            $config['total_rows'] = $resultados_total->num_rows();
-            $this->pagination->initialize($config);
-            
-        //Generar resultados para mostrar
-            $offset = $this->input->get('per_page');
-            $resultados = $this->Busqueda_model->eventos($busqueda, $config['per_page'], $offset);
-        
-        //Variables para vista
-            $data['cant_resultados'] = $config['total_rows'];
-            $data['busqueda'] = $busqueda;
-            $data['busqueda_str'] = $busqueda_str;
-            $data['resultados'] = $resultados;
-        
-        //Solicitar vista
-            $data['titulo_pagina'] = 'Eventos';
-            $data['subtitulo_pagina'] = $config['total_rows'] . ' encontrados';
-            $data['vista_a'] = 'eventos/explorar_v';
-            $this->load->view('plantilla_apanel/plantilla', $data);
-        
-    }
-    
     /**
-     * AJAX
-     * Eliminar un grupo de registros seleccionados
-     * 2019-08-01
+     * Exploración y búsqueda de usuarios
+     * 2020-08-01
      */
-    function eliminar_seleccionados()
-    {
-        $data = array('status' => 0, 'message' => 'No se eliminaron registros');
+    function explore($num_page = 1)
+    {        
+        //Identificar filtros de búsqueda
+            $this->load->model('Search_model');
+            $filters = $this->Search_model->filters();
 
-        $str_seleccionados = $this->input->post('seleccionados');
-        $seleccionados = explode('-', $str_seleccionados);
-        $cant_eliminados = 0;
+        //Datos básicos de la exploración
+            $data = $this->Evento_model->explore_data($filters, $num_page);
         
-        foreach ( $seleccionados as $elemento_id )
-        {
-            $cant_eliminados += $this->Evento_model->eliminar($elemento_id);
-        }
+        //Opciones de filtros de búsqueda
+            $data['options_type'] = $this->Item_model->options('categoria_id = 13', 'Todos');
+            
+        //Arrays con valores para contenido en lista
+            $data['arr_types'] = $this->Item_model->arr_cod('categoria_id = 13');
+            
+        //Cargar vista
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
+    }
 
-        if ( $cant_eliminados > 0) {
-            $data = array('status' => 1, 'message' => 'Registros eliminados: ' . $cant_eliminados);
-        }
+    /**
+     * JSON
+     * Listado de users, según filtros de búsqueda
+     */
+    function get($num_page = 1)
+    {
+        $this->load->model('Search_model');
+        $filters = $this->Search_model->filters();
+        $data = $this->Evento_model->get($filters, $num_page);
 
+        //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
-    
-    function nuevo()
+
+    /**
+     * AJAX JSON
+     * Eliminar un conjunto de posts seleccionados
+     */
+    function delete_selected()
     {
+        $selected = explode(',', $this->input->post('selected'));
+        $qty_deleted = 0;
         
-        //Render del grocery crud
-            $output = $this->Evento_model->crud_basico();
+        foreach ( $selected as $row_id ) 
+        {
+            $qty_deleted += $this->Evento_model->eliminar($row_id);
+        }
         
-        //Head includes específicos para la página
-            $head_includes[] = 'grocery_crud';
-            $data['head_includes'] = $head_includes;
+        $result['status'] = 1;
+        $result['message'] = 'Cantidad eliminados : ' . $qty_deleted;
+        $result['qty_deleted'] = $qty_deleted;
         
-        //Array data espefícicas
-            $data['titulo_pagina'] = 'Eventos';
-            $data['subtitulo_pagina'] = 'Nuevo';
-            $data['submenu'] = 'eventos/explorar_menu_v';
-            $data['vista_a'] = 'app/nuevo_v';
-        
-        $output = array_merge($data,(array)$output);
-        
-        $this->load->view('plantilla_apanel/plantilla', $output);
-    }
-    
-    function editar()
-    {
-        //Cargando datos básicos
-            $tema_id = $this->uri->segment(4);
-            $data = $this->Evento_model->basico($tema_id);
-            
-        //Render del grocery crud
-            $output = $this->Evento_model->crud_editar();
-        
-        //Head includes específicos para la página
-            $head_includes[] = 'grocery_crud';
-            $data['head_includes'] = $head_includes;
-            
-        //Solicitar vista
-            $data['vista_b'] = 'app/gc_v';
-            $output = array_merge($data,(array)$output);
-            $this->load->view('plantilla_apanel/plantilla', $output);
+        $this->output->set_content_type('application/json')->set_output(json_encode($result));
     }
     
 //---------------------------------------------------------------------------------------------------

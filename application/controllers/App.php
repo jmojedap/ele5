@@ -157,6 +157,12 @@ class App extends CI_Controller{
         $data['view_a'] = 'app/mantenimiento_v';
         $this->load->view('app/mantenimiento_v', $data);
     }
+
+    function test()
+    {
+        echo 'hola!';
+        log_message('info', 'ELIMINACIÓN DE USUARIOS: te atrapamos!');
+    }
     
 // BÚSQUEDAS Y REDIRECCIONAMIENTO
 //-----------------------------------------------------------------------------

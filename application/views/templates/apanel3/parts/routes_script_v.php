@@ -1,6 +1,4 @@
 <script>
-    const app_url = '<?php echo base_url() ?>';
-    const url_api = '<?php //echo URL_API ?>';
     const app_r = '<?php echo $this->session->userdata('role_abbr') ?>';
     var app_cf = '<?php echo $this->uri->segment(1) . '/' . $this->uri->segment(2); ?>';
 

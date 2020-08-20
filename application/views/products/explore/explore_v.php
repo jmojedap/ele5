@@ -1,5 +1,3 @@
-<script src="<?php echo URL_RESOURCES . 'js/pcrn.js' ?>"></script>
-
 <div id="app_explore">
     <div class="row">
         <div class="col-md-6 d-none d-md-table-cell d-lg-table-cell">
