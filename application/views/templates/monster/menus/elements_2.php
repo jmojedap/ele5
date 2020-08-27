@@ -1,8 +1,7 @@
 <script>
     var nav_1_elements = [
             {
-                id: 'nav_1_institucional',
-                text: 'Institucional',
+                text: 'Instituciones',
                 active: false,
                 style: '',
                 icon: 'fa fa-university',
@@ -13,18 +12,20 @@
                         text: 'Instituciones',
                         active: false,
                         icon: 'fa fa-university',
-                        cf: 'instituciones/explorar'
+                        cf: 'instituciones/explorar',
+                        sections: ['instituciones/explorar', 'instituciones/nuevo']
                     },
                     {
                         text: 'Grupos',
                         active: false,
                         icon: 'fa fa-users',
-                        cf: 'grupos/explorar'
+                        cf: 'grupos/explorar',
+                        sections: []
                     }
-                ]
+                ],
+                sections: ['instituciones/explorar', 'instituciones/nuevo']
             },
             {
-                id: 'nav_1_recursos',
                 text: 'Recursos',
                 active: false,
                 style: '',
@@ -36,36 +37,41 @@
                         text: 'Programas',
                         active: false,
                         icon: 'fa fa-sitemap',
-                        cf: 'programas/explorar'
+                        cf: 'programas/explorar',
+                        sections: []
                     },
                     {
                         text: 'Contenidos',
                         active: false,
                         icon: 'fa fa-book',
-                        cf: 'flipbooks/explorar'
+                        cf: 'flipbooks/explorar',
+                        sections: []
                     },
                     {
                         text: 'Temas',
                         active: false,
                         icon: 'fa fa-bars',
-                        cf: 'temas/explorar'
+                        cf: 'temas/explorar',
+                        sections: []
                     },
                     {
-                        text: 'Evidencias',
+                        text: 'Quices',
                         active: false,
                         icon: 'fa fa-question',
-                        cf: 'quices/explorar'
+                        cf: 'quices/explorar',
+                        sections: []
                     },
                     {
                         text: 'Archivos',
                         active: false,
                         icon: 'far fa-folder',
-                        cf: 'recursos/archivos'
-                    },
-                ]
+                        cf: 'recursos/archivos',
+                        sections: []
+                    }
+                ],
+                sections: []
             },
             {
-                id: 'nav_1_cuestionarios',
                 text: 'Cuestionarios',
                 active: false,
                 style: '',
@@ -77,25 +83,28 @@
                         text: 'Cuestionarios',
                         active: false,
                         icon: 'fa fa-book',
-                        cf: 'cuestionarios/explorar'
+                        cf: 'cuestionarios/explorar',
+                        sections: []
                     },
                     {
                         text: 'Lecturas',
                         active: false,
                         icon: 'fa fa-quote-left',
-                        cf: 'datos/enunciados'
+                        cf: 'datos/enunciados',
+                        sections: []
                     },
                     {
                         text: 'Preguntas',
                         active: false,
                         icon: 'fa fa-question',
-                        cf: 'preguntas/explorar'
+                        cf: 'preguntas/explorar',
+                        sections: []
                     }
-                ]
+                ],
+                sections: []
             },
             {
-                id: 'nav_1_ajustes',
-                text: 'Ajustes',
+                text: 'Administración',
                 active: false,
                 style: '',
                 icon: 'fa fa-sliders-h',
@@ -106,15 +115,28 @@
                         text: 'Estadísticas',
                         active: false,
                         icon: 'fa fa-chart-line',
-                        cf: 'estadisticas/ctn_correctas_incorrectas'
+                        cf: 'estadisticas/ctn_correctas_incorrectas',
+                        sections: []
                     },
                     {
                         text: 'Ayuda',
                         active: false,
                         icon: 'fa fa-question-circle',
-                        cf: 'datos/ayudas'
+                        cf: 'datos/ayudas',
+                        sections: ['datos/ayudas']
                     }
-                ]
+                ],
+                sections: []
+            },
+            {
+                text: 'Mensajes',
+                active: false,
+                style: '',
+                icon: 'fa fa-comments',
+                cf: 'mensajes/conversacion/0',
+                submenu: false,
+                subelements: [],
+                sections: []
             },
         ];
 </script>

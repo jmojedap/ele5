@@ -19,6 +19,7 @@ application/config/
 
 #pml
 /content/
+/resources/assets
 /htaccess/
 /system/
 /system_315/

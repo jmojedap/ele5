@@ -21,6 +21,163 @@ class Institucion_model extends CI_Model{
         
         return $basico;
     }
+
+// EXPLORE FUNCTIONS - instituciones/explorar
+//-----------------------------------------------------------------------------
+    
+    /**
+     * Array con los datos para la vista de exploración
+     */
+    function explore_data($filters, $num_page)
+    {
+        //Data inicial, de la tabla
+            $data = $this->get($filters, $num_page);
+        
+        //Elemento de exploración
+            $data['controller'] = 'instituciones';                      //Nombre del controlador
+            $data['cf'] = 'instituciones/explorar/';                      //Nombre del controlador
+            $data['views_folder'] = 'instituciones/explore/';           //Carpeta donde están las vistas de exploración
+            
+        //Vistas
+            $data['head_title'] = 'Instituciones';
+            $data['head_subtitle'] = $data['search_num_rows'];
+            $data['view_a'] = $data['views_folder'] . 'explore_v';
+            $data['nav_2'] = $data['views_folder'] . 'menu_v';
+        
+        return $data;
+    }
+
+    function get($filters, $num_page)
+    {
+        //Referencia
+            $per_page = 10;                             //Cantidad de registros por página
+            $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
+
+        //Búsqueda y Resultados
+            $this->load->model('Search_model');
+            $data['filters'] = $this->Search_model->filters();
+            $elements = $this->search($data['filters'], $per_page, $offset);    //Resultados para página
+        
+        //Cargar datos
+            $data['list'] = $elements->result();
+            $data['str_filters'] = $this->Search_model->str_filters();
+            $data['search_num_rows'] = $this->search_num_rows($data['filters']);
+            $data['max_page'] = ceil($this->pml->if_zero($data['search_num_rows'],1) / $per_page);   //Cantidad de páginas
+
+        return $data;
+    }
+    
+    /**
+     * Query con resultados de posts filtrados, por página y offset
+     * 2020-07-15
+     */
+    function search($filters, $per_page = NULL, $offset = NULL)
+    {
+        //Construir consulta
+            $this->db->select('institucion.*, lugar.nombre_completo AS ciudad, CONCAT(usuario.nombre, " ", usuario.apellidos) AS ejecutivo');
+            $this->db->join('lugar', 'institucion.lugar_id = lugar.id', 'left');
+            $this->db->join('usuario', 'institucion.lugar_id = usuario.id', 'left');
+        
+        //Orden
+            if ( $filters['o'] != '' )
+            {
+                $order_type = $this->pml->if_strlen($filters['ot'], 'ASC');
+                $this->db->order_by($filters['o'], $order_type);
+            } else {
+                $this->db->order_by('nombre_institucion', 'ASC');
+            }
+            
+        //Filtros
+            $search_condition = $this->search_condition($filters);
+            if ( $search_condition ) { $this->db->where($search_condition);}
+            
+        //Obtener resultados
+            $query = $this->db->get('institucion', $per_page, $offset); //Resultados por página
+        
+        return $query;
+        
+    }
+
+    /**
+     * String con condición WHERE SQL para filtrar post
+     * 2020-08-01
+     */
+    function search_condition($filters)
+    {
+        $condition = NULL;
+
+        $condition .= $this->role_filter() . ' AND ';
+
+        //q words condition
+        $words_condition = $this->Search_model->words_condition($filters['q'], array('nombre_institucion', 'institucion.notas'));
+        if ( $words_condition )
+        {
+            $condition .= $words_condition . ' AND ';
+        }
+        
+        //Otros filtros
+        if ( $filters['f1'] != '' ) { $condition .= "lugar_id = {$filters['f1']} AND "; }       //Por ciudad
+        if ( $filters['u'] != '' ) { $condition .= "ejecutivo_id = {$filters['u']} AND "; }       //Por Ejecutivo
+        
+        //Quitar cadena final de ' AND '
+        if ( strlen($condition) > 0 ) { $condition = substr($condition, 0, -5);}
+        
+        return $condition;
+    }
+    
+    /**
+     * Devuelve la cantidad de registros encontrados en la tabla con los filtros
+     * establecidos en la búsqueda
+     */
+    function search_num_rows($filters)
+    {
+        $this->db->select('id');
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+        $query = $this->db->get('institucion'); //Para calcular el total de resultados
+
+        return $query->num_rows();
+    }
+    
+    /**
+     * Devuelve segmento SQL
+     */
+    function role_filter()
+    {
+        $row_user = $this->Db_model->row_id('usuario', $this->session->userdata('user_id'));
+        $condition = 'id = 0';  //Valor por defecto, ninguna institución, se obtendrían cero instituciones.
+        
+        if ( $row_user->rol_id <= 2 ) {
+            //Usuarios internos
+            $condition = 'institucion.id > 0';
+        } elseif ( in_array($row_user->rol_id, array(3,4,5,6)) ) {
+            //Su institución
+            $condition = "institucion.id = {$row_user->institucion_id} ";
+        } elseif ( $this->session->userdata('rol_id') ) {
+            //Comercial
+            $condition = "institucion.ejecutivo_id = {$this->session->userdata('user_id')}";
+        }
+        
+        return $condition;
+    }
+    
+    /**
+     * Array con options para ordenar el listado de post en la vista de
+     * exploración
+     */
+    function order_options()
+    {
+        $order_options = array(
+            '' => '[ Ordenar por ]',
+            'id' => 'ID Institución',
+            'nombre_institucion' => 'Nombre'
+        );
+        
+        return $order_options;
+    }
+
+// FIN FUNCIONES EXPLORACIÓN
+//-----------------------------------------------------------------------------
     
     function buscar($busqueda, $per_page = NULL, $offset = NULL)
     {   

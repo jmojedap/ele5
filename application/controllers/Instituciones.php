@@ -18,11 +18,43 @@ class Instituciones extends CI_Controller{
         redirect("instituciones/grupos/{$institucion_id}");
     }
 
-//CRUD GENERAL
+//EXPLORACIÓN
 //---------------------------------------------------------------------------------------------------
+
+    /** Exploración de Instituciones */
+    function explorar($num_page = 1)
+    {
+        //Identificar filtros de búsqueda
+        $this->load->model('Search_model');
+        $filters = $this->Search_model->filters();
+
+        //Datos básicos de la exploración
+            $data = $this->Institucion_model->explore_data($filters, $num_page);
+        
+        //Opciones de filtros de búsqueda
+            $data['options_city'] = $this->App_model->options_place('tipo_id = 4', 'full_name', 'Todas');
+            
+        //Arrays con valores para contenido en lista
+            //$data['arr_types'] = $this->Item_model->arr_cod('category_id = 33');
+            
+        //Cargar vista
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
+    }
+
+    /**
+     * Listado de Instituciones, filtrados por búsqueda, JSON
+     */
+    function get($num_page = 1)
+    {
+        $this->load->model('Search_model');
+        $filters = $this->Search_model->filters();
+
+        $data = $this->Institucion_model->get($filters, $num_page);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
     
     
-    function explorar()
+    function explorar_ant()
     {
         $this->load->model('Busqueda_model');
         
@@ -95,14 +127,14 @@ class Instituciones extends CI_Controller{
             $gc_output = $this->Institucion_model->crud_editar();
         
         //Array data espefícicas
-            $data['titulo_pagina'] = 'Instituciones';
-            $data['subtitulo_pagina'] = 'Nueva';
-            $data['vista_a'] = 'comunes/gc_v';
-            $data['vista_menu'] = 'instituciones/explorar_menu_v';
+            $data['head_title'] = 'Instituciones';
+            $data['head_subtitle'] = 'Nueva';
+            $data['view_a'] = 'comunes/gc_v';
+            $data['nav_2'] = 'instituciones/explore/menu_v';
         
         $output = array_merge($data,(array)$gc_output);
         
-        $this->load->view(PTL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN_NEW, $output);
     }
     
     function editar()
