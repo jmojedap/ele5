@@ -529,8 +529,8 @@ class Post_Model extends CI_Model{
                 
                 $campos_posts = array('nombre_post', 'contenido', 'resumen', 'editado', 'creado');
                 
-                $concat_campos = $this->Busqueda_model->concat_campos($campos_posts);
-                $palabras = $this->Busqueda_model->palabras($busqueda['q']);
+                $concat_campos = $this->Search_model->concat_fields($campos_posts);
+                $palabras = $this->Search_model->words($busqueda['q']);
 
                 foreach ($palabras as $palabra) {
                     $this->db->like("CONCAT({$concat_campos})", $palabra);
@@ -594,15 +594,16 @@ class Post_Model extends CI_Model{
         //Elemento de exploración
             $data['controlador'] = 'posts';                      //Nombre del controlador
             $data['carpeta_vistas'] = 'posts/contenidos_ap/explorar/';         //Carpeta donde están las vistas de exploración
-            $data['titulo_pagina'] = 'Contenidos AP';
+            $data['head_title'] = 'Contenidos AP';
                 
         //Otros
-            $data['cant_resultados'] = $this->Post_model->cant_resultados($data['busqueda']);
+            $data['cant_resultados'] = $this->Post_model->search_num_rows($data['filters']);
             $data['max_pagina'] = ceil($this->Pcrn->si_cero($data['cant_resultados'],1) / $data['per_page']) - 1;   //Cantidad de páginas, menos 1 por iniciar en cero
 
         //Vistas
-            $data['vista_a'] = $data['carpeta_vistas'] . 'explorar_v';
-            $data['vista_menu'] = $data['carpeta_vistas'] . 'menu_v';
+            $data['view_a'] = $data['carpeta_vistas'] . 'explorar_v';
+            //$data['head_subtitle'] = $data['cant_resultados'];
+            //$data['nav_2'] = $data['carpeta_vistas'] . 'menu_v';
         
         return $data;
     }
@@ -624,12 +625,11 @@ class Post_Model extends CI_Model{
             $offset = $num_pagina * $data['per_page'];      //Número de la página de datos que se está consultado
         
         //Búsqueda y Resultados
-            $this->load->model('Busqueda_model');
-            $data['busqueda'] = $this->Busqueda_model->busqueda_array();
-            $data['busqueda_str'] = $this->Busqueda_model->busqueda_str();
+            $this->load->model('Search_model');
+            $data['filters'] = $this->Search_model->filters();
+            $data['str_filters'] = $this->Search_model->str_filters();
             
-            
-            $data['resultados'] = $this->Post_model->ap_buscar($data['busqueda'], $data['per_page'], $offset);    //Resultados para página
+            $data['resultados'] = $this->Post_model->ap_buscar($data['filters'], $data['per_page'], $offset);    //Resultados para página
             
         //Otros
             $data['seleccionados_todos'] = '-'. $this->Pcrn->query_to_str($data['resultados'], 'id');               //Para selección masiva de todos los elementos de la página

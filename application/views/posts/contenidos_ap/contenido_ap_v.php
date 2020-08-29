@@ -15,14 +15,14 @@
     
     //Atributos de los elementos del menú
         $arr_menus['ap_explorar'] = array(
-            'icono' => '<i class="fa fa-caret-left"></i>',
+            'icono' => '<i class="fa fa-arrow-left"></i>',
             'texto' => 'Explorar',
             'link' => "posts/ap_explorar/{$explorar_add}",
             'atributos' => ''
         );
         
         $arr_menus['ap_editar'] = array(
-            'icono' => '<i class="fa fa-pencil"></i>',
+            'icono' => '<i class="fa fa-pencil-alt"></i>',
             'texto' => 'Editar',
             'link' => "posts/ap_editar/{$row->id}",
             'atributos' => ''
@@ -36,7 +36,7 @@
         );
         
         $arr_menus['ap_instituciones'] = array(
-            'icono' => '<i class="fa fa-bank"></i>',
+            'icono' => '<i class="fa fa-university"></i>',
             'texto' => 'Instituciones',
             'link' => "posts/ap_instituciones/{$row->id}",
             'atributos' => 'title="Instituciones asignadas"'
@@ -73,6 +73,4 @@
     </p>
 <?php } ?>
 
-<?php $this->load->view('comunes/menu_v', $data_menu); ?>    
-<?php $this->load->view($vista_b); ?>
-
+<?php $this->load->view('comunes/bs4/menu_v', $data_menu); ?>    

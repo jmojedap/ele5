@@ -479,11 +479,11 @@ class Posts extends CI_Controller{
         //Si son usuarios externos
             if ( ! in_array($this->session->userdata('rol_id'), array(0,1,2)) )
             {
-                $data['titulo_pagina'] = 'Acompañamiento pedagógico';
+                $data['head_title'] = 'Acompañamiento pedagógico';
             }
         
         //Cargar vista
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -509,9 +509,7 @@ class Posts extends CI_Controller{
             $respuesta['num_pagina'] = $num_pagina;
         
         //Salida
-            $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($respuesta));
+            $this->output->set_content_type('application/json')->set_output(json_encode($respuesta));
     }
     
     /**
@@ -528,11 +526,11 @@ class Posts extends CI_Controller{
             $data['valores_form'] = $this->Pcrn->valores_form(NULL, 'post');
             
         //Solicitar vista
-            $data['titulo_pagina'] = 'Contenidos AP';
-            $data['subtitulo_pagina'] = 'Nuevo';
-            $data['vista_a'] = 'posts/contenidos_ap/formulario_v';
-            $data['vista_menu'] = 'posts/contenidos_ap/explorar/menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_title'] = 'Contenidos AP';
+            $data['head_subtitle'] = 'Nuevo';
+            $data['view_a'] = 'posts/contenidos_ap/formulario_v';
+            $data['menu_view'] = 'posts/contenidos_ap/explorar/menu_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -575,10 +573,10 @@ class Posts extends CI_Controller{
             $data = $this->Post_model->basic($post_id);
         
         //Array data espefícicas
-            $data['vista_a'] = 'posts/contenidos_ap/contenido_ap_v';
-            $data['vista_b'] = 'posts/contenidos_ap/editar_v';
+            $data['nav_2'] = 'posts/contenidos_ap/contenido_ap_v';
+            $data['view_a'] = 'posts/contenidos_ap/editar_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     function ap_leer($post_id)
@@ -594,9 +592,9 @@ class Posts extends CI_Controller{
         }
         
         //Solicitar vista
-            $data['vista_a'] = 'posts/contenidos_ap/contenido_ap_v';
-            $data['vista_b'] = 'posts/contenidos_ap/leer_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['nav_2'] = 'posts/contenidos_ap/contenido_ap_v';
+            $data['view_a'] = 'posts/contenidos_ap/leer_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -627,12 +625,12 @@ class Posts extends CI_Controller{
             
         //Variables generales
             //$data['ayuda_id'] = 97;
-            $data['titulo_pagina'] = 'Contenidos AP';
-            $data['subtitulo_pagina'] = 'Asignar con archivo Excel';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'posts/contenidos_ap/explorar/menu_v';
+            $data['head_title'] = 'Contenidos AP';
+            $data['head_subtitle'] = 'Asignar con archivo Excel';
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_2'] = 'posts/contenidos_ap/explorar/menu_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -661,11 +659,11 @@ class Posts extends CI_Controller{
             $data['destino_volver'] = "posts/ap_explorar/";
         
         //Cargar vista
-            $data['titulo_pagina'] = 'Contenidos AP';
-            $data['subtitulo_pagina'] = 'Asignar con archivo Excel';
-            $data['vista_a'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'posts/contenidos_ap/explorar/menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_title'] = 'Contenidos AP';
+            $data['head_subtitle'] = 'Asignar con archivo Excel';
+            $data['view_a'] = 'comunes/resultado_importacion_v';
+            $data['nav_2'] = 'posts/contenidos_ap/explorar/menu_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -683,11 +681,11 @@ class Posts extends CI_Controller{
         $data['instituciones'] = $this->Post_model->instituciones($post_id);
 
         //Variables generales
-        $data['vista_a'] = 'posts/contenidos_ap/contenido_ap_v';
-        $data['vista_b'] = 'posts/contenidos_ap/instituciones_v';
+        $data['nav_2'] = 'posts/contenidos_ap/contenido_ap_v';
+        $data['view_a'] = 'posts/contenidos_ap/instituciones_v';
         //$data['vista_menu'] = 'usuarios/explorar_menu_v';
 
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**

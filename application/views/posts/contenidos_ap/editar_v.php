@@ -171,81 +171,82 @@
 
 <div class="row">
     <div class="col col-md-8">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card mb-2">
+            <div class="card-header">
                 Datos generales
             </div>
             <form class="form-horizontal" id="formulario">
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" for=""></label>
-                        <div class="col-sm-9">
-                            <button class="btn btn-success btn-block" type="submit">
-                                <i class="fa fa-save"></i>
-                                Guardar
-                            </button>
-                        </div>
-                    </div>
+                <div class="card-body">
+                    
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" for="nombre_post">Título * </label>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label text-right" for="nombre_post">Título * </label>
                         <div class="col-sm-9">
                             <?= form_input($att_nombre_post) ?>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" for="resumen">Descripción * </label>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label text-right" for="resumen">Descripción * </label>
                         <div class="col-sm-9">
                             <?= form_textarea($att_resumen) ?>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" for="referente_3_id">Tipo * </label>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label text-right" for="referente_3_id">Tipo * </label>
                         <div class="col-sm-9">
                             <?= form_dropdown('referente_3_id', $opciones_tipo_cap, $row->referente_3_id, 'class="form-control" required') ?>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" for="referente_1_id">Categoría * </label>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label text-right" for="referente_1_id">Categoría * </label>
                         <div class="col-sm-9">
                             <?= form_dropdown('referente_1_id', $opciones_cap, $row->referente_1_id, 'class="form-control" required') ?>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" for="area_id">Área * </label>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label text-right" for="area_id">Área * </label>
                         <div class="col-sm-9">
                             <?= form_dropdown('referente_2_id', $opciones_area, $row->referente_2_id, 'class="form-control" required') ?>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" for="texto_1">URL</label>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label text-right" for="texto_1">URL</label>
                         <div class="col-sm-9">
                             <?= form_input($att_texto_1) ?>
                         </div>
                     </div>
-                    <div class="form-group hidden">
-                        <label class="col-sm-3 control-label" for="texto_2">Niveles</label>
+                    <div class="form-group d-none">
+                        <label class="col-sm-3 col-form-label text-right" for="texto_2">Niveles</label>
                         <div class="col-sm-9">
                             <?= form_input($att_texto_2) ?>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label text-right" for=""></label>
+                        <div class="col-sm-9">
+                            <button class="btn btn-success w120p" type="submit">
+                                Guardar
+                            </button>
                         </div>
                     </div>
                 </div>
             </form>
         </div>
         
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card">
+            <div class="card-header">
                 Archivo asociado
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <?php if ( ! is_null($row_archivo) ) { ?>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" for="imagen_id">Archivo</label>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label text-right" for="imagen_id">Archivo</label>
                         <div class="col-sm-9">
                             <div class="btn-group" role="group" aria-label="...">
                                 <button type="button" class="btn btn-default" style="width: 450px;">
@@ -257,8 +258,8 @@
                     </div>
                 <?php } else { ?>
                     <?php echo form_open_multipart("posts/cargar_archivo/{$row->id}/ap_editar", $att_form) ?>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="archivo">Archivo</label>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label text-right" for="archivo">Archivo</label>
                             <div class="col-sm-6">
                                 <?= form_upload($att_archivo) ?>
                             </div>
@@ -276,11 +277,11 @@
         
     </div>
     <div class="col col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card">
+            <div class="card-header">
                 Niveles
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <label>
                     <?= form_checkbox($att_check_todos) ?>
                     Todos

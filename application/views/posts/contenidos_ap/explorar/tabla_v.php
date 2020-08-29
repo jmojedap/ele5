@@ -11,9 +11,9 @@
 //Clases columnas
     $clases_col['selector'] = '';
     $clases_col['id'] = '';
-    $clases_col['tipo'] = 'hidden';
+    $clases_col['tipo'] = 'd-none';
     $clases_col['resumen'] = '';
-    $clases_col['categoria'] = 'hidden-sm hidden-xs';
+    $clases_col['categoria'] = 'd-none';
     $clases_col['area'] = '';
 
     $clases_col['no_documento'] = '';
@@ -22,23 +22,18 @@
 
     if ( $this->session->userdata('rol_id') >= 3 ) 
     {
-        $clases_col['selector'] = 'hidden';
-        $clases_col['tipo'] = 'hidden';
-        $clases_col['id'] = 'hidden';
-        $clases_col['botones'] = 'hidden';
-        $clases_col['categoria'] = 'hidden';
+        $clases_col['selector'] = 'd-none';
+        $clases_col['tipo'] = 'd-none';
+        $clases_col['id'] = 'd-none';
+        $clases_col['botones'] = 'd-none';
+        $clases_col['categoria'] = 'd-none';
     }
 ?>
 
-<table class="table table-default bg-blanco" role="tabpanel" cellspacing="0">
+<table class="table bg-white">
     <thead>
         <th class="<?= $clases_col['selector'] ?>" width="20px">
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" id="check_todos" value="1">
-                    <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-                </label>
-            </div>
+            <input type="checkbox" id="check_todos" value="1">
         </th>
         <th width="20px" class="warning <?php echo $clases_col['id'] ?>">ID</th>
         <th></th>
@@ -59,12 +54,7 @@
             ?>
             <tr id="fila_<?= $row_resultado->id ?>">
                 <td class="<?= $clases_col['selector'] ?>">
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" class="check_registro" value="1" data-id="<?= $row_resultado->id ?>">
-                            <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-                        </label>
-                    </div>
+                    <input type="checkbox" class="check_registro" value="1" data-id="<?= $row_resultado->id ?>">
                 </td>
                 <td class="warning <?php echo $clases_col['id'] ?>"><?= $row_resultado->id ?></td>
                 <td style="width: 45px;">

@@ -1,5 +1,3 @@
-<?php $this->load->view('assets/chosen_jquery'); ?>
-
 <?php
 
     $editando = FALSE;
@@ -20,8 +18,7 @@
             'name'   => 'nombre_post',
             'class'  => 'form-control',
             'required'  => TRUE,
-            'value'  => $valores_form['nombre_post'],
-            'placeholder'   => 'Nombre del contenido'
+            'value'  => $valores_form['nombre_post']
         );
         
         $att_resumen = array(
@@ -30,7 +27,6 @@
             'class'  => 'form-control',
             'required'  => TRUE,
             'value'  => $valores_form['resumen'],
-            'placeholder'   => 'Descripción del contenido',
             'rows' => 3
         );
         
@@ -40,7 +36,7 @@
 
 
         $att_submit = array(
-            'class'  => 'btn btn-block btn-info',
+            'class'  => 'btn btn-success w120p',
             'value'  => 'Guardar'
         );
     
@@ -85,44 +81,44 @@
     }
 </script>
 
-<?php if ( ! is_null($vista_menu) ) { ?>
-    <?php $this->load->view($vista_menu); ?>
+<?php if ( ! is_null($menu_view) ) { ?>
+    <?php $this->load->view($menu_view); ?>
 <?php } ?>
 
-<div class="panel panel-default">
-    <div class="panel-body">
+<div class="card center_box_750">
+    <div class="card-body">
         <form id="formulario" class="form-horizontal">
             <?php echo form_hidden('tipo_id', 4311) ?>
-            <div class="form-group">
-                <label for="nombre_post" class="col-sm-4 control-label">Nombre *</label>
+            <div class="form-group row">
+                <label for="nombre_post" class="col-sm-4 col-form-label text-right">Nombre *</label>
                 <div class="col-sm-8">
                     <?= form_input($att_nombre_post) ?>
                 </div>
             </div>
             
-            <div class="form-group">
-                <label for="resumen" class="col-sm-4 control-label">Descripción *</label>
+            <div class="form-group row">
+                <label for="resumen" class="col-sm-4 col-form-label text-right">Descripción *</label>
                 <div class="col-sm-8">
                     <?= form_textarea($att_resumen) ?>
                 </div>
             </div>
         
-            <div class="form-group">
-                <label for="tipo_id" class="col-sm-4 control-label">Tipo *</label>
+            <div class="form-group row">
+                <label for="tipo_id" class="col-sm-4 col-form-label text-right">Tipo *</label>
                 <div class="col-sm-8">
                     <?= form_dropdown('referente_3_id', $opciones_tipo_ap, $valores_form['referente_3_id'], 'id="campo-nivel" class="form-control" required title="Seleccione el tipo de contenido AP"'); ?>
                 </div>
             </div>
         
-            <div class="form-group">
-                <label for="referente_2_id" class="col-sm-4 control-label">Área *</label>
+            <div class="form-group row">
+                <label for="referente_2_id" class="col-sm-4 col-form-label text-right">Área *</label>
                 <div class="col-sm-8">
                     <?= form_dropdown('referente_2_id', $opciones_area, $valores_form['referente_2_id'], 'id="campo-area" class="form-control" required title="Seleccione el área del contenido AP"'); ?>
                 </div>
             </div>
 
-            <div class="form-group">
-                <div class="col-sm-offset-4 col-sm-8">
+            <div class="form-group row">
+                <div class="offset-md-4 col-sm-8">
                     <?= form_submit($att_submit) ?>
                 </div>
             </div>
