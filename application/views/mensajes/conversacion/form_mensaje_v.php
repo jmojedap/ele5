@@ -1,77 +1,41 @@
-<?php
-    //Texto botón
-        $texto_boton = 'Enviar';
-        if ( $mensajes->num_rows() > 0 ) { $texto_boton = 'Responder'; }
-
-    $seccion = $this->uri->segment(2);
-        
-    //Formulario mensajes
-        $att_form = array(
-            'class' => ''
-        );
-    
-        
-        
-        $att_asunto = array(
-            'id' => 'asunto',
-            'name' => 'asunto',
-            'placeholder' => 'Asunto',
-            'required' =>   'required',
-            'title' =>   'Escriba el asunto del mensaje',
-            'class' =>  'form-control'
-        );
-        
-        $att_texto_mensaje = array(
-            'id' => 'texto_mensaje',
-            'name' => 'texto_mensaje',
-            'class' => 'form-control',
-            'placeholder' => 'Escriba un mensaje...',
-            'rows' => 3,
-            'autofocus' => TRUE,
-            'title' =>   'Escriba aquí el mensaje',
-            'required' =>   'required'
-        );
-        
-        $att_url = array(
-            'id' => 'url',
-            'class' =>  'form-control',
-            'name' => 'url',
-            'placeholder' => 'Dirección web'
-        );
-        
-        $att_enviar = array(
-            'id' => 'boton_enviar',
-            'class' =>  'btn btn-primary',
-            'value' =>  $texto_boton
-        );
-?>
-
-<?= form_open("mensajes/enviar/{$row->id}", $att_form) ?>
-    <?= form_hidden('conversacion_id', $row->id) ?>
+<form accept-charset="utf-8" method="POST" id="message_form" action="<?= base_url("mensajes/enviar/{$row->id}") ?>">
+    <input type="hidden" name="conversacion_id" value="<?= $row->id ?>">
     <?php if ( is_null($row->asunto) ){ ?>
-        <div class="sep2" style="width: 98%">
-            <?= form_input($att_asunto) ?>
+        <div class="mb-2 w98pc">
+            <input
+                name="asunto" type="text" class="form-control" required
+                title="Escriba el asunto de la conversación" placeholder="Escriba el asunto de la conversación..."
+            >
         </div>
     <?php } ?>
 
-
-    <div class="sep2" style="width: 98%;">
-        <?= form_textarea($att_texto_mensaje) ?>
+    <div class="mb-2 w98pc">
+        <textarea
+            name="texto_mensaje" type="text" class="form-control"
+            required autofocus rows="3"
+            title="Escriba un mensaje..." placeholder="Escriba un mensaje..."
+        ></textarea>
     </div>
 
-    <div class="sep2" style="width: 98%;" id="casilla_url">
-        <?= form_input($att_url) ?>
+    <div class="mb-2 w98pc" id="casilla_url">
+        <input
+            name="url" type="text" class="form-control"
+            title="Dirección Web" placeholder="Dirección Web"
+        >
     </div>
 
-    <div class="sep2">
-        <?= form_submit($att_enviar) ?>
+    <div class="mb-2">
+        <button class="btn btn-primary w120p" type="submit">
+            Enviar
+        </button>
 
-        <span class="btn btn-default small" id="mostrar_url">
+        <button class="btn btn-secondary" id="mostrar_url" type="button">
             <i class="fa fa-link"></i> Agregar link
-        </span>
+        </button>
 
         <?php if ( $cant_mensajes == 0 ){ ?>
             <?= anchor("mensajes/eliminar/{$row->id}", '<i class="fa fa-times"></i> Descartar', 'class="btn btn-warning" title="Decartar nuevo mensaje"') ?>
         <?php } ?>
     </div>
-<?= form_close() ?>
+</form>
+

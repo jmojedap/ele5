@@ -1,4 +1,9 @@
-<link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel2/mensajes.css">
+<link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/mensajes.css">
+<style>
+    .w98pc{
+        width: 98%;
+    }
+</style>
 
 <?php $this->load->view('assets/biggora_autocomplete');    //PlugIn, auto completar ?>
 <?php $this->load->view('mensajes/conversacion/js_v'); ?>
@@ -12,8 +17,8 @@
         
         <?php if ( $conversaciones->num_rows() > 0 ) { ?>
         
-            <div class="panel panel-default" style="max-width: 800px;">
-                <div class="panel-body">
+            <div class="card" style="max-width: 800px;">
+                <div class="card-body">
                     <?php $this->load->view('mensajes/conversacion/encabezado_v'); ?>
                     <?php $this->load->view('mensajes/conversacion/mensajes_v'); ?>
                     <?php $this->load->view('mensajes/conversacion/form_mensaje_v'); ?>

@@ -1,58 +1,55 @@
 <?php
-
     //Clase 
         $clase_q_usuarios = 'form-control';
-        if ( $mensajes->num_rows() > 0 ) { $clase_q_usuarios .= ' hide'; }
-
-    //Formulario selección de usuarios
-        $att_q_usuarios = array(
-            'id'     => 'q_usuarios',
-            'name'   => 'q_usuarios',
-            'class'  => $clase_q_usuarios,
-            'placeholder'   => 'Para:'
-        );
+        if ( $mensajes->num_rows() > 0 ) { $clase_q_usuarios .= ' d-none'; }
 ?>
 
-<div class="sep1">
-    <span class="suave">Iniciada</span>
-    <span class="resaltar"><?= $this->Pcrn->fecha_formato($row->creado, 'M-d') ?></span>
-    <span class="suave"> | </span>
+<div class="mb-2">
+    <span class="text-muted">Iniciada</span>
+    <span class="resaltar"><?= $this->pml->date_format($row->creado, 'M-d') ?></span>
+    <span class="text-muted"> &middot; </span>
 
-    <span class="suave">Hace</span>
-    <span class="resaltar"><?= $this->Pcrn->tiempo_hace($row->creado) ?></span>
-    <span class="suave"> | </span>
+    <span class="text-muted">Hace</span>
+    <span class="resaltar"><?= $this->pml->ago($row->creado) ?></span>
+    <span class="text-muted"> &middot; </span>
 
     <span class="resaltar"><?= $cant_mensajes ?></span>
-    <span class="suave">mensajes</span>
-    <span class="suave"> | </span>
+    <span class="text-muted">mensajes</span>
+    <span class="text-muted"> &middot; </span>
 </div>
 
-<div>
-    <?= anchor("mensajes/nuevo", '<i class="fa fa-plus"></i> Nuevo', 'class="btn btn-info" title="Crear una nueva conversación"') ?>
+<div class="mb-2">
+    <a href="<?= base_url("mensajes/nuevo") ?>" class="btn btn-info" title="Crear una nueva conversación">
+        <i class="fa fa-plus"></i> Nuevo
+    </a>
 
-    <div class="btn btn-primary" id="mostrar_usuarios" title="Mostrar usuarios en la conversación"><i class="fa fa-users"></i> Mostrar (<?= $cant_destinatarios ?>)</div>
-    <div class="btn btn-default" id="ocultar_usuarios" title="Mostrar usuarios en la conversación"><i class="fa fa-users"></i> Ocultar (<?= $cant_destinatarios ?>)</div>
+    <div class="btn btn-primary w120p" id="mostrar_usuarios" title="Mostrar usuarios en la conversación"><i class="fa fa-users"></i> Mostrar (<?= $cant_destinatarios ?>)</div>
+    <div class="btn btn-secondary w120p" id="ocultar_usuarios" title="Mostrar usuarios en la conversación"><i class="fa fa-users"></i> Ocultar (<?= $cant_destinatarios ?>)</div>
 
-    <?php if ( $this->session->userdata('usuario_id') == $row->usuario_id ){ ?>
-        <button class="btn btn-default" title="Agregar usuario a la conversación" id="mostrar_q_usuarios">
+    <?php if ( $this->session->userdata('user_id') == $row->usuario_id ){ ?>
+        <button class="btn btn-secondary" title="Agregar usuario a la conversación" id="mostrar_q_usuarios">
             <i class="fa fa-plus"></i>
             Usuario
         </button>
     <?php } ?>
 
-    <a class="btn btn-warning" title="Eliminar la conversación" data-toggle="modal" data-target="#modal_eliminar">
-        <i class="fa fa-trash-o"></i>
-    </a>
+    <button class="btn btn-warning" title="Eliminar la conversación" data-toggle="modal" data-target="#modal_eliminar">
+        <i class="fa fa-trash"></i>
+    </button>
 
 </div>
 
-<?php if ( $row->usuario_id == $this->session->userdata('usuario_id') ){ ?>
-    <div class="sep2">
-        <?= form_input($att_q_usuarios) ?>
+<?php if ( $row->usuario_id == $this->session->userdata('user_id') ){ ?>
+    <div class="mb-2">
+        <input
+            name="q_usuarios" type="text" class="<?= $clase_q_usuarios ?>" id="q_usuarios"
+            required
+            title="Para:" placeholder="Para:"
+        >
     </div>
 <?php } ?>
 
-<div class="sep2">
+<div class="mb-2">
     <p id="lista_usuarios">
         <?php if ( $row->tipo_id == 1 ){ ?>
             <?php foreach ($usuarios->result() as $row_usuario) : ?>
