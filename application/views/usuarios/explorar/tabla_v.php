@@ -101,15 +101,17 @@
                 </div>
 
                 <div class="col-md-3 col-xs-12">
-                    <button
-                        id="alternar_<?php echo $row_resultado->id ?>"
-                        class="btn btn-sm alternar_activacion <?php echo $activacion['clase'] ?>"
-                        data-usuario_id="<?= $row_resultado->id ?>"
-                        title="Activar/Desactivar"
-                        style="width: 70px;"
-                        >
-                        <?php echo $activacion['contenido'] ?>
-                    </button>
+                    <?php if ( $this->session->userdata('role') <= 2 ) : ?>
+                        <button
+                            id="alternar_<?php echo $row_resultado->id ?>"
+                            class="btn btn-sm alternar_activacion <?php echo $activacion['clase'] ?>"
+                            data-usuario_id="<?= $row_resultado->id ?>"
+                            title="Activar/Desactivar"
+                            style="width: 70px;"
+                            >
+                            <?php echo $activacion['contenido'] ?>
+                        </button>
+                    <?php endif; ?>
 
                     <button
                         id="pago_<?php echo $row_resultado->id ?>"
