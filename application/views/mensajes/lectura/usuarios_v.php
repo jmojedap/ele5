@@ -1,4 +1,4 @@
-<table class="table table-default bg-blanco">
+<table class="table table-default bg-white">
     <thead>
         <th class="<?= $clases_col['usuario'] ?>">Usuario</th>
         <th class="<?= $clases_col['rol'] ?>">Rol</th>

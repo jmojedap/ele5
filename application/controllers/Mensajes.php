@@ -22,7 +22,7 @@ class Mensajes extends CI_Controller{
         
         //Paginación
             $this->load->library('pagination');
-            $config = $this->App_model->config_paginacion(2);
+            $config = $this->App_model->config_paginacion(3);
             $config['base_url'] = base_url("mensajes/explorar/?{$busqueda_str}");
             $config['total_rows'] = $resultados_total->num_rows();
             $this->pagination->initialize($config);
@@ -90,8 +90,8 @@ class Mensajes extends CI_Controller{
 
         //Variables generales
             //$data['head_subtitle'] = '';
-            $data['vista_b'] = 'mensajes/lectura/mensajes_v';
-            $data['nav_2'] = 'usuarios/explorar_menu_v';
+            $data['view_b'] = 'mensajes/lectura/mensajes_v';
+            //$data['nav_2'] = 'usuarios/explorar_menu_v';
 
         $this->load->view(TPL_ADMIN, $data);
     }
@@ -108,8 +108,7 @@ class Mensajes extends CI_Controller{
 
         //Variables generales
             $data['head_subtitle'] = 'Usuarios';
-            $data['vista_b'] = 'mensajes/lectura/usuarios_v';
-            $data['nav_2'] = 'usuarios/explorar_menu_v';
+            $data['view_b'] = 'mensajes/lectura/usuarios_v';
 
         $this->load->view(TPL_ADMIN, $data);
     }
