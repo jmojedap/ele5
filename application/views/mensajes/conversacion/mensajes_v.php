@@ -6,13 +6,13 @@
         <?php foreach ($mensajes->result() as $row_mensaje) : ?>
             <?php
                 $clase_mensaje = 'mensaje';
-                if ( $row_mensaje->remitente_id == $this->session->userdata('usuario_id') ) { $clase_mensaje = 'mensaje mensaje_propio pull-right'; }
+                if ( $row_mensaje->remitente_id == $this->session->userdata('usuario_id') ) { $clase_mensaje = 'mensaje mensaje_propio float-right'; }
             ?>
             <div class="<?= $clase_mensaje ?>">
                 <span class="resaltar"><?= $this->App_model->nombre_usuario($row_mensaje->remitente_id, 2) ?></span>
                 <div class="f_derecha" style="display: block">
                     <?= anchor("mensajes/eliminar_mensaje/{$row->id}/{$row_mensaje->mensaje_id}", '&nbsp;<span aria-hidden="true">&times;</span>', 'class="close" title="Eliminar mensaje" style="margin-left: 10px;"') ?>
-                    <span class="suave"><?= $this->Pcrn->fecha_formato($row_mensaje->enviado, 'M d') ?> | Hace <?= $this->Pcrn->tiempo_hace($row_mensaje->enviado) ?></span>
+                    <span class="suave"><?= $this->Pcrn->fecha_formato($row_mensaje->enviado, 'M d') ?> &middot; Hace <?= $this->Pcrn->tiempo_hace($row_mensaje->enviado) ?></span>
                 </div>
                 <br/>
                 <?= $row_mensaje->texto_mensaje ?>

@@ -11,13 +11,13 @@ class Mensaje_model extends CI_Model{
             $data['cant_destinatarios'] = $data['usuarios']->num_rows() - 1;
         }
         
-        $titulo_pagina = 'Nuevo mensaje';
+        $head_title = 'Nuevo mensaje';
         if ( $conversacion_id > 0 ) {
-            if ( strlen($data['row']->asunto) > 0 ) { $titulo_pagina = substr($data['row']->asunto, 0, 50); }
+            if ( strlen($data['row']->asunto) > 0 ) { $head_title = substr($data['row']->asunto, 0, 50); }
         }
         
-        $data['titulo_pagina'] = $titulo_pagina;
-        $data['vista_a'] = 'mensajes/conversacion/conversacion_v';
+        $data['head_title'] = $head_title;
+        $data['view_a'] = 'mensajes/conversacion/conversacion_v';
 
         return $data;
     }

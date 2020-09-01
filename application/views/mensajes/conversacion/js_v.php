@@ -1,14 +1,15 @@
 <script>
-    //Variables
-    var base_url = '<?= base_url() ?>';
+// Variables
+//-----------------------------------------------------------------------------
     var conversacion_id = <?= $row->id ?>;
     var usuario_id = 0;
     var nombre_usuario = '';
     var num_usuarios = <?= $usuarios->num_rows(); ?>;
     var num_mensajes = <?= $mensajes->num_rows(); ?>;
-</script>
 
-<script>
+// Document Ready
+//-----------------------------------------------------------------------------
+
     $(document).ready(function(){
         
         activacion_elementos();
@@ -59,14 +60,15 @@
             quitar_usuario();
         });
     });
-</script>
 
-<script>
+// Funciones
+//-----------------------------------------------------------------------------
+
     $(function() {
         
         $('#q_usuarios').typeahead({
             ajax: {
-                url: '<?= base_url("mensajes/usuarios_agregables/{$row->id}") ?>',
+                url: url_app + 'mensajes/usuarios_agregables/' + conversacion_id,
                 method: 'post',
                 triggerLength: 2
             },
@@ -82,7 +84,7 @@
     
         $.ajax({        
             type: 'POST',
-            url: base_url + 'mensajes/agregar_usuario/',
+            url: url_app + 'mensajes/agregar_usuario/',
             data: {
                 conversacion_id : conversacion_id,
                 usuario_id : usuario_id
@@ -100,7 +102,7 @@
     {
        $.ajax({
             type: 'POST',
-            url: base_url + 'mensajes/quitar_usuario/',
+            url: url_app + 'mensajes/quitar_usuario/',
             data: {
                 conversacion_id : conversacion_id,
                 usuario_id : usuario_id
@@ -135,5 +137,4 @@
             $('#mostrar_url').show();
         }
     }
-
 </script>

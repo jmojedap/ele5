@@ -22,7 +22,7 @@ class Mensajes extends CI_Controller{
         
         //Paginación
             $this->load->library('pagination');
-            $config = $this->App_model->config_paginacion(2);
+            $config = $this->App_model->config_paginacion(3);
             $config['base_url'] = base_url("mensajes/explorar/?{$busqueda_str}");
             $config['total_rows'] = $resultados_total->num_rows();
             $this->pagination->initialize($config);
@@ -37,11 +37,11 @@ class Mensajes extends CI_Controller{
             $data['resultados'] = $resultados;
         
         //Solicitar vista
-            $data['titulo_pagina'] = 'Conversaciones';
-            $data['subtitulo_pagina'] = $resultados_total->num_rows();
-            $data['vista_a'] = 'mensajes/explorar_v';
-            $data['vista_menu'] = 'mensajes/explorar_menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_title'] = 'Conversaciones';
+            $data['head_subtitle'] = $resultados_total->num_rows();
+            $data['view_a'] = 'mensajes/explorar_v';
+            $data['nav_2'] = 'mensajes/explorar_menu_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -81,7 +81,7 @@ class Mensajes extends CI_Controller{
     {
         //Variables específicas
             $data = $this->Mensaje_model->basico($conversacion_id);
-            $data['vista_a'] = 'mensajes/lectura/conversacion_v';
+            $data['view_a'] = 'mensajes/lectura/conversacion_v';
             
         //Mensajes
             $this->db->where('conversacion_id', $conversacion_id);
@@ -89,29 +89,28 @@ class Mensajes extends CI_Controller{
             $data['mensajes'] = $this->db->get('mensaje');
 
         //Variables generales
-            //$data['subtitulo_pagina'] = '';
-            $data['vista_b'] = 'mensajes/lectura/mensajes_v';
-            $data['vista_menu'] = 'usuarios/explorar_menu_v';
+            //$data['head_subtitle'] = '';
+            $data['view_b'] = 'mensajes/lectura/mensajes_v';
+            //$data['nav_2'] = 'usuarios/explorar_menu_v';
 
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     function usuarios($conversacion_id)
     {
         //Variables específicas
             $data = $this->Mensaje_model->basico($conversacion_id);
-            $data['vista_a'] = 'mensajes/lectura/conversacion_v';
+            $data['view_a'] = 'mensajes/lectura/conversacion_v';
             
         //Mensajes
             $this->db->where("id IN (SELECT usuario_id FROM usuario_asignacion WHERE referente_id = {$conversacion_id} AND tipo_asignacion_id = 5)");
             $data['usuarios'] = $this->db->get('usuario');
 
         //Variables generales
-            $data['subtitulo_pagina'] = 'Usuarios';
-            $data['vista_b'] = 'mensajes/lectura/usuarios_v';
-            $data['vista_menu'] = 'usuarios/explorar_menu_v';
+            $data['head_subtitle'] = 'Usuarios';
+            $data['view_b'] = 'mensajes/lectura/usuarios_v';
 
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
 // GESTIÓN DE CONVERSACIONES Y MENSAJES
@@ -155,9 +154,8 @@ class Mensajes extends CI_Controller{
             $data['total_no_leidos'] = $this->Mensaje_model->no_leidos();
             $data['conversaciones'] = $conversaciones;
             $data['destino_form'] = 'mensajes/buscar_conversacion';
-            
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     function conversacion_total($conversacion_id)
@@ -166,10 +164,10 @@ class Mensajes extends CI_Controller{
             $data = $this->Mensaje_model->basico($conversacion_id);
 
         //Variables generales
-            $data['subtitulo_pagina'] = 'En construcción';
-            $data['vista_a'] = 'app/en_construccion_v';
+            $data['head_subtitle'] = 'En construcción';
+            $data['view_a'] = 'app/en_construccion_v';
 
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     function nuevo()
@@ -343,10 +341,10 @@ class Mensajes extends CI_Controller{
         $data['conversaciones'] = $this->Mensaje_model->conversaciones($busqueda);
 
         //Variables generales
-            $data['titulo_pagina'] = 'Test';
-            $data['vista_a'] = 'app/prueba_v';
+            $data['head_title'] = 'Test';
+            $data['view_a'] = 'app/prueba_v';
 
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
 
     

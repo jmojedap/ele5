@@ -2,7 +2,7 @@
     $i = $mensajes->num_rows(); //Contador de mensajes, orden inverso
 ?>
 
-<table class="table table-default bg-blanco">
+<table class="table table-default bg-white">
     <thead>
         <th class="<?= $clases_col['num_mensaje'] ?>" width="50px">No.</th>
         <th class="<?= $clases_col['usuario'] ?>">Usuario</th>
