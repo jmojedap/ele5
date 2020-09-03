@@ -17,12 +17,19 @@
     
     //Atributos de los elementos del menú
         $arr_menus['explorar'] = array(
-            'icono' => '<i class="fa fa-search"></i>',
-            'texto' => '',
+            'icono' => '<i class="fa fa-arrow-left"></i>',
+            'texto' => 'Explorar',
             'link' => "cuestionarios/explorar/",
             'atributos' => 'title="Ir a lista de cuestionarios"'
         );
             
+        $arr_menus['info'] = array(
+            'icono' => '<i class="fa fa-info-circle"></i>',
+            'texto' => 'Información',
+            'link' => "cuestionarios/info/{$row->id}",
+            'atributos' => 'title="Información general sobre el cuestionario"'
+        );
+
         $arr_menus['vista_previa'] = array(
             'icono' => '',
             'texto' => 'Vista previa',
@@ -73,9 +80,9 @@
         );
         
     //Elementos de menú para cada rol
-        $elementos_rol[0] = array('explorar', 'vista_previa', 'preguntas', 'temas', 'grupos', 'asignar', 'copiar_cuestionario', 'editar');
-        $elementos_rol[1] = array('explorar', 'vista_previa', 'preguntas', 'temas', 'grupos', 'asignar', 'copiar_cuestionario', 'editar');
-        $elementos_rol[2] = array('explorar', 'vista_previa', 'preguntas', 'temas', 'grupos', 'asignar', 'copiar_cuestionario', 'editar');
+        $elementos_rol[0] = array('explorar', 'info', 'vista_previa', 'preguntas', 'temas', 'grupos', 'asignar', 'copiar_cuestionario', 'editar');
+        $elementos_rol[1] = array('explorar', 'info', 'vista_previa', 'preguntas', 'temas', 'grupos', 'asignar', 'copiar_cuestionario', 'editar');
+        $elementos_rol[2] = array('explorar', 'info', 'vista_previa', 'preguntas', 'temas', 'grupos', 'asignar', 'copiar_cuestionario', 'editar');
         $elementos_rol[3] = array('explorar', 'vista_previa', 'temas', 'grupos', 'asignar');
         $elementos_rol[4] = array('explorar', 'vista_previa', 'temas', 'grupos', 'asignar');
         $elementos_rol[5] = array('explorar', 'vista_previa', 'temas', 'grupos', 'asignar');

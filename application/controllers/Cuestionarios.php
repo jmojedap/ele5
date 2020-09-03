@@ -188,6 +188,21 @@ class Cuestionarios extends CI_Controller{
             $output = array_merge($data,(array)$gc_output);
             $this->load->view(TPL_ADMIN, $output);
     }
+
+// INFORMACIÓN SOBRE EL CUESTIONARIO
+//-----------------------------------------------------------------------------
+
+    function info($cuestionario_id)
+    {
+        $data = $this->Cuestionario_model->basico($cuestionario_id);
+        
+        $data['view_a'] = 'cuestionarios/info_v';
+        
+        //Cargar vista
+        $this->load->view(TPL_ADMIN, $data);
+    }
+
+
     
 // CREAR COPIA DE UN CUESTIONARIO
 //-----------------------------------------------------------------------------
