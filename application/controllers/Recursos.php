@@ -406,7 +406,7 @@ class Recursos extends CI_Controller{
     function links_importar()
     {
         //Iniciales
-            $template_file_name = '06_formato_cargue_links.xlsx';
+            $template_file_name = 'f33_cargue_links.xlsx';
             $help_tips = array();
         
         //Instructivo

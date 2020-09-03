@@ -23,8 +23,8 @@
         <i class="fa fa-plus"></i> Nuevo
     </a>
 
-    <div class="btn btn-primary w120p" id="mostrar_usuarios" title="Mostrar usuarios en la conversación"><i class="fa fa-users"></i> Mostrar (<?= $cant_destinatarios ?>)</div>
-    <div class="btn btn-secondary w120p" id="ocultar_usuarios" title="Mostrar usuarios en la conversación"><i class="fa fa-users"></i> Ocultar (<?= $cant_destinatarios ?>)</div>
+    <div class="btn btn-primary" id="mostrar_usuarios" title="Mostrar usuarios en la conversación"><i class="fa fa-users"></i> Mostrar (<?= $cant_destinatarios ?>)</div>
+    <div class="btn btn-secondary" id="ocultar_usuarios" title="Mostrar usuarios en la conversación"><i class="fa fa-users"></i> Ocultar (<?= $cant_destinatarios ?>)</div>
 
     <?php if ( $this->session->userdata('user_id') == $row->usuario_id ){ ?>
         <button class="btn btn-secondary" title="Agregar usuario a la conversación" id="mostrar_q_usuarios">
@@ -42,9 +42,7 @@
 <?php if ( $row->usuario_id == $this->session->userdata('user_id') ){ ?>
     <div class="mb-2">
         <input
-            name="q_usuarios" type="text" class="<?= $clase_q_usuarios ?>" id="q_usuarios"
-            required
-            title="Para:" placeholder="Para:"
+            name="q_usuarios" type="text" class="<?= $clase_q_usuarios ?>" id="q_usuarios" required title="Para:" placeholder="Para:"
         >
     </div>
 <?php } ?>

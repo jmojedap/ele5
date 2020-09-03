@@ -1,53 +1,42 @@
 <?php
     $cl_col['selector'] = '';
     if ( $this->session->userdata('role') > 2 ) { $cl_col['selector'] = 'd-none'; }
-
-    $cl_col['title'] = '';
-    $cl_col['open'] = 'd-none d-md-table-cell d-lg-table-cell';
-    $cl_col['tema'] = 'd-none d-md-table-cell d-lg-table-cell';
-    $cl_col['info'] = 'd-none d-md-table-cell d-lg-table-cell';
 ?>
 
 <div class="table-responsive">
-    <table class="table table-hover bg-white">
+    <table class="table bg-white">
         <thead>
-            <th width="46px" class="<?php echo $cl_col['selector'] ?>">
-                <div class="form-check abc-checkbox abc-checkbox-primary">
-                    <input class="form-check-input" type="checkbox" id="checkbox_all_selected" @click="select_all" v-model="all_selected">
-                    <label class="form-check-label" for="checkbox_all_selected"></label>
-                </div>
+            <th width="10px"  class="<?php echo $cl_col['selector'] ?>">
+                <input type="checkbox"  @click="select_all" v-model="all_selected">
             </th>
-            <th class="<?php echo $cl_col['open'] ?>" width="80px"></th>
-            <th class="<?php echo $cl_col['title'] ?>">Link</th>
-            <th class="<?php echo $cl_col['tema'] ?>">Tema</th>
-            <th class="<?php echo $cl_col['info'] ?>">Detalles</th>
+            <th width="80px"></th>
+            <th>Link</th>
+            <th>Tema</th>
+            <th>Detalles</th>
             <th width="80px"></th>
         </thead>
         <tbody>
             <tr v-for="(element, key) in list" v-bind:id="`row_` + element.id">
                 <td class="<?php echo $cl_col['selector'] ?>">
-                    <div class="form-check abc-checkbox abc-checkbox-primary">
-                        <input class="form-check-input" type="checkbox" v-bind:id="`check_` + element.id" v-model="selected" v-bind:value="element.id">
-                        <label class="form-check-label" v-bind:for="`check_` + element.id"></label>
-                    </div>
+                    <input type="checkbox" v-bind:id="`check_` + element.id" v-model="selected" v-bind:value="element.id">
                 </td>
-                <td class="<?php echo $cl_col['open'] ?>">
+                <td>
                     <a v-bind:href="element.url" class="btn btn-primary btn-sm" target="_blank">
                         <i class="fa fa-external-link-alt"></i>Abrir
                     </a>
                 </td>
-                <td class="<?php echo $cl_col['title'] ?>">
+                <td>
                     <p v-html="element.titulo"></p>
                     
                 </td>
 
-                <td class="<?php echo $cl_col['tema'] ?>">
+                <td>
                     <a v-bind:href="`<?php echo base_url("temas/links/") ?>` + element.tema_id">
                         {{ element.nombre_tema }}
                     </a>
                 </td>
 
-                <td class="<?php echo $cl_col['info'] ?>">
+                <td>
                     <dl class="row">
                         <dt class="col-md-3 text-right"></dt>
                         <dd class="col-md-9">

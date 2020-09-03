@@ -53,13 +53,8 @@
                             <label for="titulo" class="col-md-4 col-form-label text-right">Título</label>
                             <div class="col-md-8">
                                 <input
-                                    id="field-titulo"
-                                    type="text"
-                                    name="titulo"
-                                    class="form-control"
-                                    placeholder="Título del link"
-                                    title="Título del link"
-                                    autofocus
+                                    type="text" name="titulo" class="form-control"
+                                    placeholder="Título del link" title="Título del link" autofocus
                                     v-bind:value="form_values.titulo">
                             </div>
                         </div>
@@ -68,12 +63,8 @@
                             <label for="url" class="col-md-4 col-form-label text-right">URL</label>
                             <div class="col-md-8">
                                 <input
-                                    id="field-url"
-                                    type="url"
-                                    name="url"
-                                    class="form-control"
-                                    placeholder="URL del link"
-                                    title="URL del link"
+                                    type="url" name="url" class="form-control"
+                                    placeholder="URL del link" title="URL del link"
                                     required
                                     v-bind:value="form_values.url">
                             </div>
@@ -83,15 +74,9 @@
                             <label for="descripcion" class="col-md-4 col-form-label text-right">Descripción</label>
                             <div class="col-md-8">
                                 <textarea
-                                    type="text"
-                                    id="field-descripcion"
-                                    name="descripcion"
-                                    required
-                                    class="form-control"
-                                    placeholder="Descripción"
-                                    title="Descripción"
+                                    type="text" name="descripcion" class="form-control"
+                                    required placeholder="Descripción" title="Descripción" rows="3"
                                     v-bind:value="form_values.descripcion"
-                                    rows="3"
                                     ></textarea>
                             </div>
                         </div>
@@ -100,13 +85,8 @@
                             <label for="palabras_clave" class="col-md-4 col-form-label text-right">Palabras clave</label>
                             <div class="col-md-8">
                                 <input
-                                    type="text"
-                                    id="field-palabras_clave"
-                                    name="palabras_clave"
-                                    required
-                                    class="form-control"
-                                    placeholder="Palabras clave"
-                                    title="Palabras clave"
+                                    type="text" name="palabras_clave" class="form-control"
+                                    placeholder="Palabras clave" title="Palabras clave"
                                     v-bind:value="form_values.palabras_clave"
                                     >
                             </div>

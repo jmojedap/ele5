@@ -12,8 +12,7 @@
         </div>
 
         <div class="col">
-            <button class="btn btn-secondary"
-                id="btn_delete_selected"
+            <button class="btn btn-warning"
                 title="Eliminar links seleccionados"
                 data-toggle="modal"
                 data-target="#modal_delete"
