@@ -216,6 +216,22 @@ class Eventos extends CI_Controller{
         $data['vista_a'] = 'eventos/noticias/noticias_v';
         $this->load->view(PTL_ADMIN, $data);
     }
+
+    function get_noticias()
+    {
+        $this->load->model('Usuario_model');
+        $this->load->model('Busqueda_model');
+    
+        $busqueda = $this->Busqueda_model->busqueda_array();
+        $busqueda_str = $this->Busqueda_model->busqueda_str();
+        $noticias = $this->Evento_model->noticias($busqueda, 20);
+        $data['noticias'] = $noticias->result();
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+
+        //$this->output->enable_profiler(TRUE);
+    }
     
     /**
      * Recibe los datos del formulario de eventos/noticias

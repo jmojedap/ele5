@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Pml {
 
-    /** ACTUALIZADA 2020-08-19 */
+    /** ACTUALIZADA 2020-09-03 */
     
     /**
      * Converts codeigniter query object in an array
@@ -131,6 +131,21 @@ class Pml {
         return $money;
     }
 
+    /**
+     * Devuelve el valor de una clase html dependiendo de si un valor es igual
+     * a un elemento actual con el que se compara. Si son iguales se devuelve 
+     * la clase $active (Para resaltarlo como actual). Si son diferentes se
+     * devuelve la clase $inactive
+     * 2020-09-03
+     */
+    function active_class($current_element, $compare_element, $active, $inactive = '')
+    {
+        $active_class = $inactive;
+        if ( $current_element == $compare_element ) { $active_class = $active; }
+        
+        return $active_class;
+    }
+
 // DATE FUNCTIONS
 //-----------------------------------------------------------------------------
 
@@ -244,7 +259,7 @@ class Pml {
         if( ! is_null($date) )
         {
             $mkt = strtotime(substr($date . ' 00:00:00', 0, 19));
-            $age = round((time()-$mkt)/(60*60*24*365.25), 1, PHP_ROUND_HALF_DOWN);
+            $age = ceil((time()-$mkt)/(60*60*24*365.25)) - 1;
         }
         return $age;
     }
@@ -263,24 +278,13 @@ class Pml {
 
     /**
      * Convierte una fecha de excel en mktime de Unix
+     * @param type $date_excel
+     * @return type
      */
     function dexcel_unix($date_excel)
     {
         $hours_diff = 19; //Diferencia GMT
         return (( $date_excel - 25568 ) * 86400) - ($hours_diff * 60 * 60);
-    }
-
-    /**
-     * Convierte una fecha de excel en Fecha formato MySQL
-     * 2020-02-20
-     */
-    function dexcel_dmysql($date_excel)
-    {
-        $date = '';
-        $mktime = $this->dexcel_unix($date_excel);
-        if ( $mktime > 0 ) { $date = date('Y-m-d H:i:s', $mktime); }
-
-        return $date;
     }
 
     /**
