@@ -16,10 +16,12 @@
         data: {
             grupo_id: <?= $row->id ?>,
             flipbook_id: '<?= $flipbook_id ?>',
+            user_flipbooks: <?= json_encode($user_flipbooks) ?>,
             tema_id: '0<?= $tema_id ?>',
             temas: <?= json_encode($temas->result()) ?>,
             anotaciones: [],
-            avg_calificacion: 0
+            avg_calificacion: 0,
+            sur: <?= $this->session->userdata('role') ?>
         },
         methods: {
             get_list: function(){
@@ -46,25 +48,27 @@
                 });
             },
             set_calificacion: function(anotacion_key, calificacion){
+                if ( this.calificable )
+                {
+                    var meta_id = this.anotaciones[anotacion_key].id;
+                    console.log(meta_id);
+                    console.log(calificacion);
 
-                var meta_id = this.anotaciones[anotacion_key].id;
-                console.log(meta_id);
-                console.log(calificacion);
+                    let formData = new FormData;
+                    formData.append('calificacion', calificacion);
 
-                let formData = new FormData;
-                formData.append('calificacion', calificacion);
-
-                this.anotaciones[anotacion_key].calificacion = calificacion;
-                this.update_avg_calificacion();
-                axios.post(url_api + 'flipbooks/calificar_anotacion/' + meta_id, formData)
-                .then(response => {
-                    if ( response.data.status == 1 ) {
-                        toastr['success']('Calificación guardada');
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                    this.anotaciones[anotacion_key].calificacion = calificacion;
+                    this.update_avg_calificacion();
+                    axios.post(url_api + 'flipbooks/calificar_anotacion/' + meta_id, formData)
+                    .then(response => {
+                        if ( response.data.status == 1 ) {
+                            toastr['success']('Calificación guardada');
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                }
             },
             update_avg_calificacion: function(){
                 var sum = 0;
@@ -106,6 +110,12 @@
         computed: {
             link_export: function(){
                 return url_app + 'grupos/exportar_anotaciones/' + this.grupo_id + '/' + this.flipbook_id + '/' + this.tema_id;
+            },
+            calificable: function(){
+                int_flipbook_id = parseInt(this.flipbook_id);
+                calificable = this.user_flipbooks.includes(int_flipbook_id);
+                if ( this.sur > 5 ) calificable = false;
+                return calificable;
             },
         }
     });

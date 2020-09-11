@@ -1028,13 +1028,15 @@ class Usuarios extends CI_Controller{
         //Cargando datos básicos
         $data = $this->Usuario_model->basico($usuario_id);
         $flipbooks = $this->Usuario_model->flipbooks($data['row']);
+
+        //Construir array con flipbooks asociados al usuario en sesión
+        $data['user_flipbooks'] = array();
+        foreach ($this->session->userdata('arr_flipbooks') as $flipbook) $data['user_flipbooks'][] = intval($flipbook['flipbook_id']);
         
-        if ( $flipbooks->num_rows() > 0 ){
-            $flipbook_id = $this->Pcrn->si_nulo($flipbook_id, $flipbooks->row()->flipbook_id);
-        }
+        if ( $flipbooks->num_rows() > 0 && is_null($flipbook_id) ) $flipbook_id = $flipbooks->row()->flipbook_id;
        
        //Variables
-            $data['flipbook_id'] = $flipbook_id;
+            $data['flipbook_id'] = '0' . intval($flipbook_id);
             $data['anotaciones'] = $this->Flipbook_model->anotaciones_estudiante($flipbook_id, $usuario_id);
             $data['flipbooks'] = $flipbooks;
         

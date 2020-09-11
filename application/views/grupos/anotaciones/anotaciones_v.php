@@ -59,11 +59,13 @@
                         <p>{{ anotacion.anotacion }}</p>
                     </td>
                     <td>
-                        <i class="pointer star fa-star" v-bind:class="star_class(anotacion.calificacion, 1)" v-on:click="set_calificacion(anotacion_key, 20)"></i>
-                        <i class="pointer star fa-star" v-bind:class="star_class(anotacion.calificacion, 2)" v-on:click="set_calificacion(anotacion_key, 40)"></i>
-                        <i class="pointer star fa-star" v-bind:class="star_class(anotacion.calificacion, 3)" v-on:click="set_calificacion(anotacion_key, 60)"></i>
-                        <i class="pointer star fa-star" v-bind:class="star_class(anotacion.calificacion, 4)" v-on:click="set_calificacion(anotacion_key, 80)"></i>
-                        <i class="pointer star fa-star" v-bind:class="star_class(anotacion.calificacion, 5)" v-on:click="set_calificacion(anotacion_key, 100)"></i>
+                        <div v-bind:class="{'pointer': calificable == true }">
+                            <i class="star fa-star" v-bind:class="star_class(anotacion.calificacion, 1)" v-on:click="set_calificacion(anotacion_key, 20)"></i>
+                            <i class="star fa-star" v-bind:class="star_class(anotacion.calificacion, 2)" v-on:click="set_calificacion(anotacion_key, 40)"></i>
+                            <i class="star fa-star" v-bind:class="star_class(anotacion.calificacion, 3)" v-on:click="set_calificacion(anotacion_key, 60)"></i>
+                            <i class="star fa-star" v-bind:class="star_class(anotacion.calificacion, 4)" v-on:click="set_calificacion(anotacion_key, 80)"></i>
+                            <i class="star fa-star" v-bind:class="star_class(anotacion.calificacion, 5)" v-on:click="set_calificacion(anotacion_key, 100)"></i>
+                        </div>
                     </td>
                     <td class="text-center" v-bind:class="calificacion_color(anotacion.calificacion)">
                         {{ calificacion_name(anotacion.calificacion) }}    

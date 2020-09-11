@@ -1211,7 +1211,8 @@ class Flipbooks extends CI_Controller{
 
     /**
      * AJAX JSON
-     * Calificar una anotación
+     * Calificar una anotación en la tabla pagina_flipbook_detalle
+     * 2020-09-11
      */
     function calificar_anotacion($pfd_id)
     {

@@ -246,9 +246,7 @@ class Grupos extends CI_Controller{
      * 2020-09-08
      */
     function anotaciones($grupo_id, $flipbook_id = NULL, $tema_id = 0)
-    {
-        //$this->output->enable_profiler(TRUE);
-        
+    {        
         $this->load->model('Flipbook_model');
         
         $data = $this->Grupo_model->basico($grupo_id);
@@ -256,17 +254,14 @@ class Grupos extends CI_Controller{
         $flipbooks = $this->Grupo_model->flipbooks($grupo_id);
             
         //Identificando Flipbook
-        if ( $flipbooks->num_rows() > 0 ) 
-        {
-            $flipbook_id = $this->Pcrn->si_nulo($flipbook_id, $flipbooks->row()->flipbook_id);
-        } else {
-            $flipbook_id = 0;
-        }
+        if ( $flipbooks->num_rows() > 0 && is_null($flipbook_id) ) $flipbook_id = $flipbooks->row()->flipbook_id;
+
+        //Construir array con flipbooks asociados al usuario en sesión
+        $data['user_flipbooks'] = array();
+        foreach ($this->session->userdata('arr_flipbooks') as $flipbook) $data['user_flipbooks'][] = intval($flipbook['flipbook_id']);
         
         //Identificando tema
         $temas = $this->Flipbook_model->temas($flipbook_id);
-        //$tema_id = $this->Pcrn->si_nulo($tema_id, $temas->row()->id);
-            
             
         //Cargando array $data
             $data['flipbooks'] = $flipbooks;
