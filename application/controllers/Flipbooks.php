@@ -257,6 +257,20 @@ class Flipbooks extends CI_Controller{
             $data['view_a'] = 'flipbooks/temas_v';
             $this->load->view(TPL_ADMIN, $data);
     }
+
+    /**
+     * AJAX JSON
+     * Listado de temas que contiene un flipbook
+     * 2020-09-09
+     */
+    function get_temas($flipbook_id)
+    {
+        $temas = $this->Flipbook_model->temas($flipbook_id);
+        $data['list'] = $temas->result();
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
     
 // CREACIÓN DE CUESTIONARIOS DESDE FLIPBOOK
 //-----------------------------------------------------------------------------
@@ -711,7 +725,7 @@ class Flipbooks extends CI_Controller{
             $data['planes_aula'] = $this->Flipbook_model->planes_aula($flipbook_id);
             $data['quices'] = $this->Flipbook_model->quices($flipbook_id);
             $data['links'] = $this->Flipbook_model->links($flipbook_id);
-            $data['anotaciones'] = $this->Flipbook_model->anotaciones($flipbook_id);
+            $data['anotaciones'] = $this->Flipbook_model->anotaciones_estudiante($flipbook_id);
             $data['relacionados'] = $relacionados;
             //$data['subquices'] = $this->Flipbook_model->subquices($relacionados);
             $data['elementos_fb'] = $this->Flipbook_model->elementos_fb($data['row']);
@@ -818,7 +832,7 @@ class Flipbooks extends CI_Controller{
      */
     function json_anotaciones($flipbook_id)
     {
-        $data['anotaciones'] = $this->Flipbook_model->anotaciones($flipbook_id)->result();
+        $data['anotaciones'] = $this->Flipbook_model->anotaciones_estudiante($flipbook_id)->result();
         
         $this->output->set_content_type('application/json')->set_output(json_encode($data));   
     }
@@ -1100,12 +1114,13 @@ class Flipbooks extends CI_Controller{
             ->set_content_type('application/json')
             ->set_output($uf_id . ': ' . $num_pagina);
     }
+
+// ANOTACIONES
+//-----------------------------------------------------------------------------
     
     /**
      * AJAX
-     * 
      * Crea un registro de anotación en la tabla 'pagina_flipbook_detalle'
-     * 
      * El tipo detalle 'Anotación' corresponde al tipo_detalle_id = 3
      * Ver id_interno en la tabla item, categoría 13.
      */
@@ -1121,7 +1136,7 @@ class Flipbooks extends CI_Controller{
             {
                 
                 //Construir el registro que se va a insertar
-                $registro = array(
+                $arr_row = array(
                     'pagina_id' => $datos_pagina['id'],
                     'anotacion' => $this->input->post('anotacion'),
                     'tipo_detalle_id' => 3,
@@ -1130,16 +1145,82 @@ class Flipbooks extends CI_Controller{
                     'editado' => date('Y-m-d H:i:s')
                 );
 
-                $detalle_id = $this->Flipbook_model->guardar_anotacion($registro);
+                $detalle_id = $this->Flipbook_model->guardar_anotacion($arr_row);
                 
                 //Quitar caracteres no permitidos para JSON
                 $this->Flipbook_model->limpiar_anotacion($detalle_id);
             }
 
         //Respuesta
-            $this->output
-            ->set_content_type('application/json')
-            ->set_output($detalle_id);
+            $this->output->set_content_type('application/json')->set_output($detalle_id);
+    }
+
+    /**
+     * AJAX JSON
+     * Listado anotaciones con filtros determinados
+     */
+    function get_anotaciones_grupo($grupo_id, $flipbook_id = NULL, $tema_id = 0)
+    {
+        $anotaciones = $this->Flipbook_model->anotaciones_grupo($grupo_id, $flipbook_id, $tema_id);
+        $data['list'] = $anotaciones->result();
+        $data['avg_calificacion'] = 0;  //Valor por defecto
+
+        //Calculando promedio
+        $qty_calificaciones = 0;
+        if ( $anotaciones->num_rows() > 0 )
+        {
+            $sum = 0;
+            foreach ($anotaciones->result() as $anotacion) {
+                $sum += $anotacion->calificacion;  
+                if ( $anotacion->calificacion > 0 ) $qty_calificaciones += 1;   //Hay calificación
+            } 
+    
+            $data['avg_calificacion'] = intval($sum / $qty_calificaciones);
+        }
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * AJAX JSON
+     * Listado anotaciones con filtros determinados
+     */
+    function get_anotaciones_estudiante($usuario_id, $flipbook_id = NULL)
+    {
+        $anotaciones = $this->Flipbook_model->anotaciones_estudiante($usuario_id, $flipbook_id);
+        $data['list'] = $anotaciones->result();
+        $data['avg_calificacion'] = 0;  //Valor por defecto
+
+        //Calculando promedio
+        $qty_calificaciones = 0;
+        if ( $anotaciones->num_rows() > 0 )
+        {
+            $sum = 0;
+            foreach ($anotaciones->result() as $anotacion) {
+                $sum += $anotacion->calificacion;  
+                if ( $anotacion->calificacion > 0 ) $qty_calificaciones += 1;   //Hay calificación
+            } 
+    
+            $data['avg_calificacion'] = intval($sum / $qty_calificaciones);
+        }
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * AJAX JSON
+     * Calificar una anotación
+     */
+    function calificar_anotacion($pfd_id)
+    {
+        $data = $this->Flipbook_model->calificar_anotacion($pfd_id, $this->input->post('calificacion'));
+
+        //$data['message'] = 'Calificando';
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
 //---------------------------------------------------------------------------------------------------

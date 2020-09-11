@@ -83,9 +83,8 @@
                     <?= $row_resultado->anio_generacion ?>
                 </td>
 
-
                 <td class="<?= $clases_col['botones'] ?>">
-                    <?= anchor("grupos/editar/edit/{$row_resultado->id}", '<i class="fa fa-pencil"></i>', 'class="a4" title=""') ?>
+                    <?= anchor("grupos/editar/edit/{$row_resultado->id}", '<i class="fa fa-pencil-alt"></i>', 'class="a4" title=""') ?>
                 </td>
             </tr>
 

@@ -1,46 +1,21 @@
 <?php $this->load->view('assets/chosen_jquery'); ?>
-<?php $this->load->view('assets/icheck'); ?>
 
 <?php
-
-    //Variables para construcción del formulario
-
     $opciones_flipbooks = $this->App_model->opciones_flipbook("tipo_flipbook_id IN (0,3)  AND nivel = {$row->nivel}", 2);
-    
-    $att_submit = array(
-        'value' =>  'Asignar',
-        'class' =>  'btn btn-primary'
-    );
-    
-    //Tabla de resultados
-        $att_check_todos = array(
-            'name' => 'check_todos',
-            'id'    => 'check_todos',
-            'checked' => FALSE
-        );
-        
-        $att_check = array(
-            'class' =>  'check_registro',
-            'checked' => FALSE
-        );
-        
-
 ?>
 
 <script>
     $(document).ready(function(){
-        $('#check_todos').on('ifChanged', function(){
-            
-            if($(this).is(":checked"))
-            {
-                //Activado
-                $('.check_registro').iCheck('check');
+        $('#check_todos').change(function() {
+            if($(this).is(":checked")) {
+                $('form input[type=checkbox]').each( function() {			
+                    this.checked = true;
+                });
             } else {
-                //Desactivado
-                $('.check_registro').iCheck('uncheck');
+                $('form input[type=checkbox]').each( function() {			
+                    this.checked = false;
+                });
             }
-            
-            //$('#seleccionados').html(seleccionados.substring(1));
         });
     });
 </script>
@@ -51,14 +26,16 @@
 
     <div class="row">
         <div class="col col-md-3">
-        <div class="panel panel-default">
-            <div class="panel-body" style="min-height: 400px;">
-                <div class="sep1">
+        <div class="card card-default">
+            <div class="card-body" style="min-height: 400px;">
+            <div class="mb-2">
                     <label for="flipbook_id" class="label1">Contenido</label>
                     <?=  form_dropdown('flipbook_id', $opciones_flipbooks, set_value('flipbook_id'), 'class="form-control chosen-select"') ?><br/>
                 </div>
-                <div class="sep1">
-                    <?= form_submit($att_submit) ?>        
+                <div class="mb-2">
+                    <button class="btn btn-primary w120p" type="submit">
+                        Asignar
+                    </button>
                 </div>
 
                 <?php if ( validation_errors() ):?>
@@ -78,9 +55,9 @@
         </div>
         </div>
         <div class="col col-md-9">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <p class="p1">
+            <div class="card mb-2">
+                <div class="card-body">
+                    <p>
                         Los estudiantes que se seleccionen serán asignados al Contenido.
                         Si un estudiante ya ha sido agregado previamente al contenido no se asignará de nuevo y sus datos
                         permanecerán sin modificaciones.
@@ -91,19 +68,17 @@
             <table class="table table-default bg-blanco" cellspacing="0">
                 <thead>
                     <tr>
-                        <th width="10px;"><?= form_checkbox($att_check_todos) ?></th>
+                        <th width="10px"><input type="checkbox" id="check_todos"></th>
                         <th>Nombre estudiante</th>
                     </tr>
                 </thead>
                 <tbody>
 
                     <?php foreach ($estudiantes->result() as $row_estudiante): ?>
-                        <?php
-                            //Check
-                            $att_check['name'] = $row_estudiante->id;
-                        ?>
                         <tr>
-                            <td width="50px"><?= form_checkbox($att_check) ?></td>
+                            <td>
+                                <input type="checkbox" name="<?= $row_estudiante->id ?>" class="check_registro">
+                            </td>
                             <td><?= $this->App_model->nombre_usuario($row_estudiante->id, 3) ?></td>
                         </tr>
                     <?php endforeach ?>

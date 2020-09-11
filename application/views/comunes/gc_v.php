@@ -18,5 +18,7 @@
     });
 </script>
 
-<?php echo $output; ?>
+<div class="container">
+    <?php echo $output; ?>
+</div>
 

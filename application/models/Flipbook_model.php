@@ -573,15 +573,14 @@ class Flipbook_model extends CI_Model {
     /**
      * Array con los ID de los quices asociados a los temas y subtemas (temas
      * relacionados) de un flipbook.
-     * 
-     * @param type $flipbook_id
-     * @return type
+     * 2020-09-10
      */
     function quices_total($flipbook_id)
     {
         $arr_quices = array();
         $temas = $this->temas($flipbook_id);
         $str_temas = $this->Pcrn->query_to_str($temas, 'tema_id', ',');
+        if ( strlen($str_temas) == 0 ) $str_temas = '0';
 
         $this->db->select('quiz.*, tema.nombre_tema');
         $this->db->join('quiz', 'recurso.referente_id = quiz.id');
@@ -742,24 +741,6 @@ class Flipbook_model extends CI_Model {
         $quices = $this->db->get('meta');
 
         return $quices;
-    }
-
-
-    function anotaciones($flipbook_id, $usuario_id = NULL) 
-    {
-        if (is_null($usuario_id)) {
-            $usuario_id = $this->session->userdata('usuario_id');
-        }
-
-        $this->db->select('flipbook_contenido.pagina_id, anotacion, num_pagina, editado');
-        $this->db->where('tipo_detalle_id', 3);
-        $this->db->join('flipbook_contenido', 'pagina_flipbook_detalle.pagina_id = flipbook_contenido.pagina_id');
-        $this->db->where('flipbook_contenido.flipbook_id', $flipbook_id);
-        $this->db->where('usuario_id', $usuario_id);
-        $this->db->order_by('num_pagina', 'ASC');
-        $anotaciones = $this->db->get('pagina_flipbook_detalle');
-
-        return $anotaciones;
     }
 
     /**
@@ -1053,12 +1034,11 @@ class Flipbook_model extends CI_Model {
     /**
      * Crea o actualiza una registro en la tabla pagina_flipbook_detalle, correspondiente a una anotación
      * en la página de un flipbook
-     * @param type $registro
-     * @return type
      */
-    function guardar_anotacion($registro) {
-        $condicion = "pagina_id = {$registro['pagina_id']} AND usuario_id = {$registro['usuario_id']}";
-        $detalle_id = $this->Pcrn->guardar('pagina_flipbook_detalle', $condicion, $registro);
+    function guardar_anotacion($arr_row)
+    {
+        $condition = "pagina_id = {$arr_row['pagina_id']} AND usuario_id = {$arr_row['usuario_id']}";
+        $detalle_id = $this->Db_model->save('pagina_flipbook_detalle', $condition, $arr_row);
 
         return $detalle_id;
     }
@@ -1200,6 +1180,47 @@ class Flipbook_model extends CI_Model {
 //---------------------------------------------------------------------------------------------------
 // DETALLES DE LAS PÁGINAS
 
+    function anotaciones($filters)
+    {
+        $this->db->select('flipbook_contenido.pagina_id, anotacion, num_pagina, editado, flipbook_id, integer_1 AS calificacion');
+        $this->db->where('tipo_detalle_id', 3);
+        $this->db->join('flipbook_contenido', 'pagina_flipbook_detalle.pagina_id = flipbook_contenido.pagina_id');
+
+        //$this->db->where('flipbook_contenido.flipbook_id', $flipbook_id);
+        //$this->db->where('usuario_id', $usuario_id);
+
+        if ( $filters['u'] != '' ) $this->db->where('usuario_id', $filters['u']);
+        if ( $filters['fb'] != '' ) $this->db->where('flipbook_contenido.flipbook_id', $filters['fb']);
+
+        //$this->db->order_by('num_pagina', 'ASC');
+        $anotaciones = $this->db->get('pagina_flipbook_detalle', 10);
+
+        return $anotaciones;
+    }
+
+    /**
+     * Listado de anotaciones realizadas por un estudiante en un flipbook
+     * 2020-09-10
+     */
+    function anotaciones_estudiante($flipbook_id, $usuario_id = NULL) 
+    {
+        if (is_null($usuario_id)) {
+            $usuario_id = $this->session->userdata('usuario_id');
+        }
+
+        $this->db->select('pagina_flipbook_detalle.id, flipbook_contenido.pagina_id, anotacion, num_pagina, pagina_flipbook_detalle.editado, integer_1 AS calificacion, nombre_tema, tema_id');
+        $this->db->where('tipo_detalle_id', 3);
+        $this->db->join('pagina_flipbook', 'pagina_flipbook_detalle.pagina_id = pagina_flipbook.id');
+        $this->db->join('flipbook_contenido', 'pagina_flipbook_detalle.pagina_id = flipbook_contenido.pagina_id');
+        $this->db->join('tema', 'pagina_flipbook.tema_id = tema.id', 'left');
+        $this->db->where('flipbook_contenido.flipbook_id', $flipbook_id);
+        $this->db->where('pagina_flipbook_detalle.usuario_id', $usuario_id);
+        $this->db->order_by('num_pagina', 'ASC');
+        $anotaciones = $this->db->get('pagina_flipbook_detalle');
+
+        return $anotaciones;
+    }
+
     /**
      * Devuelve las anotaciones de los estudiantes en un flipbook
      * Los estudiantes son los que pertenecen a los grupos que un profesor tiene asignado.
@@ -1239,34 +1260,67 @@ class Flipbook_model extends CI_Model {
     }
 
     /**
-     * Devuelve las anotaciones de los estudiantes en un flipbook
-     * Los estudiantes son los que pertenecen a un grupo de estudiantes.
-     * 
-     * @param type $flipbook_id
-     * @param type $usuario_id
-     * @return type
+     * Devuelve las anotaciones de los estudiantes deun grupo en un flipbook y tema determinado
+     * Las anotaciones están en la tabla pagina_flipbook_detalle, tipo 3
+     * 2020-09-10
      */
-    function anotaciones_grupo($flipbook_id, $grupo_id = NULL, $tema_id = 0) {
+    function anotaciones_grupo($flipbook_id, $grupo_id = NULL, $tema_id = 0)
+    {
+        //String Select
+            $select = 'pagina_flipbook_detalle.id, ';
+            $select .= "CONCAT((usuario.nombre), ' ', (usuario.apellidos)) as nombre_estudiante, ";
+            $select .= "pagina_flipbook_detalle.usuario_id, ";
+            $select .= "tema.nombre_tema, anotacion, ";
+            $select .= 'pagina_flipbook_detalle.integer_1 AS calificacion, ';
+            $select .= 'CEIL(pagina_flipbook_detalle.integer_1/20) AS estrellas, ';
+            $select .= 'pagina_flipbook_detalle.editado, ';
+            $select .= 'flipbook_id, ';
+        
+        //String Group By
+            $group_by = 'pagina_flipbook_detalle.id, anotacion, pagina_flipbook_detalle.editado, pagina_flipbook_detalle.usuario_id, flipbook_id, ';
+            $group_by .= 'pagina_flipbook_detalle.integer_1, ';
+            $group_by .= 'tema.nombre_tema, ';
+            $group_by .= "CONCAT((usuario.nombre), ' ', (usuario.apellidos))";
 
-        $this->db->select('pagina_flipbook_detalle.*, tema.nombre_tema');
-        $this->db->where('tipo_detalle_id', 3);
-        $this->db->join('flipbook_contenido', 'pagina_flipbook_detalle.pagina_id = flipbook_contenido.pagina_id');
-        $this->db->join('usuario_grupo', 'pagina_flipbook_detalle.usuario_id = usuario_grupo.usuario_id');
-        $this->db->join('pagina_flipbook', 'pagina_flipbook_detalle.pagina_id = pagina_flipbook.id', 'LEFT');
-        $this->db->join('tema', 'pagina_flipbook.tema_id = tema.id', 'left');
-        $this->db->where('flipbook_id', $flipbook_id);
-        $this->db->where('grupo_id', $grupo_id);
-        $this->db->order_by('pagina_flipbook_detalle.editado', 'DESC');
-
-        //Filtro por tema
-        if ($tema_id > 0) {
-            $this->db->where('tema_id', $tema_id);
-        }
+        //Construyendo consulta
+            $this->db->select($select);
+            $this->db->where('tipo_detalle_id', 3); //Anotación en página de flipbook
+            $this->db->join('pagina_flipbook', 'pagina_flipbook_detalle.pagina_id = pagina_flipbook.id');
+            $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
+            $this->db->join('usuario_grupo', 'pagina_flipbook_detalle.usuario_id = usuario_grupo.usuario_id');
+            $this->db->join('tema', 'pagina_flipbook.tema_id = tema.id');
+            $this->db->join('usuario', 'pagina_flipbook_detalle.usuario_id = usuario.id');
+            $this->db->where('flipbook_contenido.flipbook_id', $flipbook_id);
+            $this->db->where('usuario_grupo.grupo_id', $grupo_id);
+            if ($tema_id > 0) $this->db->where('tema_id', $tema_id);    //Filtro por tema
+            $this->db->order_by('pagina_flipbook_detalle.editado', 'DESC');
+            $this->db->group_by($group_by);
 
         $anotaciones = $this->db->get('pagina_flipbook_detalle');
 
         return $anotaciones;
     }
+
+    /**
+     * Actualiza el campo pagina_flipbook_detalle.integer_1, como calificación
+     * de una anotación de un estudiante.
+     * 2020-09-10
+     */
+    function calificar_anotacion($pfd_id, $calificacion)
+    {
+        $arr_row['integer_1'] = $calificacion;
+
+        $this->db->where('id', $pfd_id);
+        $this->db->update('pagina_flipbook_detalle', $arr_row);
+
+        $data['affected_rows'] = $this->db->affected_rows();
+        if ( $data['affected_rows'] > 0 ) $data['status'] = 1;
+
+        return $data;
+    }
+
+//-----------------------------------------------------------------------------
+// FIN ANOTACIONES
 
     function aperturas($flipbook_id) {
 

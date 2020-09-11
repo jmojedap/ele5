@@ -13,14 +13,14 @@
         );
             
         $arr_menus['cuestionarios_resumen03'] = array(
-            'icono' => '<i class="fa fa-bar-chart-o"></i>',
+            'icono' => '<i class="fas fa-chart-bar"></i>',
             'texto' => 'Competencias',
             'link' => "grupos/cuestionarios_resumen03/{$row->id}/50",
             'atributos' => 'title="Resumen por cometencias"'
         );
         
         $arr_menus['cuestionarios_resumen01'] = array(
-            'icono' => '<i class="fa fa-bar-chart-o"></i>',
+            'icono' => '<i class="fas fa-chart-bar"></i>',
             'texto' => 'Competencias cuestionario',
             'link' => "grupos/cuestionarios_resumen01/{$row->id}/50",
             'atributos' => 'title="Resumen por cometencias por cuestionario"'
@@ -41,4 +41,4 @@
         $data_menu['seccion_sm'] = $seccion_sm;
     
     //Cargue vista
-        $this->load->view('comunes/submenu_v', $data_menu);
+        $this->load->view('comunes/bs4/submenu_v', $data_menu);

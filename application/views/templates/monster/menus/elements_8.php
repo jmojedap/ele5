@@ -1,76 +1,113 @@
 <script>
     var nav_1_elements = [
-            {
-                id: 'nav_1_instituciones',
-                text: 'Instituciones',
-                active: false,
-                style: '',
-                icon: 'fa fa-university',
-                cf: 'instituciones/explorar',
-                submenu: false,
-                subelements: []
-            },
-            {
-                id: 'nav_1_usuarios',
-                text: 'Usuarios',
-                active: false,
-                style: '',
-                icon: 'fa fa-user',
-                cf: 'usuarios/explorar',
-                submenu: false,
-                subelements: []
-            },
-            {
-                id: 'nav_1_recursos',
-                text: 'Recursos',
-                active: false,
-                style: '',
-                icon: 'fa fa-book',
-                cf: '',
-                submenu: true,
-                subelements: [
-                    {
-                        text: 'Programas',
-                        active: false,
-                        icon: 'fa fa-sitemap',
-                        cf: 'programas/explorar'
-                    },
-                    {
-                        text: 'Contenidos',
-                        active: false,
-                        icon: 'fa fa-book',
-                        cf: 'flipbooks/explorar'
-                    }
-                ]
-            },
-            {
-                id: 'nav_1_cuestionarios',
-                text: 'Cuestionarios',
-                active: false,
-                style: '',
-                icon: 'fa fa-question',
-                cf: '',
-                submenu: true,
-                subelements: [
-                    {
-                        text: 'Cuestionarios',
-                        active: false,
-                        icon: 'fa fa-book',
-                        cf: 'cuestionarios/explorar'
-                    },
-                    {
-                        text: 'Lecturas',
-                        active: false,
-                        icon: 'fa fa-quote-left',
-                        cf: 'datos/enunciados'
-                    },
-                    {
-                        text: 'Preguntas',
-                        active: false,
-                        icon: 'fa fa-question',
-                        cf: 'preguntas/explorar'
-                    }
-                ]
-            }
-        ];
+        {
+            text: 'Usuarios',
+            active: false,
+            style: '',
+            icon: 'fa fa-user',
+            cf: 'usuarios/explorar',
+            submenu: false,
+            subelements: [],
+            sections: []
+        },
+        {
+            text: 'Instituciones',
+            active: false,
+            style: '',
+            icon: 'fa fa-university',
+            cf: 'instituciones/explorar',
+            submenu: false,
+            subelements: [],
+            sections: ['instituciones/explorar']
+        },
+        {
+            text: 'Recursos',
+            active: false,
+            style: '',
+            icon: 'fa fa-book',
+            cf: '',
+            submenu: true,
+            subelements: [
+                {
+                    text: 'Programas',
+                    active: false,
+                    icon: 'fa fa-sitemap',
+                    cf: 'programas/explorar',
+                    sections: []
+                },
+                {
+                    text: 'Contenidos',
+                    active: false,
+                    icon: 'fa fa-book',
+                    cf: 'flipbooks/explorar',
+                    sections: []
+                },
+                {
+                    text: 'Links',
+                    active: false,
+                    icon: 'fa fa-globe',
+                    cf: 'recursos/links',
+                    sections: []
+                }
+            ],
+            sections: []
+        },
+        {
+            text: 'Cuestionarios',
+            active: false,
+            style: '',
+            icon: 'fa fa-question',
+            cf: '',
+            submenu: true,
+            subelements: [
+                {
+                    text: 'Cuestionarios',
+                    active: false,
+                    icon: 'fa fa-book',
+                    cf: 'cuestionarios/explorar',
+                    sections: []
+                },
+                {
+                    text: 'Lecturas',
+                    active: false,
+                    icon: 'fa fa-quote-left',
+                    cf: 'datos/enunciados',
+                    sections: []
+                },
+                {
+                    text: 'Preguntas',
+                    active: false,
+                    icon: 'fa fa-question',
+                    cf: 'preguntas/explorar',
+                    sections: []
+                }
+            ],
+            sections: []
+        },
+        {
+            text: 'Administración',
+            active: false,
+            style: '',
+            icon: 'fa fa-sliders-h',
+            cf: '',
+            submenu: true,
+            subelements: [
+                {
+                    text: 'Estadísticas',
+                    active: false,
+                    icon: 'fa fa-chart-line',
+                    cf: 'estadisticas/ctn_correctas_incorrectas',
+                    sections: []
+                },
+                {
+                    text: 'Ayuda',
+                    active: false,
+                    icon: 'fa fa-question-circle',
+                    cf: 'datos/ayudas',
+                    sections: ['datos/ayudas']
+                }
+            ],
+            sections: []
+        },
+    ];
 </script>

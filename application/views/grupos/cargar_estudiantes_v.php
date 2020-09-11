@@ -1,4 +1,3 @@
-<?php $this->load->view('grupos/submenu_estudiantes_v') ?>
 
 <?= form_open_multipart("grupos/procesar_cargue/{$row->id}") ?>
 

@@ -15,6 +15,7 @@
 
         <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/style.css">
         <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/style_add_01.css">
+        <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>css/ele_20200910.css">
         <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>css/pel.css">
         <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES . 'css/abc_checkbox.css' ?>">
 
@@ -27,11 +28,16 @@
         <!-- Alerts Toastr -->
         <?php $this->load->view('assets/toastr') ?>
 
+        <!-- Moment.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js" integrity="sha256-H9jAz//QLkDOy/nzE9G4aYijQtkLt9FvGmdUTwBk6gs=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/es.js" integrity="sha256-bETP3ndSBCorObibq37vsT+l/vwScuAc9LRJIQyb068=" crossorigin="anonymous"></script>
+
         <!-- Google Analytics -->
-        <?php //$this->load->view('head_includes/google_analytics'); ?>
+        <?php $this->load->view('head_includes/google_analytics'); ?>
 
         <!-- PML Tools -->
         <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES . 'css/style_pml.css' ?>">
+        <script type="text/javascript" src="<?php echo URL_RESOURCES . 'js/pcrn_en.js' ?>"></script>
         <script>
                 const app_url = '<?php echo base_url() ?>'; const url_app = '<?php echo URL_API ?>'; const url_api = '<?php echo URL_API ?>';
         </script>

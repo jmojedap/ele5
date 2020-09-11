@@ -5,8 +5,8 @@
     $i = 0;
     
     $icono_resultado = array(
-        '<i class="fa fa-times resaltar"></i>',
-        '<i class="fa fa-check correcto"></i>'
+        '<i class="fa fa-times text-danger"></i>',
+        '<i class="fa fa-check text-success"></i>'
     );
     
     //Opciones
@@ -31,8 +31,6 @@
 <script>
 // Variables
 //-----------------------------------------------------------------------------
-
-    var base_url = '<?= base_url() ?>';
     var grupo_id = <?= $grupo_id ?>;
     var flipbook_id = <?= intval($flipbook_id) ?>;
     var quiz_id = <?= $quiz_id ?>;
@@ -44,13 +42,13 @@
     {
         $('#campo-flipbook_id').change(function(){
             flipbook_id = $('#campo-flipbook_id').val();
-            window.location = base_url + 'grupos/quices/' + grupo_id + '/' + flipbook_id;
+            window.location = url_app + 'grupos/quices/' + grupo_id + '/' + flipbook_id;
         });
         
         $('#campo-quiz_id').change(function(){
             quiz_id = $('#campo-quiz_id').val();
             //alert(flipbook_id);
-            window.location = base_url + 'grupos/quices/' + grupo_id + '/' + flipbook_id + '/' + quiz_id;
+            window.location = url_app + 'grupos/quices/' + grupo_id + '/' + flipbook_id + '/' + quiz_id;
         });
         
     });
@@ -58,11 +56,11 @@
 
 <div class="row">
     <div class="col col-md-3">
-        <div class="sep1" style="min-height: 400px;">
-            <div class="sep1">
+        <div class="mb-2" style="min-height: 400px;">
+            <div class="mb-2">
                 <?= form_dropdown('flipbook_id', $opciones_flipbook, $flipbook_id, 'id="campo-flipbook_id" class="form-control chosen-select"') ?>
             </div>
-            <div class="sep1">
+            <div class="mb-2">
                 <?= form_dropdown('quiz_id', $opciones_quices, $quiz_id, 'id="campo-quiz_id" class="form-control chosen-select"') ?>
             </div>
     
@@ -70,17 +68,17 @@
     </div>
     <div class="col col-md-9">
         
-        <div class="sep1">
+        <div class="mb-2">
             <div class="row">
                 <div class="col-md-12">
                     <?= anchor("grupos/quices_exportar/{$grupo_id}/{$quiz_id}", '<i class="fa fa-file-excel-o"></i> Exportar', 'class="btn btn-success" title="Exportar resultados a MS-Excel" target="_blank"') ?>
-                    <?= anchor("quices/resolver/{$quiz_id}", '<i class="fa fa-laptop"></i> Abrir evidencia', 'class="btn btn-default" title="Exportar resultados a MS-Excel" target="_blank"') ?>
+                    <?= anchor("quices/resolver/{$quiz_id}", '<i class="fa fa-laptop"></i> Abrir evidencia', 'class="btn btn-secondary" title="Exportar resultados a MS-Excel" target="_blank"') ?>
                 </div>
             </div>
         </div>
         
         
-        <table class="table table-default bg-blanco">
+        <table class="table bg-white">
             <thead>
                 <th>Estudiante</th>
                 <th>Estado</th>
@@ -106,10 +104,10 @@
                                 $clase_fila = '';
                                 break;
                             case 0:
-                                $clase_fila = 'danger';
+                                $clase_fila = 'table-danger';
                                 break;
                             case 1:
-                                $clase_fila = 'success';
+                                $clase_fila = 'table-success';
                                 break;
                         }
                     ?>

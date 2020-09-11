@@ -1,4 +1,3 @@
-<?php $this->load->view('assets/icheck'); ?>
 <?php $this->load->view('assets/toastr') ?>
 
 <?php
@@ -30,6 +29,9 @@
             'p5' => 'Marcar como pagado'
         );
     }
+
+    $permiso_procesos = FALSE;
+    if ( in_array($this->session->userdata('rol_id'), array(0,1,2,3,5,8)) ) $permiso_procesos = TRUE;
     
     if ( $this->session->userdata('srol') == 'interno' ) 
     {
@@ -40,19 +42,6 @@
             $opciones_proceso[$indice] = "Mover al grupo {$row_grupo->nivel}-{$row_grupo->grupo}";
         }
     }
-    
-            
-    $att_check_todos = array(
-        'name' => 'check_todos',
-        'id'    => 'check_todos',
-        'checked' => FALSE
-    );
-    
-    $att_check = array(
-        'class' =>  'check_registro',
-        'value' => 1,
-        'checked' => FALSE
-    );
     
     //Elementos usuario.pago
         $pago_texto[0] = 'No';
@@ -83,7 +72,6 @@
 <script>
 // Variables
 //-----------------------------------------------------------------------------
-    var app_url = '<?php echo base_url() ?>';
     var grupo_id = <?php echo $row->id ?>;
 
 // Document Ready
@@ -91,6 +79,7 @@
     $(document).ready(function(){
         
         $('#check_todos').change(function() {
+            console.log('hola');
             if($(this).is(":checked")) {
                 $('form input[type=checkbox]').each( function() {			
                     this.checked = true;
@@ -100,20 +89,6 @@
                     this.checked = false;
                 });
             }
-        });
-        
-        $('#check_todos').on('ifChanged', function(){
-            
-            if($(this).is(":checked"))
-            {
-                //Activado
-                $('.check_registro').iCheck('check');
-            } else {
-                //Desactivado
-                $('.check_registro').iCheck('uncheck');
-            }
-            
-            //$('#seleccionados').html(seleccionados.substring(1));
         });
 
         $('#estudiantes_form').submit(function(){
@@ -145,18 +120,16 @@
     }
 </script>
 
-<?php $this->load->view('grupos/submenu_estudiantes_v') ?>
-
 <form accept-charset="utf-8" method="POST" id="estudiantes_form">
 
-    <?php if ( in_array($this->session->userdata('rol_id'), array(0,1,2,3,5,8)) ) { ?>
-        <div class="sep1">
+    <?php if ( $permiso_procesos ) { ?>
+        <div class="mb-2">
             <div class="row mb-2">
                 <div class="col-md-2">
                     <?php echo  form_dropdown('proceso', $opciones_proceso, set_value('proceso'), 'class="form-control"') ?>
                 </div>
                 <div class="col-md-2">
-                    <button class="btn btn-primary btn-block" type="submit">
+                    <button class="btn btn-primary w120p" type="submit">
                         Aplicar
                     </button>
                 </div>
@@ -168,10 +141,14 @@
     <?php } ?>
     
 
-    <table class="table table-default bg-blanco" cellspacing="0">
+    <table class="table table-default bg-white" cellspacing="0">
         <thead>
             <tr>
-                <th width="10px"><?php echo form_checkbox($att_check_todos) ?></th>
+                <?php if ( $permiso_procesos ) : ?>
+                <th width="10px">
+                    <input type="checkbox" name="check_todos" id="check_todos">
+                </th>
+                <?php endif; ?>
                 <th>Estudiante</th>
                 <th>Cantidad login</th>
                 <th>Username</th>
@@ -192,9 +169,6 @@
                         $valor_activo = '<span class="w3 etiqueta exito">Activo</span>';
                         if ( $row_estudiante->estado == 0 ) { $valor_activo = '<span class="w3 etiqueta alerta">Inactivo</span>'; }
                         
-                    //Checkbox
-                        $att_check['name'] = $row_estudiante->id;
-                        
                     //Mostrar fila
                         $mostrar_estudiante = $this->Usuario_model->mostrar_estudiante($row_estudiante);
                         $clase_fila = $this->Pcrn->si_cero($mostrar_estudiante, 'hidden', '');
@@ -214,7 +188,11 @@
                 ?>
 
                 <tr class="<?php echo $clase_fila ?>">
-                    <td><?php echo form_checkbox($att_check) ?></td>
+                    <?php if ( $permiso_procesos ) : ?>
+                        <td>
+                            <input type="checkbox" name="<?= $row_estudiante->id ?>" value="1">
+                        </td>
+                    <?php endif; ?>
                     <td>
                         <?php echo anchor("usuarios/actividad/{$row_estudiante->id}/1", $nombre_estudiante, 'class="" title=""') ?>
                     </td>

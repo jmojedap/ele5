@@ -38,7 +38,7 @@
 ?>
 
 <?= form_open("busquedas/explorar_redirect/{$controlador}", $att_form) ?>
-    <div class="form-horizontal">
+    <div class="">
         <div class="form-group">
             <div class="col-sm-10">
                 <div class="input-group">

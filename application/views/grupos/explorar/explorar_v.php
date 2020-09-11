@@ -30,7 +30,7 @@
             <i class="fa fa-trash-o"></i>
         </a>
         
-        <div class="btn-group hidden-xs <?= $clases_btn['exportar'] ?>" role="group">
+        <div class="btn-group only-lg <?= $clases_btn['exportar'] ?>" role="group">
             <?= anchor("grupos/exportar/?{$busqueda_str}", '<i class="fa fa-file-excel-o"></i> Exportar', 'class="btn btn-success" title="Exportar los ' . $cant_resultados . ' registros a archivo de MS Excel"') ?>
         </div>
     </div>

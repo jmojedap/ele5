@@ -6,19 +6,189 @@ class Grupo_model extends CI_Model{
      * Crea los valores de unas variables para el array $data
      * que serán utilizadas por varias funciones del controlador,
      * son variables básicas sobre un grupo
-     * 
-     * @param type $grupo_id
-     * @return string
      */
     function basico($grupo_id)
     {
         $row = $this->Grupo_model->datos_grupo($grupo_id);
         
-        $basico['row'] = $row;
-        $basico['titulo_pagina'] = 'Grupo ' . $row->nombre_grupo;
-        $basico['vista_a'] = 'grupos/grupo_v';
+        $data['row'] = $row;
+        $data['head_title'] = 'Grupo ' . $row->nombre_grupo;
+        $data['view_description'] = 'grupos/grupo_v';
+        $data['nav_2'] = 'grupos/menu_v';
         
-        return $basico;
+        return $data;
+    }
+
+// EXPLORE FUNCTIONS - grupos/explorar
+//-----------------------------------------------------------------------------
+    
+    /**
+     * Array con los datos para la vista de exploración
+     */
+    function explore_data($filters, $num_page)
+    {
+        //Data inicial, de la tabla
+            $data = $this->get($filters, $num_page);
+        
+        //Elemento de exploración
+            $data['controller'] = 'grupos';                      //Nombre del controlador
+            $data['cf'] = 'grupos/explorar/';                      //Nombre del controlador
+            $data['views_folder'] = 'grupos/explore/';           //Carpeta donde están las vistas de exploración
+            
+        //Vistas
+            $data['head_title'] = 'Grupos';
+            $data['head_subtitle'] = $data['search_num_rows'];
+            $data['view_a'] = $data['views_folder'] . 'explore_v';
+            $data['nav_2'] = $data['views_folder'] . 'menu_v';
+        
+        return $data;
+    }
+
+    function get($filters, $num_page)
+    {
+        //Referencia
+            $per_page = 12;                             //Cantidad de registros por página
+            $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
+
+        //Búsqueda y Resultados
+            $this->load->model('Search_model');
+            $data['filters'] = $this->Search_model->filters();
+            //$elements = $this->search($data['filters'], $per_page, $offset);    //Resultados para página
+        
+        //Cargar datos
+            $data['list'] = $this->list($data['filters'], $per_page, $offset);    //Resultados para página
+            $data['str_filters'] = $this->Search_model->str_filters();
+            $data['search_num_rows'] = $this->search_num_rows($data['filters']);
+            $data['max_page'] = ceil($this->pml->if_zero($data['search_num_rows'],1) / $per_page);   //Cantidad de páginas
+
+        return $data;
+    }
+    
+    /**
+     * Query con resultados de posts filtrados, por página y offset
+     * 2020-07-15
+     */
+    function search($filters, $per_page = NULL, $offset = NULL)
+    {
+        //Construir consulta
+            $this->db->select('grupo.*, institucion.nombre_institucion');
+            $this->db->join('institucion', 'grupo.institucion_id = institucion.id');
+        
+        //Orden
+            if ( $filters['o'] != '' )
+            {
+                $order_type = $this->pml->if_strlen($filters['ot'], 'ASC');
+                $this->db->order_by($filters['o'], $order_type);
+            } else {
+                $this->db->order_by('nombre_grupo', 'ASC');
+            }
+            
+        //Filtros
+            $search_condition = $this->search_condition($filters);
+            if ( $search_condition ) { $this->db->where($search_condition);}
+            
+        //Obtener resultados
+            $query = $this->db->get('grupo', $per_page, $offset); //Resultados por página
+        
+        return $query;
+        
+    }
+
+    /**
+     * Array Listado elemento resultado de la búsqueda (filtros).
+     * 2020-01-21
+     */
+    function list($filters, $per_page = NULL, $offset = NULL)
+    {
+        $query = $this->search($filters, $per_page, $offset);
+        $list = array();
+
+        foreach ($query->result() as $row)
+        {
+            $row->qty_students = $this->Db_model->num_rows('usuario_grupo', "grupo_id = {$row->id}");  //Cantidad de estudiantes
+            $list[] = $row;
+        }
+
+        return $list;
+    }
+
+    /**
+     * String con condición WHERE SQL para filtrar post
+     * 2020-08-01
+     */
+    function search_condition($filters)
+    {
+        $condition = NULL;
+
+        $condition .= $this->role_filter() . ' AND ';
+
+        //q words condition
+        $words_condition = $this->Search_model->words_condition($filters['q'], array('nombre_grupo'));
+        if ( $words_condition )
+        {
+            $condition .= $words_condition . ' AND ';
+        }
+        
+        //Otros filtros
+        if ( $filters['i'] != '' ) { $condition .= "institucion_id = {$filters['i']} AND "; }       //Por ciudad
+        if ( $filters['n'] != '' ) { $condition .= "nivel = {$filters['n']} AND "; }                //Por nivel
+        if ( $filters['y'] != '' ) { $condition .= "anio_generacion = {$filters['y']} AND "; }                //Por año generacion
+        
+        //Quitar cadena final de ' AND '
+        if ( strlen($condition) > 0 ) { $condition = substr($condition, 0, -5);}
+        
+        return $condition;
+    }
+    
+    /**
+     * Devuelve la cantidad de registros encontrados en la tabla con los filtros
+     * establecidos en la búsqueda
+     */
+    function search_num_rows($filters)
+    {
+        $this->db->select('id');
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+        $query = $this->db->get('grupo'); //Para calcular el total de resultados
+
+        return $query->num_rows();
+    }
+    
+    /**
+     * Devuelve segmento SQL
+     */
+    function role_filter()
+    {
+        $row_user = $this->Db_model->row_id('usuario', $this->session->userdata('user_id'));
+        $condition = 'id = 0';  //Valor por defecto, ninguna institución, se obtendrían cero grupos.
+        
+        if ( $row_user->rol_id <= 2 ) {
+            //Usuarios internos
+            $condition = 'grupo.id > 0';
+        } elseif ( in_array($row_user->rol_id, array(3,4,5,6)) ) {
+            //Su institución
+            $condition = "grupo.id = {$row_user->grupo_id} ";
+        } elseif ( $this->session->userdata('rol_id') ) {
+            //Comercial
+            $condition = "grupo.ejecutivo_id = {$this->session->userdata('user_id')}";
+        }
+        
+        return $condition;
+    }
+    
+    /**
+     * Array con options para ordenar el listado de post en la vista de
+     * exploración
+     */
+    function order_options()
+    {
+        $order_options = array(
+            '' => '[ Ordenar por ]',
+            'id' => 'ID Institución',
+            'nombre_grupo' => 'Nombre'
+        );
+        
+        return $order_options;
     }
     
     /**

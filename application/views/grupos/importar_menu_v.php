@@ -7,7 +7,7 @@
     
     //Atributos de los elementos del menú
         $arr_menus['importar_editar_anios'] = array(
-            'icono' => '<i class="fa fa-calendar-o"></i>',
+            'icono' => '<i class="far fa-calendar"></i>',
             'texto' => 'Años generación',
             'link' => "grupos/importar_editar_anios/",
             'atributos' => 'title="Explorar grupos"'
@@ -35,4 +35,4 @@
         $data_menu['seccion_sm'] = $seccion_sm;
     
     //Cargue vista
-        $this->load->view('comunes/submenu_v', $data_menu);
+        $this->load->view('comunes/bs4/submenu_v', $data_menu);

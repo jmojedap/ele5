@@ -2,7 +2,7 @@
     $clases_submenu[$subseccion] = 'active';
 ?>
 
-<div class="div2">
+<div class="mb-2">
     <ul class="nav nav-pills">
       <li role="presentation" class="<?= $clases_submenu['en_linea'] ?>">
           <?= anchor("grupos/cuestionarios_flipbooks/$row->id", 'Generar', 'class="' . $clase_submenu['en_linea'] . '"') ?>

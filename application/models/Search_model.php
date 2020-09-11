@@ -46,6 +46,7 @@ class Search_model extends CI_Model{
             'n',        //Nivel escolar, grado escolar
             'i',        //Institución
             'g',        //Grupo
+            'fb',       //Flipbook
             'y',        //Year, año generación
             'fi',       //Fecha inicial
             'ff',       //Fecha final

@@ -1,5 +1,10 @@
 <?php
         $seccion_sm = $this->uri->segment(2);
+
+        $clases_sm['anotaciones'] = '';
+        $clases_sm['asignar_flipbook'] = '';
+        $clases_sm['quitar_flipbook'] = '';
+
         if ( $this->uri->segment(2) == 'validar_asignacion_f' ) { $seccion = 'asignar_flipbook'; }
 
         $clases_sm[$seccion_sm] = 'active';
@@ -44,4 +49,4 @@
         $data_menu['seccion_sm'] = $seccion_sm;
     
     //Cargue vista
-        $this->load->view('comunes/submenu_v', $data_menu);
+        $this->load->view('comunes/bs4/submenu_v', $data_menu);

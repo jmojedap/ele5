@@ -1,3 +1,5 @@
+<?php $this->load->view('head_includes/highcharts') ?>
+
 <?php
     $condiciones[0] = "grupo_id = {$grupo_id}";
     
@@ -99,11 +101,11 @@ $(function () {
 
 <?php $this->load->view('grupos/cuestionarios/submenu_v'); ?>
 
-<div class="div2">
+<div class="mb-2">
     <?php foreach ($areas->result() as $row_area) : ?>
     <?php
-        $clase_area = 'a2 w3';
-        if ( $row_area->id == $area_id ) { $clase_area .= ' actual'; }
+        $clase_area = 'btn btn-light w3';
+        if ( $row_area->id == $area_id ) { $clase_area = 'btn btn-primary w3'; }
     ?>
         <?= anchor("grupos/cuestionarios_resumen03/{$grupo_id}/{$row_area->id}/{$nivel}", $row_area->item_corto, 'class="' . $clase_area . '"' )  ?>
     <?php endforeach ?>

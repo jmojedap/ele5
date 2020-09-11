@@ -994,6 +994,31 @@ class Usuarios extends CI_Controller{
         redirect("usuarios/flipbooks/{$usuario_id}");
     }
     
+    function anotaciones_ant($usuario_id, $flipbook_id = NULL)
+    {
+        //Cargando
+            $this->load->model('Flipbook_model');
+            $this->load->model('Pagina_model');
+        
+        //Cargando datos básicos
+        $data = $this->Usuario_model->basico($usuario_id);
+        $flipbooks = $this->Usuario_model->flipbooks($data['row']);
+        
+        if ( $flipbooks->num_rows() > 0 ){
+            $flipbook_id = $this->Pcrn->si_nulo($flipbook_id, $flipbooks->row()->flipbook_id);
+        }
+       
+       //Variables
+            $data['flipbook_id'] = $flipbook_id;
+            $data['anotaciones'] = $this->Flipbook_model->anotaciones_estudiante($flipbook_id, $usuario_id);
+            $data['flipbooks'] = $flipbooks;
+        
+        //Cargar vista
+            $data['head_subtitle'] = 'Anotaciones';
+            $data['view_a'] = 'usuarios/anotaciones_v';
+            $this->load->view(TPL_ADMIN, $data);
+    }
+
     function anotaciones($usuario_id, $flipbook_id = NULL)
     {
         //Cargando
@@ -1010,12 +1035,12 @@ class Usuarios extends CI_Controller{
        
        //Variables
             $data['flipbook_id'] = $flipbook_id;
-            $data['anotaciones'] = $this->Flipbook_model->anotaciones($flipbook_id, $usuario_id);
+            $data['anotaciones'] = $this->Flipbook_model->anotaciones_estudiante($flipbook_id, $usuario_id);
             $data['flipbooks'] = $flipbooks;
         
         //Cargar vista
             $data['head_subtitle'] = 'Anotaciones';
-            $data['view_a'] = 'usuarios/anotaciones_v';
+            $data['view_a'] = 'usuarios/anotaciones/anotaciones_v';
             $this->load->view(TPL_ADMIN, $data);
     }
     

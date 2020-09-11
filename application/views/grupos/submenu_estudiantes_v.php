@@ -1,5 +1,10 @@
 <?php
         $seccion_sm = $this->uri->segment(2);
+
+        $clases_sm['estudiantes'] = '';
+        $clases_sm['cargar_estudiantes'] = '';
+        $clases_sm['editar_estudiantes'] = '';
+
         //if ( $this->uri->segment(2) == 'otra_seccion' ) { $seccion = 'seccion'; }
 
         $clases_sm[$seccion_sm] = 'active';
@@ -26,12 +31,10 @@
             'atributos' => 'title="Editar estudiantes del grupo"'
         );
         
-        
-        
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('estudiantes', 'cargar_estudiantes', 'editar_estudiantes');
-        $elementos_rol[1] = array('estudiantes', 'cargar_estudiantes', 'editar_estudiantes');
-        $elementos_rol[2] = array('estudiantes', 'cargar_estudiantes', 'editar_estudiantes');
+        $elementos_rol[0] = array('estudiantes', 'editar_estudiantes');
+        $elementos_rol[1] = array('estudiantes', 'editar_estudiantes');
+        $elementos_rol[2] = array('estudiantes', 'editar_estudiantes');
         
     //Definiendo menú mostrar, según el rol del visitante
         $elementos = $elementos_rol[$this->session->userdata('rol_id')];
@@ -43,4 +46,4 @@
         $data_menu['seccion_sm'] = $seccion_sm;
     
     //Cargue vista
-        $this->load->view('comunes/submenu_v', $data_menu);
+        $this->load->view('comunes/bs4/submenu_v', $data_menu);

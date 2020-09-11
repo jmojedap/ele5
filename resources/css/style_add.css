@@ -214,3 +214,13 @@ span.suave{
         display: none;
     }
 }
+
+/* CALIFICACIÓN Y ESCALAS */
+/*-----------------------------------------------------------------------------*/
+.pointer { cursor: pointer; }
+.star { color: #FFC61E }
+.calificacion_rango_1_5 { background-color: #E06666; color: white; }
+.calificacion_rango_2_5 { background-color: #EF9F66; color: white; }
+.calificacion_rango_3_5 { background-color: #FFD966; color: #666; }
+.calificacion_rango_4_5 { background-color: #C4D25A; color: #666; }
+.calificacion_rango_5_5 { background-color: #89cb4e; color: white; }

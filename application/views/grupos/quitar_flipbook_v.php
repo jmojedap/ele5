@@ -1,45 +1,21 @@
 <?php $this->load->view('assets/chosen_jquery'); ?>
-<?php $this->load->view('assets/icheck'); ?>
 
 <?php
-
     $att_link_flipbooks = 'class="a2"';
-
-    $submit = array(
-        'value' =>  'Quitar',
-        'class' => 'btn btn-warning w3'
-    );
-            
-    //Tabla de resultados
-        $att_check_todos = array(
-            'name' => 'check_todos',
-            'id'    => 'check_todos',
-            'checked' => FALSE
-        );
-        
-        $att_check = array(
-            'class' =>  'check_registro',
-            'value' =>  1,
-            'checked' => FALSE
-        );
-
 ?>
-
 
 <script>
     $(document).ready(function(){
-        $('#check_todos').on('ifChanged', function(){
-            
-            if($(this).is(":checked"))
-            {
-                //Activado
-                $('.check_registro').iCheck('check');
+        $('#check_todos').change(function() {
+            if($(this).is(":checked")) {
+                $('form input[type=checkbox]').each( function() {			
+                    this.checked = true;
+                });
             } else {
-                //Desactivado
-                $('.check_registro').iCheck('uncheck');
+                $('form input[type=checkbox]').each( function() {			
+                    this.checked = false;
+                });
             }
-            
-            //$('#seleccionados').html(seleccionados.substring(1));
         });
     });
 </script>
@@ -59,29 +35,33 @@
                     Seleccione el Contenido que quiere quitar de este grupo
                 </p>
                 
-                <ul class="nav nav-pills nav-stacked sep1">
+                <ul class="nav nav-pills flex-column mb-2">
                     <?php foreach ($flipbooks->result() as $row_flipbook): ?>
                         <?php
                             $link_flipbook = "grupos/quitar_flipbook/{$grupo_id}/{$row_flipbook->flipbook_id}";
                             $nombre_flipbook_row = $this->App_model->nombre_flipbook($row_flipbook->flipbook_id);
 
-                            $clase = '';
+                            $clase = 'nav-link';
                             if ( $flipbook_id == $row_flipbook->flipbook_id )
                             {
-                                $clase = 'active'; 
+                                $clase = 'nav-link active'; 
                             }
                         ?>
 
-                        <li role="presentation" class="<?= $clase ?>">
-                            <?= anchor($link_flipbook, $nombre_flipbook_row) ?>
+                        <li role="presentation" class="nav-item">
+                            <a href="<?= base_url($link_flipbook) ?>" class="<?= $clase ?>">
+                                <?= $nombre_flipbook_row ?>
+                            </a>
                         </li>
 
 
                     <?php endforeach ?>
                 </ul>
                 
-                <div class="sep1 pull-right">
-                    <?= form_submit($submit) ?>        
+                <div class="mb-2 pull-right">
+                    <button class="btn btn-warning w120p" type="submit">
+                        Quitar
+                    </button>
                 </div>
                 
             </div>
@@ -93,7 +73,7 @@
 
         <?php if ( $this->session->flashdata('resultado') != NULL ):?>
             <?php $resultado = $this->session->flashdata('resultado') ?>
-            <div class="sep1">
+            <div class="mb-2">
                 <div class="alert alert-success">
                     <i class="fa fa-info-circle"></i>
                     Se eliminaron <?= $resultado['num_eliminados'] ?> asignaciones de contenido
@@ -115,19 +95,17 @@
         <table class="table table-default bg-blanco" cellspacing="0">
             <thead>
                 <tr>
-                    <th width="10px;"><?= form_checkbox($att_check_todos) ?></th>
+                    <th width="10px"><input type="checkbox" id="check_todos"></th>
                     <th>Nombre estudiante</th>
                 </tr>
             </thead>
             <tbody>
 
                 <?php foreach ($estudiantes->result() as $row_estudiante): ?>
-                    <?php
-                        //Check
-                        $att_check['name'] = $row_estudiante->id;
-                    ?>
                     <tr>
-                        <td width="50px"><?= form_checkbox($att_check) ?></td>
+                        <td>
+                            <input type="checkbox" name="<?= $row_estudiante->id ?>" class="check_registro">
+                        </td>
                         <td><?= $this->App_model->nombre_usuario($row_estudiante->id, 3) ?></td>
 
                     </tr>

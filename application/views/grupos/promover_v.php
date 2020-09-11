@@ -1,5 +1,4 @@
 <?php $this->load->view('assets/chosen_jquery'); ?>
-<?php $this->load->view('assets/icheck'); ?>
 
 <?php
 
@@ -18,38 +17,26 @@
     
         $att_submit = array(
             'value' =>  'Guardar',
-            'class' => 'btn btn-primary'
+            'class' => 'btn btn-primary w120p'
         );
 
     $clase_botones = array('', '', '');
     $clase_botones[$tipo_promocion] = 'active';
-    
-    //Tabla de resultados
-        $att_check_todos = array(
-            'name' => 'check_todos',
-            'id'    => 'check_todos',
-            'checked' => FALSE
-        );
-
-        $att_check = array(
-            'class' =>  'check_registro',
-            'checked' => FALSE
-        );
 
 ?>
 
 <script>
     $(document).ready(function(){
         
-        $('#check_todos').on('ifChanged', function(){
-            
-            if($(this).is(":checked"))
-            {
-                //Activado
-                $('.check_registro').iCheck('check');
+        $('#check_todos').change(function() {
+            if($(this).is(":checked")) {
+                $('form input[type=checkbox]').each( function() {			
+                    this.checked = true;
+                });
             } else {
-                //Desactivado
-                $('.check_registro').iCheck('uncheck');
+                $('form input[type=checkbox]').each( function() {			
+                    this.checked = false;
+                });
             }
         });
     });
@@ -65,35 +52,35 @@
     <div class="row">
         <div class="col col-md-3">
 
-            <div class="sep1">
+            <div class="mb-2">
                 <ul class="nav nav-pills">
-                    <li role="presentation" class="<?= $clase_botones[1] ?>">
-                        <?= anchor("grupos/promover/$row->id/1", 'Grupo nuevo'); ?>
+                    <li role="presentation" class="nav-item">
+                        <?= anchor("grupos/promover/$row->id/1", 'Grupo nuevo', 'class="nav-link ' . $clase_botones[1] . '"'); ?>
                     </li>
-                    <li role="presentation" class="<?= $clase_botones[2] ?>">
-                        <?= anchor("grupos/promover/$row->id/2", 'Grupo existente'); ?>
+                    <li role="presentation" class="nav-item">
+                        <?= anchor("grupos/promover/$row->id/2", 'Grupo existente', 'class="nav-link ' . $clase_botones[2] . '"'); ?>
                     </li>
                 </ul>
             </div>
 
-            <div class="panel panel-default" style="min-height: 400px;">
-                <div class="panel-heading">
+            <div class="card" style="min-height: 400px;">
+                <div class="card-header">
                     Grupo destino
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     <p>Puede promover los estudiantes a un grupo nuevo o a un grupo existente.</p>
 
                         <?php if ( $tipo_promocion == 1 ): ?>
                             <p>
-                                <span class="suave">Institución: </span>
+                                <span class="text-muted">Institución: </span>
                                 <span class="resaltar"><?= $this->App_model->nombre_institucion($row->institucion_id) ?></span> |
-                                <span class="suave">Nivel: </span>
+                                <span class="text-muted">Nivel: </span>
                                 <span class="resaltar"><?= $this->Item_model->nombre(3, $row->nivel + 1) ?></span> |
-                                <span class="suave">Año generación: </span>
+                                <span class="text-muted">Año generación: </span>
                                 <span class="resaltar"><?= $row->anio_generacion + 1 ?></span> |
                             </p>
 
-                            <div class="sep1">
+                            <div class="mb-2">
                                 <label for="grupo" class="label1">Grupo Nuevo</label>
                                 <p class="descripcion">Número o letra que identifica al grupo</p>
                                 <?=  form_input($att_grupo) ?>
@@ -102,7 +89,7 @@
                         <?php endif ?>
 
                         <?php if ( $tipo_promocion == 2 ):?>
-                            <div class="sep1">
+                            <div class="mb-2">
                                 <label for="grupo" class="label1">Grupo existente</label>
                                 <p class="descripcion">Grupo de estudiantes creado previamente, correspondientes al año <?= $row->anio_generacion + 1 ?></p>
                                 <?=  form_dropdown('grupo_existente_id', $opciones_grupo, '', 'class="form-control chosen-select"') ?>
@@ -110,7 +97,7 @@
                         <?php endif ?>
 
                     <?php if ( $tipo_promocion > 0 ):?>
-                        <div class="sep1">
+                        <div class="mb-2">
                             <?= form_submit($att_submit) ?>        
                         </div>
                     <?php endif ?>
@@ -128,7 +115,9 @@
             <table class="table table-default bg-blanco">
                 <thead>
                     <tr>
-                        <th width="10px"><?= form_checkbox($att_check_todos) ?></th>
+                        <th width="10px">
+                            <input type="checkbox" id="check_todos">
+                        </th>
                         <th>Nombre estudiante</th>
                         <th>Promovido a <?= $row->anio_generacion + 1 ?></th>
                     </tr>
@@ -152,7 +141,9 @@
                         ?>
 
                         <tr class="<?= $clase_fila ?>">
-                            <td><?= form_checkbox($att_check) ?></td>
+                            <td>
+                                <input type="checkbox" name="<?= $row_estudiante->id ?>" class="check_registro">
+                            </td>
                             <td><?= $this->App_model->nombre_usuario($row_estudiante->id, 3) ?></td>
                             <td>
                                 <?php if ( $promovido ) { ?>

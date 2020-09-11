@@ -86,7 +86,7 @@ $(function () {
 
 <?php $this->load->view('grupos/submenu_cuestionarios_v'); ?>
 
-<div class="div2">
+<div class="mb-2">
     <p>
         <?php foreach ($areas->result() as $row_area) : ?>
         <?php
