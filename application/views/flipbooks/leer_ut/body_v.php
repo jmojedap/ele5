@@ -240,15 +240,29 @@
                     </p>
                 </div>
 
-                <form accept-charset="utf-8" @submit.prevent="guardar_anotacion">
+                <!-- RESPUESTA ESTUDIANTE -->
+                <div v-show="anotacion.calificacion > 0" class="alert alert-warning">
+                    <p><strong>Tú escribiste:</strong></p>
+                    <p>
+                        {{ anotacion.anotacion }}
+                    </p>
+                    <p></p>
+                    <p>
+                        <strong class="mr-2">Calificación:</strong>
+                        <i class="star fa-star" v-bind:class="star_class(anotacion.calificacion, 1)"></i>
+                        <i class="star fa-star" v-bind:class="star_class(anotacion.calificacion, 2)"></i>
+                        <i class="star fa-star" v-bind:class="star_class(anotacion.calificacion, 3)"></i>
+                        <i class="star fa-star" v-bind:class="star_class(anotacion.calificacion, 4)"></i>
+                        <i class="star fa-star" v-bind:class="star_class(anotacion.calificacion, 5)"></i>
+                    </p>
+                </div>
+
+                <form accept-charset="utf-8" @submit.prevent="guardar_anotacion" v-show="anotacion.calificacion == 0">
                     <div class="">
                         <textarea
-                            id="anotacion"
-                            rows="7"
-                            class="anotacion"
-                            placeholder="Escribe aquí una anotación sobre este tema"
+                            rows="7" class="anotacion" placeholder="Escribe aquí una anotación o respuesta sobre este tema"
                             required
-                            v-model="anotacion"
+                            v-model="anotacion.anotacion"
                             >
                         </textarea>
                     </div>

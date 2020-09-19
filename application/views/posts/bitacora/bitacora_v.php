@@ -50,9 +50,6 @@
                     <?php if ( $row_pago->estado_id == 3 ) { ?>
                         <i class="fa fa-exclamation-triangle text-warning"></i>
                     <?php } ?>
-                    <?php if ( $row_pago->estado_id == 3 ) { ?>
-                        <i class="fa fa-exclamation-triangle text-warning"></i>
-                    <?php } ?>
                     <?php echo $arr_estados_pago[$row_pago->estado_id] ?> &middot;
                     <?php echo $row_pago->texto_1 ?>
                 </a>

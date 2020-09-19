@@ -1167,16 +1167,16 @@ class Flipbooks extends CI_Controller{
 
         //Calculando promedio
         $qty_calificaciones = 0;
+        $sum = 0;
         if ( $anotaciones->num_rows() > 0 )
         {
-            $sum = 0;
             foreach ($anotaciones->result() as $anotacion) {
                 $sum += $anotacion->calificacion;  
                 if ( $anotacion->calificacion > 0 ) $qty_calificaciones += 1;   //Hay calificación
-            } 
-    
-            $data['avg_calificacion'] = intval($sum / $qty_calificaciones);
+            }    
         }
+
+        if ( $qty_calificaciones > 0 ) $data['avg_calificacion'] = intval($sum / $qty_calificaciones);
 
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
@@ -1202,7 +1202,8 @@ class Flipbooks extends CI_Controller{
                 if ( $anotacion->calificacion > 0 ) $qty_calificaciones += 1;   //Hay calificación
             } 
     
-            $data['avg_calificacion'] = intval($sum / $qty_calificaciones);
+            if ( $qty_calificaciones > 0 ) $data['avg_calificacion'] = intval($sum / $qty_calificaciones);
+            
         }
 
         //Salida JSON

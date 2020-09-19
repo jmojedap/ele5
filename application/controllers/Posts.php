@@ -425,7 +425,7 @@ class Posts extends CI_Controller{
         $data['pago_id'] = $pago_id;
 
         //Pagos
-        $this->db->order_by('fecha', 'DESC');
+        $this->db->order_by('id', 'DESC');
         $this->db->where('tipo_id', 91);
         $data['pagos'] = $this->db->get('post');
 

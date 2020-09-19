@@ -24,7 +24,7 @@
                 }
             },
             anotaciones: {},
-            anotacion: '',
+            anotacion: {anotacion: '', calificacion: 0},
             ver_indice: false,
             grupo_id: <?php echo $this->session->userdata('grupo_id'); ?>,
             area_id: <?php echo $row->area_id ?>,
@@ -60,15 +60,24 @@
             cargar_anotaciones: function() {
                 for (key in this.data.anotaciones)
                 {
-                    var num_pagina = this.data.anotaciones[key].num_pagina;
-                    this.anotaciones[num_pagina] = this.data.anotaciones[key].anotacion;
+                    var tema_id = this.data.anotaciones[key].tema_id;
+                    this.anotaciones[tema_id] = this.data.anotaciones[key];
                 }
-                this.anotacion = this.anotaciones[this.num_pagina];
-            },  
+                this.establecer_anotacion();
+            },
+            establecer_anotacion: function(){
+                //console.log('tema:', this.pagina.tema_id);
+                this.anotacion = {anotacion: '', calificacion: 0};
+                if ( this.anotaciones[this.pagina.tema_id] != undefined ) {
+                    this.anotacion = this.anotaciones[this.pagina.tema_id];
+                    this.anotacion.calificacion = parseInt(this.anotacion.calificacion);
+                }
+            },
             cambiar_pagina: function() {
                 $('#img_pagina').attr('src', '<?php echo URL_IMG . 'flipbook/pagina_cargando.png' ?>');
                 this.pagina = this.data.paginas[this.num_pagina];
                 this.anotacion = this.anotaciones[this.num_pagina];
+                this.establecer_anotacion();
             },
             pagina_sig: function() {
                 this.num_pagina = parseInt(this.num_pagina) + 1;
@@ -102,7 +111,7 @@
             guardar_anotacion: function() {
                 var params = new FormData();
                 params.append('num_pagina', this.num_pagina);
-                params.append('anotacion', this.anotacion);
+                params.append('anotacion', this.anotacion.anotacion);
                 
                 axios.post(this.app_url + 'flipbooks/guardar_anotacion/' + this.flipbook_id, params)
                 .then(response => {
@@ -195,6 +204,11 @@
                     console.log(error);
                 });
                 //$('#lectura_modal_contenido').html('Tema: ' + this.pagina.tema_id);
+            },
+            star_class: function(calificacion, num){
+                var star_class = 'far';
+                if ( calificacion > 20 * (num - 1) ) star_class = 'fa';
+                return star_class;
             }
         }
     });

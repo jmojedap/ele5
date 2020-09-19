@@ -38,7 +38,7 @@ $(document).ready(function(){
                 ?>
                 {
                     id: <?php echo $row_evento->max_evento_id ?>,
-                    title: "Cuestionario: <?php echo $nombre_cuestionario ?>",
+                    title: 'Cuestionario: <?php echo json_encode($nombre_cuestionario) ?>',
                     start: '<?= $row_evento->fecha_inicio ?>',
                     end: '<?= $this->Pcrn->suma_fecha($row_evento->fecha_fin) ?>',
                     url: '<?= $url ?>',

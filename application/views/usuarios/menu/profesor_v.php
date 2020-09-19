@@ -49,6 +49,13 @@
             'link' => "usuarios/grupos_profesor/{$usuario_id}",
             'atributos' => ''
         );
+
+        $arr_menus['anotaciones'] = array(
+            'icono' => '<i class="far fa-sticky-note"></i>',
+            'texto' => 'Anotaciones',
+            'link' => "usuarios/anotaciones/{$usuario_id}",
+            'atributos' => ''
+        );
             
         $arr_menus['contrasena'] = array(
             'icono' => '<i class="fa fa-lock"></i>',
@@ -68,9 +75,9 @@
         $elementos_rol[0] = array('actividad', 'grupos_profesor', 'editar', 'master_login');
         $elementos_rol[1] = array('actividad', 'grupos_profesor', 'editar', 'master_login');
         $elementos_rol[2] = array('actividad', 'grupos_profesor', 'editar');
-        $elementos_rol[3] = array('actividad',);
-        $elementos_rol[4] = array('actividad',);
-        $elementos_rol[5] = array('actividad');
+        $elementos_rol[3] = array('actividad', 'anotaciones');
+        $elementos_rol[4] = array('actividad', 'anotaciones');
+        $elementos_rol[5] = array('actividad', 'anotaciones');
         $elementos_rol[6] = array('actividad');
         $elementos_rol[7] = array('actividad');
         $elementos_rol[8] = array('actividad');
