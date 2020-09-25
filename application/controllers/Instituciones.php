@@ -53,42 +53,6 @@ class Instituciones extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
-    
-    function explorar_ant()
-    {
-        $this->load->model('Busqueda_model');
-        
-        //Datos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
-            $resultados_total = $this->Institucion_model->buscar($busqueda); //Para calcular el total de resultados
-        
-        //Paginación
-            $this->load->library('pagination');
-            $config = $this->App_model->config_paginacion(2);
-            $config['per_page'] = 10;
-            $config['base_url'] = base_url() . "instituciones/explorar/?{$busqueda_str}";
-            $config['total_rows'] = $resultados_total->num_rows();
-            $this->pagination->initialize($config);
-            
-        //Generar resultados para mostrar
-            $offset = $this->input->get('per_page');
-            $resultados = $this->Institucion_model->buscar($busqueda, $config['per_page'], $offset);
-        
-        //Variables para vista
-            $data['cant_resultados'] = $config['total_rows'];
-            $data['busqueda'] = $busqueda;
-            $data['busqueda_str'] = $busqueda_str;
-            $data['resultados'] = $resultados;
-        
-        //Solicitar vista
-            $data['titulo_pagina'] = 'Instituciones';
-            $data['subtitulo_pagina'] = $data['cant_resultados'];
-            $data['vista_a'] = 'instituciones/explorar_v';
-            $data['vista_menu'] = 'instituciones/explorar_menu_v';
-            $this->load->view(PTL_ADMIN, $data);
-    }
-    
     /**
      * Exporta el resultado de la búsqueda a un archivo de Excel
      */

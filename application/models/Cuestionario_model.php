@@ -13,6 +13,244 @@ class Cuestionario_model extends CI_Model
         
         return $basico;
     }
+
+// EXPLORE FUNCTIONS
+//-----------------------------------------------------------------------------
+    
+    /**
+     * Array con los datos para la vista de exploración
+     */
+    function explore_data($filters, $num_page)
+    {
+        //Data inicial, de la tabla
+            $data = $this->get($filters, $num_page);
+        
+        //Elemento de exploración
+            $data['controller'] = 'cuestionarios';                      //Nombre del controlador
+            $data['cf'] = 'cuestionarios/explorar/';                      //Nombre del controlador
+            $data['views_folder'] = 'cuestionarios/explore/';           //Carpeta donde están las vistas de exploración
+            
+        //Vistas
+            $data['head_title'] = 'Cuestionarios';
+            $data['head_subtitle'] = $data['search_num_rows'];
+            $data['view_a'] = $data['views_folder'] . 'explore_v';
+            $data['nav_2'] = $data['views_folder'] . 'menu_v';
+        
+        return $data;
+    }
+
+    function get($filters, $num_page)
+    {
+        //Referencia
+            $per_page = 10;                             //Cantidad de registros por página
+            $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
+
+        //Búsqueda y Resultados
+            $this->load->model('Search_model');
+            $data['filters'] = $this->Search_model->filters();
+            //$elements = $this->search($data['filters'], $per_page, $offset);    //Resultados para página
+        
+        //Cargar datos
+            $data['list'] = $this->list($data['filters'], $per_page, $offset);    //Resultados para página
+            //$data['list'] = $elements->result();
+            $data['str_filters'] = $this->Search_model->str_filters();
+            $data['search_num_rows'] = $this->search_num_rows($data['filters']);
+            $data['max_page'] = ceil($this->pml->if_zero($data['search_num_rows'],1) / $per_page);   //Cantidad de páginas
+
+        return $data;
+    }
+    
+    /**
+     * Query con resultados de posts filtrados, por página y offset
+     * 2020-07-15
+     */
+    function search($filters, $per_page = NULL, $offset = NULL)
+    {
+        //Construir consulta
+            $this->db->select('cuestionario.*, CONCAT(usuario.nombre, " ", usuario.apellidos) AS creador, institucion.nombre_institucion');
+            $this->db->join('usuario', 'cuestionario.creado_usuario_id = usuario.id');
+            $this->db->join('institucion', 'usuario.institucion_id = institucion.id', 'LEFT');
+        
+        //Orden
+            if ( $filters['o'] != '' )
+            {
+                $order_type = $this->pml->if_strlen($filters['ot'], 'ASC');
+                $this->db->order_by($filters['o'], $order_type);
+            } else {
+                $this->db->order_by('editado', 'DESC');
+            }
+            
+        //Filtros
+            $search_condition = $this->search_condition($filters);
+            if ( $search_condition ) { $this->db->where($search_condition);}
+            
+        //Obtener resultados
+            $query = $this->db->get('cuestionario', $per_page, $offset); //Resultados por página
+        
+        return $query;
+        
+    }
+
+    /**
+     * Array Listado elemento resultado de la búsqueda (filtros).
+     * 2020-09-25
+     */
+    function list($filters, $per_page = NULL, $offset = NULL)
+    {
+        $query = $this->search($filters, $per_page, $offset);
+        $list = array();
+
+        foreach ($query->result() as $row)
+        {
+            $row->qty_preguntas = $this->Db_model->num_rows('cuestionario_pregunta', "cuestionario_id = {$row->id}");  //Cantidad de preguntas
+            $list[] = $row;
+        }
+
+        return $list;
+    }
+
+    /**
+     * String con condición WHERE SQL para filtrar post
+     * 2020-08-01
+     */
+    function search_condition($filters)
+    {
+        $condition = NULL;
+
+        $condition .= $this->role_filter() . ' AND ';
+
+        //q words condition
+        $words_condition = $this->Search_model->words_condition($filters['q'], array('nombre_cuestionario', 'descripcion'));
+        if ( $words_condition )
+        {
+            $condition .= $words_condition . ' AND ';
+        }
+        
+        //Otros filtros
+        if ( $filters['a'] != '' ) { $condition .= "area_id = {$filters['a']} AND "; }    //Área
+        if ( $filters['n'] != '' ) { $condition .= "nivel = {$filters['n']} AND "; }      //Nivel
+        if ( $filters['tp'] != '' ) { $condition .= "tipo_id = {$filters['tp']} AND "; }  //Tipo
+        if ( $filters['i'] != '' ) { $condition .= "cuestionario.institucion_id = {$filters['i']} AND "; }  //Tipo
+        if ( $filters['fi'] != '' ) { $condition .= "cuestionario.creado >= '{$filters['fi']} 00:00:00' AND "; }  //Fecha mínima de creación
+        if ( $filters['ff'] != '' ) { $condition .= "cuestionario.creado <= '{$filters['ff']} 23:59:59' AND "; }  //Fecha máxima de creación
+        
+        //Quitar cadena final de ' AND '
+        if ( strlen($condition) > 0 ) { $condition = substr($condition, 0, -5);}
+        
+        return $condition;
+    }
+    
+    /**
+     * Devuelve la cantidad de registros encontrados en la tabla con los filtros
+     * establecidos en la búsqueda
+     */
+    function search_num_rows($filters)
+    {
+        $this->db->select('id');
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+        $query = $this->db->get('cuestionario'); //Para calcular el total de resultados
+
+        return $query->num_rows();
+    }
+    
+    /**
+     * Devuelve segmento SQL
+     */
+    function role_filter()
+    {
+        $row_user = $this->Db_model->row_id('usuario', $this->session->userdata('user_id'));
+        $condition = 'cuestionario.id = 0';  //Valor por defecto, ninguna institución, se obtendrían cero cuestionarios.
+        
+        if ( $row_user->rol_id <= 2 ) {
+            //Usuarios internos
+            $condition = 'cuestionario.id > 0';
+        } elseif ( in_array($row_user->rol_id, array(3,4)) ) {
+            //Admin institucional y directivos
+            $condition = "( cuestionario.tipo_id IN (3,4) AND ( cuestionario.institucion_id = '{$this->session->userdata('institucion_id')}' ) )";
+        } elseif ( $row_user->rol_id == 5 ) {
+            //Profesor
+            $condition = "( cuestionario.tipo_id IN (3,4) AND cuestionario.creado_usuario_id = {$this->session->userdata('usuario_id')} )";
+        } elseif ( $row_user->rol_id == 7 ) {
+            //Digitador
+            $condition = "cuestionario.institucion_id IN (5)";
+        } elseif ( $row_user->rol_id == 8 ) {
+            //Comercial
+            $condition = "cuestionario.institucion_id IN (SELECT id FROM institucion WHERE ejecutivo_id = {$this->session->userdata('usuario_id')})";
+        }
+        
+        return $condition;
+    }
+
+// ELIMINACIÓN
+//-----------------------------------------------------------------------------
+
+    /**
+     * Eliminación masiva de cuestionarios, según filtros desde cuestionarios/explorar
+     * 2020-09-25
+     */
+    function delete_filtered($filters)
+    {
+        $data['qty_deleted'] = 0;
+
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition )
+        {
+            $this->db->select('id');
+            $this->db->where($search_condition);
+            $cuestionarios = $this->db->get('cuestionario');
+
+            if ( $cuestionarios->num_rows() <= 500 )    //Hasta 500 cuestionarios por ciclo
+            {
+                foreach ($cuestionarios->result() as $cuestionario) {
+                    $data['qty_deleted'] += $this->delete($cuestionario->id);
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Elimina registro en la tabla cuestionario, y los registro en tablas relacionadas
+     * 2020-09-25
+     */
+    function delete($cuestionario_id)
+    {
+        //Tabla principal
+            $this->db->where('id', $cuestionario_id);
+            $this->db->delete('cuestionario');
+
+            $qty_deleted = $this->db->affected_rows();
+            
+        //Tablas relacionadas
+            $tablas = array(
+                'cuestionario_pregunta',
+                'cuestionario_sugerencia',
+                'usuario_cuestionario',
+                'usuario_pregunta',
+                'dw_usuario_pregunta'
+            );
+            
+            foreach ( $tablas as $tabla ) 
+            {
+                $this->db->where('cuestionario_id', $cuestionario_id);
+                $this->db->delete($tabla);
+            }
+            
+        //Otras consultas
+            $arr_sql[] = "DELETE FROM evento WHERE tipo_id = 1 AND referente_2_id = {$cuestionario_id}";
+            $arr_sql[] = "DELETE FROM evento WHERE tipo_id = 11 AND referente_2_id = {$cuestionario_id}";
+            $arr_sql[] = "DELETE FROM evento WHERE tipo_id = 21 AND referente_id = {$cuestionario_id}";     //Evento de creación del cuestionario
+            $arr_sql[] = "DELETE FROM evento WHERE tipo_id = 22 AND referente_id = {$cuestionario_id}";     //Asignación de cuestionario a grupo
+            
+            foreach ( $arr_sql as $sql ) 
+            {
+                $this->db->query($sql);
+            }
+        
+        return $qty_deleted;
+    }
     
 // EXPLORACIÓN
 //-----------------------------------------------------------------------------
@@ -22,7 +260,7 @@ class Cuestionario_model extends CI_Model
      * 
      * @return string
      */
-    function data_explorar($num_pagina)
+    function z_data_explorar($num_pagina)
     {
         //Data inicial, de la tabla
             $data = $this->data_tabla_explorar($num_pagina);
@@ -51,7 +289,7 @@ class Cuestionario_model extends CI_Model
      * @param type $num_pagina
      * @return string
      */
-    function data_tabla_explorar($num_pagina)
+    function z_data_tabla_explorar($num_pagina)
     {
         //Elemento de exploración
             $data['cf'] = 'cuestionarios/explorar/';     //CF Controlador Función
@@ -83,7 +321,7 @@ class Cuestionario_model extends CI_Model
      * @param type $offset
      * @return type
      */
-    function buscar($busqueda, $per_page = NULL, $offset = NULL)
+    function z_buscar($busqueda, $per_page = NULL, $offset = NULL)
     {
         //Filtro según el rol de usuario que se tenga
             $filtro_rol = $this->filtro_rol();
@@ -121,7 +359,7 @@ class Cuestionario_model extends CI_Model
      * @param type $busqueda
      * @return type
      */
-    function cant_resultados($busqueda)
+    function z_cant_resultados($busqueda)
     {
         $resultados = $this->buscar($busqueda); //Para calcular el total de resultados
         return $resultados->num_rows();
@@ -131,7 +369,7 @@ class Cuestionario_model extends CI_Model
      * Condición SQL Where, para filtrar resultados de cuestionarios en vista de exploración
      * según el rol del usuario en sesión
      */
-    function filtro_rol()
+    function z_filtro_rol()
     {
         $row_usuario = $this->Pcrn->registro_id('usuario', $this->session->userdata('usuario_id'));
         $condicion = "id = 0";  //Valor por defecto, ningún usuario, se obtendrían cero resultados.
@@ -298,44 +536,6 @@ class Cuestionario_model extends CI_Model
         
         return $data;
     }
-
-    /**
-     * Elimina registro en la tabla cuestionario, y los registro en tablas relacionadas
-     */
-    function eliminar($cuestionario_id)
-    {
-        //Tabla principal
-            $this->db->where('id', $cuestionario_id);
-            $this->db->delete('cuestionario');
-            
-        //Tablas relacionadas
-            $tablas = array(
-                'cuestionario_pregunta',
-                'cuestionario_sugerencia',
-                'usuario_cuestionario',
-                'usuario_pregunta',
-                'dw_usuario_pregunta'
-            );
-            
-            foreach ( $tablas as $tabla ) 
-            {
-                $this->db->where('cuestionario_id', $cuestionario_id);
-                $this->db->delete($tabla);
-            }
-            
-        //Otras consultas
-            $arr_sql[] = "DELETE FROM evento WHERE tipo_id = 1 AND referente_2_id = {$cuestionario_id}";
-            $arr_sql[] = "DELETE FROM evento WHERE tipo_id = 11 AND referente_2_id = {$cuestionario_id}";
-            $arr_sql[] = "DELETE FROM evento WHERE tipo_id = 21 AND referente_id = {$cuestionario_id}";     //Evento de creación del cuestionario
-            $arr_sql[] = "DELETE FROM evento WHERE tipo_id = 22 AND referente_id = {$cuestionario_id}";     //Asignación de cuestionario a grupo
-            
-            foreach ( $arr_sql as $sql ) 
-            {
-                $this->db->query($sql);
-            }
-        
-    }
-    
     
 //GROCERY CRUD DE CUESTIONARIOS
 //---------------------------------------------------------------------------------------------------

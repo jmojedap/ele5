@@ -4,5 +4,8 @@
 
 <?php $this->load->view('assets/grocery_crud'); ?>
 
-<?= $output; ?>
+<div class="container">
+    <?= $output; ?>
+</div>
+
 

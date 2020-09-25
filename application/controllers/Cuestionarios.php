@@ -25,76 +25,101 @@ class Cuestionarios extends CI_Controller{
 //EXLPORACIÓN DE CUESTIONARIOS
 //------------------------------------------------------------------------------------------
 
-    /**
-     * Exploración y búsqueda de cuestionarios
-     */
-    function explorar($num_pagina = 1)
+    /** Exploración y búsqueda */
+    function explorar($num_page = 1)
     {
+        //Identificar filtros de búsqueda
+        $this->load->model('Search_model');
+        $filters = $this->Search_model->filters();
+
         //Datos básicos de la exploración
-            $data = $this->Cuestionario_model->data_explorar($num_pagina);
+            $data = $this->Cuestionario_model->explore_data($filters, $num_page);
         
-        //Opciones de filtros de búsqueda
-            
-            $data['opciones_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
-            $data['opciones_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Nivel');
-            $data['opciones_tipo'] = $this->Item_model->opciones('categoria_id = 15', 'Tipo');
-            $data['opciones_institucion'] = $this->App_model->opciones_institucion('id > 0', 'Institución');
-            $data['opciones_alcance'] = array('00' => 'Cuestionarios de la institución', '01' => 'Solo mis cuestionarios');
+        //Opciones
+            $data['options_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
+            $data['options_nivel'] = $this->App_model->opciones_nivel('item_largo', 'Nivel');
+            $data['options_tipo'] = $this->Item_model->opciones('categoria_id = 15', 'Tipo');
+            $data['options_institucion'] = $this->App_model->opciones_institucion('id > 0', 'Institución');
+            $data['options_alcance'] = array('00' => 'Cuestionarios de la institución', '01' => 'Solo mis cuestionarios');
             
         //Arrays con valores para contenido en la tabla
+            $data['arr_niveles'] = $this->App_model->arr_nivel();
+            $data['arr_areas'] = $this->Item_model->arr_item('1', 'id');
             $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 15');
-        
+            
         //Cargar vista
-            $this->load->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN, $data);
     }
 
     /**
-     * AJAX
-     * 
-     * Devuelve JSON, que incluye string HTML de la tabla de exploración para la
-     * página $num_pagina, y los filtros enviados por post
-     * 
-     * @param type $num_pagina
+     * Listado, filtrados por búsqueda, JSON
      */
-    function tabla_explorar($num_pagina = 1)
+    function get($num_page = 1)
     {
-        //Datos básicos de la exploración
-            $data = $this->Cuestionario_model->data_tabla_explorar($num_pagina);
-        
-        //Arrays con valores para contenido en lista
-            $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 15');
-        
-        //Preparar respuesta
-            $respuesta['html'] = $this->load->view('cuestionarios/explorar/tabla_v', $data, TRUE);
-            $respuesta['seleccionados_todos'] = $data['seleccionados_todos'];
-            $respuesta['num_pagina'] = $num_pagina;
-            $respuesta['busqueda_str'] = $data['busqueda_str'];
-            $respuesta['cant_resultados'] = $data['cant_resultados'];
-            $respuesta['max_pagina'] = $data['max_pagina'];
-        
-        //Salida
-            $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($respuesta));
+        $this->load->model('Search_model');
+        $filters = $this->Search_model->filters();
+
+        $data = $this->Cuestionario_model->get($filters, $num_page);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**
      * AJAX JSON
      * Eliminar un grupo de registros seleccionados
      */
-    function eliminar_seleccionados()
+    function delete_selected()
     {
-        $str_seleccionados = $this->input->post('seleccionados');
-        $seleccionados = explode('-', $str_seleccionados);
+        $selected = explode(',', $this->input->post('selected'));
+        $data['qty_deleted'] = 0;
         
-        foreach ( $seleccionados as $elemento_id ) 
+        foreach ( $selected as $row_id ) 
         {
-            $this->Cuestionario_model->eliminar($elemento_id);
+            $data['qty_deleted'] += $this->Cuestionario_model->delete($row_id);
         }
-        
-        $resultado = array('ejecutado' => 1, 'mensaje' =>  count($seleccionados) . ' cuestionarios eliminados');
 
-        $this->output->set_content_type('application/json')->set_output(json_encode($resultado));
+        //Establecer resultado
+        if ( $data['qty_deleted'] > 0 ) { $data['status'] = 1; }
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * AJAX JSON
+     * Eliminar cuestionarios filtrados
+     * 2020-09-25
+     */
+    function delete_filtered()
+    {
+        //Identificar filtros de búsqueda
+            $this->load->model('Search_model');
+            $filters = $this->Search_model->filters();
+
+        //Valores inicio del proceso
+            $arr_row['fecha_inicio'] = date('Y-m-d');
+            $arr_row['hora_inicio'] = date('H:i:s');
+
+        //Datos básicos de la exploración
+            $data = $this->Cuestionario_model->delete_filtered($filters);
+
+        //Registrar evento de eliminación masiva
+            if ( $data['qty_deleted'] >= 0 )
+            {
+                $arr_descripcion['filters'] = $filters;
+                $arr_descripcion['ip_address'] = $this->input->ip_address();
+                $arr_descripcion['qty_deleted'] = $data['qty_deleted'];
+
+                $this->load->model('Evento_model');
+                $arr_row['fecha_fin'] = date('Y-m-d');
+                $arr_row['hora_fin'] = date('H:i:s');
+                $arr_row['tipo_id'] = 215;
+                $arr_row['referente_id'] = 4200;
+                $arr_row['entero_1'] = $data['qty_deleted'];
+                $arr_row['descripcion'] = json_encode($arr_descripcion);
+
+                $data['evento_id'] = $this->Evento_model->guardar_evento($arr_row, 'id = 0');   //id=0, para que cree registro siempre, no edite
+            }
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**
@@ -153,7 +178,7 @@ class Cuestionarios extends CI_Controller{
         //Array data espefícicas
             $data['head_title'] = 'Cuestionarios';
             $data['head_subtitle'] = 'Nuevo';
-            $data['nav_2'] = 'cuestionarios/explorar/menu_v';
+            $data['nav_2'] = 'cuestionarios/explore/menu_v';
             $data['view_a'] = 'app/gc_v';
         
         $output = array_merge($data,(array)$gc_output);
@@ -405,7 +430,7 @@ class Cuestionarios extends CI_Controller{
         //Solicitar vista
             $data['head_title'] = 'Asignaciones';
             $data['head_subtitle'] = $data['cant_resultados'];
-            $data['nav_2'] = 'cuestionarios/explorar/menu_v';
+            $data['nav_2'] = 'cuestionarios/explore/menu_v';
             $data['view_a'] = 'cuestionarios/asignaciones/explorar_v';
             $this->load->view(TPL_ADMIN, $data);
     }
@@ -614,7 +639,7 @@ class Cuestionarios extends CI_Controller{
             $data['head_title'] = 'Cuestionarios';
             $data['head_subtitle'] = 'Asignar masivamente';
             $data['view_a'] = 'comunes/bs4/importar_v';
-            $data['nav_2'] = 'cuestionarios/explorar/menu_v';
+            $data['nav_2'] = 'cuestionarios/explore/menu_v';
         
         $this->load->view(TPL_ADMIN, $data);
     }
@@ -1267,7 +1292,7 @@ class Cuestionarios extends CI_Controller{
             $data['head_title'] = 'Cuestionarios';
             $data['head_subtitle'] = 'Importar respuestas';
             $data['view_a'] = 'comunes/bs4/importar_v';
-            $data['nav_2'] = 'cuestionarios/explorar/menu_v';
+            $data['nav_2'] = 'cuestionarios/explore/menu_v';
             $data['ayuda_id'] = 143;
         
         $this->load->view(TPL_ADMIN, $data);

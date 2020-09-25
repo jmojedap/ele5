@@ -103,7 +103,7 @@ class Respuestas extends CI_Controller{
             $data['head_title'] = 'Cuestionarios';
             $data['subhead_title'] = 'Importar respuestas';
             $data['view_a'] = 'comunes/bs4/importar_json_v';
-            $data['nav_2'] = 'cuestionarios/explorar/menu_v';
+            $data['nav_2'] = 'cuestionarios/explore/menu_v';
         
         $this->load->view(TPL_ADMIN, $data);
     }

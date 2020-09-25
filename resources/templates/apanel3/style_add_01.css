@@ -233,6 +233,24 @@ ul.ul1 li{
     cursor: pointer;
 }
 
+.btn-light {
+    background-color: #fefefe;
+    border-color: #E4EAEC;
+    color: #444;
+  }
+  .btn-light:hover,
+  .btn-light:active,
+  .btn-light.hover {
+    background-color: #ffffff;
+    border-color: rgb(212, 217, 219);
+  }
+
+  .btn-light:disabled{
+      background-color: #ffffff;
+      border-color: #EEE;
+      color: #AAA;
+  }
+
 /* TEXTO
 ----------------------------------------------------------------------------------------------------*/
 

@@ -31,8 +31,8 @@
                 name="opcion_1"
                 required
                 class="form-control"
-                placeholder="Opción B"
-                title="Opción B"
+                placeholder="Opción A"
+                title="Opción A"
                 v-model="form_values.opcion_1"
                 >
         </div>
