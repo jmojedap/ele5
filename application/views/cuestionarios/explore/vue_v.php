@@ -131,7 +131,7 @@
             delete_filtered: function(){
                 $('.table-responsive').hide()
                 this.delete_process = true;
-                axios.get(url_app + this.controller + '/delete_filtered/?' + this.str_filters)
+                axios.get(url_app + this.controller + '/delete_filtered/' + this.search_num_rows + '/?' + this.str_filters)
                 .then(response => {
                     $('#delete_filtered_modal').modal('hide')
                     this.delete_process = false;

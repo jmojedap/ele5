@@ -20,10 +20,10 @@
             </button>
             <?php if ( $this->session->userdata('role') <= 1 ) : ?>
                 <button class="btn btn-danger"
-                    v-bind:title="`Eliminar ` + search_num_rows + ` cuestionarios filtrados, filtre menos de 2000 cuestionarios para activar este botón`"
+                    v-bind:title="`Eliminar ` + search_num_rows + ` cuestionarios filtrados, filtre menos de 500 cuestionarios para activar este botón`"
                     data-toggle="modal"
                     data-target="#delete_filtered_modal"
-                    v-bind:disabled="search_num_rows > 2000"
+                    v-bind:disabled="search_num_rows > 500"
                     >
                     <i class="fa fa-trash"></i> Masiva...
                 </button>

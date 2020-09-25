@@ -87,36 +87,36 @@ class Cuestionarios extends CI_Controller{
      * Eliminar cuestionarios filtrados
      * 2020-09-25
      */
-    function delete_filtered()
+    function delete_filtered($qty_filtered = 0)
     {
         //Identificar filtros de búsqueda
             $this->load->model('Search_model');
             $filters = $this->Search_model->filters();
 
-        //Valores inicio del proceso
-            $arr_row['fecha_inicio'] = date('Y-m-d');
-            $arr_row['hora_inicio'] = date('H:i:s');
-
-        //Datos básicos de la exploración
-            $data = $this->Cuestionario_model->delete_filtered($filters);
-
         //Registrar evento de eliminación masiva
-            if ( $data['qty_deleted'] >= 0 )
+            $evento_id = 0;
+            if ( $qty_filtered > 0 )
             {
                 $arr_descripcion['filters'] = $filters;
                 $arr_descripcion['ip_address'] = $this->input->ip_address();
-                $arr_descripcion['qty_deleted'] = $data['qty_deleted'];
+                $arr_descripcion['qty_deleted'] = $qty_filtered;
 
                 $this->load->model('Evento_model');
+                $arr_row['fecha_inicio'] = date('Y-m-d');
+                $arr_row['hora_inicio'] = date('H:i:s');
                 $arr_row['fecha_fin'] = date('Y-m-d');
                 $arr_row['hora_fin'] = date('H:i:s');
                 $arr_row['tipo_id'] = 215;
                 $arr_row['referente_id'] = 4200;
-                $arr_row['entero_1'] = $data['qty_deleted'];
+                $arr_row['entero_1'] = $qty_filtered;
                 $arr_row['descripcion'] = json_encode($arr_descripcion);
 
-                $data['evento_id'] = $this->Evento_model->guardar_evento($arr_row, 'id = 0');   //id=0, para que cree registro siempre, no edite
+                $evento_id = $this->Evento_model->guardar_evento($arr_row, 'id = 0');   //id=0, para que cree registro siempre, no edite
             }
+
+        //Datos básicos de la exploración
+            $data = $this->Cuestionario_model->delete_filtered($filters);
+            $data['evento_id'] = $evento_id;
 
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
