@@ -133,6 +133,8 @@ class Cuestionario_model extends CI_Model
         if ( $filters['i'] != '' ) { $condition .= "cuestionario.institucion_id = {$filters['i']} AND "; }  //Tipo
         if ( $filters['fi'] != '' ) { $condition .= "cuestionario.creado >= '{$filters['fi']} 00:00:00' AND "; }  //Fecha mínima de creación
         if ( $filters['ff'] != '' ) { $condition .= "cuestionario.creado <= '{$filters['ff']} 23:59:59' AND "; }  //Fecha máxima de creación
+        if ( $filters['condition'] != '' ) { $condition .= "{$filters['condition']} AND "; }  //Condición especial
+
         
         //Quitar cadena final de ' AND '
         if ( strlen($condition) > 0 ) { $condition = substr($condition, 0, -5);}

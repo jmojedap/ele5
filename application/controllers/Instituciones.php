@@ -764,33 +764,33 @@ class Instituciones extends CI_Controller{
     {
         //$this->output->enable_profiler(TRUE);
         $data = $this->Institucion_model->basico($institucion_id);
-        $this->load->model('Busqueda_model');
+        $this->load->model('Search_model');
         $this->load->model('Cuestionario_model');
         
         //Datos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
+            $filters = $this->Search_model->filters();
+            $str_filters = $this->Search_model->str_filters();
             
         //Filtro especial
-            $condicion = "id IN (SELECT cuestionario_id FROM usuario_cuestionario WHERE institucion_id = {$institucion_id})";
+            $condition = "cuestionario.id IN (SELECT cuestionario_id FROM usuario_cuestionario WHERE institucion_id = {$institucion_id})";
             
-            $busqueda['condicion'] = $condicion;
+            $filters['condition'] = $condition;
         
         //Paginación
-            $resultados_total = $this->Cuestionario_model->buscar($busqueda); //Para calcular el total de resultados
+            $resultados_total = $this->Cuestionario_model->search($filters); //Para calcular el total de resultados
             $this->load->library('pagination');
             $config = $this->App_model->config_paginacion(2);
-            $config['base_url'] = base_url("instituciones/cuestionarios/{$institucion_id}/?{$busqueda_str}");
+            $config['base_url'] = base_url("instituciones/cuestionarios/{$institucion_id}/?{$str_filters}");
             $config['total_rows'] = $resultados_total->num_rows();
             $this->pagination->initialize($config);
             
         //Generar resultados para mostrar
             $offset = $this->input->get('per_page');
-            $resultados = $this->Cuestionario_model->buscar($busqueda, $config['per_page'], $offset);
+            $resultados = $this->Cuestionario_model->search($filters, $config['per_page'], $offset);
         
         //Variables para vista
             $data['cant_resultados'] = $config['total_rows'];
-            $data['busqueda'] = $busqueda;
+            $data['filters'] = $filters;
             $data['cuestionarios'] = $resultados;
         
         //Solicitar vista

@@ -76,7 +76,7 @@ class Institucion_model extends CI_Model{
         //Construir consulta
             $this->db->select('institucion.*, lugar.nombre_completo AS ciudad, CONCAT(usuario.nombre, " ", usuario.apellidos) AS ejecutivo');
             $this->db->join('lugar', 'institucion.lugar_id = lugar.id', 'left');
-            $this->db->join('usuario', 'institucion.lugar_id = usuario.id', 'left');
+            $this->db->join('usuario', 'institucion.ejecutivo_id = usuario.id', 'left');
         
         //Orden
             if ( $filters['o'] != '' )

@@ -13,7 +13,7 @@
             'class' =>  'form-control',
             'name' => 'q',
             'placeholder' => 'Buscar',
-            'value' => $busqueda['q']
+            'value' => $filters['q']
         );
 
         //Opciones de dropdowns
@@ -37,10 +37,10 @@
                     <?= form_input($att_q) ?>
                 </div>
                 <div class="casilla w4">
-                    <?= form_dropdown('a', $opciones_area, $busqueda['a'], 'class="form-control"'); ?>
+                    <?= form_dropdown('a', $opciones_area, $filters['a'], 'class="form-control"'); ?>
                 </div>
                 <div class="casilla w4">
-                    <?= form_dropdown('n', $opciones_nivel, $busqueda['n'], 'title="Filtrar por nivel" class="form-control"'); ?>
+                    <?= form_dropdown('n', $opciones_nivel, $filters['n'], 'title="Filtrar por nivel" class="form-control"'); ?>
                 </div>
                 <div class="casilla"><?= form_submit($att_submit) ?></div>
             <?= form_close() ?>

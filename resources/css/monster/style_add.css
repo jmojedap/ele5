@@ -103,6 +103,24 @@ div.pf_datos{
     width: 28px;
 }
 
+.btn-light {
+    background-color: #fefefe;
+    border-color: #ced4da;
+    color: #444;
+  }
+  .btn-light:hover,
+  .btn-light:active,
+  .btn-light.hover {
+    background-color: #ffffff;
+    border-color: rgb(212, 217, 219);
+  }
+
+  .btn-light:disabled{
+      background-color: #ffffff;
+      border-color: #ced4da;
+      color: #AAA;
+  }
+
 /* TEXTO
 ----------------------------------------------------------------------------------------------------*/
 
