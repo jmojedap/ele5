@@ -8,7 +8,8 @@
 ?>
 
 <script>
-    //Variables
+// Variables
+//-----------------------------------------------------------------------------
     var respuesta_arr = [];
     <?php for ($i = 0; $i <= $cant_elementos; $i++) { ?>
         respuesta_arr[<?= $i ?>] = '';
@@ -25,9 +26,9 @@
     var resultado = 0;
     var quiz_id = <?= $row->id ?>;
     var usuario_id = <?= $this->session->userdata('usuario_id') ?>
-</script>
 
-<script>
+// Document Ready
+//-----------------------------------------------------------------------------
     
     $(document).ready(function(){
         
@@ -54,9 +55,9 @@
         });
     });
     
-</script>
+// Functions
+//-----------------------------------------------------------------------------
 
-<script>
     function actualizar_resultado()
     {
         if ( respuesta === clave ) {
@@ -73,11 +74,11 @@
         
         $.ajax({        
             type: 'POST',
-            url: '<?= base_url() ?>quices/guardar_resultado',
+            url: url_api + 'quices/guardar_resultado',
             data: {
-                usuario_id : usuario_id,
-                quiz_id : quiz_id,
-                resultado : resultado
+                usuario_id: usuario_id,
+                quiz_id: quiz_id,
+                resultado: resultado
             }
         });
 
@@ -85,20 +86,24 @@
 </script>
 
 <?php if ( strlen($imagen['src']) > 0 ){ ?>
-    <div class="div2" style="text-align: center;">
+    <div class="mb-2" style="text-align: center;">
         <?php $att_img['src'] = $imagen['src'] ?>
         <?= img($att_img) ?>
     </div>
 <?php } ?>
 
 <?php foreach ($elementos->result() as $row_elemento) : ?>
+    <?php
+        $ancho_casilla = strlen($row_elemento->detalle) * 6.2;
+    ?>
     <div class="card mb-1">
         <div class="card-body">
             <?php
                 $att_casilla = array(
                     'name' => 'casilla_' . $row_elemento->orden,
                     'id' => 'casilla_' . $row_elemento->orden,
-                    'class' => 'casilla_quiz w2',
+                    'class' => 'casilla_quiz',
+                    'style' => "width: {$ancho_casilla}px; min-width: 70px;"
                 );
                 $casilla = form_input($att_casilla);
             ?>
