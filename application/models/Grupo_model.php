@@ -388,6 +388,52 @@ class Grupo_model extends CI_Model{
             
         return $query;
     }
+
+    /**
+     * Objeto Excel Library, para exportar achhivo excel, listado de estudiantes con espacios par calificaciones
+     * 2020-10-16
+     */
+    function estudiantes_exportar($grupo_id)
+    {
+        //Datos
+        $row = $this->Db_model->row_id('grupo', $grupo_id);
+
+        $campos = array('estudiante', 'nota_1', 'nota_2','nota_3','final');
+
+        //
+        $this->db->select('id, apellidos, nombre');
+        $this->db->order_by('apellidos', 'ASC');
+        $this->db->where('pago > 0'); //no es no pagado
+        $this->db->where("usuario.id IN (SELECT usuario_id FROM usuario_grupo WHERE grupo_id = {$grupo_id})");
+        $estudiantes = $this->db->get('usuario');
+        
+
+        //Variables comunes
+            $arr_fila['nota_1'] = '';
+            $arr_fila['nota_2'] = '';
+            $arr_fila['nota_3'] = '';
+            $arr_fila['final'] = '';
+
+        //Cargando datos
+            $array = array();
+            foreach ($estudiantes->result() as $row_estudiante)
+            {
+                //Cargue array
+                    $arr_fila['estudiante'] = $row_estudiante->apellidos . ' ' . $row_estudiante->nombre;
+
+                //Cargue fila en array
+                    $array[] = $arr_fila;
+            }
+
+        //Array para objeto
+            $datos['nombre_hoja'] = "Grupo {$row->nombre_grupo}";
+            $datos['campos'] = $campos;
+            $datos['arr_datos'] = $array;
+
+        $objeto_archivo = $this->Pcrn_excel->archivo_array($datos);
+
+        return $objeto_archivo;
+    }
     
     /**
      * Eliminar masivamente los estudiantes de un listado de grupos

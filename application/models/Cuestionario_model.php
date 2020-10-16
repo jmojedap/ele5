@@ -3238,7 +3238,6 @@ class Cuestionario_model extends CI_Model
         $objeto_archivo = $this->Pcrn_excel->archivo_array($datos);
         
         return $objeto_archivo;
-                
     }
 
 // SelectorP - Constructor de cuestionarios

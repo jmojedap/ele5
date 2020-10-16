@@ -1189,6 +1189,23 @@ class Grupos extends CI_Controller{
         
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
+
+    /**
+     * Exportar archivo excel con listado de estudiantes de un grupo, usuarios.pagado sí,
+     * espacios para calificaciones, ordenados por apellido
+     * 2020-10-16
+     */
+    function exportar_estudiantes($grupo_id)
+    {
+        $row = $this->Db_model->row_id('grupo', $grupo_id);
+
+        $this->load->model('Pcrn_excel');
+        
+        $data['objWriter'] = $this->Grupo_model->estudiantes_exportar($grupo_id);
+        $data['nombre_archivo'] = date('Ymd') . ' Grupo ' . $row->nombre_grupo;
+        
+        $this->load->view('app/descargar_phpexcel_v', $data);
+    }
     
 // GESTIÓN DE CUESTIONARIOS PARA GRUPOS
 //-----------------------------------------------------------------------------

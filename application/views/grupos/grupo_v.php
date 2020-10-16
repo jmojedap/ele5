@@ -14,4 +14,8 @@
         <i class="far fa-comment"></i>
         Mensaje grupal
     </a>
+    <a href="<?= base_url("grupos/exportar_estudiantes/{$row->id}") ?>" class="btn btn-success btn-sm">
+        <i class="fa fa-download"></i>
+        Listado
+    </a>
 </p>
