@@ -1066,6 +1066,41 @@ class Grupo_model extends CI_Model{
                 
     }
 
+// APERTURA DE LINKS
+//-----------------------------------------------------------------------------
+
+    /**
+     * 
+     * 2020-10-22
+     */
+    function actividad_links($grupo_id, $flipbook_id, $tema_id)
+    {
+        $this->db->select('entero_1 AS flipbook_id, evento.usuario_id,  COUNT(evento.id) AS qty_rows');
+        $this->db->where('evento.tipo_id', 73);    //Apertura de links
+        $this->db->where('evento.grupo_id', intval($grupo_id));
+        $this->db->where('evento.entero_1', intval($flipbook_id));
+        if ( $tema_id > 0 ) $this->db->where('referente_id', $tema_id);
+        $this->db->group_by('entero_1, evento.usuario_id');
+
+        $eventos = $this->db->get('evento');
+        $arr_eventos = $this->pml->query_to_array($eventos, 'qty_rows', 'usuario_id');
+
+        $estudiantes = $this->estudiantes($grupo_id, 'pago > 0');
+        
+        $actividad_links = array();
+        foreach ($estudiantes->result() as $row_estudiante)
+        {
+            $estudiante['usuario_id'] = $row_estudiante->id;
+            $estudiante['display_name'] = $row_estudiante->apellidos . ' ' . $row_estudiante->nombre;
+            $estudiante['qty_eventos'] = 0;
+            if ( array_key_exists($row_estudiante->id, $arr_eventos) ) $estudiante['qty_eventos'] = $arr_eventos[$row_estudiante->id];
+
+            $actividad_links[$row_estudiante->id] = $estudiante;
+        }
+
+        return $actividad_links;
+    }
+
 // PREGUNTAS ASIGNADAS A GRUPOS 2019-09-12
 //-----------------------------------------------------------------------------
 

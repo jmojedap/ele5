@@ -542,7 +542,7 @@ class Flipbook_model extends CI_Model {
      */
     function links($flipbook_id)
     {
-        $this->db->select('titulo, url, num_pagina');
+        $this->db->select('recurso.id, titulo, url, num_pagina');
         $this->db->join('pagina_flipbook', 'recurso.tema_id = pagina_flipbook.tema_id');
         $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
         $this->db->where('flipbook_id', $flipbook_id);

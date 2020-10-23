@@ -454,8 +454,7 @@ class Develop extends CI_Controller {
             $estudiantes = $this->db->get('usuario');
         
         foreach ( $estudiantes->result() as $row_estudiante )
-        {
-            
+        {   
             $this->db->select('SELECT usuario_id, grupo_id');
             $this->db->order_by('id', 'DESC');
             $grupos = $this->db->get('usuario_grupo');
@@ -466,7 +465,6 @@ class Develop extends CI_Controller {
                 $this->db->update('usuario', $registro);
                 
                 $num_usuarios += 1;
-                
             }    
         }
         

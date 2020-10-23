@@ -472,6 +472,37 @@ class Temas extends CI_Controller{
         $data = $this->Tema_model->delete_link($tema_id, $link_id);
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
+
+    /**
+     * Abrir link, recurso de un tema, registra evento y redirige a url
+     * 2020-10-21
+     */
+    function open_link($tema_id, $link_id, $area_id, $nivel)
+    {
+        //Identificar URL destino
+        $url_link = trim($this->input->get('url_link'));
+
+        //Construir registro para tabla evento
+        $arr_row['fecha_inicio'] = date('Y-m-d');
+        $arr_row['hora_inicio'] = date('H:i:s');
+        $arr_row['tipo_id'] = 73;   //Evento tipo abrir link
+        $arr_row['url'] = $url_link;
+        $arr_row['referente_id'] = $tema_id;
+        $arr_row['referente_2_id'] = $link_id;
+        $arr_row['entero_1'] = $this->input->get('flipbook_id');
+        $arr_row['usuario_id'] = $this->session->userdata('user_id');
+        $arr_row['institucion_id'] = $this->session->userdata('institucion_id');
+        $arr_row['grupo_id'] = $this->session->userdata('grupo_id');
+        $arr_row['area_id'] = $area_id;
+        $arr_row['nivel'] = $nivel;
+
+        //Guardar evento
+        $this->load->model('Evento_model');
+        $this->Evento_model->guardar_evento($arr_row, "usuario_id = {$arr_row['usuario_id']} AND referente_2_id = {$arr_row['referente_2_id']}");
+
+        //Redirigir
+        redirect($url_link, 'refresh');
+    }
     
 // CARGA MASIVA DE TEMAS
 //---------------------------------------------------------------------------------------------------

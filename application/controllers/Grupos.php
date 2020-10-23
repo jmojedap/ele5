@@ -355,6 +355,52 @@ class Grupos extends CI_Controller{
         
         $this->load->view('app/descargar_phpexcel_v', $data);    
     }
+
+// SEGUIMIENTO DE APERTURA DE LINKS
+//-----------------------------------------------------------------------------
+
+    function actividad_links($grupo_id, $flipbook_id = NULL, $tema_id = 0)
+    {
+        $data = $this->Grupo_model->basico($grupo_id);
+        $data['estudiantes'] = $this->Grupo_model->estudiantes($grupo_id);
+
+        $flipbooks = $this->Grupo_model->flipbooks($grupo_id);
+            
+        //Identificando Flipbook
+        if ( $flipbooks->num_rows() > 0 && is_null($flipbook_id) ) $flipbook_id = $flipbooks->row()->flipbook_id;
+
+        //Construir array con flipbooks asociados al usuario en sesión
+        $data['user_flipbooks'] = array();
+        foreach ($this->session->userdata('arr_flipbooks') as $flipbook) $data['user_flipbooks'][] = intval($flipbook['flipbook_id']);
+        
+        //Identificando tema
+            $this->load->model('Flipbook_model');
+            $temas = $this->Flipbook_model->temas($flipbook_id);
+            
+        //Cargando array $data
+            $data['flipbooks'] = $flipbooks;
+            $data['flipbook_id'] = intval($flipbook_id);
+            $data['temas'] = $temas;
+            $data['tema_id'] = $tema_id;
+
+        //Variables vista
+            $data['head_subtitle'] = 'Actividad links';
+            $data['view_a'] = 'grupos/actividad_links_v';
+
+        $this->App_model->view(TPL_ADMIN, $data);
+    }
+
+    function get_actividad_links($grupo_id, $flipbook_id, $tema_id = 0)
+    {
+        $actividad_links = $this->Grupo_model->actividad_links($grupo_id, $flipbook_id, $tema_id);
+
+        //$data['list'] = $actividad_links->result();
+        $data['list'] = $actividad_links;
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        //$this->output->enable_profiler(TRUE);
+    }
     
 // IMPORTAR CAMBIO DE AÑO DE GENERACIÓN
 //-----------------------------------------------------------------------------

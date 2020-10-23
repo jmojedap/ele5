@@ -28,6 +28,7 @@
             ver_indice: false,
             grupo_id: <?php echo $this->session->userdata('grupo_id'); ?>,
             area_id: <?php echo $row->area_id ?>,
+            nivel: <?php echo $row->nivel ?>,
             pregunta_id: 0,
             pa_asignadas: [],
             pregunta_personalizada: true,

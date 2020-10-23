@@ -57,6 +57,14 @@
         anchor: true
     };
 
+    sections.actividad_links = {
+        icon: '',
+        text: 'Links',
+        class: '<?php echo $cl_nav_2['grupos_actividad_links'] ?>',
+        cf: 'grupos/actividad_links/' + element_id,
+        anchor: true
+    };
+
     sections.cuestionarios_flipbooks = {
         icon: '',
         text: 'Crear cuestionarios',
@@ -98,13 +106,13 @@
     };
     
     //Secciones para cada rol
-    sections_rol.dvlp = ['institucion', 'estudiantes', 'anotaciones', 'quices', 'cuestionarios_flipbooks', 'cuestionarios', 'profesores', 'promover', 'editar'];
-    sections_rol.admn = ['institucion', 'estudiantes', 'anotaciones', 'quices', 'cuestionarios_flipbooks', 'cuestionarios', 'profesores', 'promover', 'editar'];
-    sections_rol.edtr = ['institucion', 'estudiantes', 'anotaciones', 'quices', 'cuestionarios_flipbooks', 'cuestionarios', 'profesores', 'promover'];
-    sections_rol.ains = ['institucion', 'estudiantes', 'anotaciones', 'quices', 'cuestionarios_flipbooks', 'cuestionarios', 'profesores', 'promover'];
-    sections_rol.dirc = ['estudiantes', 'anotaciones', 'quices', 'cuestionarios_flipbooks', 'cuestionarios', 'profesores'];
-    sections_rol.prof = ['estudiantes', 'anotaciones', 'quices', 'cuestionarios_flipbooks', 'cuestionarios'];
-    sections_rol.comr = ['estudiantes', 'anotaciones', 'quices', 'cuestionarios_flipbooks', 'cuestionarios', 'profesores'];
+    sections_rol.dvlp = ['institucion', 'estudiantes', 'anotaciones', 'quices', 'actividad_links', 'cuestionarios_flipbooks', 'cuestionarios', 'profesores', 'promover', 'editar'];
+    sections_rol.admn = ['institucion', 'estudiantes', 'anotaciones', 'quices', 'actividad_links', 'cuestionarios_flipbooks', 'cuestionarios', 'profesores', 'promover', 'editar'];
+    sections_rol.edtr = ['institucion', 'estudiantes', 'anotaciones', 'quices', 'actividad_links', 'cuestionarios_flipbooks', 'cuestionarios', 'profesores', 'promover'];
+    sections_rol.ains = ['institucion', 'estudiantes', 'anotaciones', 'quices', 'actividad_links', 'cuestionarios_flipbooks', 'cuestionarios', 'profesores', 'promover'];
+    sections_rol.dirc = ['estudiantes', 'anotaciones', 'quices', 'actividad_links', 'cuestionarios_flipbooks', 'cuestionarios', 'profesores'];
+    sections_rol.prof = ['estudiantes', 'anotaciones', 'quices', 'actividad_links', 'cuestionarios_flipbooks', 'cuestionarios'];
+    sections_rol.comr = ['estudiantes', 'anotaciones', 'quices', 'actividad_links', 'cuestionarios_flipbooks', 'cuestionarios', 'profesores'];
     
     //Recorrer el sections del rol actual y cargarlos en el menú
     for ( key_section in sections_rol[app_r]) 

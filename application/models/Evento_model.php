@@ -261,9 +261,7 @@ class Evento_Model extends CI_Model{
     
     /**
      * Guarda un registro en la tabla evento
-     * 
-     * @param type $registro
-     * @return type
+     * 2020-10-21
      */
     function guardar_evento($registro, $condicion_add = NULL)
     {

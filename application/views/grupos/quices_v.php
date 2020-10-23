@@ -20,12 +20,6 @@
         foreach( $quices as $quiz ) {
             $opciones_quices['0' . $quiz['id']] = $this->App_model->nombre_tema($quiz['tema_id']);
         }
-        
-        /*//Subquices
-        foreach ( $subquices as $subquiz )
-        {
-            $opciones_quices['0' . $subquiz['subquiz_id']] = $subquiz['nombre_quiz'];
-        }*/
 ?>
 
 <script>
@@ -58,7 +52,7 @@
     <div class="col col-md-3">
         <div class="mb-2" style="min-height: 400px;">
             <div class="mb-2">
-                <?= form_dropdown('flipbook_id', $opciones_flipbook, $flipbook_id, 'id="campo-flipbook_id" class="form-control chosen-select"') ?>
+                <?= form_dropdown('flipbook_id', $opciones_flipbook, $flipbook_id, 'id="campo-flipbook_id" class="form-control"') ?>
             </div>
             <div class="mb-2">
                 <?= form_dropdown('quiz_id', $opciones_quices, $quiz_id, 'id="campo-quiz_id" class="form-control chosen-select"') ?>
@@ -76,7 +70,6 @@
                 </div>
             </div>
         </div>
-        
         
         <table class="table bg-white">
             <thead>
