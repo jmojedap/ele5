@@ -343,7 +343,7 @@ class Evento_Model extends CI_Model{
         $this->db->limit($limit);
         $this->db->offset($offset);
         //$this->db->where('fecha_inicio <= "' . $fecha_limite . '"');
-        $this->db->where("($condicion)");
+        $this->db->where($condicion);
         $this->db->order_by('fecha_inicio', 'DESC');
         $this->db->order_by('hora_inicio', 'DESC');
         
@@ -372,6 +372,7 @@ class Evento_Model extends CI_Model{
                 break;
             case 'institucional';
                 $condicion = "institucion_id = {$this->session->userdata('institucion_id')} AND ";
+                $condicion .= '(';
                 $condicion .= "(tipo_id = 50 AND entero_1 IN (1, 3) AND institucion_id = {$this->session->userdata('institucion_id')})";
                 $condicion .= ' OR ';
                 $condicion .= "(tipo_id = 50 AND entero_1 = 2 AND grupo_id IN ({$str_grupos}))";
@@ -379,9 +380,11 @@ class Evento_Model extends CI_Model{
                 $condicion .= "(tipo_id IN (4,11,12,13,101) AND grupo_id IN ({$str_grupos}))";
                 $condicion .= ' OR ';
                 $condicion .= "(tipo_id = 21 AND institucion_id = {$this->session->userdata('institucion_id')})";
+                $condicion .= ')';
                 break;
             case 'estudiante';
                 $condicion = "institucion_id = {$this->session->userdata('institucion_id')} AND ";
+                $condicion .= '(';
                 $condicion .= "(tipo_id = 1 AND estado = 0 AND usuario_id = {$this->session->userdata('usuario_id')})";
                 $condicion .= ' OR ';
                 $condicion .= "(tipo_id IN (2,3,4) AND grupo_id IN ({$str_grupos}))";
@@ -389,6 +392,7 @@ class Evento_Model extends CI_Model{
                 $condicion .= "(tipo_id = 50 AND entero_1 = 1)";
                 $condicion .= ' OR ';
                 $condicion .= "(tipo_id = 50 AND entero_1 = 2 AND grupo_id IN ({$str_grupos}))";
+                $condicion .= ')';
                 break;
         }
         

@@ -1375,9 +1375,7 @@ class Cuestionarios extends CI_Controller{
 
         $data = array('status' => 1, 'message' => 'La pregunta se quitó del cuestionario');
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**
@@ -1430,9 +1428,7 @@ class Cuestionarios extends CI_Controller{
             $this->Cuestionario_model->act_clave($cuestionario_id);
         }
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
         
     }
     

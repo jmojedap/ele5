@@ -1,11 +1,15 @@
 <?php $this->load->view('assets/lightbox2') ?>
 
-<a href="<?php echo base_url("cuestionarios/pregunta_nueva/{$cuestionario_id}/0") ?>" class="btn btn-secondary mb-2" title="Agregar pregunta al inicio del cuestionario">
-    <i class="fa fa-plus"></i>
-    Pregunta
-</a>
 
 <div id="preguntas">
+    <a href="<?php echo base_url("cuestionarios/pregunta_nueva/{$cuestionario_id}/0") ?>" class="btn btn-light mb-2" title="Agregar pregunta al inicio del cuestionario">
+        <i class="fa fa-plus"></i>
+        Pregunta al inicio
+    </a>
+    <a v-bind:href="`<?php echo base_url("cuestionarios/pregunta_nueva/{$cuestionario_id}/") ?>` + lista.length" class="btn btn-light mb-2" title="Agregar pregunta al inicio del cuestionario">
+        <i class="fa fa-plus"></i>
+        Pregunta al final
+    </a>
     <div class="row mb-1" v-for="(pregunta, key) in lista">
         <div class="col-md-8">
             <div class="card">
