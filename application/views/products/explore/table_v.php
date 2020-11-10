@@ -1,20 +1,14 @@
-<?php
-    //Clases columnas
-        $cl_col['id'] = '';
-        $cl_col['name'] = '';
-        $cl_col['price'] = '';
-        $cl_col['description'] = 'only-lg';
-?>
-
 <div class="table-responsive">
     <table class="table table-hover bg-white">
         <thead>
             <th width="46px">
                 <input type="checkbox" id="checkbox_all_selected" @click="select_all" v-model="all_selected">
             </th>
-            <th class="<?php echo $cl_col['name'] ?>">Nombre</th>
-            <th class="<?php echo $cl_col['price'] ?>">Precio</th>
-            <th class="<?php echo $cl_col['description'] ?>">
+            <th class="table-warning">ID</th>
+            <th>Ref.</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>
                 Descripción
             </th>
             
@@ -25,18 +19,24 @@
                 <td>
                     <input type="checkbox" v-bind:id="`check_` + element.id" v-model="selected" v-bind:value="element.id">
                 </td>
+
+                <td class="table-warning">{{ element.id }}</td>
+
+                <td>{{ element.code }}</td>
                 
-                <td class="<?php echo $cl_col['name'] ?>">
-                    <a v-bind:href="`<?php echo base_url("products/info/") ?>` + element.id">
+                <td>
+                    <a v-bind:href="`<?= base_url("products/info/") ?>` + element.id">
                         {{ element.name }}
                     </a>
                 </td>
 
-                <td class="<?php echo $cl_col['price'] ?>">
-                    {{ element.price | currency }}
+                <td width="120px">
+                    <span class="price_label">
+                        {{ element.price | currency }}
+                    </span>
                 </td>
 
-                <td class="<?php echo $cl_col['description'] ?>">
+                <td>
                     {{ element.description }}
                 </td>
                 

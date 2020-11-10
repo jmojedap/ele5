@@ -26,7 +26,11 @@
 
     <?php $this->load->view('assets/toastr') ?>
 
+
     <?php
         //Seguimiento google analytics, DESACTIVAR PARA VERSIÓN LOCAL
         //$this->load->view('head_includes/google_analytics');
     ?>
+    <script>
+        const url_app = '<?php echo URL_API ?>'; const url_api = '<?php echo URL_API ?>';
+    </script>

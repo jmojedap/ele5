@@ -2,7 +2,7 @@
 
 <?php
     $options_level = $this->App_model->opciones_nivel('item_largo');
-    $options_kit = $this->Kit_model->options();
+    //$options_kit = $this->Kit_model->options();
 ?>
 
 <div id="app_edit">
@@ -55,13 +55,6 @@
                             v-model="form_values.description"
                             rows="3"
                             ></textarea>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label for="kit_id" class="col-md-4 col-form-label text-right">Kit asociado</label>
-                    <div class="col-md-8">
-                        <?php echo form_dropdown('kit_id', $options_kit, '', 'class="form-control chosen-select" v-model="form_values.kit_id"') ?>
                     </div>
                 </div>
 

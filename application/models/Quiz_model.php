@@ -564,7 +564,7 @@ class Quiz_Model extends CI_Model{
         $elemento['clave'] = $row->clave;
         $elemento['archivo'] = $row->archivo;
         
-        $elemento['cant_opciones'] = count($arr_detalle);
+        $elemento['cant_opciones'] = 0;
         $elemento['x'] = $row->x;
         $elemento['y'] = $row->y;
         $elemento['alto'] = $row->alto;
@@ -572,6 +572,7 @@ class Quiz_Model extends CI_Model{
         
         if ( is_array($arr_detalle) )
         {
+            $elemento['cant_opciones'] = count($arr_detalle);
             foreach ( $arr_detalle as $key => $texto_opcion ){
                 $campo = 'opcion_' . $key;
                 $elemento[$campo] = $texto_opcion;

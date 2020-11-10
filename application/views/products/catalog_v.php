@@ -1,15 +1,3 @@
-<style>
-    .catalog .product_description{
-        width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        display: inline-block;
-        text-overflow: ellipsis;
-        border: 1px solid #ddd;
-        margin: 0;
-    }
-</style>
-
 <div id="app_catalog" class="catalog">
     <form accept-charset="utf-8" method="POST" id="search_form" @submit.prevent="get_list">
         <div class="row mb-2">
@@ -38,7 +26,7 @@
                     <img src="<?= URL_IMG ?>comercial/product_example.jpg" alt="Imagen producto" class="w120p">
                 </td>
                 <td>
-                    <a v-bind:href="`<?php echo base_url("products/detail/") ?>` + product.id" class="product_title">
+                    <a v-bind:href="`<?php echo base_url("products/details/") ?>` + product.id" class="product_title">
                         {{ product.name }}
                     </a>
                     <p>{{ product.description }}</p>

@@ -86,7 +86,7 @@ class Product_model extends CI_Model{
         $role_filter = $this->role_filter($this->session->userdata('user_id'));
 
         //Construir consulta
-            $this->db->select('product.id, name, product.status, product.description, product.price, product.slug, text_1, external_url');
+            $this->db->select('product.id, code, name, product.status, product.description, product.price, product.slug, text_1, external_url');
         
         //Crear array con términos de búsqueda
             $words_condition = $this->Search_model->words_condition($filters['q'], array('name', 'code', 'description', 'text_1', 'text_2'));
@@ -204,6 +204,21 @@ class Product_model extends CI_Model{
 
 // CRUD
 //-----------------------------------------------------------------------------
+
+    function save($condition, $arr_row)
+    {
+        if ( is_null($arr_row) ) { $arr_row = $this->arr_row('insert'); }
+        
+        //Save in table
+            $product_id = $this->Db_model->save('product', $condition, $arr_row);
+
+            if ( $product_id > 0 )
+            {
+                $data = array('status' => 1, 'message' => 'Producto creado', 'saved_id' => $product_id);
+            }
+        
+        return $data;
+    }
     
     /**
      * Insertar un registro en la tabla product.
@@ -461,33 +476,32 @@ class Product_model extends CI_Model{
         //Validar
             $error_text = '';
                             
-            if ( strlen($row_data[0]) == 0 ) { $error_text = 'La casilla Nombre está vacía. '; }
-            if ( strlen($row_data[5]) == 0 ) { $error_text = 'La casilla Descripción está vacía. '; }
-            if ( ! (floatval($row_data[7]) > 0) ) { $error_text .= 'Debe tener costo (' . $row_data[7] .  ') mayor a 0. '; }
-            if ( ! (floatval($row_data[9]) > floatval($row_data[7])) ) { $error_text .= 'El precio debe ser mayor al costo. '; }
+            if ( strlen($row_data[1]) == 0 ) { $error_text = 'La casilla Nombre está vacía. '; }
+            if ( strlen($row_data[4]) == 0 ) { $error_text = 'La casilla Descripción está vacía. '; }
+            if ( ! (floatval($row_data[6]) > 0) ) { $error_text .= 'Debe tener costo (' . $row_data[6] .  ') mayor a 0. '; }
+            if ( ! (floatval($row_data[8]) > floatval($row_data[6])) ) { $error_text .= 'El precio debe ser mayor al costo. '; }
 
         //Si no hay error
             if ( $error_text == '' )
             {
-                $arr_row['name'] = $row_data[0];
-                $arr_row['type_id'] = $row_data[1];
+                $arr_row['name'] = $row_data[1];
+                $arr_row['type_id'] = 1;    //Tipo 1, por defecto
                 $arr_row['code'] = $row_data[2];
-                $arr_row['cat_1'] = $row_data[3];
-                $arr_row['status'] = $this->pml->if_strlen($row_data[4], 2);
-                $arr_row['description'] = $row_data[5];
-                $arr_row['keywords'] = $this->pml->if_strlen($row_data[6], '');
-                $arr_row['cost'] = $row_data[7];
-                $arr_row['tax_percent'] = $row_data[8];
-                $arr_row['price'] = $row_data[9];
-                $arr_row['weight'] = $this->pml->if_strlen($row_data[10], 0);
-                $arr_row['width'] = $this->pml->if_strlen($row_data[11], 0);
-                $arr_row['height'] = $this->pml->if_strlen($row_data[12], 0);
-                $arr_row['depth'] = $this->pml->if_strlen($row_data[13], 0);
-                $arr_row['stock'] = $this->pml->if_strlen($row_data[14], 0);
-                $arr_row['kit_id'] = $this->pml->if_strlen($row_data[15], 0);
-                $arr_row['level'] = $this->pml->if_strlen($row_data[16], 0);
+                $arr_row['cat_1'] = 1111;   //Libros virtuales, valor por defecto
+                $arr_row['status'] = $this->pml->if_strlen($row_data[3], 2);
+                $arr_row['description'] = $row_data[4];
+                $arr_row['keywords'] = $this->pml->if_strlen($row_data[5], '');
+                $arr_row['cost'] = $row_data[6];
+                $arr_row['tax_percent'] = $row_data[7];
+                $arr_row['price'] = $row_data[8];
+                $arr_row['weight'] = $this->pml->if_strlen($row_data[9], 0);
+                $arr_row['width'] = $this->pml->if_strlen($row_data[10], 0);
+                $arr_row['height'] = $this->pml->if_strlen($row_data[11], 0);
+                $arr_row['depth'] = $this->pml->if_strlen($row_data[12], 0);
+                $arr_row['stock'] = $this->pml->if_strlen($row_data[13], 0);
+                $arr_row['level'] = $this->pml->if_strlen($row_data[14], 0);
                 //Calculados
-                $arr_row['slug'] = $this->Db_model->unique_slug($row_data[0], 'product');
+                $arr_row['slug'] = $this->Db_model->unique_slug($row_data[1], 'product');
                 $arr_row['base_price'] = $arr_row['price'] / ( 1 + $arr_row['tax_percent'] / 10);
                 $arr_row['tax'] = $arr_row['price'] - $arr_row['base_price'];
                 //Automáticos
@@ -495,19 +509,20 @@ class Product_model extends CI_Model{
                 $arr_row['updater_id'] = $this->session->userdata('user_id');
 
                 //Guardar en tabla user
-                $data_insert = $this->insert($arr_row);
+                $product_id = $this->pml->if_strlen($row_data[0], 0);
+                $data_save = $this->save("id = {$product_id}", $arr_row);
 
                 //Asingar instituciones
-                if ( strlen($row_data[17]) > 0 )
+                if ( strlen($row_data[15]) > 0 )
                 {
-                    $arr_institutions = explode(',',$row_data['17']);
+                    $arr_institutions = explode(',',$row_data[15]);
                     foreach ($arr_institutions as $institution_id)
                     {
-                        $this->add_institution($data_insert['saved_id'], $institution_id);
+                        $this->add_institution($data_save['saved_id'], $institution_id);
                     }
                 }
 
-                $data = array('status' => 1, 'text' => '', 'imported_id' => $data_insert['saved_id']);
+                $data = array('status' => 1, 'text' => '', 'imported_id' => $data_save['saved_id']);
             } else {
                 $data = array('status' => 0, 'text' => $error_text, 'imported_id' => 0);
             }

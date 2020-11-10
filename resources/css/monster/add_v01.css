@@ -58,29 +58,14 @@ div.pf_datos{
 /* ANCHO de OBJETOS
 ----------------------------------------------------------------------------------------------------*/
 
-.w1{
-    width: 25px;
-}
+.w1{ width: 25px; }
+.w2{ width: 50px; }
+.w3{ width: 100px; }
+.w4{ width: 150px; }
+.w5{ width: 200px; }
 
-.w2{
-    width: 50px;
-}
-
-.w3{
-    width: 100px;
-}
-
-.w4{
-    width: 150px;
-}
-
-.w5{
-    width: 200px;
-}
-
-/* VÍNCULOS
+/* LINKS
 ----------------------------------------------------------------------------------------------------*/
-
 
 
 .a4{
@@ -123,7 +108,6 @@ div.pf_datos{
 
 /* TEXTO
 ----------------------------------------------------------------------------------------------------*/
-
 
 .resaltar{
     font-weight: bold;
@@ -182,6 +166,40 @@ div.pf_datos{
 
 .neutro{
     background: #666;
+}
+
+/* MÓDULO DE VENTAS */
+/*-----------------------------------------------------------------------------*/
+
+.catalog .product_description{
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;
+    border: 1px solid #ddd;
+    margin: 0;
+}
+
+.price_1 {
+    font-family: 'Rubik', sans-serif;
+    font-weight: bold;
+    font-size: 1.5em;
+    color: #89cb4f;
+}
+
+.price_2 {
+    font-family: 'Rubik', sans-serif;
+    font-size: 1em;
+    color: #89cb4f;
+}
+
+.price_label {
+    display: inline-block;
+    background-color: #89cf4f;
+    color: #FFF;
+    padding: 1px 10px;
+    border-radius: 3px;
 }
 
 /* MENSAJES

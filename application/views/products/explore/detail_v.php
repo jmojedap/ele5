@@ -23,7 +23,7 @@
                     <tr>
                         <td>Precio</td>
                         <td>
-                            {{ element.price | currency }}
+                            <span class="price_label">{{ element.price | currency }}</span>
                         </td>
                     </tr>
                 </table>

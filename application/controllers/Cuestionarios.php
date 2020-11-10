@@ -1356,7 +1356,7 @@ class Cuestionarios extends CI_Controller{
             $data = $this->Cuestionario_model->basico($cuestionario_id);
         
         //Solicitar vista
-            $data['editable'] = $this->Cuestionario_model->basico($cuestionario_id);
+            $data['editable'] = $this->Cuestionario_model->editable($cuestionario_id);
             $data['cuestionario_id'] = $cuestionario_id;
             $data['view_a'] = 'cuestionarios/preguntas/preguntas_v';
 

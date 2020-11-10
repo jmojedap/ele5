@@ -234,16 +234,6 @@ class Products extends CI_Controller{
             $data = $this->Product_model->import($imported_data['arr_sheet']);
         }
 
-        /*$this->load->model('Pcrn_excel');
-        $last_column = 'R';   //Última columna con datos
-        
-        $imported_data = $this->Pcrn_excel->array_hoja_default($last_column);
-
-        /*if ( $imported_data['valido'] )
-        {
-            $data = $this->Product_model->import($imported_data['array_hoja']);
-        }*/
-
         //Cargue de variables
             $data['status'] = $imported_data['status'];
             $data['message'] = $imported_data['message'];
@@ -284,14 +274,17 @@ class Products extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
-    function detail($product_id)
+    /**
+     * Detalle del producto, información detallada para venta
+     */
+    function details($product_id)
     {
         $data = $this->Product_model->basic($product_id);
 
         //Variables
         $data['flipbooks'] = $this->Product_model->assigned_flipbooks($product_id);
         unset($data['nav_2']);  //Quitar menú de administración
-        $data['view_a'] = 'products/detail_v';
+        $data['view_a'] = 'products/details_v';
             
         //Cargar vista
             $this->App_model->view(TPL_ADMIN_NEW, $data);

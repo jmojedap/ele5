@@ -90,20 +90,22 @@
         </div>
     </form>
 
-    <div class="alert alert-warning text-center">
+    <div class="alert alert-success text-center">
         <p>
-            <i class="fa fa-info-circle fa-2x"></i>
+            ENLINEA EDITORES se complace en presentar su nuevo servicio:
         </p>
+        <p style="font-size: 1.5em;">
+            <strong><i class="fa fa-check"></i> PAGO EN LÍNEA</strong>
+        </p>
+
         <p>
-            Debido a la suspensión de clases presenciales en las
-            instituciones educativas, el acceso a las páginas web
-            de entornos de educación virtual
-            <b>se ha incrementado enormemente</b> en Colombia y el Mundo.
+            Ahora usted podrá adquirir nuestros productos desde la comodidad de su hogar.
         </p>
+
         <p>
-            Por tal motivo es posible que se perciba <b>cierta lentitud</b> en su funcionamiento.
-            Trabajamos continuamente para brindar el mejor servicio.
+            Solicite ya el Código del Colegio para que así pueda realizar su compra a partir del 12 de diciembre del 2020.
         </p>
+ 
     </div>
 
     <div class="clearfix"></div>
