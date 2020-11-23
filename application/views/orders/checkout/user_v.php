@@ -121,7 +121,7 @@
                 var params = new FormData();
                 params.append('email', this.email);
                 
-                axios.post(app_url + 'accounts/check_email/', params)
+                axios.post(url_app + 'accounts/check_email/', params)
                 .then(response => {
                     console.log(response.data);
                     this.show_email_form = false;
@@ -140,7 +140,7 @@
                 });  
             },
             set_user: function(){
-                axios.get(app_url + 'orders/set_user/' + this.user.id)
+                axios.get(url_app + 'orders/set_user/' + this.user.id)
                 .then(response => {
                     console.log(response.data)
                 })
@@ -158,7 +158,7 @@
                 }
             },
             fast_register: function(){                
-                axios.post(app_url + 'accounts/fast_register/', $('#register_form').serialize())
+                axios.post(url_app + 'accounts/fast_register/', $('#register_form').serialize())
                 .then(response => {
                     if ( response.data.saved_id > 0 )
                     {

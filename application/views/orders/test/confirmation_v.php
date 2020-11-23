@@ -67,7 +67,7 @@
         },
         methods: {
             send_form: function(){                
-                axios.post(app_url + 'orders/confirmation_payu/', $('#confirmation_form').serialize())
+                axios.post(url_app + 'orders/confirmation_payu/', $('#confirmation_form').serialize())
                 .then(response => {
                     toastr["success"]('confirmation_id: ' + response.data.confirmation_id);
                     //console.log(response.data.message);

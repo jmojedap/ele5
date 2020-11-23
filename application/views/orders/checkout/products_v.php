@@ -8,7 +8,7 @@
         <?php foreach ( $products->result() as $product ) { ?>
             <tr>
                 <td>
-                    <a href="<?php echo base_url("products/detail/{$product->product_id}") ?>" class="">
+                    <a href="<?php echo base_url("products/details/{$product->product_id}") ?>" class="">
                         <?php echo $product->name ?>
                     </a>
                 </td>

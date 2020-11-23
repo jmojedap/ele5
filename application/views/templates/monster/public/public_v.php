@@ -9,10 +9,6 @@
         <?php $this->load->view('templates/monster/parts/head_v') ?>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" integrity="sha256-PHcOkPmOshsMBC+vtJdVr5Mwb7r0LkSVJPlPrp/IMpU=" crossorigin="anonymous" />
         <link rel="stylesheet" href="<?php echo URL_RESOURCES ?>css/monster/public.css">
-
-        <script>
-            const app_url = '<?php echo base_url() ?>';
-        </script>
     </head>
 
     <body class="fix-header card-no-border fix-sidebar">

@@ -173,6 +173,7 @@ class Order_model extends CI_Model{
         
         //Construir registro
         $arr_row['country_id'] = 51;    //Colombia
+        $arr_row['region_id'] = 267;    //Bogotá D.C.
 
         //Construir registro
             if ( $this->input->get('i') ) { $arr_row['institution_id'] = $this->input->get('i'); }
@@ -278,6 +279,29 @@ class Order_model extends CI_Model{
         $this->update_totals($order_id);
         
         $data['status'] = ($data['op_id'] > 0 ) ? 1 : 0 ;
+
+        return $data;
+    }
+
+    /**
+     * Quita un producto de la orden y recalcula totales, elimina de la tabla order_product
+     * y recalcula totales.
+     */
+    function remove_product($product_id)
+    {
+        $order_id = $this->session->userdata('order_id');
+
+        $this->db->where('product_id', $product_id);
+        $this->db->where('order_id', $order_id);
+        $this->db->where('type_id', 1); //Es un producto
+        $this->db->delete('order_product');
+        
+        $data['qty_deleted'] = $this->db->affected_rows();
+
+        //Actualizar totales del pedido
+        $this->update_totals($order_id);
+        
+        $data['status'] = ($data['qty_deleted'] > 0 ) ? 1 : 0 ;
 
         return $data;
     }

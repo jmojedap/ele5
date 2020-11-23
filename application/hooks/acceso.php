@@ -47,6 +47,7 @@ class Acceso {
         $funciones_publicas[] = 'app/login';
         $funciones_publicas[] = 'app/test';
         $funciones_publicas[] = 'app/mantenimiento';
+        $funciones_publicas[] = 'app/get_places';
         
         $funciones_publicas[] = 'app/registro';
         $funciones_publicas[] = 'app/validar_login';
@@ -74,12 +75,11 @@ class Acceso {
 
         $funciones_publicas[] = 'orders/pays';
         $funciones_publicas[] = 'orders/add_product';
+        $funciones_publicas[] = 'orders/remove_product';
+        $funciones_publicas[] = 'orders/get_info';
         $funciones_publicas[] = 'orders/checkout';
         $funciones_publicas[] = 'orders/update';
         $funciones_publicas[] = 'orders/result';
-
-
-
 
         $funciones_publicas[] = 'products/get_by_institution';
 

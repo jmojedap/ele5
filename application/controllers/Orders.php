@@ -65,6 +65,32 @@ class Orders extends CI_Controller{
 // CRUD
 //-----------------------------------------------------------------------------
 
+    /**
+     * Información general de la compra
+     * 2020-11-19
+     */
+    function get_info($order_code)
+    {
+        $data['row'] = $this->Db_model->row('orders', "order_code = '{$order_code}'");
+
+        if ( ! is_null($data['row']) )
+        {
+            $products = $this->Order_model->products($data['row']->id);
+            $data['products'] = $products->result();
+        }
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    function get_products($order_id)
+    {
+        $products = $this->Order_model->products($order_id);
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($products->result()));
+    }
+
     function info($order_id)
     {
         $data = $this->Order_model->basic($order_id);
@@ -108,13 +134,38 @@ class Orders extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
+    /**
+     * Quita un producto de la orden y recalcula totales
+     * 2020-11-19
+     */
+    function remove_product($product_id)
+    { 
+        $data = $this->Order_model->remove_product($product_id);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
 // PAGOS POR CÓDIGOS INSTITUCIÓN Y USUARIO
 //-----------------------------------------------------------------------------
 
     function pays($institution_cod = '')
     {
         $data['head_title'] = 'Pagos';
-        $data['view_a'] = 'orders/pays_v';
+        $data['view_a'] = 'orders/pays/pays_v';
+        $data['institution_cod'] = $institution_cod;
+
+        //Identificar institución
+        $curr_institution = array('id' => 0, 'name' => '');
+        if ( $institution_cod != '' )
+        {
+            $institucion = $this->Db_model->row('institucion', "cod = '{$institution_cod}'");
+            if ( ! is_null($institucion) ) {
+                $curr_institution['id'] = $institucion->id;
+                $curr_institution['name'] = $institucion->nombre_institucion;
+            }
+        }
+
+        $data['curr_institution'] = $curr_institution;
+
         $this->App_model->view('templates/monster/public/public_v', $data);
     }
 
@@ -133,18 +184,21 @@ class Orders extends CI_Controller{
 
         $data['products'] = $this->Order_model->products($order_id);
         $data['form_data'] = $this->Order_model->payu_form_data($order_id);
+        $data['institucion'] = $this->Db_model->row_id('institucion', $data['row']->institution_id);
         $data['step'] = $step;
 
         $data['head_title'] = 'Completa tus datos';
         $data['view_a'] = "orders/checkout/step_{$step}_v";
 
+        //Opciones para formulario
+        $data['options_region'] = $this->App_model->options_place('tipo_id = 3', 'place_name', 'Departamento');
+        $data['options_city'] = $this->App_model->options_place("tipo_id = 4 AND region_id = {$data['row']->region_id}", 'place_name', 'Ciudad');
         
         if ( $this->session->userdata('logged') ) {
             $this->App_model->view(TPL_ADMIN_NEW, $data);
         } else {
             $this->App_model->view('templates/monster/public/public_v', $data);
         }
-
     }
 
     /**
