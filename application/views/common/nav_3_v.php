@@ -29,7 +29,7 @@
                 }
                 this.nav_3[key].class = 'active';   //Elemento actual
                 if ( this.nav_3[key].anchor ) {
-                    window.location = app_url + this.nav_3[key].cf;
+                    window.location = url_app + this.nav_3[key].cf;
                 } else {
                     this.load_view_a(key);
                 }

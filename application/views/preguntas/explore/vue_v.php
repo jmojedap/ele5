@@ -60,9 +60,11 @@
             filters: <?php echo json_encode($filters) ?>,
             showing_filters: false,
             qty_selectorp: <?php echo $qty_selectorp ?>,
+            loading: false
         },
         methods: {
             get_list: function(){
+                this.loading = true;
                 this.num_page = 1;
                 axios.post(app_url + this.controller + '/get/' + this.num_page, $('#search_form').serialize())
                 .then(response => {
@@ -72,6 +74,7 @@
                     history.pushState(null, null, app_url + this.cf + this.num_page + '/?' + response.data.str_filters);
                     this.all_selected = false;
                     this.selected = [];
+                    this.loading = false;
                 })
                 .catch(function (error) {
                     console.log(error);

@@ -1,40 +1,30 @@
-<?php
-    $cl_col['title'] = '';
-    $cl_col['open'] = 'd-none d-md-table-cell d-lg-table-cell';
-    $cl_col['info'] = 'd-none d-md-table-cell d-lg-table-cell';
-    $cl_col['difficulty'] = 'd-none d-md-table-cell d-lg-table-cell';
-?>
-
-<div class="table-responsive">
-    <table class="table table-hover bg-white">
+<div class="text-center" v-show="loading">
+    <i class="fa fa-spin fa-spinner fa-3x"></i>
+</div>
+<div class="table-responsive" v-show="!loading">
+    <table class="table bg-white">
         <thead>
             <th width="46px">
-                <div class="form-check abc-checkbox abc-checkbox-primary">
-                    <input class="form-check-input" type="checkbox" id="checkbox_all_selected" @click="select_all" v-model="all_selected">
-                    <label class="form-check-label" for="checkbox_all_selected"></label>
-                </div>
+                <input type="checkbox" id="checkbox_all_selected" @click="select_all" v-model="all_selected">
             </th>
-            <th class="<?php echo $cl_col['open'] ?>" width="40px"></th>
-            <th class="<?php echo $cl_col['title'] ?>">Pregunta</th>
-            <th class="<?php echo $cl_col['info'] ?>">Detalles</th>
-            <th class="<?php echo $cl_col['difficulty'] ?>" width="150px">Dificultad</th>
+            <th width="40px"></th>
+            <th>Pregunta</th>
+            <th>Detalles</th>
+            <th width="150px">Dificultad</th>
             <th width="50px"></th>
             <th width="50px"></th>
         </thead>
         <tbody>
             <tr v-for="(element, key) in list" v-bind:id="`row_` + element.id">
                 <td>
-                    <div class="form-check abc-checkbox abc-checkbox-primary">
-                        <input class="form-check-input" type="checkbox" v-bind:id="`check_` + element.id" v-model="selected" v-bind:value="element.id">
-                        <label class="form-check-label" v-bind:for="`check_` + element.id"></label>
-                    </div>
+                    <input type="checkbox" v-bind:id="`check_` + element.id" v-model="selected" v-bind:value="element.id">
                 </td>
-                <td class="<?php echo $cl_col['open'] ?>">
+                <td>
                     <a v-bind:href="`<?php echo base_url("preguntas/index/") ?>` + element.id" class="btn btn-primary btn-sm">
                         Abrir
                     </a>
                 </td>
-                <td class="<?php echo $cl_col['title'] ?>">
+                <td >
                     <p>
                         <span class="etiqueta nivel w1">{{ element.nivel }}</span>
                         <span class="etiqueta_a" v-bind:class="`etiqueta_a` + element.area_id">
@@ -56,14 +46,14 @@
 
                 </td>
 
-                <td class="<?php echo $cl_col['info'] ?>">
+                <td>
                     <div>
                         <span class="text-muted">Palabras clave:</span>
                         <span>{{ element.palabras_clave }}</span>
                     </div>
                 </td>
 
-                <td class="<?php echo $cl_col['difficulty'] ?>">
+                <td>
                     <div class="progress" v-if="element.qty_answers > 0">
                         <div class="progress-bar" v-bind:class="element.difficulty | difficulty_class" role="progressbar" v-bind:style="`width: ` + element.difficulty + `%`" v-bind:aria-valuenow="element.difficulty" aria-valuemin="0" aria-valuemax="100">
                             {{ element.difficulty_level | difficulty_name }}

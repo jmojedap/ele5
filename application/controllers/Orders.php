@@ -183,7 +183,7 @@ class Orders extends CI_Controller{
         $data = $this->Order_model->basic($order_id);
 
         $data['products'] = $this->Order_model->products($order_id);
-        $data['form_data'] = $this->Order_model->payu_form_data($order_id);
+        $data['form_data'] = $this->Order_model->wompi_form_data($order_id);
         $data['institucion'] = $this->Db_model->row_id('institucion', $data['row']->institution_id);
         $data['step'] = $step;
 
@@ -237,9 +237,9 @@ class Orders extends CI_Controller{
      * terminar una transacción. Recibe datos de POL vía post, actualiza 
      * datos del pago del pedido
      */
-    function confirmation_payu()
+    function confirmation_wompi()
     {
-        $data['confirmation_id'] = $this->Order_model->confirmation_payu();
+        $data['confirmation_id'] = $this->Order_model->confirmation_wompi();
 
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));

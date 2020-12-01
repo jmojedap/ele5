@@ -398,45 +398,33 @@ class Order_model extends CI_Model{
         return $row;
     }
 
-// CHECKOUT PayU
+// CHECKOUT Wompi
 //-----------------------------------------------------------------------------
 
     /**
-     * Array con todos los datos para construir el formulario que se envía a PayU
+     * Array con todos los datos para construir el formulario que se envía a Wompi
      * para iniciar el proceso de pago.
      */
-    function payu_form_data($order_id)
+    function wompi_form_data($order_id)
     {
         //Registro del pedido
         $row = $this->Db_model->row_id('orders', $order_id);
 
         //Construir array
-            $data['merchantId'] = K_PUMI;
-            $data['referenceCode'] = $row->order_code;
+            $data['public-key'] = K_WPPK;
+            $data['reference'] = $row->order_code;
             $data['description'] = $row->description;
-            $data['amount'] = $row->amount;
-            $data['tax'] = $row->total_tax;
-            $data['taxReturnBase'] = 0; //No tiene IVA
-            $data['signature'] = $this->payu_signature($row);
-            $data['accountId'] = K_PUAI;
+            $data['amount-in-cents'] = intval($row->amount * 100);
             $data['currency'] = 'COP';  //Pesos colombianos
-            $data['test'] = ( $this->input->get('test') == 1 ) ? 1 : 0;
-            $data['buyerFullName'] = $row->buyer_name;
-            $data['buyerEmail'] = $row->email;
-            $data['shippingAddress'] = $row->address;
-            $data['shippingCity'] = $row->city;
-            $data['shippingCountry'] = 'CO';
-            $data['telephone'] = $row->phone_number;
-            $data['responseUrl'] = base_url('orders/result');
-            $data['confirmationUrl'] = base_url('orders/confirmation_payu');
+            $data['redirect-url'] = base_url('orders/result');
 
         return $data;
     }
 
     /**
-     * Genera la firma que se envía en el Formulario para ir al pago en PayU
+     * Genera la firma que se envía en el Formulario para ir al pago en Wompi
      */
-    function payu_signature($row_order)
+    function wompi_signature($row_order)
     {
         $signature_pre = K_PUAK;
         $signature_pre .= '~' . K_PUMI;
@@ -448,11 +436,11 @@ class Order_model extends CI_Model{
     }
 
     /**
-     * Tomar y procesar los datos POST que envía PayU a la página 
+     * Tomar y procesar los datos POST que envía Wompi a la página 
      * de confirmación.
-     * url_confirmacion >> 'orders/confirmation_payu'
+     * url_confirmacion >> 'orders/confirmation_wompi'
      */
-    function confirmation_payu()
+    function confirmation_wompi()
     {   
         //Identificar Pedido
         $confirmation_id = 0;
@@ -474,7 +462,7 @@ class Order_model extends CI_Model{
                 if ( $row_confirmation->estado_id == 1 )
                 {
                     //Asignar contenidos digitales asociados a los productos comprados
-                    $this->assign_posts($row->id);
+                    //$this->assign_posts($row->id);
                 }
 
             //Enviar mensaje a administradores de tienda y al cliente
@@ -487,28 +475,28 @@ class Order_model extends CI_Model{
 
     /**
      * Crea un registro en la tabla post, con los datos recibidos tras en la 
-     * ejecución de la página de confirmación por parte de PayU.
+     * ejecución de la página de confirmación por parte de Wompi.
      */
     function save_confirmation($row)
     {
         //Datos POL
-            $arr_confirmation_payu = $this->input->post();
-            $arr_confirmation_payu['ip_address'] = $this->input->ip_address();
-            $json_confirmation_payu = json_encode($arr_confirmation_payu);
+            $arr_confirmation_wompi = $this->input->post();
+            $arr_confirmation_wompi['ip_address'] = $this->input->ip_address();
+            $json_confirmation_wompi = json_encode($arr_confirmation_wompi);
         
         //Construir registro para tabla Post
             $arr_row['tipo_id'] = 54;  //54: Confirmación de pago, Ver: items.category_id = 33
-            $arr_row['nombre_post'] = 'Confirmación ' . $arr_confirmation_payu['reference_sale'];
-            $arr_row['contenido_json'] = $json_confirmation_payu;
-            $arr_row['estado_id'] = ( $arr_confirmation_payu['response_code_pol'] == 1 ) ? 1 : 0;
+            $arr_row['nombre_post'] = 'Confirmación ' . $arr_confirmation_wompi['reference_sale'];
+            $arr_row['contenido_json'] = $json_confirmation_wompi;
+            $arr_row['estado_id'] = ( $arr_confirmation_wompi['response_code_pol'] == 1 ) ? 1 : 0;
             $arr_row['padre_id'] = $row->id;
-            $arr_row['referente_1_id'] = $arr_confirmation_payu['response_code_pol'];
-            $arr_row['referente_2_id'] = $arr_confirmation_payu['payment_method_id'];
+            $arr_row['referente_1_id'] = $arr_confirmation_wompi['response_code_pol'];
+            $arr_row['referente_2_id'] = $arr_confirmation_wompi['payment_method_id'];
             $arr_row['fecha'] = date('Y-m-d H:i:s');
-            $arr_row['texto_1'] = $arr_confirmation_payu['sign'];
-            $arr_row['texto_2'] = $arr_confirmation_payu['response_message_pol'];
-            $arr_row['editor_id'] = 1001;     //PayU internal user
-            $arr_row['usuario_id'] = 1001;    //PayU internal user
+            $arr_row['texto_1'] = $arr_confirmation_wompi['sign'];
+            $arr_row['texto_2'] = $arr_confirmation_wompi['response_message_pol'];
+            $arr_row['editor_id'] = 1001;     //Wompi internal user
+            $arr_row['usuario_id'] = 1001;    //Wompi internal user
         
         //Guardar
             $condition = "tipo_id = 54 AND padre_id = {$row->id}";
@@ -530,7 +518,7 @@ class Order_model extends CI_Model{
         $arr_row['response_code_pol'] = $row_confirmation->referente_1_id;
         $arr_row['confirmed_at'] = date('Y-m-d H:i:s');
         $arr_row['updated_at'] = date('Y-m-d H:i:s');
-        $arr_row['updater_id'] = 1001;  //PayU Automático
+        $arr_row['updater_id'] = 1001;  //Wompi Automático
 
         $this->db->where('id', $row_confirmation->padre_id);   //Parent ID = Order ID
         $this->db->update('orders', $arr_row);
@@ -629,7 +617,7 @@ class Order_model extends CI_Model{
 //-----------------------------------------------------------------------------
 
     /**
-     * Tras la confirmación PayU, se envía un mensaje de estado del pedido
+     * Tras la confirmación Wompi, se envía un mensaje de estado del pedido
      * al cliente
      * 
      * @param type $order_id

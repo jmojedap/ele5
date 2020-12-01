@@ -1,7 +1,7 @@
 <?php
     //Formulario destino
-    $url_action = 'https://checkout.payulatam.com/ppp-web-gateway-payu/';
-    if ( $form_data['test'] == 1 ) { $url_action = 'https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu'; }
+    $url_action = 'https://checkout.wompi.co/p/';
+    if ( $form_data['test'] == 1 ) { $url_action = 'https://checkout.wompi.co/p/'; }
 ?>
 
 <div class="px-3 py-1 mx-auto text-center">
@@ -76,18 +76,23 @@
         </tbody>
     </table>
 
-    <form accept-charset="utf-8" method="POST" action="<?php echo $url_action ?>">
-        <?php foreach ( $form_data as $field_name => $field_value ) { ?>
-            <input type="hidden" name="<?php echo $field_name ?>" value="<?php echo $field_value ?>">
-        <?php } ?>
+    <form method="GET" action="<?php echo $url_action ?>">
+        <!-- OBLIGATORIOS -->
+        <input type="hidden" name="public-key" value="<?= $form_data['public-key'] ?>" />
+        <input type="hidden" name="currency" value="<?= $form_data['currency'] ?>" />
+        <input type="hidden" name="amount-in-cents" value="<?= $form_data['amount-in-cents'] ?>" />
+        <input type="hidden" name="reference" value="<?= $form_data['reference'] ?>" />
+        <!-- OPCIONALES -->
+        <input type="hidden" name="redirect-url" value="<?= $form_data['redirect-url'] ?>" />
+
         <button class="btn btn-success btn-block btn-lg">
-            IR A PAGAR
+            PAGAR
         </button>
-        <a class="btn btn-info btn-block mt-2" role="button" href="<?php echo base_url('orders/checkout/1') ?>">
-            <i class="fa fa-chevron-left"></i>
-            Volver
-        </a>
     </form>
+    <a class="btn btn-info btn-block mt-2" role="button" href="<?php echo base_url('orders/checkout/1') ?>">
+        <i class="fa fa-chevron-left"></i>
+        Volver
+    </a>
     <hr>
     <?php $this->load->view('orders/checkout/products_v') ?>
 </div>

@@ -80,6 +80,7 @@ class Acceso {
         $funciones_publicas[] = 'orders/checkout';
         $funciones_publicas[] = 'orders/update';
         $funciones_publicas[] = 'orders/result';
+        $funciones_publicas[] = 'orders/confirmation_wompi';
 
         $funciones_publicas[] = 'products/get_by_institution';
 
