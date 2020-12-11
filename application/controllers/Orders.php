@@ -26,8 +26,10 @@ class Orders extends CI_Controller{
         
         //Opciones de filtros de búsqueda
             $data['options_status'] = $this->Item_model->options('categoria_id = 7', 'Todos');
+            $data['options_institucion'] = $this->App_model->opciones_institucion('id > 0', 'Todos');
             
         //Arrays con valores para contenido en lista
+            $data['arr_niveles'] = $this->App_model->arr_nivel();
             $data['arr_status'] = $this->Item_model->arr_cod('categoria_id = 7');
             
         //Cargar vista
@@ -45,21 +47,49 @@ class Orders extends CI_Controller{
     
     /**
      * AJAX JSON
-     * Eliminar un conjunto de posts seleccionados
+     * Eliminar un conjunto de orders seleccionados
      */
     function delete_selected()
     {
         $selected = explode(',', $this->input->post('selected'));
-        $data['quan_deleted'] = 0;
+        $data['qty_deleted'] = 0;
         
         foreach ( $selected as $row_id ) 
         {
-            $data['quan_deleted'] += $this->Order_model->delete($row_id);
+            $data['qty_deleted'] += $this->Order_model->delete($row_id);
         }
 
         //Establecer resultado
         if ( $data['qty_deleted'] > 0 ) { $data['status'] = 1; }
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * Exporta el resultado de la búsqueda a un archivo de Excel
+     * 2020-12-11
+     */
+    function export()
+    {
+        //Cargando
+            $this->load->model('Search_model');
+            $this->load->model('Pcrn_excel');
+        
+        //Datos de consulta, construyendo array de búsqueda
+            $filters = $this->Search_model->filters();
+            $results_total = $this->Order_model->search($filters);
+        
+        //Preparar datos
+            $datos['nombre_hoja'] = 'Ventas';
+            $datos['query'] = $results_total;
+            
+        //Preparar archivo
+            $objWriter = $this->Pcrn_excel->archivo_query($datos);
+        
+        $data['objWriter'] = $objWriter;
+        $data['nombre_archivo'] = date('Ymd_His'). '_ventas'; //save our workbook as this file name
+        
+        $this->load->view('comunes/descargar_phpexcel_v', $data);
+            
     }
 
 // CRUD
@@ -102,6 +132,45 @@ class Orders extends CI_Controller{
         $data['subtitle_head'] = 'Información';
 
         $this->App_model->view(TPL_ADMIN_NEW, $data);
+    }
+
+    function details($order_id)
+    {
+        $data = $this->Order_model->basic($order_id);
+
+        $data['products'] = $this->Order_model->products($order_id);
+
+        $data['view_a'] = 'orders/details_v';
+        $data['nav_2'] = 'orders/menu_v';
+        $data['subtitle_head'] = 'Información';
+
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
+    }
+
+// Edición desde administrador
+//-----------------------------------------------------------------------------
+
+    /**
+     * Formulario edición de datos de la compra
+     * 2020-12-07
+     */
+    function edit($order_id)
+    {
+        $data = $this->Order_model->basic($order_id);
+
+        $data['products'] = $this->Order_model->products($order_id);
+
+        $data['view_a'] = 'orders/edit_v';
+        $data['nav_2'] = 'orders/menu_v';
+        $data['subtitle_head'] = 'Editar';
+
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
+    }
+
+    function admin_update($order_id)
+    {
+        $data = $this->Order_model->update($order_id);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -202,22 +271,20 @@ class Orders extends CI_Controller{
     }
 
     /**
-     * Vista HTML, Página de respuesta, redireccionada desde PayU para mostrar el resultado
+     * Vista HTML, Página de respuesta, redireccionada desde Wompi para mostrar el resultado
      * de una transacción de pago. Toma los datos de resultado de GET
+     * 20520-12-09
      */
     function result()
     {
-        $data = $this->Order_model->result_data();
+        //Quitar Compra de las variables de sesión
+        $this->session->unset_userdata('order_id');
 
-        //Si el pago fue exitoso, se agrega el tipo de suscripción a las variables de sesión
-        if ( $data['success'] )
-        {
-            $row_user = $this->Db_model->row('usuario', $this->session->userdata('user_id'));
-        }
+        $data = $this->Order_model->result_data();
 
         $data['step'] = 3;  //Tercer y último paso, resultado
         $data['view_a'] = "orders/checkout/result_v";
-        $this->App_model->view(TPL_ADMIN_NEW, $data);
+        $this->App_model->view('templates/monster/public/public_v', $data);
     }
 
     /**
@@ -245,16 +312,36 @@ class Orders extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
-    function test_email($order_id)
+    /**
+     * Realiza el envío de un email al comprador, sobre el estado más reciente de su compra
+     * 2020-12-07
+     */
+    function send_status_email($order_id)
+    {
+        $data = $this->Order_model->email_buyer($order_id);
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    function email_preview($order_id)
     {
         $row_order = $this->Db_model->row_id('orders', $order_id);
         $message = $this->Order_model->message_buyer($row_order);
         echo $message;
     }
 
+    function institution_email()
+    {
+        $data = $this->Order_model->institution_emails(41);
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
     /**
      * Formulario para probar el resultado de ejecución de la página de confirmación
-     * ejecutada por PayU remotamente
+     * ejecutada por Wompi remotamente
      */
     function test($type, $order_id)
     {
@@ -265,6 +352,21 @@ class Orders extends CI_Controller{
         $data['view_a'] = "orders/test/{$type}_v";
         $data['nav_2'] = "orders/menu_v";
         $data['nav_3'] = "orders/test/menu_v";
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
+    }
+
+// Respuestas de plataforma de pago
+//-----------------------------------------------------------------------------
+
+    function responses($order_id)
+    {
+        $data = $this->Order_model->basic($order_id);
+
+        $data['responses'] = $this->Order_model->responses($order_id);
+
+        $data['view_a'] = 'orders/responses_v';
+        $data['nav_2'] = "orders/menu_v";
+        $data['subtitle_head'] = 'Respuestas Wompi';
         $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
@@ -300,7 +402,7 @@ class Orders extends CI_Controller{
             $data['products'] = $this->Order_model->products($row->id);
             $data['view_a'] = 'orders/status_v';
 
-            $this->App_model->view(TPL_ADMIN_NEW, $data);
+            $this->App_model->view('templates/monster/public/public_v', $data);
         } else {
             redirect('app/no_permitido');
         }

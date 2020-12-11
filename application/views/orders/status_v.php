@@ -74,7 +74,7 @@
                     <td><?= $this->Item_model->name(7, $row->status) ?></td>
                 </tr>
                 <tr>
-                    <td>Respuesta PayU</td>
+                    <td>Respuesta Wompi</td>
                     <td><?= $this->Item_model->name(110, $row->response_code_pol) ?></td>
                 </tr>
                 <tr>

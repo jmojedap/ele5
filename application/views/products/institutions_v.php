@@ -9,7 +9,6 @@
                             <input
                                 name="institution_id" id="field-institution_id" type="text" class="form-control"
                                 required
-                                title="ID institución" placeholder="ID institución"
                                 v-model="institution_id"
                             >
                         </div>
@@ -34,7 +33,7 @@
             <tr v-for="(institution, institution_key) in institutions">
                 <td>{{ institution.id }}</td>
                 <td>
-                    <a v-bind:href="`<?php echo base_url("institutions/info/") ?>` + `/` + institution.id">
+                    <a v-bind:href="`<?php echo base_url("instituciones/index/") ?>` + `/` + institution.id">
                         {{ institution.title }}
                     </a>
                 </td>

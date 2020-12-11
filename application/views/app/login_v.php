@@ -90,6 +90,10 @@
         </div>
     </form>
 
+    <a href="<?= base_url("orders/pays") ?>" class="btn btn-warning btn-block btn-lg" style="margin-bottom: 10px;">
+        PAGOS
+    </a>
+
     <div class="alert alert-success text-center">
         <p>
             ENLINEA EDITORES se complace en presentar su nuevo servicio:

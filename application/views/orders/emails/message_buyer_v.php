@@ -1,75 +1,89 @@
 <?php
-    //$link_status = base_url() . "orders/estado/?order_code={$row_order->order_code}";
     $link_status = base_url("orders/my_suscriptions");
 ?>
 
 
 <body>
-    <div style="<?php echo $style->body ?>">
-        
+    <div style="<?= $style->body ?>">
+    <p style="color: red; text-align: center">EMAIL DE PRUEBAS - PACARINA MEDIA LAB</p>
         <table>
             <tr>
+                <td colspan="3">
+                    <?php if ( $row_order->wompi_status == 'APPROVED' ) : ?>
+                        <p style="<?= $style->alert ?>">
+                            Nos complace informar que hemos recibido el pago. Estamos preparando su pedido
+                            y pronto recibirá el número de guía para hacer seguimiento de la entrega.
+                        </p>
+                    <?php else: ?>
+                        <p>El pago no fue confirmado</p>
+                    <?php endif; ?>
+                </td>
+            </tr>
+            <tr>
                 <td style="width: 33%;">
-                    <b style="<?php echo $style->text_info ?>"><?php echo $this->pml->money($row_order->amount) ?></b>
-                    <span style="<?php echo $style->text_muted ?>">
-                        <?php echo $this->Item_model->name(7, $row_order->status) ?>
+                    <b style="<?= $style->text_info ?>"><?= $this->pml->money($row_order->amount) ?></b>
+                    <span style="<?= $style->text_muted ?>">
+                        <?= $this->Item_model->name(7, $row_order->status) ?>
                     </span>
                 </td>
                 <td style="text-align: left;">
-                    <h4 style="<?php echo $style->h4 ?>"></h4>
+                    <h4 style="<?= $style->h4 ?>"></h4>
                 </td>
                 <td style="text-align: right;">
-                    <a href="<?php echo $link_status ?>" style="<?php echo $style->btn ?>" title="Ver compra en la página" target="_blank">
+                    <a href="<?= base_url("orders/status/{$row_order->order_code}") ?>" style="<?= $style->btn ?>" title="Ver compra en la página" target="_blank">
                         Ver compra
                     </a>
                 </td>
             </tr>
 
             <tr>
-                <td colspan="3" style="<?php echo $style->text_center ?>">
-
-                    <h1 style="<?php echo $style->h1 ?>">
-                        <?php echo $row_order->buyer_name ?>
+                <td colspan="3" style="<?= $style->text_center ?>">
+                    <h1 style="<?= $style->h1 ?>">
+                        <?= $row_order->buyer_name ?>
                     </h1>
+                    
                 </td>
             </tr>
 
-            <tr style="<?php echo $style->text_center ?>">
+            <tr style="<?= $style->text_center ?>">
                 <td colspan="3">
-                    <span style="<?php echo $style->text_muted?>">
-                        Cód. compra:
+                    <span style="<?= $style->text_muted?>">
+                        Ref. venta:
                     </span>
-                    <span style="<?php echo $style->text_danger ?>">
-                        <?php echo $row_order->order_code ?>
-                    </span>
-
-                    <span style="<?php echo $style->text_muted?>">
-                        |
+                    <span style="<?= $style->text_primary ?>">
+                        <?= $row_order->order_code ?>
                     </span>
 
-                    <span style="<?php echo $style->text_muted?>">
+                    &middot;
+
+                    <span style="<?= $style->text_muted?>">
                         Actualizado:
                     </span>
-                    <span style="<?php echo $style->text_danger ?>">
-                        <?php echo $this->pml->date_format($row_order->updated_at, 'Y-M-d H:i') ?>
+                    <span style="<?= $style->text_primary ?>">
+                        <?= $this->pml->date_format($row_order->updated_at, 'Y-M-d H:i') ?>
                     </span>
-                    <span style="<?php echo $style->text_muted?>">
-                        |
+                    &middot;
+
+                    <span style="<?= $style->text_muted?>">
+                        Valor total:
+                    </span>
+                    <span style="<?= $style->text_primary ?>">
+                        <?= $this->pml->money($row_order->amount) ?>
                     </span>
                 </td>
             </tr>
         </table>
 
-        <h2 style="<?php echo $style->h2 ?>">Detalle de la compra</h2>
+        <h2 style="<?= $style->h2 ?>">Detalle de la compra</h2>
 
-        <table style="<?php echo $style->table ?>">
-            <thead style="<?php echo $style->thead ?>">
+        <table style="<?= $style->table ?>">
+            <thead style="<?= $style->thead ?>">
                 <tr style="">
-                    <td style="<?php echo $style->td ?>">Producto</td>
-                    <td style="<?php echo $style->td ?>">Precio</td>
-                    <td style="<?php echo $style->td ?>">Cantidad</td>
-                    <td style="<?php echo $style->td ?>">
-                        <?php echo $this->pml->money($row_order->amount) ?>
+                    <td style="<?= $style->td ?>">Producto</td>
+                    <td style="<?= $style->td ?>">Precio</td>
+                    <td style="<?= $style->td ?>">Cantidad</td>
+                    <td style="<?= $style->td ?>">
+                        <?= $this->pml->money($row_order->amount) ?>
                     </td>
                 </tr>
             </thead>
@@ -79,21 +93,25 @@
                         $precio_detalle = $row_product->quantity * $row_product->price;
                     ?>
                     <tr>
-                        <td style="<?php echo $style->td ?>">
-                            <?php echo $row_product->description ?>
-                        </td>
-                        <td style="<?php echo $style->td ?>">
+                        <td style="<?= $style->td ?>" width="65%">
+                            <strong><?= $row_product->name ?></strong>
+                            
                             <p>
-                                <?php echo $this->pml->money($row_product->price) ?>
+                                <?= $row_product->description ?>
                             </p>
                         </td>
-                        <td style="<?php echo $style->td ?>">
+                        <td style="<?= $style->td ?>">
                             <p>
-                                <?php echo $row_product->quantity ?>
+                                <?= $this->pml->money($row_product->price) ?>
                             </p>
                         </td>
-                        <td style="<?php echo $style->td ?>">
-                            <?php echo $this->pml->money($precio_detalle) ?>
+                        <td style="<?= $style->td ?>">
+                            <p>
+                                <?= $row_product->quantity ?>
+                            </p>
+                        </td>
+                        <td style="<?= $style->td ?>">
+                            <?= $this->pml->money($precio_detalle) ?>
                         </td>
 
                     </tr>
@@ -101,55 +119,55 @@
             </tbody>
         </table>
 
-        <h2 style="<?php echo $style->h2 ?>">Datos de entrega</h2>
+        <h2 style="<?= $style->h2 ?>">Datos de entrega</h2>
 
         <p>
-            <span style="<?php echo $style->text_muted ?>">
+            <span style="<?= $style->text_muted ?>">
                 No. documento
             </span>
-            <span style="<?php echo $style->text_danger ?>">
-                <?php echo $row_order->id_number ?>
+            <span style="<?= $style->text_primary ?>">
+                <?= $row_order->id_number ?>
             </span>
 
-            |
+            &middot;
 
-            <span style="<?php echo $style->text_muted ?>">E-mail</span>
-            <span style="<?php echo $style->text_danger ?>"><?php echo $row_order->email ?></span>
+            <span style="<?= $style->text_muted ?>">E-mail</span>
+            <span style="<?= $style->text_primary ?>"><?= $row_order->email ?></span>
 
-            |
+            &middot;
 
-            <span style="<?php echo $style->text_muted ?>">
+            <span style="<?= $style->text_muted ?>">
                 Ciudad
             </span>
-            <span style="<?php echo $style->text_danger ?>">
-                <?php echo $row_order->city ?>
+            <span style="<?= $style->text_primary ?>">
+                <?= $row_order->city ?>
             </span>
 
-            |
+            &middot;
 
-            <span style="<?php echo $style->text_muted ?>">Dirección</span>
-            <span style="<?php echo $style->text_danger ?>">
-                <?php echo $row_order->address ?>
+            <span style="<?= $style->text_muted ?>">Dirección</span>
+            <span style="<?= $style->text_primary ?>">
+                <?= $row_order->address ?>
             </span>            
 
-            |
+            &middot;
 
-            <span style="<?php echo $style->text_muted ?>">
+            <span style="<?= $style->text_muted ?>">
                 Teléfono
             </span>
-            <span style="<?php echo $style->text_danger ?>">
-                <?php echo $row_order->phone_number ?>
+            <span style="<?= $style->text_primary ?>">
+                <?= $row_order->phone_number ?>
             </span>
         </p>
 
         <hr>
 
-        <div style="<?php echo $style->text_center ?>">
+        <div style="<?= $style->footer ?>">
             <h3>
-                <?php echo APP_NAME ?><br>
+                <?= APP_NAME ?> &middot; En Línea Editores &middot; Colombia
             </h3>
-            <p sytle="<?php echo $style->text_muted ?>">
-                &copy; <?php echo date('Y') ?>
+            <p sytle="<?= $style->text_muted ?>">
+                &copy; <?= date('Y') ?>
             </p>
         </div>
 

@@ -1,47 +1,34 @@
 <?php
-    $textos['titulo'] = 'Bienvenido a la Plataforma Enlace - En Línea Editores';
+//Contenido
+    $textos['titulo'] = 'Bienvenido a la Plataforma En Línea Editores';
     $textos['parrafo'] = 'Para activar su cuenta haga clic en el siguiente link';
     $textos['boton'] = 'Activar mi cuenta';
     $textos['link'] = "usuarios/activar/{$row_usuario->cod_activacion}";
     
     if ( $tipo_activacion == 'restaurar' ) {
-        $textos['titulo'] = 'Plataforma Enlace - En Línea Editores';
+        $textos['titulo'] = 'Plataforma En Línea Editores';
         $textos['parrafo'] = 'Para restaurar su contraseña haga clic en el siguiente link';
         $textos['boton'] = 'Restaurar mi contraseña';
         $textos['link'] = "usuarios/activar/{$row_usuario->cod_activacion}/restaurar";
     }
 
+//Estilos
+    $styles['body'] = 'font-family: Helvetica, Sans-Serif; text-align: center; padding-top: 1em;';
+    $styles['h1'] = 'color: #89CB4E';
+    $styles['h3'] = 'color: #666';
+    $styles['a'] = 'color: #00b0f0';
+    $styles['footer'] = 'color: #666; background-color: #FAFAFA; margin-top: 2em; height: 2em; padding-top: 1em; font-size: 0.8em;';
+
 ?>
-
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Activación de Cuenta</title>
-        
-        <!--JQuery-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-        
-        <!--Bootstrap-->
-        <?php $this->load->view('head_includes/bootstrap') ?>
-
-        <!-- Style adicionales PCRN-->
-        <link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Ubuntu:500,300'>
-    </head>
-    <body>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1 style="color: #00b0f0"><?= $textos['titulo'] ?></h1>
-                    <h3 class="suave"><?= $row_usuario->nombre . ' ' . $row_usuario->apellidos ?></h3>
-                    <p><?= $textos['parrafo'] ?></p>
-                    <?= anchor($textos['link'], $textos['boton'], 'class="btn btn-success"') ?>
-                </div>
-            </div>
-        </div>
-        
-        
-    </body>
-    
-</html>
+<div style="<?= $styles['body'] ?>">
+    <h1 style="<?= $styles['h1'] ?>"><?= $textos['titulo'] ?></h1>
+    <h3 style="<?= $styles['h3'] ?>"><?= $row_usuario->nombre . ' ' . $row_usuario->apellidos ?></h3>
+    <p><?= $textos['parrafo'] ?></p>
+    <a href="<?= base_url($textos['link']) ?>" style="<?= $styles['a'] ?>">
+        <?= $textos['boton'] ?>
+    </a>
+    <div style="<?= $styles['footer'] ?>">
+        &copy; En Línea Editores &middot; Colombia
+    </div>
+</div>
 

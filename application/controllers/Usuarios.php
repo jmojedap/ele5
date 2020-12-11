@@ -344,7 +344,7 @@ class Usuarios extends CI_Controller{
             $data['tipo_activacion'] = $tipo_activacion;
             $data['row'] = $row_usuario;
             $data['view_a'] = 'usuarios/activar_v';
-            $data['titulo_pagina'] = "Cuenta de {$row_usuario->nombre}";
+            $data['head_title'] = "Cuenta de {$row_usuario->nombre}";
             
         //Evaluar condiciones
             $condiciones = 0;
@@ -352,9 +352,10 @@ class Usuarios extends CI_Controller{
             if ( $this->session->userdata('logged') != TRUE ) { $condiciones++; }
         
         if ( $condiciones == 2 ) {
-            $this->load->view('p_apanel2/plantilla_vacia_v', $data);
+            $this->load->view('templates/apanel3/start_v', $data);
         } else {
-            redirect('app/no_permitido');
+            'no permitido';
+            //redirect('app/no_permitido');
         }
     }
     
@@ -741,15 +742,27 @@ class Usuarios extends CI_Controller{
             redirect('usuarios/restaurar/no_encontrado');
         }
     }
+
+    /**
+     * Previsualización del mensaje para activación de cuenta o restauración de contraseña
+     * 2020-12-01
+     */
+    function test_mensaje($usuario_id, $tipo_activacion = 'restaurar')
+    {
+        $mensaje = $this->Usuario_model->mensaje_activacion($usuario_id, $tipo_activacion);
+
+        echo $mensaje;
+    }
     
     function test_envio($usuario_id)
     {
 
-        if ( $usuario_id == 3484 ) {
+        if ( $usuario_id == 3484 & ENV == 'production')
+        {
             $this->load->library('email');
             $config['mailtype'] = 'html';
 
-            //$row_usuario = $this->Pcrn->registro_id('usuario', $usuario_id);
+            $row_usuario = $this->Pcrn->registro_id('usuario', $usuario_id);
 
             $this->email->initialize($config);
             $this->email->from('info@plataformaenlinea.com', 'Plataforma en Línea');

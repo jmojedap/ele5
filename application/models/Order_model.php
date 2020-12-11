@@ -61,8 +61,9 @@ class Order_model extends CI_Model{
     {
         $condition = NULL;
         
-        //Tipo de post
-        if ( $filters['status'] != '' ) { $condition .= "status = {$filters['status']} AND "; }
+        if ( $filters['status'] != '' ) { $condition .= "status = {$filters['status']} AND "; } //Estado compra
+        if ( $filters['i'] != '' ) { $condition .= "institution_id = {$filters['i']} AND "; } //Institución asociada
+        if ( $filters['fi'] != '' ) { $condition .= "created_at >= '{$filters['fi']}' AND "; } //Fecha de creación posterior a
         
         if ( strlen($condition) > 0 )
         {
@@ -78,10 +79,12 @@ class Order_model extends CI_Model{
         $role_filter = $this->role_filter($this->session->userdata('post_id'));
 
         //Construir consulta
-            //$this->db->select('id, post_name, except, ');
+            $this->db->select('orders.id, status, order_code, buyer_name, orders.email, id_number, address, city, phone_number, amount, updated_at, created_at, institution_id, nombre_institucion AS institution_name, orders.level, notes_admin, bill AS no_factura, shipping_code AS no_guia, wompi_id, wompi_status, wompi_payment_method_type, confirmed_at, user_id, student_name');
+            $this->db->join('institucion', 'orders.institution_id = institucion.id', 'left');
+            
         
         //Crear array con términos de búsqueda
-            $words_condition = $this->Search_model->words_condition($filters['q'], array('order_code', 'buyer_name', 'city', 'email', 'phone_number'));
+            $words_condition = $this->Search_model->words_condition($filters['q'], array('order_code', 'buyer_name', 'city', 'orders.email', 'phone_number', 'id_number', 'notes_admin'));
             if ( $words_condition )
             {
                 $this->db->where($words_condition);
@@ -133,7 +136,7 @@ class Order_model extends CI_Model{
         
         if ( $role <= 2 ) 
         {   //Desarrollador, todos las compras
-            $condition = 'id > 0';
+            $condition = 'orders.id > 0';
         }
         
         return $condition;
@@ -325,6 +328,42 @@ class Order_model extends CI_Model{
         return $arr_row['order_code'];
     }
 
+// ELIMINACIÓN
+//-----------------------------------------------------------------------------
+
+    /**
+     * Eliminar registro de la tabla orders, y relacionados
+     * 2020-12-11
+     */
+    function delete($order_id)
+    {
+        $qty_deleted = 0;
+
+        //Verificar si se puede eliminar
+        $deleteable = 1;
+
+        //Tiene respuestas recibidas de wompi?
+        $qty_responses = $this->Db_model->num_rows('post', "tipo_id = 54 AND padre_id = {$order_id}");
+        if ( $qty_responses > 0 ) { $deleteable = 0; }
+
+        if ( $deleteable )
+        {
+            //Tabla orders
+            $this->db->where('id', $order_id);
+            $this->db->delete('orders');
+            
+            $qty_deleted = $this->db->affected_rows();
+
+            //Tabla order_product
+            $this->db->where('order_id', $order_id);
+            $this->db->delete('order_product');
+        }
+
+        return $qty_deleted;
+
+    }
+
+
 // CÁLCULO Y ACTUALIZACIÓN DE TOTALES
 //-----------------------------------------------------------------------------
 
@@ -436,37 +475,29 @@ class Order_model extends CI_Model{
     }
 
     /**
-     * Tomar y procesar los datos POST que envía Wompi a la página 
-     * de confirmación.
+     * Tomar y procesar los datos POST que envía Wompi a la url de eventos
+     * 2020-12-09
      * url_confirmacion >> 'orders/confirmation_wompi'
      */
     function confirmation_wompi()
     {   
         //Identificar Pedido
         $confirmation_id = 0;
-        $row = $this->row_by_code($this->input->post('reference_sale'));
+        $wompi_response = $this->wompi_response();
+        $row = $this->row_by_code($wompi_response->data->transaction->reference);
+        $row_confirmation = $this->save_confirmation($row, $wompi_response);
 
         if ( ! is_null($row) )
         {
-            //Guardar array completo de confirmación en la tabla "meta"
-                $row_confirmation = $this->save_confirmation($row);
+            //Guardar respuesta de wompi en la tabla "post"
+                $row_confirmation = $this->save_confirmation($row, $wompi_response);
+                $confirmation_id = $row_confirmation->id;
 
-            //Actualizar registro de pedido
-                if ( ! is_null($row_confirmation) )
-                {
-                    $confirmation_id = $row_confirmation->id;
-                    $this->update_status($row_confirmation);
-                }
-
-            //Asignar contenidos digitales
-                if ( $row_confirmation->estado_id == 1 )
-                {
-                    //Asignar contenidos digitales asociados a los productos comprados
-                    //$this->assign_posts($row->id);
-                }
+            //Actualizar estado registro en la tabla orders
+                $this->update_status($row->id, $wompi_response);
 
             //Enviar mensaje a administradores de tienda y al cliente
-                //$this->email_buyer($row->id);
+                $this->email_buyer($row->id);
                 //if ( $order_status == 1 ) { $this->email_admon($row->id); }
         }
 
@@ -475,31 +506,30 @@ class Order_model extends CI_Model{
 
     /**
      * Crea un registro en la tabla post, con los datos recibidos tras en la 
-     * ejecución de la página de confirmación por parte de Wompi.
+     * ejecución de la URL de eventos por parte de Wompi
      */
-    function save_confirmation($row)
+    function save_confirmation($row, $wompi_response)
     {
-        //Datos POL
-            $arr_confirmation_wompi = $this->input->post();
-            $arr_confirmation_wompi['ip_address'] = $this->input->ip_address();
-            $json_confirmation_wompi = json_encode($arr_confirmation_wompi);
+        //Datos Wompi en formato JSON
+            $json_confirmation_wompi = json_encode($wompi_response);
         
         //Construir registro para tabla Post
             $arr_row['tipo_id'] = 54;  //54: Confirmación de pago, Ver: items.category_id = 33
-            $arr_row['nombre_post'] = 'Confirmación ' . $arr_confirmation_wompi['reference_sale'];
+            $arr_row['contenido'] = 'Se ejecutó un evento desde Wompi';
+            $arr_row['nombre_post'] = 'Confirmación ' . $wompi_response->data->transaction->reference;
             $arr_row['contenido_json'] = $json_confirmation_wompi;
-            $arr_row['estado_id'] = ( $arr_confirmation_wompi['response_code_pol'] == 1 ) ? 1 : 0;
+            $arr_row['estado_id'] = ( $wompi_response->data->transaction->status == 'APPROVED' ) ? 1 : 0;
             $arr_row['padre_id'] = $row->id;
-            $arr_row['referente_1_id'] = $arr_confirmation_wompi['response_code_pol'];
-            $arr_row['referente_2_id'] = $arr_confirmation_wompi['payment_method_id'];
             $arr_row['fecha'] = date('Y-m-d H:i:s');
-            $arr_row['texto_1'] = $arr_confirmation_wompi['sign'];
-            $arr_row['texto_2'] = $arr_confirmation_wompi['response_message_pol'];
+            $arr_row['texto_1'] = $wompi_response->data->transaction->status;
             $arr_row['editor_id'] = 1001;     //Wompi internal user
             $arr_row['usuario_id'] = 1001;    //Wompi internal user
+            $arr_row['editado'] = date('Y-m-d H:i:s');
+            $arr_row['creado'] = date('Y-m-d H:i:s');
         
         //Guardar
-            $condition = "tipo_id = 54 AND padre_id = {$row->id}";
+            //$condition = "type_id = 54 AND parent_id = {$row->id}";
+            $condition = 'id = 0';  //Siempre guarda respuesta wompi
             $confirmation_id =$this->Db_model->save('post', $condition, $arr_row);
 
         //Row de confirmación
@@ -509,43 +539,124 @@ class Order_model extends CI_Model{
     }
 
     /**
-     * Actualiza el estado de un pedido, dependiendo del código de respuesta en la 
-     * confirmación
+     * Objeto con respuesta de Wompi enviada a la URL de eventos
+     * 2020-12-09
      */
-    function update_status($row_confirmation)
+    function wompi_response()
     {
-        $arr_row['status'] = ( $row_confirmation->referente_1_id == 1 ) ? 1 : 5;
-        $arr_row['response_code_pol'] = $row_confirmation->referente_1_id;
-        $arr_row['confirmed_at'] = date('Y-m-d H:i:s');
-        $arr_row['updated_at'] = date('Y-m-d H:i:s');
+        $input_wompi = file_get_contents('php://input');
+        $wompi_response = json_decode($input_wompi);
+        $wompi_response->ip_address = $this->input->ip_address();
+
+        return $wompi_response;
+    }
+
+    function responses($order_id)
+    {
+        $this->db->select('id, texto_1 AS wompi_status, creado, contenido_json');
+        $this->db->where('tipo_id', 54);    //Respuesta de Wompi
+        $this->db->where('padre_id', $order_id);
+        $query = $this->db->get('post');
+
+        $responses = array();
+        foreach ($query->result() as $row)
+        {
+            $response = json_decode($row->contenido_json);
+            $response->response_id = $row->id;
+            $response->response_created_at = $row->creado;
+
+            $responses[] = $response;
+        }
+    
+        return $responses;
+    }
+
+    /**
+     * Actualiza el estado de una venta, dependiendo de la respuesta wompi
+     * 2020-12-09
+     */
+    function update_status($order_id, $wompi_response)
+    {
+        $arr_row['status'] = ( $wompi_response->data->transaction->status == 'APPROVED' ) ? 1 : 5;
+        $arr_row['wompi_status'] = $wompi_response->data->transaction->status;
+        $arr_row['wompi_id'] = $wompi_response->data->transaction->id;
+        $arr_row['wompi_payment_method_type'] = $wompi_response->data->transaction->payment_method_type;
+        $arr_row['updated_at'] = date('Y-m-d H:i:s', $wompi_response->timestamp);
         $arr_row['updater_id'] = 1001;  //Wompi Automático
 
-        $this->db->where('id', $row_confirmation->padre_id);   //Parent ID = Order ID
+        $this->db->where('id', $order_id);   //Parent ID = Order ID
         $this->db->update('orders', $arr_row);
     }
 
+    /**
+     * Datos resultado del pago
+     * 2020-12-05
+     */
     function result_data()
     {
-        $order_code = $this->input->get('referenceCode');
-        $row = $this->row_by_code($order_code);
-
+        $wompi_id = $this->input->get('id');
         $data = array('status' => 0, 'message' => 'Compra no identificada', 'success' => 0);
-        $data['success'] = 0;
-        $data['order_id'] = 0;
-        $data['head_title'] = 'Pago no realizado';
+        $result = NULL;
 
-        if ( ! is_null($row) )
+        //Requerir datos de API Wompi
+        $url_wompi_transaction = "https://sandbox.wompi.co/v1/transactions/{$wompi_id}";
+        $json_wompi = $this->pml->get_url_content($url_wompi_transaction);
+
+        if ( $json_wompi )
         {
-            $data['status'] = 1;
-            $data['message'] = 'Resultado recibido';
-            $data['order_id'] = $row->id;
-
-            if ( $this->input->get('polResponseCode') == 1 )
+            $wompi = json_decode($json_wompi);
+            $result = $wompi->data;    
+            //Idenficar registro de Order
+            $row = $this->row_by_code($result->reference);
+    
+            $data = array('status' => 0, 'message' => 'Compra no identificada', 'success' => 0);
+            $data['success'] = 0;
+            $data['order_id'] = 0;
+            $data['head_title'] = 'Pago no realizado';
+    
+            if ( ! is_null($row) )
             {
-                $data['success'] = 1;
-                $data['head_title'] = 'Pago exitoso';
+                $data['status'] = 1;
+                $data['message'] = 'Resultado recibido';
+                $data['order_id'] = $row->id;
+    
+                if ( $result->status == 'APPROVED' )
+                {
+                    $data['success'] = 1;
+                    $data['head_title'] = 'Pago exitoso';
+                }
             }
+            $data['result'] = $result;
+
+            //Actualizar registro tabla orders
+            $data['order_updating'] = $this->update_wompi_status($row->id, $result);
         }
+
+        return $data;
+    }
+
+    /**
+     * Actualiza los campos de la tabla orders, relacionados con la información de wompi
+     * 2020-12-05
+     */
+    function update_wompi_status($order_id, $result)
+    {
+        $data = array('status' => 0, 'qty_affected' => 0);
+
+        $arr_row['wompi_status'] = $result->status;
+        $arr_row['wompi_payment_method_type'] = $result->payment_method->type;
+        $arr_row['wompi_id'] = $result->id;
+        $arr_row['confirmed_at'] = $result->created_at;
+        $arr_row['status'] = 5;
+
+        if ( $result->status == 'APPROVED' ) { $arr_row['status'] = 1; }    //Si es APPROVED, se marca como Pago confirmado
+
+        $this->db->where('id', $order_id);
+        $this->db->update('orders', $arr_row);
+        
+        $data['qty_affected'] = $this->db->affected_rows();
+
+        if ( $data['qty_affected'] > 0 ) { $data['status'] = 1;}
 
         return $data;
     }
@@ -624,25 +735,58 @@ class Order_model extends CI_Model{
      */
     function email_buyer($order_id)
     {
-        $row_order = $this->Db_model->row_id('orders', $order_id);
-        $admin_email = $this->Db_model->field_id('sis_option', 25); //Opción 25
-            
-        //Asunto de mensaje
-            $subject = "Estado de la compra {$row_order->order_code}: " . $this->Item_model->name(10, $row_order->response_code_pol);
-        
-        //Enviar Email
-            $this->load->library('email');
-            $config['mailtype'] = 'html';
+        $data = array('status' => 0, 'message' => 'No enviado, Versión Local');
 
-            $this->email->initialize($config);
-            $this->email->from('info@' . APP_DOMAIN, APP_NAME);
-            $this->email->to($row_order->email);
-            $this->email->bcc($admin_email);
-            $this->email->subject($subject);
-            $this->email->message($this->message_buyer($row_order));
+        if ( ENV == 'production' )
+        {
+            $row_order = $this->Db_model->row_id('orders', $order_id);
+            $admin_email = $this->Db_model->field_id('sis_opcion', 25, 'valor'); //Opción 25
+
+            //Email ejecutivo institución
+            $institution_emails = $this->institution_emails($row_order->institution_id);
+            if ( strlen($institution_emails) ) $admin_email .= ',' . $institution_emails;
+                
+            //Asunto de mensaje
+                $subject = "Estado de la compra {$row_order->order_code}: " . $this->Item_model->name(7, $row_order->status);
             
-            $this->email->send();   //Enviar
-            
+            //Enviar Email
+                $this->load->library('email');
+                $config['mailtype'] = 'html';
+    
+                $this->email->initialize($config);
+                $this->email->from('info@' . APP_DOMAIN, COMPANY_NAME);
+                $this->email->to($row_order->email);
+                $this->email->cc($admin_email);
+                $this->email->subject($subject);
+                $this->email->message($this->message_buyer($row_order));
+                
+                $this->email->send();   //Enviar
+
+            $data = array('status' => 1, 'message' => 'E-mail enviado');
+        }
+
+        return $data;
+    }
+
+    /**
+     * String con emails de los ejecutivos de la institucion a la que está asociada la compra
+     * 2020-12-07
+     */
+    function institution_emails($institution_id)
+    {
+        $institution_emails = '';
+
+        $row_institution = $this->Db_model->row_id('institucion', $institution_id);
+        if ( ! is_null($row_institution) ) {
+            $row_user = $this->Db_model->row_id('usuario', $row_institution->ejecutivo_id);
+
+            if ( ! is_null($row_user) )
+            {
+                $institution_emails = $row_user->email;
+            }
+        }
+
+        return $institution_emails;
     }
 
     /**
@@ -652,9 +796,11 @@ class Order_model extends CI_Model{
     function message_buyer($row_order)
     {
         $data['row_order'] = $row_order;
-        $data['product'] = $this->products($row_order->id);
+        $data['products'] = $this->products($row_order->id);
 
-        $str_style = file_get_contents(URL_RESOURCES . 'css/email.json');
+        $style_file_path = PATH_RESOURCES . 'css/email.json';
+        $style_file = fopen($style_file_path, 'r');
+        $str_style = fread($style_file, filesize($style_file_path));
         $data['style'] = json_decode($str_style);
         
         $message = $this->load->view('orders/emails/message_buyer_v', $data, TRUE);

@@ -1,3 +1,8 @@
+<?php
+    $arr_json = array();
+    if ( strlen($row->contenido_json) ) { $arr_json = json_decode($row->contenido_json); }
+?>
+
 <div class="card center_box_750">
     <div class="card-header">Fields</div>
     <div class="card-body">
@@ -9,3 +14,6 @@
         <?php } ?>
     </div>
 </div>
+
+<h3>JSON CONTENT</h3>
+<?php print_r($arr_json) ?>

@@ -23,7 +23,8 @@
             username: 'kdquinto7',
             user: { id: 0 },
             level: '',
-            products: []
+            products: [],
+            no_institutions: false
         },
         methods: {
             start_step: function(){
@@ -46,6 +47,8 @@
                 .then(response => {
                     this.institutions = response.data.list;
                     this.user.id = 0;
+                    if ( this.institutions.length == 0 ) this.no_institutions = true
+                    if ( this.institutions.length > 0 ) this.no_institutions = false
                 })
                 .catch(function (error) {
                     console.log(error);

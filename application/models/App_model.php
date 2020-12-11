@@ -258,7 +258,7 @@ class App_model extends CI_Model {
      */
     function nombre_usuario($usuario_id, $formato = 1)
     {
-        $nombre_usuario = "(Vacío)";
+        $nombre_usuario = "ND/NA";
         $row = $this->Pcrn->registro('usuario', "id = {$usuario_id}");
 
         if ( ! is_null($row) ) 

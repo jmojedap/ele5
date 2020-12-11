@@ -1,13 +1,13 @@
 <?php
-    $payu_data['transactionState'] = 4;
-    $payu_data['referenceCode'] = $row->order_code;
-    $payu_data['processingDate'] = date('Y-m-d H:i:s');
-    $payu_data['cus'] = rand(100000,999999);
-    $payu_data['TX_VALUE'] = $row->amount;
-    $payu_data['currency'] = 'COP';
-    $payu_data['pseBank'] = 'Bancolombia';
-    $payu_data['lapPaymentMethod'] = 'VISA';
-    $payu_data['reference_pol'] = rand(1000000,9999999);
+    $wompi_data['transactionState'] = 4;
+    $wompi_data['referenceCode'] = $row->order_code;
+    $wompi_data['processingDate'] = date('Y-m-d H:i:s');
+    $wompi_data['cus'] = rand(100000,999999);
+    $wompi_data['TX_VALUE'] = $row->amount;
+    $wompi_data['currency'] = 'COP';
+    $wompi_data['pseBank'] = 'Bancolombia';
+    $wompi_data['lapPaymentMethod'] = 'VISA';
+    $wompi_data['reference_pol'] = rand(1000000,9999999);
 
     $options_pol_response_code = $this->Item_model->options('categoria_id = 110');
 ?>
@@ -28,7 +28,7 @@
                 </div>
             </div>
 
-            <?php foreach ( $payu_data as $field => $field_value ) { ?>
+            <?php foreach ( $wompi_data as $field => $field_value ) { ?>
 
             <div class="form-group row">
                 <label for="" class="col-md-4 col-form-label text-right"><?php echo $field ?></label>

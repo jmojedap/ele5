@@ -41,7 +41,7 @@
                         </div>
                     </div>
                 </form>
-                <table class="table" v-show="code_type == 'institution'">
+                <table class="table" v-show="code_type == 'institution' && ! no_institutions">
                     <thead>
                         <th>Nombre institución</th>
                         <th></th>
@@ -55,6 +55,10 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="alert alert-info" v-show="no_institutions">
+                    <i class="fa fa-info-circle"></i>
+                    No se encontraron instituciones con el código <strong>"{{ institution_cod }}"</strong>
+                </div>
 
                 <form accept-charset="utf-8" method="POST" id="user_form" @submit.prevent="get_user" v-show="code_type == 'user'">
                     <div class="form-group row">
@@ -99,8 +103,7 @@
                             </td>
                             <td>
                                 <button class="btn btn-primary btn-block" v-on:click="add_product(product_key)">
-                                    <i class="fa fa-shopping-cart"></i>
-                                    Agregar
+                                    Continuar
                                 </button>
                             </td>
                         </tr>

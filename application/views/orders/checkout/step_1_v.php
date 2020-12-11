@@ -10,6 +10,9 @@
 <?php $this->load->view('orders/checkout/steps_v') ?>
 
 <div class="center_box_750" id="step_1">
+    <button class="btn btn-primary" v-on:click="set_data_test">
+        Datos de prueba
+    </button>
     <form accept-charset="utf-8" method="POST" id="checkout_form" @submit.prevent="send_form">
         <div class="form-group row">
             <label for="buyer_name" class="col-md-3 col-form-label">Nombre comprador</label>
@@ -181,6 +184,20 @@
 </div>
 
 <script>
+// Variables
+//-----------------------------------------------------------------------------
+    var data_test = {
+        user_id: 0,
+        buyer_name: 'Juan Pérez Pruebas',
+        id_number: '123456789012',
+        email: 'elindustrial252@hotmail.com',
+        city_id: '0909',
+        address: 'Calle 13 10-23',
+        phone_number: '3007838911',
+        student_name: 'George'
+    }
+
+
 // Filters
 //-----------------------------------------------------------------------------
     Vue.filter('currency', function (value) {
@@ -253,6 +270,10 @@
                 .catch(function (error) {
                     console.log(error);
                 });
+            },
+            set_data_test: function(){
+                this.order = data_test
+                this.city_id = data_test.city_id
             },
 
         }

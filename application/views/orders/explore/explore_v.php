@@ -1,3 +1,4 @@
+<?php $this->load->view('assets/bs4_chosen') ?>
 <div id="app_explore">
     <div class="row">
         <div class="col-md-6 d-none d-md-table-cell d-lg-table-cell">
@@ -5,7 +6,7 @@
         </div>
 
         <div class="col">
-            <a href="<?php echo base_url("groups/export/?{$str_filters}") ?>" class="btn btn-light" title="Exportar registros encontrados a Excel">
+            <a v-bind:href="`<?= base_url("orders/export/?") ?>` + str_filters" class="btn btn-light" title="Exportar registros encontrados a Excel">
                 <i class="fa fa-download"></i>
             </a>
             <a class="btn btn-light"

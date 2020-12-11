@@ -1,9 +1,9 @@
 <?php
-    $payu_data['state_pol'] = '4';
-    $payu_data['reference_sale'] = $row->order_code;
-    $payu_data['value'] = $row->amount;
-    $payu_data['sign'] = rand(1000,9999);
-    $payu_data['response_message_pol'] = 'Test confirmation';
+    $wompi_data['state_pol'] = '4';
+    $wompi_data['reference_sale'] = $row->order_code;
+    $wompi_data['value'] = $row->amount;
+    $wompi_data['sign'] = rand(1000,9999);
+    $wompi_data['response_message_pol'] = 'Test confirmation';
 
     $options_response_code_pol = $this->Item_model->options('categoria_id = 110');
     $options_payment_method = $this->Item_model->options('categoria_id = 112');
@@ -33,7 +33,7 @@
                     </div>
                 </div>
 
-                <?php foreach ( $payu_data as $field => $field_value ) { ?>
+                <?php foreach ( $wompi_data as $field => $field_value ) { ?>
                     
 
                     <div class="form-group row">
@@ -67,7 +67,7 @@
         },
         methods: {
             send_form: function(){                
-                axios.post(url_app + 'orders/confirmation_payu/', $('#confirmation_form').serialize())
+                axios.post(url_app + 'orders/confirmation_wompi/', $('#confirmation_form').serialize())
                 .then(response => {
                     toastr["success"]('confirmation_id: ' + response.data.confirmation_id);
                     //console.log(response.data.message);

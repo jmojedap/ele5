@@ -31,12 +31,26 @@
             </button>
         </div>
     </div>
-    <div id="adv_filters" style="<?php echo $filters_style ?>">
+    <div id="adv_filters" style="<?= $filters_style ?>">
         <div class="form-group row">
             <div class="col-md-9">
-                <?php echo form_dropdown('status', $options_status, $filters['status'], 'class="form-control" title="Filtrar por Estado"'); ?>
+                <?= form_dropdown('status', $options_status, $filters['status'], 'class="form-control" title="Filtrar por Estado"'); ?>
             </div>
             <label for="status" class="col-md-3 control-label col-form-label">Estado compra</label>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-9">
+                <?= form_dropdown('i', $options_institucion, $filters['i'], 'class="form-control form-control-chosen" title="Filtrar por institución"'); ?>
+            </div>
+            <label for="i" class="col-md-3 col-form-label">Institución</label>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-9">
+                <input
+                    name="fi" type="date" class="form-control"
+                >
+            </div>
+            <label for="i" class="col-md-3 col-form-label">Creada a partir de</label>
         </div>
     </div>
 </form>

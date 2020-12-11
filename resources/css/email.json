@@ -1,0 +1,20 @@
+{
+    "body": "font-family: Geneva, 'Helvetica Neue', Helvetica, sans-serif; color: #555; background-color: #FCFCFC; max-width: 750px; margin: 0 auto; padding: 15px;",
+    "h1": "color: #007BFF;",
+    "h2": "color: #FAFAFA; background-color: #85D22F; padding: 4px;",
+    "h3": "font-family: Trebuchet, sans-serir; color: #FAFAFA; background-color: #85D22F; padding: 3px;",
+    "h4": "color: #666;",
+    "alert": "margin-bottom: 1em; text-align: center; padding: 1em; border: 1px solid #85d22f; border-radius: 5px; color: white; background-color: #85D22F",
+    "footer": "text-align: center; font-size: 0.8em; color: #999",
+    "a": "color: #00b0f0",
+    "table": "width: 100%; border-collapse: collapse; background-color: #FFF; color: #555; font-size: 0.9em;",
+    "thead" : "color: white; font-weight: bold; padding: 5px; background-color: #81d4fa",
+    "td" : "border: 1px solid #ddd; padding: 5px;",
+    "btn" : "background: #007BFF; padding: 10px; color: white; text-decoration: none; border: 1px solid #007BFF; border-radius: 5px;",
+    "text_success": "color: #28a745;",
+    "text_primary": "color: #007BFF;",
+    "text_info": "color: #65AA1E;",
+    "text_danger": "color: #f44336;",
+    "text_muted": "color: #999;",
+    "text_center": "text-align: center;"
+}

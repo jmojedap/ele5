@@ -1081,9 +1081,6 @@ class Usuario_model extends CI_Model{
     
     /**
      * Envía e-mail de activación o restauración de cuenta
-     * 
-     * @param type $usuario_id
-     * @param type $tipo_activacion
      */
     function email_activacion($usuario_id, $tipo_activacion = 'activar')
     {
@@ -1113,10 +1110,7 @@ class Usuario_model extends CI_Model{
     
     /**
      * Devuelve texto de la vista que se envía por email a un usuario para activación o restauración de su cuenta
-     * 
-     * @param type $usuario_id
-     * @param type $tipo_activacion
-     * @return type
+     * 2020-12-01
      */
     function mensaje_activacion($usuario_id, $tipo_activacion)
     {
@@ -1137,7 +1131,7 @@ class Usuario_model extends CI_Model{
     function cod_activacion($usuario_id)
     {
         $this->load->helper('string');
-        $registro['cod_activacion'] = random_string('alpha', 32);
+        $registro['cod_activacion'] = strtolower(random_string('alpha', 32));
         
         $this->db->where('id', $usuario_id);
         $this->db->update('usuario', $registro);
@@ -1167,9 +1161,6 @@ class Usuario_model extends CI_Model{
     
     /**
      * Envía un email de para restauración de la contraseña de usuario
-     * 
-     * @param type $email
-     * @return int
      */
     function restaurar($email)
     {
@@ -1177,8 +1168,9 @@ class Usuario_model extends CI_Model{
         
         //Identificar usuario
         $row_usuario = $this->Pcrn->registro('usuario', "email = '{$email}'");
-        if ( ! is_null($row_usuario) ) {
-            $this->email_activacion($row_usuario->id, 'restaurar');
+        if ( ! is_null($row_usuario) )
+        {
+            if ( ENV == 'production' ) $this->email_activacion($row_usuario->id, 'restaurar');
             $enviado = 1;
         }
         

@@ -4,6 +4,8 @@
     $cl_nav_2['orders_info'] = '';
     $cl_nav_2['orders_edit'] = '';
     $cl_nav_2['orders_test'] = '';
+    $cl_nav_2['orders_details'] = '';
+    $cl_nav_2['orders_responses'] = '';
     //$cl_nav_2['orders_import'] = '';
     
     $cl_nav_2[$app_cf_index] = 'active';
@@ -26,15 +28,31 @@
     };
 
     sections.info = {
-        icon: 'fa fa-info-circle',
+        icon: '',
         text: 'Información',
         class: '<?php echo $cl_nav_2['orders_info'] ?>',
         cf: 'orders/info/' + element_id,
         anchor: true
     };
 
+    sections.details = {
+        icon: '',
+        text: 'Detalles',
+        class: '<?php echo $cl_nav_2['orders_details'] ?>',
+        cf: 'orders/details/' + element_id,
+        anchor: true
+    };
+
+    sections.responses = {
+        icon: '',
+        text: 'Wompi',
+        class: '<?php echo $cl_nav_2['orders_responses'] ?>',
+        cf: 'orders/responses/' + element_id,
+        anchor: true
+    };
+
     sections.edit = {
-        icon: 'fa fa-pencil-alt',
+        icon: '',
         text: 'Editar',
         class: '<?php echo $cl_nav_2['orders_edit'] ?>',
         cf: 'orders/edit/' + element_id,
@@ -50,8 +68,8 @@
     };
     
     //Secciones para cada rol
-    sections_rol.dvlp = ['explore', 'info', 'edit', 'test'];
-    sections_rol.admn = ['explore', 'info', 'edit', 'test'];
+    sections_rol.dvlp = ['explore', 'info', 'details', 'responses', 'edit', 'test'];
+    sections_rol.admn = ['explore', 'info', 'details', 'responses', 'edit'];
     
     //Recorrer el sections del rol actual y cargarlos en el menú
     for ( key_section in sections_rol[app_r]) 
