@@ -10,7 +10,7 @@
 <?php $this->load->view('orders/checkout/steps_v') ?>
 
 <div class="center_box_750" id="step_1">
-    <button class="btn btn-primary" v-on:click="set_data_test">
+    <button class="btn btn-primary d-none" v-on:click="set_data_test">
         Datos de prueba
     </button>
     <form accept-charset="utf-8" method="POST" id="checkout_form" @submit.prevent="send_form">

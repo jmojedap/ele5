@@ -17,13 +17,11 @@ class Product_model extends CI_Model{
     
     /**
      * Array con los datos para la vista de exploración
-     * 
-     * @return string
      */
-    function explore_data($num_page)
+    function explore_data($filters, $num_page, $per_page = 10)
     {
         //Data inicial, de la tabla
-            $data = $this->get($num_page);
+            $data = $this->get($filters, $num_page, $per_page);
         
         //Elemento de exploración
             $data['controller'] = 'products';                      //Nombre del controlador
@@ -39,61 +37,46 @@ class Product_model extends CI_Model{
         return $data;
     }
 
-    function get($num_page)
+    function get($filters, $num_page, $per_page)
     {
         //Referencia
-            $per_page = 20;                             //Cantidad de registros por página
             $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
 
         //Búsqueda y Resultados
-            $this->load->model('Search_model');
-            $data['filters'] = $this->Search_model->filters();
-            $data['list'] = $this->list($data['filters'], $per_page, $offset);    //Resultados para página
+            $data['filters'] = $filters;
+            $data['list'] = $this->list($filters, $per_page, $offset);    //Resultados para página
         
         //Cargar datos
-            $data['str_filters'] = $this->Search_model->str_filters();
-            $data['search_num_rows'] = $this->search_num_rows($data['filters']);
+            $data['str_filters'] = $this->Search_model->str_filters($filters);
+            $data['search_num_rows'] = $this->search_num_rows($filters);
             $data['max_page'] = ceil($this->pml->if_zero($data['search_num_rows'],1) / $per_page);   //Cantidad de páginas
 
         return $data;
     }
-    
+
     /**
-     * String con condición WHERE SQL para filtrar el elemento
-     * 
-     * @param type $filters
-     * @return type
+     * Segmento Select SQL, con diferentes formatos, consulta de products
+     * 2020-12-12
      */
-    function search_condition($filters)
+    function select($format = 'general')
     {
-        $condition = NULL;
-        
-        //Filtros
-        if ( $filters['type'] != '' ) { $condition .= "type_id = {$filters['type']} AND "; }
-        if ( $filters['condition'] != '' ) { $condition .= "{$filters['condition']} AND "; }
-        
-        if ( strlen($condition) > 0 )
-        {
-            $condition = substr($condition, 0, -5);
-        }
-        
-        return $condition;
+        $arr_select['general'] = 'product.id, code, name, product.status, product.description, product.price, product.slug, text_1, external_url';
+
+        $arr_select['export'] = 'product.id, code AS referencia, name AS nombre_producto, product.status, product.description AS descripcion, product.price AS precio_venta';
+        $arr_select['export'] .= ', keywords AS palabras_clave, cost AS costo, tax_percent AS iva, tax AS iva_valor, weight AS peso_gramos, stock AS existencias, level AS nivel';
+        $arr_select['export'] .= ', created_at AS creado, creator_id AS creador_id, updated_at AS actualizado, updater_id AS editor_id';
+
+        return $arr_select[$format];
     }
     
+    /**
+     * Query productos, aplicando filtros, paginado y orden
+     * 2020-12-12
+     */
     function search($filters, $per_page = NULL, $offset = NULL)
     {
-        
-        $role_filter = $this->role_filter($this->session->userdata('user_id'));
-
         //Construir consulta
-            $this->db->select('product.id, code, name, product.status, product.description, product.price, product.slug, text_1, external_url');
-        
-        //Crear array con términos de búsqueda
-            $words_condition = $this->Search_model->words_condition($filters['q'], array('name', 'code', 'description', 'text_1', 'text_2'));
-            if ( $words_condition )
-            {
-                $this->db->where($words_condition);
-            }
+            $this->db->select($this->select());
             
         //Orden
             if ( $filters['o'] != '' )
@@ -106,17 +89,11 @@ class Product_model extends CI_Model{
             }
             
         //Filtros
-            $this->db->where($role_filter); //Filtro según el rol de user en sesión
             $search_condition = $this->search_condition($filters);
             if ( $search_condition ) { $this->db->where($search_condition);}
             
         //Obtener resultados
-        if ( is_null($per_page) )
-        {
-            $query = $this->db->get('product'); //Resultados totales
-        } else {
-            $query = $this->db->get('product', $per_page, $offset); //Resultados por página
-        }
+        $query = $this->db->get('product', $per_page, $offset);
         
         return $query;
     }
@@ -138,6 +115,33 @@ class Product_model extends CI_Model{
 
         return $list;
     }
+
+    /**
+     * String con condición WHERE SQL para filtrar post
+     * 2020-08-01
+     */
+    function search_condition($filters)
+    {
+        $condition = NULL;
+
+        $condition .= $this->role_filter() . ' AND ';
+
+        //q words condition
+        $words_condition = $this->Search_model->words_condition($filters['q'], array('name', 'code', 'description', 'text_1', 'text_2'));
+        if ( $words_condition )
+        {
+            $condition .= $words_condition . ' AND ';
+        }
+        
+        //Otros filtros
+        if ( $filters['type'] != '' ) { $condition .= "type_id = {$filters['type']} AND "; }
+        if ( $filters['condition'] != '' ) { $condition .= "{$filters['condition']} AND "; }
+        
+        //Quitar cadena final de ' AND '
+        if ( strlen($condition) > 0 ) { $condition = substr($condition, 0, -5);}
+        
+        return $condition;
+    }
     
     /**
      * Devuelve la cantidad de registros encontrados en la tabla con los filtros
@@ -148,12 +152,24 @@ class Product_model extends CI_Model{
         $query = $this->search($filters); //Para calcular el total de resultados
         return $query->num_rows();
     }
+
+    /**
+     * Query para exportar
+     * 2020-12-12
+     */
+    function export($filters)
+    {
+        $this->db->select($this->select('export'));
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+        $query = $this->db->get('product', 5000);  //Hasta 5000 productos
+
+        return $query;
+    }
     
     /**
-     * Devuelve segmento SQL
-     * 
-     * @param type $product_id
-     * @return type 
+     * Devuelve segmento Where SQL, aplicando filtro de productos según el rol del usuario en sesión
+     * 2020-12-12
      */
     function role_filter()
     {
@@ -174,10 +190,7 @@ class Product_model extends CI_Model{
     }
     
     /**
-     * Array con options para ordenar el listado de user en la vista de
-     * exploración
-     * 
-     * @return string
+     * Array con options para ordenar el listado de user en la vista de exploración
      */
     function order_options()
     {

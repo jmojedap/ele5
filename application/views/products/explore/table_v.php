@@ -1,5 +1,9 @@
-<div class="table-responsive">
-    <table class="table table-hover bg-white">
+<div class="text-center" v-show="loading">
+    <i class="fa fa-spin fa-spinner fa-3x"></i>
+</div>
+
+<div class="table-responsive" v-show="!loading">
+    <table class="table bg-white">
         <thead>
             <th width="46px">
                 <input type="checkbox" id="checkbox_all_selected" @click="select_all" v-model="all_selected">

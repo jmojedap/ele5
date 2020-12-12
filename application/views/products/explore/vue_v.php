@@ -25,24 +25,30 @@
             cf: '<?php echo $cf; ?>',
             controller: '<?php echo $controller; ?>',
             num_page: 1,
-            max_page: 1,
+            max_page: <?= $max_page ?>,
             list: <?php echo json_encode($list) ?>,
             element: [],
             selected: [],
             all_selected: false,
             filters: <?php echo json_encode($filters) ?>,
-            showing_filters: false
+            showing_filters: false,
+            search_num_rows: <?= $search_num_rows ?>,
+            loading: false
         },
         methods: {
             get_list: function(){
-                axios.post(app_url + this.controller + '/get/' + this.num_page, $('#search_form').serialize())
+                this.loading = true;
+                axios.post(url_api + this.controller + '/get/' + this.num_page, $('#search_form').serialize())
                 .then(response => {
                     this.list = response.data.list;
                     this.max_page = response.data.max_page;
+                    this.search_num_rows = response.data.search_num_rows
+                    this.str_filters = response.data.str_filters
                     $('#head_subtitle').html(response.data.search_num_rows);
-                    history.pushState(null, null, app_url + this.cf + this.num_page +'/?' + response.data.str_filters);
+                    history.pushState(null, null, url_app + this.cf + this.num_page +'/?' + response.data.str_filters);
                     this.all_selected = false;
                     this.selected = [];
+                    this.loading = false;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -64,7 +70,7 @@
                 var params = new FormData();
                 params.append('selected', this.selected);
                 
-                axios.post(app_url + this.controller + '/delete_selected', params)
+                axios.post(url_api + this.controller + '/delete_selected', params)
                 .then(response => {
                     if ( response.data.status == 1 )
                     {

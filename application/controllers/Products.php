@@ -21,10 +21,18 @@ class Products extends CI_Controller{
 //EXPLORE
 //---------------------------------------------------------------------------------------------------
 
-    function explore()
+    /**
+     * Vista listado de productos, filtros exploración
+     * 2020-12-12
+     */
+    function explore($num_page = 1)
     {        
+        //Identificar filtros de búsqueda
+            $this->load->model('Search_model');
+            $filters = $this->Search_model->filters();
+
         //Datos básicos de la exploración
-            $data = $this->Product_model->explore_data(1);
+            $data = $this->Product_model->explore_data($filters, $num_page);
         
         //Opciones de filtros de búsqueda
             /*$data['options_level'] = $this->Item_model->options('category_id = 3', 'Nivel escolar');
@@ -38,9 +46,17 @@ class Products extends CI_Controller{
             $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
-    function get($num_page = 1)
+    /**
+     * JSON
+     * Listado de productos
+     */
+    function get($num_page, $per_page = 10)
     {
-        $data = $this->Product_model->get($num_page);
+        //Identificar filtros de búsqueda
+        $this->load->model('Search_model');
+        $filters = $this->Search_model->filters();
+
+        $data = $this->Product_model->get($filters, $num_page, $per_page);
 
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
@@ -64,6 +80,34 @@ class Products extends CI_Controller{
         
         //Salida
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * Exporta el resultado de la búsqueda a un archivo de Excel
+     * 2020-12-11
+     */
+    function export()
+    {
+        //Cargando
+            $this->load->model('Search_model');
+            $this->load->model('Pcrn_excel');
+        
+        //Datos de consulta, construyendo array de búsqueda
+            $filters = $this->Search_model->filters();
+            $results_total = $this->Product_model->export($filters);
+        
+        //Preparar datos
+            $datos['nombre_hoja'] = 'Productos';
+            $datos['query'] = $results_total;
+            
+        //Preparar archivo
+            $objWriter = $this->Pcrn_excel->archivo_query($datos);
+        
+        $data['objWriter'] = $objWriter;
+        $data['nombre_archivo'] = date('Ymd_His'). '_productos'; //save our workbook as this file name
+        
+        $this->load->view('comunes/descargar_phpexcel_v', $data);
+            
     }
     
     
