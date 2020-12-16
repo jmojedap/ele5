@@ -59,9 +59,25 @@
                 </div>
 
                 <div class="form-group row">
+                    <label for="status" class="col-md-4 col-form-label text-right">Estado</label>
+                    <div class="col-md-8">
+                        <select name="status" v-model="form_values.status" class="form-control" required>
+                            <option v-for="(option_status, status_key) in options_status" v-bind:value="status_key">{{ option_status }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
                     <label for="level" class="col-md-4 col-form-label text-right">Nivel</label>
                     <div class="col-md-8">
                         <?php echo form_dropdown('level', $options_level, '0', 'class="form-control" v-model="form_values.level"') ?>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="stock" class="col-md-4 col-form-label text-right">Cantidad existencias</label>
+                    <div class="col-md-8">
+                        <input name="stock" type="number" class="form-control" min="0" required v-model="form_values.stock">
                     </div>
                 </div>
 
@@ -141,16 +157,18 @@
     var form_values = <?php echo json_encode($row) ?>;
     form_values.level = '0' + '<?= $row->level ?>';
     form_values.kit_id = '0' + '<?= $row->kit_id ?>';
+    form_values.status = '0' + '<?= $row->status ?>';
     
     new Vue({
     el: '#app_edit',
         data: {
             form_values: form_values,
-            row_id: '<?php echo $row->id ?>'
+            row_id: '<?php echo $row->id ?>',
+            options_status: <?= json_encode($options_status) ?>
         },
         methods: {
             send_form: function() {
-                axios.post(app_url + 'products/update/' + this.row_id, $('#edit_form').serialize())
+                axios.post(url_api + 'products/update/' + this.row_id, $('#edit_form').serialize())
                     .then(response => {
                         console.log(response.data.status);
                         if (response.data.status == 1)

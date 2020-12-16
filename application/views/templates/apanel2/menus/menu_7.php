@@ -13,8 +13,33 @@
     <?php $this->load->view('templates/apanel2/encabezado') ?>
     <ul class="main_nav">
         
-        <li class="">
+        <li>
             <a href="<?php echo base_url('cuestionarios/explorar') ?>" class="<?= $clase_m['cuestionarios'] ?>"><i class="fa fa-2x fa-question"></i><span>cuestionarios</span></a>
+        </li>
+        <li class="has_submenu">
+            <a href="#" class="<?= $clase_m['comercial'] ?>">
+                <i class="fa fa-2x fa-shopping-cart"></i>
+                <span>comercial</span>
+            </a>
+            
+            <?php if ( $m_current['menu'] == 'comercial' ){ ?>
+                <span class="gossip"><?= $m_current['submenu_show'] ?></span>
+            <?php } ?>
+
+            <ul class="sub_nav">
+                <li>
+                    <a href="<?php echo base_url('orders/explore') ?>" class="<?php echo $clase_sm['ventas'] ?>">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span>ventas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo base_url('products/explore') ?>" class="<?php echo $clase_sm['productos'] ?>">
+                        <i class="fa fa-book"></i>
+                        <span>productos</span>
+                    </a>
+                </li>
+            </ul>
         </li>
         
         <li class="">

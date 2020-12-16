@@ -76,7 +76,7 @@ class Orders extends CI_Controller{
         
         //Datos de consulta, construyendo array de búsqueda
             $filters = $this->Search_model->filters();
-            $results_total = $this->Order_model->search($filters);
+            $results_total = $this->Order_model->export($filters);
         
         //Preparar datos
             $datos['nombre_hoja'] = 'Ventas';
@@ -221,6 +221,7 @@ class Orders extends CI_Controller{
         $data['head_title'] = 'Pagos';
         $data['view_a'] = 'orders/pays/pays_v';
         $data['institution_cod'] = $institution_cod;
+        $data['arr_niveles'] = $this->App_model->arr_nivel('nombre_nivel');
 
         //Identificar institución
         $curr_institution = array('id' => 0, 'name' => '');

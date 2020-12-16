@@ -16,6 +16,7 @@
         'Evidencias' => 'Evidencias',
         'Cuestionarios' => 'Cuestionarios',
         'Preguntas' => 'Preguntas',
+        'Comercial' => 'Comercial',
         'Otro' => 'Otro'
     );
 ?>

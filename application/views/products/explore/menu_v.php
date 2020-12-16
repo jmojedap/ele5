@@ -42,6 +42,7 @@
     sections_rol.dvlp = ['explore', 'import', 'add'];
     sections_rol.admn = ['explore', 'import', 'add'];
     sections_rol.edtr = ['explore', 'add'];
+    sections_rol.digt = ['explore'];
     
     //Recorrer el sections del rol actual y cargarlos en el menú
     for ( key_section in sections_rol[app_r]) 

@@ -710,7 +710,7 @@ class Product_model extends CI_Model{
      */
     function assigned_institutions($product_id)
     {
-        $this->db->select('institucion.id, nombre_institucion AS title, product_meta.id AS meta_id');
+        $this->db->select('institucion.id, nombre_institucion AS title, product_meta.id AS meta_id, cod');
         $this->db->join('product_meta', 'institucion.id = product_meta.related_1');
         $this->db->where('product_meta.type_id', 310022);   //Asignación de institution
         $this->db->where('product_meta.product_id', $product_id);

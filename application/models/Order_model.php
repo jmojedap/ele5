@@ -26,7 +26,7 @@ class Order_model extends CI_Model{
             $data['views_folder'] = 'orders/explore/';           //Carpeta donde están las vistas de exploración
             
         //Vistas
-            $data['head_title'] = 'Compras';
+            $data['head_title'] = 'Ventas';
             $data['head_subtitle'] = $data['search_num_rows'];
             $data['view_a'] = $data['views_folder'] . 'explore_v';
             $data['nav_2'] = $data['views_folder'] . 'menu_v';
@@ -60,10 +60,19 @@ class Order_model extends CI_Model{
     function search_condition($filters)
     {
         $condition = NULL;
+
+        $condition .= $this->role_filter() . ' AND ';
+
+        //q words condition
+        $words_condition = $this->Search_model->words_condition($filters['q'], array('name', 'code', 'description', 'text_1', 'text_2'));
+        if ( $words_condition )
+        {
+            $condition .= $words_condition . ' AND ';
+        }
         
-        if ( $filters['status'] != '' ) { $condition .= "status = {$filters['status']} AND "; } //Estado compra
-        if ( $filters['i'] != '' ) { $condition .= "institution_id = {$filters['i']} AND "; } //Institución asociada
-        if ( $filters['fi'] != '' ) { $condition .= "created_at >= '{$filters['fi']}' AND "; } //Fecha de creación posterior a
+        if ( $filters['status'] != '' ) { $condition .= "orders.status = {$filters['status']} AND "; } //Estado compra
+        if ( $filters['i'] != '' ) { $condition .= "orders.institution_id = {$filters['i']} AND "; } //Institución asociada
+        if ( $filters['fi'] != '' ) { $condition .= "orders.created_at >= '{$filters['fi']}' AND "; } //Fecha de creación posterior a
         
         if ( strlen($condition) > 0 )
         {
@@ -72,23 +81,28 @@ class Order_model extends CI_Model{
         
         return $condition;
     }
+
+    /**
+     * Segmento Select SQL, con diferentes formatos, consulta de orders
+     * 2020-12-15
+     */
+    function select($format = 'general')
+    {
+        $arr_select['general'] = 'orders.id, status, order_code, buyer_name, orders.email, id_number, address, city, phone_number, amount, updated_at, created_at, institution_id, nombre_institucion AS institution_name, orders.level, notes_admin, bill AS no_factura, shipping_code AS no_guia, wompi_id, wompi_status, wompi_payment_method_type, confirmed_at, user_id, student_name';
+
+        $arr_select['export'] = 'orders.id, orders.status, order_code AS referencia, buyer_name AS comprador, orders.email, id_number AS no_documento, address AS direccion';
+        $arr_select['export'] .= ', city AS ciudad, phone_number AS telefono, amount, orders.updated_at, orders.created_at';
+        $arr_select['export'] .= ', orders.institution_id, nombre_institucion AS institution_name, orders.level, notes_admin, bill AS no_factura, shipping_code AS no_guia, wompi_id, wompi_status, wompi_payment_method_type, confirmed_at, user_id, student_name AS nombre_estudiante';
+        $arr_select['export'] .= ', order_product.product_id AS producto_id, product.name AS nombre_producto, product.code AS referencia_producto, order_product.quantity AS cantidad_productos';
+
+        return $arr_select[$format];
+    }
     
     function search($filters, $per_page = NULL, $offset = NULL)
     {
-        
-        $role_filter = $this->role_filter($this->session->userdata('post_id'));
-
         //Construir consulta
-            $this->db->select('orders.id, status, order_code, buyer_name, orders.email, id_number, address, city, phone_number, amount, updated_at, created_at, institution_id, nombre_institucion AS institution_name, orders.level, notes_admin, bill AS no_factura, shipping_code AS no_guia, wompi_id, wompi_status, wompi_payment_method_type, confirmed_at, user_id, student_name');
+            $this->db->select($this->select());
             $this->db->join('institucion', 'orders.institution_id = institucion.id', 'left');
-            
-        
-        //Crear array con términos de búsqueda
-            $words_condition = $this->Search_model->words_condition($filters['q'], array('order_code', 'buyer_name', 'city', 'orders.email', 'phone_number', 'id_number', 'notes_admin'));
-            if ( $words_condition )
-            {
-                $this->db->where($words_condition);
-            }
             
         //Orden
             if ( $filters['o'] != '' )
@@ -100,7 +114,6 @@ class Order_model extends CI_Model{
             }
             
         //Filtros
-            $this->db->where($role_filter); //Filtro según el rol de post en sesión
             $search_condition = $this->search_condition($filters);
             if ( $search_condition ) { $this->db->where($search_condition);}
             
@@ -125,6 +138,25 @@ class Order_model extends CI_Model{
         $query = $this->search($filters); //Para calcular el total de resultados
         return $query->num_rows();
     }
+
+    /**
+     * Query para exportar
+     * 2020-12-15
+     */
+    function export($filters)
+    {
+        $this->db->select($this->select('export'));
+        $this->db->join('institucion', 'orders.institution_id = institucion.id', 'left');
+        $this->db->join('order_product', 'orders.id = order_product.order_id');
+        $this->db->join('product', 'order_product.product_id = product.id');
+
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+
+        $query = $this->db->get('orders', 5000);  //Hasta 5000 productos
+
+        return $query;
+    }
     
     /**
      * Devuelve segmento SQL
@@ -132,10 +164,12 @@ class Order_model extends CI_Model{
     function role_filter()
     {
         $role = $this->session->userdata('role');
-        $condition = "user_id = {$this->session->userdata('user_id')}";  //Valor por defecto, ningún post, se obtendrían cero post.
+        $condition = "user_id = {$this->session->userdata('user_id')}";  //Valor por defecto, ninguna order, se obtendrían cero orders.
         
         if ( $role <= 2 ) 
         {   //Desarrollador, todos las compras
+            $condition = 'orders.id > 0';
+        } elseif ( $role == 7 ) {
             $condition = 'orders.id > 0';
         }
         

@@ -27,6 +27,10 @@
                     <td><?= $this->Item_model->name(3, $row->level) ?></td>
                 </tr>
                 <tr>
+                    <td>Estado</td>
+                    <td><?= $this->Item_model->name(108, $row->status) ?></td>
+                </tr>
+                <tr>
                     <td>Precio venta</td>
                     <td>
                         <strong class="price_label"><?= $this->pml->money($row->price) ?></strong>

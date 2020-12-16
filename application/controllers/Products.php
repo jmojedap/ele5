@@ -169,6 +169,8 @@ class Products extends CI_Controller{
 
         //Datos básicos
             $data = $this->Product_model->basic($product_id);
+
+            $data['options_status'] = $this->Item_model->options('categoria_id = 108');
         
         //Variables cargue vista
             $data['nav_2'] = 'products/menu_v';
@@ -435,6 +437,9 @@ class Products extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
+    /**
+     * Listado de productos filtrados por institución asociada
+     */
     function get_by_institution($institution_id, $level = NULL)
     {
         $products = $this->Product_model->get_by_institution($institution_id, $level);

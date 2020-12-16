@@ -97,7 +97,7 @@
                                 </p>
                                 <p class="price text-success">{{ product.price | currency }}</p>
                                 <p>
-                                   Nivel escolar: {{ product.level }}
+                                   Nivel escolar: <strong>{{ product.level | nivel_name }}</strong>
                                 </p>
 
                             </td>

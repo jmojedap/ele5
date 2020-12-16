@@ -1,3 +1,8 @@
+<?php
+    $cl_col['checkbox'] = '';
+    if ( $this->session->userdata('role') > 2 ) $cl_col['checkbox'] = 'd-none';
+?>
+
 <div class="text-center" v-show="loading">
     <i class="fa fa-spin fa-spinner fa-3x"></i>
 </div>
@@ -5,7 +10,7 @@
 <div class="table-responsive" v-show="!loading">
     <table class="table bg-white">
         <thead>
-            <th width="46px">
+            <th width="46px" class="<?= $cl_col['checkbox'] ?>">
                 <input type="checkbox" id="checkbox_all_selected" @click="select_all" v-model="all_selected">
             </th>
             <th class="table-warning">ID</th>
@@ -20,7 +25,7 @@
         </thead>
         <tbody>
             <tr v-for="(element, key) in list" v-bind:id="`row_` + element.id">
-                <td>
+                <td class="<?= $cl_col['checkbox'] ?>">
                     <input type="checkbox" v-bind:id="`check_` + element.id" v-model="selected" v-bind:value="element.id">
                 </td>
 

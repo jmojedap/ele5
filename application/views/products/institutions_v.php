@@ -25,13 +25,15 @@
 
     <table class="table bg-white">
         <thead>
-            <th width="50px">ID</th>
+            <th class="table-warning" width="50px">ID</th>
+            <th width="50px">Código</th>
             <th>Nombre</th>
             <th width="50px"></th>
         </thead>
         <tbody>
             <tr v-for="(institution, institution_key) in institutions">
-                <td>{{ institution.id }}</td>
+                <td class="table-warning">{{ institution.id }}</td>
+                <td>{{ institution.cod }}</td>
                 <td>
                     <a v-bind:href="`<?php echo base_url("instituciones/index/") ?>` + `/` + institution.id">
                         {{ institution.title }}

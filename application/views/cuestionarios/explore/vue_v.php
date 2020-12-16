@@ -8,9 +8,9 @@
 <script>
 // Variables
 //-----------------------------------------------------------------------------
-    var arr_niveles = <?php echo json_encode($arr_niveles); ?>;
-    var arr_areas = <?php echo json_encode($arr_etiquetas_areas); ?>;
-    var arr_tipos = <?php echo json_encode($arr_tipos); ?>;
+    var arr_niveles = <?= json_encode($arr_niveles); ?>;
+    var arr_areas = <?= json_encode($arr_etiquetas_areas); ?>;
+    var arr_tipos = <?= json_encode($arr_tipos); ?>;
 
 // Filters
 //-----------------------------------------------------------------------------
@@ -44,16 +44,16 @@
             //this.get_list();
         },
         data: {
-            cf: '<?php echo $cf; ?>',
-            controller: '<?php echo $controller; ?>',
+            cf: '<?= $cf; ?>',
+            controller: '<?= $controller; ?>',
             num_page: 1,
-            max_page: <?php echo $max_page; ?>,
+            max_page: <?= $max_page; ?>,
             search_num_rows: <?= $search_num_rows ?>,
-            list: <?php echo json_encode($list) ?>,
+            list: <?= json_encode($list) ?>,
             element: [],
             selected: [],
             all_selected: false,
-            filters: <?php echo json_encode($filters) ?>,
+            filters: <?= json_encode($filters) ?>,
             showing_filters: false,
             str_filters: '<?= $str_filters ?>',
             delete_confirm: false,   //Casilla para confirmar eliminación masiva

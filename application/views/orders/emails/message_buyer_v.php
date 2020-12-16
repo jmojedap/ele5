@@ -5,7 +5,6 @@
 
 <body>
     <div style="<?= $style->body ?>">
-    <p style="color: red; text-align: center">EMAIL DE PRUEBAS - PACARINA MEDIA LAB</p>
         <table>
             <tr>
                 <td colspan="3">
@@ -122,6 +121,8 @@
         <h2 style="<?= $style->h2 ?>">Datos de entrega</h2>
 
         <p>
+            
+
             <span style="<?= $style->text_muted ?>">
                 No. documento
             </span>
@@ -158,6 +159,18 @@
             <span style="<?= $style->text_primary ?>">
                 <?= $row_order->phone_number ?>
             </span>
+
+            <span style="<?= $style->text_muted ?>">
+                Institución:
+            </span>
+            <span style="<?= $style->text_primary ?>">
+                <?= $this->App_model->nombre_institucion($row_order->institution_id) ?>
+            </span>
+            <span style="<?= $style->text_muted ?>">
+                (<?= $row_order->institution_id ?>)
+            </span>
+
+            &middot;
         </p>
 
         <hr>

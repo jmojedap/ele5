@@ -1,9 +1,18 @@
 <script>
+// Variables
+//-----------------------------------------------------------------------------
+var arr_niveles = <?= json_encode($arr_niveles); ?>;
+
 // Filters
 //-----------------------------------------------------------------------------
     Vue.filter('currency', function (value) {
         if (!value) return '';
         value = '$ ' + new Intl.NumberFormat().format(value);
+        return value;
+    });
+    Vue.filter('nivel_name', function (value) {
+        if (!value) return '';
+        value = arr_niveles[value];
         return value;
     });
 
