@@ -1516,7 +1516,7 @@ class Pregunta_model extends CI_Model{
         $arr_row['referente_2_id'] = $version_id;
         $arr_row['usuario_id'] = $this->session->userdata('usuario_id');
         $arr_row['institucion_id'] = $this->session->userdata('institucion_id');
-        $arr_row['c_usuario_id'] = $this->session->userdata('usuario_id');
+        $arr_row['creador_id'] = $this->session->userdata('usuario_id');
         
         //Guardar evento
         //$condition = "tipo_id = {$arr_row['tipo_id']} AND referente_id = {$arr_row['referente_id']} AND referente_2_id = {$arr_row['referente_2_id']}";

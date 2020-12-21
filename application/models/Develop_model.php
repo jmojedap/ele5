@@ -586,8 +586,9 @@ class Develop_model extends CI_Model{
         $arr_row['fecha_fin'] = date('Y-m-d');
         $arr_row['hora_fin'] = date('H:i:s');
         $arr_row['usuario_id'] = 0;
+        $arr_row['periodo_id'] = intval(date('Ym'));
         $arr_row['creado'] = date('Y-m-d H:i:s');
-        $arr_row['c_usuario_id'] = 0;
+        $arr_row['creador_id'] = 0;
         
         $this->db->insert('evento', $arr_row);
 

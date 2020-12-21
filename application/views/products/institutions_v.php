@@ -62,20 +62,20 @@
         },
         methods: {
             add_institution: function(){
-                axios.get(app_url + 'products/add_institution/' + this.product_id + '/' + this.institution_id)
+                axios.get(url_app + 'products/add_institution/' + this.product_id + '/' + this.institution_id)
                 .then(response => {
                     console.log(response.data)
-                    window.location = app_url + 'products/institutions/' + this.product_id;
+                    window.location = url_app + 'products/institutions/' + this.product_id;
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
             },
             delete_meta: function(meta_id){
-                axios.get(app_url + 'products/delete_meta/' + this.product_id + '/' + meta_id)
+                axios.get(url_app + 'products/delete_meta/' + this.product_id + '/' + meta_id)
                 .then(response => {
                     console.log(response.data)
-                    window.location = app_url + 'products/institutions/' + this.product_id;
+                    window.location = url_app + 'products/institutions/' + this.product_id;
                 })
                 .catch(function (error) {
                     console.log(error);

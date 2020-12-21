@@ -1,4 +1,4 @@
-<?php if ( $this->session->userdata('usuario_id') == $row_noticia->c_usuario_id ) : ?>                
+<?php if ( $this->session->userdata('usuario_id') == $row_noticia->creador_id ) : ?>                
     <div class="pull-right">
         <div class="a4 eliminar_noticia" data-evento_id="<?= $row_noticia->id ?>">
             <i class="fa fa-times"></i>
@@ -9,7 +9,7 @@
 
 
 <b>
-    <?= anchor("usuarios/actividad/{$row_noticia->c_usuario_id}", $this->App_model->nombre_usuario($row_noticia->c_usuario_id, 2), 'class="" title=""') ?>
+    <?= anchor("usuarios/actividad/{$row_noticia->creador_id}", $this->App_model->nombre_usuario($row_noticia->creador_id, 2), 'class="" title=""') ?>
 </b>
 
 <span class="suave">asignó un link</span>

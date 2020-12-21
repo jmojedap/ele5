@@ -221,6 +221,7 @@ class Respuesta_model extends CI_Model
             $arr_row['tipo_id'] = 23;
             $arr_row['fecha_inicio'] = date('Y-m-d');
             $arr_row['hora_inicio'] = date('H:i:s');
+            $arr_row['periodo_id'] = intval(date('Ym'));
             $arr_row['creado'] = date('Y-m-d H:i:s');
             $arr_row['editado'] = date('Y-m-d H:i:s');
             $arr_row['descripcion'] = json_encode($data);

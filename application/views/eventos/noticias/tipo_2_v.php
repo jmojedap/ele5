@@ -3,7 +3,7 @@
     $href = base_url() . "flipbooks/abrir_flipbook/{$row_noticia->referente_2_id}/{$row_noticia->entero_1}/{$row_noticia->referente_id}";
 ?>
 <b>
-    <?= anchor("usuarios/actividad/{$row_noticia->c_usuario_id}", $this->App_model->nombre_flipbook($row_noticia->referente_2_id), 'class="" title=""') ?>
+    <?= anchor("usuarios/actividad/{$row_noticia->creador_id}", $this->App_model->nombre_flipbook($row_noticia->referente_2_id), 'class="" title=""') ?>
 </b>
 <span class="suave"> tienes programado un tema</span>    
 <br/>

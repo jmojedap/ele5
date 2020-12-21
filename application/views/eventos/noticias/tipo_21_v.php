@@ -5,7 +5,7 @@
     $tiempo_hace = $this->Pcrn->tiempo_hace($row_noticia->editado);
 ?>
 <b>
-    <?= anchor("usuarios/actividad/{$row_noticia->usuario_id}", $this->App_model->nombre_usuario($row_noticia->c_usuario_id, 2)) ?>
+    <?= anchor("usuarios/actividad/{$row_noticia->usuario_id}", $this->App_model->nombre_usuario($row_noticia->creador_id, 2)) ?>
 </b>
 <span class="suave"> ha creado un cuestionario</span>    
 <br/>

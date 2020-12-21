@@ -70,7 +70,7 @@ class Evento_Model extends CI_Model{
     {
         //Construir consulta
             $this->db->select('evento.*, CONCAT((fecha_inicio), (" "), (hora_inicio)) AS inicio, usuario.username, institucion.nombre_institucion');
-            $this->db->join('usuario', 'usuario.id = evento.c_usuario_id');
+            $this->db->join('usuario', 'usuario.id = evento.creador_id');
             $this->db->join('institucion', 'evento.institucion_id = institucion.id', 'left');
             
             
@@ -205,7 +205,7 @@ class Evento_Model extends CI_Model{
         $row_evento = $this->Pcrn->registro_id('evento', $evento_id);
         
         //El usuario creó el evento
-        if ( $row_evento->c_usuario_id == $this->session->userdata('usuario_id') ) {
+        if ( $row_evento->creador_id == $this->session->userdata('user_id') ) {
             $eliminable = TRUE;
         }
         
@@ -252,21 +252,21 @@ class Evento_Model extends CI_Model{
      */
     function act_estado($tipo_id, $referente_id, $estado)
     {
-        $registro['estado'] = $estado;
+        $arr_row['estado'] = $estado;
         
         $this->db->where('tipo_id', $tipo_id);
         $this->db->where('referente_id', $referente_id);
-        $this->db->update('evento', $registro);
+        $this->db->update('evento', $arr_row);
     }
     
     /**
      * Guarda un registro en la tabla evento
      * 2020-10-21
      */
-    function guardar_evento($registro, $condicion_add = NULL)
+    function guardar_evento($arr_row, $condicion_add = NULL)
     {
         //Condición para identificar el registro del evento
-            $condicion = "tipo_id = {$registro['tipo_id']} AND referente_id = {$registro['referente_id']}";
+            $condicion = "tipo_id = {$arr_row['tipo_id']} AND referente_id = {$arr_row['referente_id']}";
             if ( ! is_null($condicion_add) ){
                 $condicion .= " AND " . $condicion_add;
             }
@@ -274,21 +274,22 @@ class Evento_Model extends CI_Model{
             $evento_id = $this->Pcrn->existe('evento', $condicion);
         
         //Datos adicionales del registro
-            $registro['editado'] = date('Y-m-d H:i:s');
+            $arr_row['editado'] = date('Y-m-d H:i:s');
         
         //Guardar el evento
         if ( $evento_id == 0 ) 
         {
             //No existe, se inserta
-            $registro['creado'] = date('Y-m-d H:i:s');
-            $registro['c_usuario_id'] = $this->Pcrn->si_nulo($this->session->userdata('usuario_id'), 0);
+            $arr_row['periodo_id'] = intval(date('Ym'));
+            $arr_row['creado'] = date('Y-m-d H:i:s');
+            $arr_row['creador_id'] = $this->Pcrn->si_nulo($this->session->userdata('user_id'), 0);
             
-            $this->db->insert('evento', $registro);
+            $this->db->insert('evento', $arr_row);
             $evento_id = $this->db->insert_id();
         } else {
             //Ya existe, editar
             $this->db->where('id', $evento_id);
-            $this->db->update('evento', $registro);
+            $this->db->update('evento', $arr_row);
         }
         
         return $evento_id;
@@ -385,7 +386,7 @@ class Evento_Model extends CI_Model{
             case 'estudiante';
                 $condicion = "institucion_id = {$this->session->userdata('institucion_id')} AND ";
                 $condicion .= '(';
-                $condicion .= "(tipo_id = 1 AND estado = 0 AND usuario_id = {$this->session->userdata('usuario_id')})";
+                $condicion .= "(tipo_id = 1 AND estado = 0 AND usuario_id = {$this->session->userdata('user_id')})";
                 $condicion .= ' OR ';
                 $condicion .= "(tipo_id IN (2,3,4) AND grupo_id IN ({$str_grupos}))";
                 $condicion .= ' OR ';                
@@ -498,7 +499,7 @@ class Evento_Model extends CI_Model{
                 $condicion .= "(tipo_id = 12 AND grupo_id IN ({$str_grupos}))";
                 break;
             case 'estudiante';
-                $condicion = "(tipo_id = 1 AND usuario_id = {$this->session->userdata('usuario_id')})";
+                $condicion = "(tipo_id = 1 AND usuario_id = {$this->session->userdata('user_id')})";
                 $condicion .= ' OR ';
                 $condicion .= "(tipo_id = 2 AND grupo_id IN ({$str_grupos}))";
                 $condicion .= ' OR ';
@@ -527,21 +528,21 @@ class Evento_Model extends CI_Model{
     {
         $row_flipbook = $this->Pcrn->registro_id('flipbook', $flipbook_id);
         
-        $registro['tipo_id'] = 15;   //Lectura de flipbook, ver item cantegoria_id = 13
-        $registro['fecha_inicio'] = date('Y-m-d');
-        $registro['hora_inicio'] = date('H:i:s');
-        $registro['referente_id'] = $flipbook_id;
-        $registro['entero_1'] = $row_flipbook->tipo_flipbook_id;
-        $registro['usuario_id'] = $this->session->userdata('usuario_id');
-        $registro['institucion_id'] = $this->session->userdata('institucion_id');
-        $registro['grupo_id'] = $this->session->userdata('grupo_id');
-        $registro['area_id'] = $row_flipbook->area_id;
-        $registro['nivel'] = $row_flipbook->nivel;
+        $arr_row['tipo_id'] = 15;   //Lectura de flipbook, ver item cantegoria_id = 13
+        $arr_row['fecha_inicio'] = date('Y-m-d');
+        $arr_row['hora_inicio'] = date('H:i:s');
+        $arr_row['referente_id'] = $flipbook_id;
+        $arr_row['entero_1'] = $row_flipbook->tipo_flipbook_id;
+        $arr_row['usuario_id'] = $this->session->userdata('user_id');
+        $arr_row['institucion_id'] = $this->session->userdata('institucion_id');
+        $arr_row['grupo_id'] = $this->session->userdata('grupo_id');
+        $arr_row['area_id'] = $row_flipbook->area_id;
+        $arr_row['nivel'] = $row_flipbook->nivel;
         
         //Condición adicional WHERE para guardar registro
-        $condicion_add = "fecha_inicio = '{$registro['fecha_inicio']}' AND hora_inicio = '{$registro['hora_inicio']}'";
+        $condicion_add = "fecha_inicio = '{$arr_row['fecha_inicio']}' AND hora_inicio = '{$arr_row['hora_inicio']}'";
         
-        $evento_id = $this->guardar_evento($registro, $condicion_add);
+        $evento_id = $this->guardar_evento($arr_row, $condicion_add);
         
         return $evento_id;
     }
@@ -582,21 +583,21 @@ class Evento_Model extends CI_Model{
         $row_tema = $this->Pcrn->registro_id('tema', $datos['tema_id']);
         $row_grupo = $this->Pcrn->registro_id('grupo', $datos['grupo_id']);
         
-        $registro['nombre_evento'] = $row_tema->nombre_tema;
-        $registro['tipo_id'] = 2;                       //Programación de tema
-        $registro['referente_id'] = $row_tema->id;      //Id del tema
-        $registro['referente_2_id'] = $datos['flipbook_id'];
-        $registro['entero_1'] = $datos['num_pagina'];   //Página en la que está el tema dentro del flipbook
-        $registro['fecha_inicio'] = $datos['fecha_inicio'];
-        $registro['grupo_id'] = $row_grupo->id;
-        $registro['institucion_id'] = $row_grupo->institucion_id;
-        $registro['area_id'] = $row_tema->area_id;
-        $registro['nivel'] = $row_grupo->nivel;
+        $arr_row['nombre_evento'] = $row_tema->nombre_tema;
+        $arr_row['tipo_id'] = 2;                       //Programación de tema
+        $arr_row['referente_id'] = $row_tema->id;      //Id del tema
+        $arr_row['referente_2_id'] = $datos['flipbook_id'];
+        $arr_row['entero_1'] = $datos['num_pagina'];   //Página en la que está el tema dentro del flipbook
+        $arr_row['fecha_inicio'] = $datos['fecha_inicio'];
+        $arr_row['grupo_id'] = $row_grupo->id;
+        $arr_row['institucion_id'] = $row_grupo->institucion_id;
+        $arr_row['area_id'] = $row_tema->area_id;
+        $arr_row['nivel'] = $row_grupo->nivel;
         
         //Condición adicional WHERE para guardar registro
-        $condicion_add = "grupo_id = {$registro['grupo_id']}";
+        $condicion_add = "grupo_id = {$arr_row['grupo_id']}";
         
-        $evento_id = $this->guardar_evento($registro, $condicion_add);
+        $evento_id = $this->guardar_evento($arr_row, $condicion_add);
         
         //Programar quices del tema
         $this->guardar_ev_quiz($evento_id);
@@ -608,21 +609,21 @@ class Evento_Model extends CI_Model{
     {
         $row_flipbook = $this->Pcrn->registro_id('flipbook', $flipbook_id);
         
-        $registro['tipo_id'] = 12;   //Lectura de tema, ver item cantegoria_id = 13
-        $registro['fecha_inicio'] = date('Y-m-d');
-        $registro['hora_inicio'] = date('H:i:s');
-        $registro['referente_id'] = $tema_id;
-        $registro['referente_2_id'] = $flipbook_id;
-        $registro['usuario_id'] = $this->session->userdata('usuario_id');
-        $registro['institucion_id'] = $this->session->userdata('institucion_id');
-        $registro['grupo_id'] = $this->session->userdata('grupo_id');
-        $registro['area_id'] = $row_flipbook->area_id;
-        $registro['nivel'] = $row_flipbook->nivel;
+        $arr_row['tipo_id'] = 12;   //Lectura de tema, ver item cantegoria_id = 13
+        $arr_row['fecha_inicio'] = date('Y-m-d');
+        $arr_row['hora_inicio'] = date('H:i:s');
+        $arr_row['referente_id'] = $tema_id;
+        $arr_row['referente_2_id'] = $flipbook_id;
+        $arr_row['usuario_id'] = $this->session->userdata('user_id');
+        $arr_row['institucion_id'] = $this->session->userdata('institucion_id');
+        $arr_row['grupo_id'] = $this->session->userdata('grupo_id');
+        $arr_row['area_id'] = $row_flipbook->area_id;
+        $arr_row['nivel'] = $row_flipbook->nivel;
         
         //Condición adicional WHERE para guardar registro
-        $condicion_add = "fecha_inicio = '{$registro['fecha_inicio']}' AND hora_inicio = '{$registro['hora_inicio']}'";
+        $condicion_add = "fecha_inicio = '{$arr_row['fecha_inicio']}' AND hora_inicio = '{$arr_row['hora_inicio']}'";
         
-        $evento_id = $this->guardar_evento($registro, $condicion_add);
+        $evento_id = $this->guardar_evento($arr_row, $condicion_add);
         
         return $evento_id;
     }
@@ -637,23 +638,23 @@ class Evento_Model extends CI_Model{
         $row_evento = $this->Pcrn->registro_id('evento', $evento_id);
         
         //Registro, valores generales
-        $registro['tipo_id'] = 3;   //Programación de quiz, ver item cantegoria_id = 13
-        $registro['referente_2_id'] = $row_evento->id;
-        $registro['fecha_inicio'] = $row_evento->fecha_inicio;
-        $registro['hora_inicio'] = $row_evento->hora_inicio;
-        $registro['institucion_id'] = $row_evento->institucion_id;
-        $registro['grupo_id'] = $row_evento->grupo_id;
-        $registro['area_id'] = $row_evento->area_id;
-        $registro['nivel'] = $row_evento->nivel;
+        $arr_row['tipo_id'] = 3;   //Programación de quiz, ver item cantegoria_id = 13
+        $arr_row['referente_2_id'] = $row_evento->id;
+        $arr_row['fecha_inicio'] = $row_evento->fecha_inicio;
+        $arr_row['hora_inicio'] = $row_evento->hora_inicio;
+        $arr_row['institucion_id'] = $row_evento->institucion_id;
+        $arr_row['grupo_id'] = $row_evento->grupo_id;
+        $arr_row['area_id'] = $row_evento->area_id;
+        $arr_row['nivel'] = $row_evento->nivel;
         
-        $condicion_add = "referente_2_id = {$registro['referente_2_id']}";
+        $condicion_add = "referente_2_id = {$arr_row['referente_2_id']}";
         
         $quices = $this->Tema_model->quices($row_evento->referente_id);
         
         foreach ($quices->result() as $row_quiz) {
-            $registro['referente_id'] = $row_quiz->id;
+            $arr_row['referente_id'] = $row_quiz->id;
             
-            $evento_id = $this->guardar_evento($registro, $condicion_add);
+            $evento_id = $this->guardar_evento($arr_row, $condicion_add);
         }
         
     }
@@ -674,7 +675,7 @@ class Evento_Model extends CI_Model{
             $this->db->where('grupo_id', $this->session->userdata('grupo_id'));
         } else {
             //Otros tipos de usuario
-            $this->db->where('c_usuario_id', $this->session->userdata('usuario_id'));
+            $this->db->where('creador_id', $this->session->userdata('user_id'));
         }
         
         $this->db->select('evento.*, quiz.nombre_quiz');
@@ -699,22 +700,22 @@ class Evento_Model extends CI_Model{
         
         if ( ! is_null($row_quiz) )
         {
-            $registro['fecha_inicio'] = date('Y-m-d');
-            $registro['hora_inicio'] = date('H:i:s');
-            $registro['tipo_id'] = 13;   //Respuesta de quiz
-            $registro['referente_id'] = $ua_id;
-            $registro['referente_2_id'] = $quiz_id;
-            $registro['entero_1'] = 0;  //Cantidad de intentos
-            $registro['estado'] = 0;    //Incorrecto
-            $registro['usuario_id'] = $this->session->userdata('usuario_id');
-            $registro['institucion_id'] = $this->session->userdata('institucion_id');
-            $registro['grupo_id'] = $this->session->userdata('grupo_id');
-            $registro['area_id'] = $row_quiz->area_id;
-            $registro['nivel'] = $row_quiz->nivel;
+            $arr_row['fecha_inicio'] = date('Y-m-d');
+            $arr_row['hora_inicio'] = date('H:i:s');
+            $arr_row['tipo_id'] = 13;   //Respuesta de quiz
+            $arr_row['referente_id'] = $ua_id;
+            $arr_row['referente_2_id'] = $quiz_id;
+            $arr_row['entero_1'] = 0;  //Cantidad de intentos
+            $arr_row['estado'] = 0;    //Incorrecto
+            $arr_row['usuario_id'] = $this->session->userdata('user_id');
+            $arr_row['institucion_id'] = $this->session->userdata('institucion_id');
+            $arr_row['grupo_id'] = $this->session->userdata('grupo_id');
+            $arr_row['area_id'] = $row_quiz->area_id;
+            $arr_row['nivel'] = $row_quiz->nivel;
             
-            $condicion_add = "usuario_id = {$this->session->userdata('usuario_id')}";   //Agregado 2018-08-23
+            $condicion_add = "usuario_id = {$this->session->userdata('user_id')}";   //Agregado 2018-08-23
 
-            $evento_id = $this->guardar_evento($registro, $condicion_add);
+            $evento_id = $this->guardar_evento($arr_row, $condicion_add);
         }
         
         return $evento_id;
@@ -733,22 +734,22 @@ class Evento_Model extends CI_Model{
         $evento_id = 0;
         $row_ua = $this->Pcrn->registro_id('usuario_asignacion', $ua_id);
         
-        $condicion = "tipo_id = 13 AND referente_id = {$ua_id} AND usuario_id = {$this->session->userdata('usuario_id')}";
+        $condicion = "tipo_id = 13 AND referente_id = {$ua_id} AND usuario_id = {$this->session->userdata('user_id')}";
         $cant_intentos = $this->Pcrn->campo('evento', $condicion, 'entero_1');
         //$row_evento = $this->Pcrn->registro('evento', $condicion);
         
         if ( ! is_null($cant_intentos) )
         {
-            $registro['tipo_id'] = 13;              //Respuesta de quiz
-            $registro['referente_id'] = $ua_id;     //usuario_asignacion.id
-            $registro['fecha_fin'] = date('Y-m-d');
-            $registro['hora_fin'] = date('H:i:s');
-            $registro['estado'] = $row_ua->estado_int;           //Correcto o incorrecto
-            $registro['entero_1'] = $cant_intentos + 1;   //Cantidad de intentos
+            $arr_row['tipo_id'] = 13;              //Respuesta de quiz
+            $arr_row['referente_id'] = $ua_id;     //usuario_asignacion.id
+            $arr_row['fecha_fin'] = date('Y-m-d');
+            $arr_row['hora_fin'] = date('H:i:s');
+            $arr_row['estado'] = $row_ua->estado_int;           //Correcto o incorrecto
+            $arr_row['entero_1'] = $cant_intentos + 1;   //Cantidad de intentos
             
-            $condicion_add = "usuario_id = {$this->session->userdata('usuario_id')}";
+            $condicion_add = "usuario_id = {$this->session->userdata('user_id')}";
 
-            $evento_id = $this->guardar_evento($registro, $condicion_add);
+            $evento_id = $this->guardar_evento($arr_row, $condicion_add);
         }
         
         return $evento_id;
@@ -772,7 +773,7 @@ class Evento_Model extends CI_Model{
         
         //Consulta
         //$this->db->select('evento.id, nombre_cuestionario, fecha_inicio, fecha_fin');
-        $this->db->where('usuario_id', $this->session->userdata('usuario_id'));
+        $this->db->where('usuario_id', $this->session->userdata('user_id'));
         $this->db->where('evento.tipo_id', 1); //Tipo 1 => asignación de cuestionario
         $this->db->where('estado', 1); //Estado 1  => sin responder
         $this->db->join('cuestionario', 'cuestionario.id = evento.referente_2_id');
@@ -817,7 +818,7 @@ class Evento_Model extends CI_Model{
         if ( $busqueda['tp'] != '' ) { $this->db->where('evento.tipo_id', $busqueda['tp']); }    //Tipo evento
         
         $this->db->select('MAX(id) AS max_evento_id, nombre_evento, fecha_inicio, fecha_fin, referente_id, institucion_id, grupo_id');
-        $this->db->where('c_usuario_id', $this->session->userdata('usuario_id'));
+        $this->db->where('creador_id', $this->session->userdata('user_id'));
         $this->db->where('tipo_id', 22); //Tipo 2 => asignación de cuestionario a grupo
         $this->db->group_by('nombre_evento, fecha_inicio, fecha_fin, referente_2_id, institucion_id, grupo_id');
         $query = $this->db->get('evento');
@@ -829,7 +830,7 @@ class Evento_Model extends CI_Model{
      * Agrega registro en la tabla evento,
      * se refiere a la asignación de cuestionarios a estudiantes
      * 
-     * @param type $registro_uc
+     * @param type $arr_row_uc
      * @param type $uc_id
      * @return type
      */
@@ -840,21 +841,21 @@ class Evento_Model extends CI_Model{
         
         if ( ! is_null($row_cuestionario) ) 
         {
-            $registro['fecha_inicio'] = substr($row_uc->fecha_inicio,0,10);
-            $registro['hora_inicio'] = substr($row_uc->fecha_inicio,11, 8);
-            $registro['fecha_fin'] = substr($row_uc->fecha_fin,0,10);
-            $registro['hora_fin'] = substr($row_uc->fecha_inicio,11, 8);
-            $registro['tipo_id'] = 1;   //Asignación de cuestionario
-            $registro['referente_id'] = $row_uc->id;
-            $registro['referente_2_id'] = $row_uc->cuestionario_id;
-            $registro['estado'] = $row_uc->estado;
-            $registro['usuario_id'] = $row_uc->usuario_id;
-            $registro['institucion_id'] = $row_uc->institucion_id;
-            $registro['grupo_id'] = $row_uc->grupo_id;
-            $registro['area_id'] = $row_cuestionario->area_id;
-            $registro['nivel'] = $row_cuestionario->nivel;
+            $arr_row['fecha_inicio'] = substr($row_uc->fecha_inicio,0,10);
+            $arr_row['hora_inicio'] = substr($row_uc->fecha_inicio,11, 8);
+            $arr_row['fecha_fin'] = substr($row_uc->fecha_fin,0,10);
+            $arr_row['hora_fin'] = substr($row_uc->fecha_inicio,11, 8);
+            $arr_row['tipo_id'] = 1;   //Asignación de cuestionario
+            $arr_row['referente_id'] = $row_uc->id;
+            $arr_row['referente_2_id'] = $row_uc->cuestionario_id;
+            $arr_row['estado'] = $row_uc->estado;
+            $arr_row['usuario_id'] = $row_uc->usuario_id;
+            $arr_row['institucion_id'] = $row_uc->institucion_id;
+            $arr_row['grupo_id'] = $row_uc->grupo_id;
+            $arr_row['area_id'] = $row_cuestionario->area_id;
+            $arr_row['nivel'] = $row_cuestionario->nivel;
 
-            $evento_id = $this->guardar_evento($registro);   
+            $evento_id = $this->guardar_evento($arr_row);   
         }
         
         return $evento_id;
@@ -874,20 +875,20 @@ class Evento_Model extends CI_Model{
         
         if ( ! is_null($row_cuestionario) )
         {
-            $registro['fecha_inicio'] = date('Y-m-d');
-            $registro['hora_inicio'] = date('H:i:s');
-            $registro['tipo_id'] = 11;   //Respuesta de cuestionario
-            $registro['referente_id'] = $row_uc->id;
-            $registro['referente_2_id'] = $row_uc->cuestionario_id;
-            $registro['entero_1'] = $row_cuestionario->creado_usuario_id;
-            $registro['estado'] = 0;
-            $registro['usuario_id'] = $this->session->userdata('usuario_id');
-            $registro['institucion_id'] = $row_uc->institucion_id;
-            $registro['grupo_id'] = $row_uc->grupo_id;
-            $registro['area_id'] = $row_cuestionario->area_id;
-            $registro['nivel'] = $row_cuestionario->nivel;
+            $arr_row['fecha_inicio'] = date('Y-m-d');
+            $arr_row['hora_inicio'] = date('H:i:s');
+            $arr_row['tipo_id'] = 11;   //Respuesta de cuestionario
+            $arr_row['referente_id'] = $row_uc->id;
+            $arr_row['referente_2_id'] = $row_uc->cuestionario_id;
+            $arr_row['entero_1'] = $row_cuestionario->creado_usuario_id;
+            $arr_row['estado'] = 0;
+            $arr_row['usuario_id'] = $this->session->userdata('user_id');
+            $arr_row['institucion_id'] = $row_uc->institucion_id;
+            $arr_row['grupo_id'] = $row_uc->grupo_id;
+            $arr_row['area_id'] = $row_cuestionario->area_id;
+            $arr_row['nivel'] = $row_cuestionario->nivel;
 
-            $evento_id = $this->guardar_evento($registro);   
+            $evento_id = $this->guardar_evento($arr_row);   
         }
         
         return $evento_id;
@@ -904,14 +905,14 @@ class Evento_Model extends CI_Model{
     function guardar_fin_ctn($row_uc)
     {
 
-        $registro['tipo_id'] = 11;
-        $registro['referente_id'] = $row_uc->id;
-        $registro['fecha_fin'] = date('Y-m-d');
-        $registro['hora_fin'] = date('H:i:s');
-        $registro['tipo_id'] = 11;   //Respuesta de cuestionario
-        $registro['estado'] = 1;    //Finalizado
+        $arr_row['tipo_id'] = 11;
+        $arr_row['referente_id'] = $row_uc->id;
+        $arr_row['fecha_fin'] = date('Y-m-d');
+        $arr_row['hora_fin'] = date('H:i:s');
+        $arr_row['tipo_id'] = 11;   //Respuesta de cuestionario
+        $arr_row['estado'] = 1;    //Finalizado
 
-        $evento_id = $this->guardar_evento($registro);
+        $evento_id = $this->guardar_evento($arr_row);
         
         return $evento_id;
         
@@ -976,16 +977,16 @@ class Evento_Model extends CI_Model{
         $row_cuestionario = $this->Pcrn->registro_id('cuestionario', $cuestionario_id);
         $row_usuario = $this->Pcrn->registro_id('usuario', $row_cuestionario->creado_usuario_id);
         
-        $registro['tipo_id'] = 21;  //Creación de cuestionario, item.ite_interno cat 13
-        $registro['referente_id'] = $cuestionario_id;
-        $registro['fecha_inicio'] = date('Y-m-d');
-        $registro['hora_inicio'] = date('H:i:s');
-        $registro['usuario_id'] = $row_cuestionario->creado_usuario_id;
-        $registro['institucion_id'] = $row_usuario->institucion_id;
-        $registro['area_id'] = $row_cuestionario->area_id;
-        $registro['nivel'] = $row_cuestionario->nivel;
+        $arr_row['tipo_id'] = 21;  //Creación de cuestionario, item.ite_interno cat 13
+        $arr_row['referente_id'] = $cuestionario_id;
+        $arr_row['fecha_inicio'] = date('Y-m-d');
+        $arr_row['hora_inicio'] = date('H:i:s');
+        $arr_row['usuario_id'] = $row_cuestionario->creado_usuario_id;
+        $arr_row['institucion_id'] = $row_usuario->institucion_id;
+        $arr_row['area_id'] = $row_cuestionario->area_id;
+        $arr_row['nivel'] = $row_cuestionario->nivel;
         
-        $evento_id = $this->guardar_evento($registro);
+        $evento_id = $this->guardar_evento($arr_row);
                 
         return $evento_id;
     }
@@ -998,16 +999,16 @@ class Evento_Model extends CI_Model{
     {
         $row_post = $this->Pcrn->registro_id('post', $post_id);
         
-        $registro['tipo_id'] = 50;    //Publicación, ver item categoria_id = 13, tipos de evento
-        $registro['referente_id'] = $post_id;
-        $registro['entero_1'] = $this->input->post('entero_1');    //Tipo publicación, ver item categoria_id = 12, tipo de publicación muro
-        $registro['fecha_inicio'] = $this->Pcrn->fecha_formato($row_post->creado, 'Y-m-d');
-        $registro['hora_inicio'] = $this->Pcrn->fecha_formato($row_post->creado, 'H:i:s');
-        $registro['institucion_id'] = $this->session->userdata('institucion_id');
-        $registro['grupo_id'] = $this->input->post('grupo_id');
-        $registro['usuario_id'] = $this->session->userdata('usuario_id');
+        $arr_row['tipo_id'] = 50;    //Publicación, ver item categoria_id = 13, tipos de evento
+        $arr_row['referente_id'] = $post_id;
+        $arr_row['entero_1'] = $this->input->post('entero_1');    //Tipo publicación, ver item categoria_id = 12, tipo de publicación muro
+        $arr_row['fecha_inicio'] = $this->Pcrn->fecha_formato($row_post->creado, 'Y-m-d');
+        $arr_row['hora_inicio'] = $this->Pcrn->fecha_formato($row_post->creado, 'H:i:s');
+        $arr_row['institucion_id'] = $this->session->userdata('institucion_id');
+        $arr_row['grupo_id'] = $this->input->post('grupo_id');
+        $arr_row['usuario_id'] = $this->session->userdata('user_id');
 
-        $evento_id = $this->guardar_evento($registro);
+        $evento_id = $this->guardar_evento($arr_row);
         
         return $evento_id;
         
@@ -1105,21 +1106,21 @@ class Evento_Model extends CI_Model{
      */
     function guardar_ev_login()
     {
-        $row_usuario = $this->Pcrn->registro_id('usuario', $this->session->userdata('usuario_id'));
+        $row_usuario = $this->Pcrn->registro_id('usuario', $this->session->userdata('user_id'));
         $nivel = $this->Pcrn->campo_id('grupo', $row_usuario->grupo_id, 'nivel');
         
         //Registro, valores generales
-            $registro['tipo_id'] = 101;   //Login de usuario, ver item cantegoria_id = 13
-            $registro['fecha_inicio'] = date('Y-m-d');
-            $registro['hora_inicio'] = date('H:i:s');
-            $registro['referente_id'] = $row_usuario->id;
-            $registro['usuario_id'] = $row_usuario->id;
-            $registro['institucion_id'] = $this->session->userdata('institucion_id');
-            $registro['grupo_id'] = $this->session->userdata('grupo_id');
-            $registro['nivel'] = $nivel;
+            $arr_row['tipo_id'] = 101;   //Login de usuario, ver item cantegoria_id = 13
+            $arr_row['fecha_inicio'] = date('Y-m-d');
+            $arr_row['hora_inicio'] = date('H:i:s');
+            $arr_row['referente_id'] = $row_usuario->id;
+            $arr_row['usuario_id'] = $row_usuario->id;
+            $arr_row['institucion_id'] = $this->session->userdata('institucion_id');
+            $arr_row['grupo_id'] = $this->session->userdata('grupo_id');
+            $arr_row['nivel'] = $nivel;
 
             $condicion_add = 'id = 0';  //Se pone una condición adicional incumplible, para que siempre agregue el registro
-            $evento_id = $this->guardar_evento($registro, $condicion_add);
+            $evento_id = $this->guardar_evento($arr_row, $condicion_add);
             
         //Agregar evento_id a los datos de sesión
             $this->session->set_userdata('login_id', $evento_id);

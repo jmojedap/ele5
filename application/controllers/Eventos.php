@@ -346,7 +346,7 @@ class Eventos extends CI_Controller{
         $arr_row['url'] = $this->input->post('url');
         $arr_row['institucion_id'] = $this->session->userdata('institucion_id');
         $arr_row['grupo_id'] = $this->input->post('grupo_id');
-        $arr_row['c_usuario_id'] = $this->session->userdata('usuario_id');
+        $arr_row['creador_id'] = $this->session->userdata('usuario_id');
         
         if ( $evento_id == 0 ) {
             $data['saved_id'] = $this->Evento_model->guardar_evento($arr_row);
@@ -380,7 +380,7 @@ class Eventos extends CI_Controller{
         $arr_row['url'] = $this->input->post('url');
         $arr_row['institucion_id'] = $this->session->userdata('institucion_id');
         $arr_row['grupo_id'] = $this->input->post('grupo_id');
-        $arr_row['c_usuario_id'] = $this->session->userdata('usuario_id');
+        $arr_row['creador_id'] = $this->session->userdata('usuario_id');
         
         if ( $evento_id == 0 ) {
             $data['saved_id'] = $this->Evento_model->guardar_evento($arr_row);

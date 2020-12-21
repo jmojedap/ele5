@@ -331,7 +331,7 @@ class Recurso_Model extends CI_Model{
             $arr_row['institucion_id'] = $this->session->userdata('institucion_id');
             $arr_row['area_id'] = $row_tema->area_id;
             $arr_row['nivel'] = $row_tema->nivel;
-            $arr_row['c_usuario_id'] = $this->session->userdata('usuario_id');
+            $arr_row['creador_id'] = $this->session->userdata('usuario_id');
 
         //Guardar
             $condition = "tipo_id = {$arr_row['tipo_id']} AND referente_id = {$arr_row['referente_id']} AND grupo_id = {$arr_row['grupo_id']}";
@@ -348,7 +348,7 @@ class Recurso_Model extends CI_Model{
     {
         $this->db->select('evento.id, recurso.titulo, fecha_inicio, grupo_id, evento.url, nivel, area_id, tema_id');
         $this->db->where('tipo_id', 5);
-        $this->db->where('c_usuario_id', $this->session->userdata('usuario_id'));
+        $this->db->where('creador_id', $this->session->userdata('usuario_id'));
         $this->db->join('recurso', 'evento.referente_id = recurso.id');
         $this->db->order_by('fecha_inicio', 'ASC');
         $links = $this->db->get('evento', 500);

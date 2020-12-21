@@ -2,7 +2,7 @@
     $row_ctn = $this->Pcrn->registro_id('cuestionario', $row_noticia->referente_2_id);
 ?>
 <b>
-    <?= anchor("usuarios/actividad/{$row_noticia->c_usuario_id}", $this->App_model->nombre_usuario($row_noticia->c_usuario_id, 2), 'class="" title=""') ?>
+    <?= anchor("usuarios/actividad/{$row_noticia->creador_id}", $this->App_model->nombre_usuario($row_noticia->creador_id, 2), 'class="" title=""') ?>
 </b>
 <span class="suave">te asignó un cuestionario</span>    
 <br/>
