@@ -1214,10 +1214,10 @@ class Grupos extends CI_Controller{
                     $this->Usuario_model->eliminar($row_estudiante->usuario_id);
                     $data['process'] = 'Eliminar';
                 } elseif ( $proceso_id == 5 ) {
-                    $this->Usuario_model->marcar_pagado($row_estudiante->usuario_id);
+                    $this->Usuario_model->establecer_pago($row_estudiante->usuario_id, 1);
                     $data['process'] = 'Marcar como pagado';
                 } elseif ( $proceso_id == 6 ) {
-                    $this->Usuario_model->marcar_no_pagado($row_estudiante->usuario_id);
+                    $this->Usuario_model->establecer_pago($row_estudiante->usuario_id, 0);
                     $data['process'] = 'Marcar como NO pagado';
                 } elseif ( $proceso_id == 7 ) {
                     $grupo_destino_id = substr($this->input->post('proceso'), -6, 6);

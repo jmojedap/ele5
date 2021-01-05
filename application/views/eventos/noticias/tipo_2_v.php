@@ -7,7 +7,7 @@
 </b>
 <span class="suave"> tienes programado un tema</span>    
 <br/>
-<span class="suave" title="<?= $this->Pcrn->fecha_formato($row_noticia->fecha_inicio, 'Y-M-d') ?>"><?= $this->Pcrn->tiempo_hace($row_noticia->creado); ?></span>
+<span class="suave" title="<?= $this->Pcrn->fecha_formato($row_noticia->fecha_inicio, 'Y-M-d') ?>"><?= $this->pml->ago($row_noticia->creado); ?></span>
 
 <a class="noticia_contenido" href="<?= $href ?>" target="_blank">
     <h4><?= $row_tema->nombre_tema ?></h4>

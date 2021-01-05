@@ -32,4 +32,4 @@
         </div>
     <?php } ?>
 </div>
-<footer class="main_footer text-right text-muted">&copy; 2019 - En Línea Editores</footer>
+<footer class="main_footer text-right text-muted">&copy; 2019 &middot; En Línea Editores</footer>

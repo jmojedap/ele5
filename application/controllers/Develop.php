@@ -341,9 +341,7 @@ class Develop extends CI_Controller {
         $data = $this->Cuestionario_model->actualizar_dw_up($mes);
         $data['message'] = 'Se actualizaron los datos desde el mes: ' . $mes;
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**
@@ -564,8 +562,6 @@ class Develop extends CI_Controller {
             $data = $this->Develop_model->cron($cron_code);
         }
 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 }

@@ -790,7 +790,7 @@ class Order_model extends CI_Model{
                 $this->email->initialize($config);
                 $this->email->from('info@' . APP_DOMAIN, COMPANY_NAME);
                 $this->email->to($row_order->email);
-                $this->email->cc($admin_email);
+                $this->email->bcc($admin_email);
                 $this->email->subject($subject);
                 $this->email->message($this->message_buyer($row_order));
                 

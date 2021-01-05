@@ -3,6 +3,44 @@ div.container_narrow{
     margin: 0px auto;
 }
 
+/* INICIO */
+/*-----------------------------------------------------------------------------*/
+
+.body_start{
+    height: 100vh;
+    background: rgb(137,203,78);
+    background: -moz-linear-gradient(180deg, rgba(137,203,78,1) 0%, rgba(153,235,63,1) 100%);
+    background: -webkit-linear-gradient(180deg, rgba(137,203,78,1) 0%, rgba(153,235,63,1) 100%);
+    background: linear-gradient(180deg, rgba(137,203,78,1) 0%, rgba(153,235,63,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#89cb4e",endColorstr="#99eb3f",GradientType=1);
+    padding-top: 30px;
+}
+
+div.start_container{
+    background-color: white;
+    padding: 30px;
+    width: 320px;
+    margin: 0 auto;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    border: 1px solid #8ACD4D;
+    text-align: center;
+}
+
+div.start_content{
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+div.start_links{
+    font-size: 0.9em;
+}
+
+.start_logo{
+    max-width: 200px;
+}
+
 /* TÍTULO Y SUBTÍTULO DE PÁGINA */
 /*----------------------------------------------------------------------------------------------------*/
 

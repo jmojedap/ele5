@@ -3,7 +3,7 @@
     $row_flipbook = $this->Pcrn->registro_id('flipbook', $row_noticia->referente_2_id);
     $href = base_url() . "flipbooks/abrir_flipbook/{$row_noticia->referente_2_id}/{$row_noticia->entero_1}/{$row_noticia->referente_id}";
     
-    $tiempo_hace = $this->Pcrn->tiempo_hace($row_noticia->editado);
+    $tiempo_hace = $this->pml->ago($row_noticia->editado);
 ?>
 <b>
     <?= anchor("usuarios/actividad/{$row_noticia->usuario_id}", $this->App_model->nombre_usuario($row_noticia->creador_id, 2)) ?>

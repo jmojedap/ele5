@@ -24,9 +24,6 @@
     </head>
     <body>
         <div class="container">
-            
-            
-
             <div class="row">
                 <div class="col-md-12">
                     <div style="padding-top: 50px" class="hidden-xs-down"></div>
@@ -54,7 +51,7 @@
             
             <div class="fixed-bottom text-center pb-2">
                 <span style="color: #AAA">
-                    © 2019 | En Línea Editores - Colombia
+                    © 2019 &middot; En Línea Editores &middot; Colombia
                 </span>
             </div>
 

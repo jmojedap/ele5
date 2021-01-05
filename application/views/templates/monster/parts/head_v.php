@@ -27,7 +27,7 @@
     <![endif]-->
 
     <link href="<?= URL_RESOURCES ?>css/style_pml.css" rel="stylesheet">
-    <link href="<?= URL_RESOURCES ?>css/monster/add_v01.css" rel="stylesheet">
+    <link href="<?= URL_RESOURCES ?>css/monster/add_v02.css" rel="stylesheet">
 
     <!-- Moment.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js" integrity="sha256-H9jAz//QLkDOy/nzE9G4aYijQtkLt9FvGmdUTwBk6gs=" crossorigin="anonymous"></script>

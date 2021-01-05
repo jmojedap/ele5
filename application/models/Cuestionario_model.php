@@ -2474,17 +2474,18 @@ class Cuestionario_model extends CI_Model
     function actualizar_dw_up($mes)
     {
         //Eliminar datos
-            $this->db->where('mes >= "' . $mes . '"');
+            $periodo_id = str_replace('-', '', $mes);
+            $this->db->where('periodo_id >= "' . $periodo_id . '"');
             $this->db->delete('dw_usuario_pregunta');
         
         //Cargar datos
-            $sql = 'INSERT INTO dw_usuario_pregunta (mes, cuestionario_id, institucion_id, grupo_id, area_id, competencia_id, cant_respondidas, cant_correctas) ';
-            $sql .= 'SELECT LEFT(fin_respuesta, 7), usuario_pregunta.cuestionario_id, usuario_cuestionario.institucion_id, usuario_cuestionario.grupo_id AS grupo_id, pregunta.area_id, pregunta.competencia_id, COUNT(usuario_pregunta.id) AS cant_preguntas, SUM( usuario_pregunta.resultado ) AS cant_correctas ';
+            $sql = 'INSERT INTO dw_usuario_pregunta (periodo_id, cuestionario_id, institucion_id, grupo_id, area_id, competencia_id, cant_respondidas, cant_correctas) ';
+            $sql .= 'SELECT DATE_FORMAT(usuario_cuestionario.creado,"%Y%m"), usuario_pregunta.cuestionario_id, usuario_cuestionario.institucion_id, usuario_cuestionario.grupo_id AS grupo_id, pregunta.area_id, pregunta.competencia_id, COUNT(usuario_pregunta.id) AS cant_preguntas, SUM( usuario_pregunta.resultado ) AS cant_correctas ';
             $sql .= 'FROM usuario_pregunta ';
             $sql .= 'JOIN usuario_cuestionario ON usuario_pregunta.uc_id = usuario_cuestionario.id ';
             $sql .= 'JOIN pregunta ON usuario_pregunta.pregunta_id = pregunta.id ';
             $sql .= 'WHERE fin_respuesta >= "' . $mes . '" ';
-            $sql .= 'GROUP BY LEFT(fin_respuesta, 7), usuario_pregunta.cuestionario_id, usuario_cuestionario.grupo_id, usuario_cuestionario.institucion_id, area_id, competencia_id';
+            $sql .= 'GROUP BY DATE_FORMAT(usuario_cuestionario.creado,"%Y%m"), usuario_pregunta.cuestionario_id, usuario_cuestionario.grupo_id, usuario_cuestionario.institucion_id, area_id, competencia_id';
             
             $this->db->query($sql);
 
@@ -2498,18 +2499,19 @@ class Cuestionario_model extends CI_Model
     function actualizar_dw_uc($mes)
     {
         //Eliminar datos
-            $this->db->where('mes >= "' . $mes . '"');
+            $periodo_id = str_replace('-', '', $mes);
+            $this->db->where('periodo_id >= "' . $periodo_id . '"');
             //$this->db->where('id > 0');
             $this->db->delete('dw_usuario_cuestionario');
         
         //Cargar datos
-            $sql = 'INSERT INTO dw_usuario_cuestionario (mes, cuestionario_id, institucion_id, grupo_id, area_id, nivel, cant_asignados, cant_respondieron) ';
-            $sql .= 'SELECT LEFT(usuario_cuestionario.creado, 7), usuario_cuestionario.cuestionario_id, usuario_cuestionario.institucion_id, usuario_cuestionario.grupo_id AS grupo_id, cuestionario.area_id, grupo.nivel, COUNT( usuario_cuestionario.id ) AS cant_asignados, SUM( usuario_cuestionario.respondido ) AS cant_respondieron ';
+            $sql = 'INSERT INTO dw_usuario_cuestionario (periodo_id, cuestionario_id, institucion_id, grupo_id, area_id, nivel, cant_asignados, cant_respondieron) ';
+            $sql .= 'SELECT DATE_FORMAT(usuario_cuestionario.creado,"%Y%m"), usuario_cuestionario.cuestionario_id, usuario_cuestionario.institucion_id, usuario_cuestionario.grupo_id AS grupo_id, cuestionario.area_id, grupo.nivel, COUNT( usuario_cuestionario.id ) AS cant_asignados, SUM( usuario_cuestionario.respondido ) AS cant_respondieron ';
             $sql .= 'FROM  usuario_cuestionario ';
             $sql .= 'JOIN cuestionario ON usuario_cuestionario.cuestionario_id = cuestionario.id ';
             $sql .= 'JOIN grupo ON usuario_cuestionario.grupo_id = grupo.id ';
             $sql .= 'WHERE usuario_cuestionario.creado >= "' . $mes . '" ';
-            $sql .= 'GROUP BY LEFT(usuario_cuestionario.creado, 7), usuario_cuestionario.cuestionario_id, usuario_cuestionario.institucion_id, usuario_cuestionario.grupo_id, area_id, nivel';
+            $sql .= 'GROUP BY DATE_FORMAT(usuario_cuestionario.creado,"%Y%m"), usuario_cuestionario.cuestionario_id, usuario_cuestionario.institucion_id, usuario_cuestionario.grupo_id, area_id, nivel';
             
             $this->db->query($sql);
         

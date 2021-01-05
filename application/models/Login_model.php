@@ -4,10 +4,6 @@ class Login_model extends CI_Model{
     /**
      * Realiza la validación de login, usuario y contraseña. Valida coincidencia
      * de contraseña, y estado del usuario.
-     * 
-     * @param type $userlogin
-     * @param type $password
-     * @return int
      */
     function validar_login($userlogin, $password)
     {
@@ -24,9 +20,9 @@ class Login_model extends CI_Model{
             
         //Condición 2: Verificar que el usuario esté activo
             $estado_usuario = $this->estado_usuario($userlogin);
-            if ( $estado_usuario['estado'] != 1 ) { $resultado['mensajes'][] = $estado_usuario['mensaje']; }
+            if ( $estado_usuario['estado'] < 1 ) { $resultado['mensajes'][] = $estado_usuario['mensaje']; }
             
-            if ( $estado_usuario['estado'] == 1 ) { $condiciones++; }   //Usuario activo
+            if ( $estado_usuario['estado'] >= 1 ) { $condiciones++; }   //Usuario activo o temporalmene activo
             
         //Se valida el login si se cumplen las condiciones
         if ( $condiciones == 2 ) { $resultado['status'] = 1; }
@@ -51,15 +47,12 @@ class Login_model extends CI_Model{
     }
     
     /**
-     * Array con: valor del campo usuario.estado, y un mensaje explicando 
-     * el estado
-     * 
-     * @param type $userlogin
-     * @return string
+     * Array con: valor del campo usuario.estado, y un mensaje explicando el estado
+     * 2020-12-29
      */
     function estado_usuario($userlogin)
     {
-        $est_usuario['estado'] = 2;     //Valor inicial, 2 => inexistente
+        $est_usuario['estado'] = -1;     //Valor inicial, 2 => inexistente
         $est_usuario['mensaje'] = 'No existe un usuario identificado con "'. $userlogin .'"';
         
         $this->db->where("username = '{$userlogin}' OR email = '{$userlogin}' OR no_documento = '{$userlogin}'");
@@ -71,6 +64,7 @@ class Login_model extends CI_Model{
             $est_usuario['mensaje'] = 'Usuario activo';
             
             if ( $est_usuario['estado'] == 0 ) { $est_usuario['mensaje'] = 'El usuario está inactivo, consulte al administrador'; }
+            if ( $est_usuario['estado'] == 2 ) { $est_usuario['mensaje'] = 'El usuario está activo temporalmente'; }
         }
         
         return $est_usuario;

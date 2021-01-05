@@ -6,5 +6,5 @@
 </b>
 <span class="suave">ingresó a la Plataforma</span>    
 <br/>
-<span class="suave"><?= $this->Pcrn->tiempo_hace($row_noticia->editado); ?></span>
+<span class="suave"><?= $this->pml->ago($row_noticia->editado); ?></span>
 

@@ -6,7 +6,7 @@
 </b>
 <span class="suave">te asignó un cuestionario</span>    
 <br/>
-<span class="suave"><?= $this->Pcrn->tiempo_hace($row_noticia->creado); ?></span>
+<span class="suave"><?= $this->pml->ago($row_noticia->creado); ?></span>
 
 <a class="noticia_contenido" href="<?= base_url("cuestionarios/preliminar/{$row_noticia->referente_id}/noticias") ?>">
     <h4><?= $row_ctn->nombre_cuestionario ?></h4>

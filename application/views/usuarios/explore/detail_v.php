@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="detail_modal_label">{{ element.nombre_evento }}</h5>
+                <h5 class="modal-title" id="detail_modal_label">{{ element.apellidos }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -17,28 +17,19 @@
                     <tr>
                         <td>Nombre</td>
                         <td>
-                            {{ element.nombre_evento }}
+                            {{ element.nombre }} {{ element.apellidos }}
                         </td>
                     </tr>
                     <tr>
-                        <td>Inicio</td>
-                        <td>{{ element.inicio }}</td>
-                    </tr>
-                    <tr>
-                        <td>Usuario</td>
-                        <td>{{ element.username }}</td>
-                    </tr>
-                    <tr>
-                        <td>Dirección IP</td>
-                        <td>{{ element.ip_address }}</td>
+                        <td>Correo electrónico</td>
+                        <td>
+                            {{ element.email }}
+                        </td>
                     </tr>
                 </table>
-                <p>
-                    {{ element.descripcion }}
-                </p>
             </div>
             <div class="modal-footer">
-                    <a class="btn btn-primary w100p" v-bind:href="`<?php echo base_url('event/info/') ?>` + element.id">Abrir</a>
+                    <a class="btn btn-primary w100p" v-bind:href="`<?= base_url('usuarios/index/') ?>` + element.id">Abrir</a>
                     <button type="button" class="btn btn-secondary w100p" data-dismiss="modal">Cerrar</button>
             </div>
         </div>

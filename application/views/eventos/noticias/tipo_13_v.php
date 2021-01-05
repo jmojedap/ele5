@@ -20,7 +20,7 @@
 </b>
 <span class="suave">respondió una evidencia de aprendizaje</span>    
 <br/>
-<span class="suave"><?= $this->Pcrn->tiempo_hace($row_noticia->editado); ?></span>
+<span class="suave"><?= $this->pml->ago($row_noticia->editado); ?></span>
 
 <a class="noticia_contenido" href="<?= $link ?>">
     <h4><?= $row_quiz->nombre_quiz ?></h4>

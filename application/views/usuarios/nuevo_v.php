@@ -1,5 +1,3 @@
-<?php $this->load->view('assets/grocery_crud'); ?>
-
 <?php
     $clases[$tipo] = 'active';
 ?>
@@ -7,7 +5,6 @@
 <script>
 //Variables
 //---------------------------------------------------------------------------------------------------
-    var base_url = '<?= base_url() ?>';
     var nombre = '';
     var apellidos = '';
 
@@ -38,7 +35,7 @@
             if ( cant_condiciones === 2 ) {
                 generar_username();
             } else {
-                alert('Escriba los nombres y apellidos');
+                toastr['info']('Escriba los nombres y apellidos');
             }
             
             
@@ -52,7 +49,7 @@
     function generar_username(){
         $.ajax({        
             type: 'POST',
-            url: base_url + 'usuarios/username',
+            url: url_app + 'usuarios/username',
             data: {
                 nombre : nombre,
                 apellidos : apellidos
@@ -93,5 +90,3 @@
 <div class="my-2">
     <span class="btn btn-secondary" id="generar_username">Generar username</span>
 </div>
-
-<?php echo $output; ?>

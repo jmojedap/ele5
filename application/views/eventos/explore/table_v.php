@@ -7,7 +7,7 @@
 ?>
 
 <div class="table table-responsive">
-    <table class="table table-hover bg-white">
+    <table class="table bg-white">
         <thead>
             <th width="10px">
                 <input type="checkbox" id="checkbox_all_selected" @change="select_all" v-model="all_selected">

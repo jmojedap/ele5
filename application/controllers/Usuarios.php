@@ -12,18 +12,67 @@ class Usuarios extends CI_Controller{
         date_default_timezone_set("America/Bogota");
     }
     
-    function index()
+    function index($usuario_id = NULL)
     {
-        $this->explorar();
+        $destination = 'usuarios/explorar';
+        if ( ! is_null($usuario_id) ) {
+            $destination = "usuarios/actividad/{$usuario_id}";
+        }
+
+        redirect($destination);
+    }
+
+// EXPLORACIÓN DE USUARIOS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Vista listado de productos, filtros exploración
+     * 2020-12-12
+     */
+    function explorar($num_page = 1)
+    {        
+        //Identificar filtros de búsqueda
+            $this->load->model('Search_model');
+            $filters = $this->Search_model->filters();
+
+        //Datos básicos de la exploración
+            $data = $this->Usuario_model->explore_data($filters, $num_page);
+        
+        //Opciones de filtros de búsqueda
+            $data['options_role'] = $this->Item_model->opciones('categoria_id = 58', 'Todos');
+            $data['options_institution'] = $this->App_model->opciones_institucion('id > 0', 'Todas');
+            
+        //Arrays con valores para contenido en la tabla
+            $data['arr_roles'] = $this->Item_model->arr_interno('categoria_id = 58');
+            $data['arr_status'] = $this->Item_model->arr_interno('categoria_id = 65');
+            
+        //Cargar vista
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
+    }
+
+    /**
+     * JSON
+     * Listado de usuarios
+     */
+    function get($num_page, $per_page = 10)
+    {
+        //Identificar filtros de búsqueda
+        $this->load->model('Search_model');
+        $filters = $this->Search_model->filters();
+
+        $data = $this->Usuario_model->get($filters, $num_page, $per_page);
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
-// EXPLORACIÓN DE USUARIOS
+// EXPLORACIÓN DE USUARIOS ANTERIOR
 //-----------------------------------------------------------------------------
     
     /**
      * Exploración y búsqueda de usuarios
      */
-    function explorar($num_pagina = 1)
+    function explorar_ant($num_pagina = 1)
     {
         //Datos básicos de la exploración
             $this->load->helper('text');
@@ -130,6 +179,9 @@ class Usuarios extends CI_Controller{
         ->set_content_type('application/json')
         ->set_output(json_encode($data));
     }
+
+// CRUD
+//-----------------------------------------------------------------------------
     
     function nuevo()
     {
@@ -145,21 +197,17 @@ class Usuarios extends CI_Controller{
                 $output = $this->Usuario_model->crud_internos();
             }
             
-        
-        //Head includes específicos para la página
-            $head_includes[] = 'grocery_crud';
-            $data['head_includes'] = $head_includes;
-            
         //Array data espefícicas
             $data['tipo'] = $tipo;
             $data['head_title'] = 'Usuarios';
             $data['head_subtitle'] = 'Nuevo';
             $data['view_a'] = 'usuarios/nuevo_v';
-            $data['nav_2'] = 'usuarios/explorar/menu_v';
+            $data['view_b'] = 'comunes/gc_v';
+            $data['nav_2'] = 'usuarios/explore/menu_v';
         
         $output = array_merge($data,(array)$output);
         
-        $this->load->view(TPL_ADMIN, $output);
+        $this->App_model->view(TPL_ADMIN_NEW, $output);
     }
     
     function editar()
@@ -262,10 +310,10 @@ class Usuarios extends CI_Controller{
             $data['head_title'] = 'Usuarios';
             $data['head_subtitle'] = 'Importar estudiantes';
             $data['view_a'] = 'comunes/bs4/importar_v';
-            $data['nav_2'] = 'usuarios/explorar/menu_v';
+            $data['nav_2'] = 'usuarios/explore/menu_v';
             $data['nav_3'] = 'usuarios/importar_menu_v';
         
-        $this->load->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -300,9 +348,9 @@ class Usuarios extends CI_Controller{
             $data['head_title'] = 'Usuarios';
             $data['head_subtitle'] = 'Resultado importación';
             $data['view_a'] = 'comunes/resultado_importacion_v';
-            $data['nav_2'] = 'usuarios/explorar/menu_v';
+            $data['nav_2'] = 'usuarios/explore/menu_v';
             $data['nav_3'] = 'usuarios/importar_menu_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
     
@@ -451,6 +499,7 @@ class Usuarios extends CI_Controller{
         //Variables vista
         $data['view_a'] = 'eventos/noticias/noticias_usuario_v';
         $this->load->view(TPL_ADMIN, $data);
+        //$this->output->enable_profiler(TRUE);
         
     }
     
@@ -458,9 +507,6 @@ class Usuarios extends CI_Controller{
      * AJAX, envía un objeto JSON con el html de actividad adicionales para mostrarse
      * al final de la vista usuarios/actividad cuando el usuario hace clic en el botón [Más]
      * 2019-07-08
-     * 
-     * @param type $limit
-     * @param type $offset
      */
     function mas_actividad($usuario_id, $limit, $offset)
     {
@@ -481,9 +527,7 @@ class Usuarios extends CI_Controller{
         $respuesta['html'] = $html;
         $respuesta['cant_noticias'] = $noticias->num_rows();
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($respuesta));
+        $this->output->set_content_type('application/json')->set_output(json_encode($respuesta));
     }
     
 //GESTIÓN DE USUARIOS
@@ -550,26 +594,16 @@ class Usuarios extends CI_Controller{
     
     /**
      * AJAX Cambia el estado de activación de un usuario a un valor específico
-     * 
-     * @param type $usuario_id
-     * @param type $valor
-     * @param type $rapido 
      */
     function cambiar_activacion($usuario_id, $valor)
     {
         $this->Usuario_model->cambiar_activacion($usuario_id, $valor);
-        
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($valor));
+        $this->output->set_content_type('application/json')->set_output(json_encode($valor));
     }
     
     /**
      * AJAX Alterna el estado de pago de un usuario, entre verdadero y falso
      * 
-     * @param type $usuario_id
-     * @param type $valor
-     * @param type $rapido 
      */
     function alternar_activacion($usuario_id)
     {
@@ -577,34 +611,19 @@ class Usuarios extends CI_Controller{
         $valor_nuevo = $this->Pcrn->alternar($valor_actual);
         $this->Usuario_model->cambiar_activacion($usuario_id, $valor_nuevo);
         
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output($valor_nuevo);
+        $this->output->set_content_type('application/json')->set_output($valor_nuevo);
     }
     
     /**
      * AJAX Cambia el estado de pago de un usuario
-     * 
-     * @param type $usuario_id
-     * @param type $valor
-     * @param type $rapido 
+     * 2020-12-29
      */
-    function alternar_pago($usuario_id)
+    function establecer_pago($usuario_id, $pago)
     {
-        $nuevo_valor = $this->Pcrn->alternar_boleano('usuario', $usuario_id, 'pago');
-        
-        $estado = 1;
-        if ( $nuevo_valor == 0 ) { $estado = 0; } //No ha pagado, se cambia a inactivo
-        
-        $this->Usuario_model->cambiar_activacion($usuario_id, $estado);
-        
-        $arr_resultados['pago'] = $nuevo_valor;
-        $arr_resultados['estado'] = $estado;
-        
-        $resultados = json_encode($arr_resultados);
-        
-        $this->output->set_content_type('application/json');
-        $this->output->set_output($resultados);
+        $data = $this->Usuario_model->establecer_pago($usuario_id, $pago);
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**
@@ -626,8 +645,11 @@ class Usuarios extends CI_Controller{
      */
     function restaurar_contrasena($usuario_id)
     {
-        $this->Usuario_model->restaurar_contrasena($usuario_id);
-        echo 1;
+        $data = $this->Usuario_model->restaurar_contrasena($usuario_id);
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        
     }
     
     /* Viene del formulario que muestra el controlador usuarios/cambiar_contrasena
@@ -721,8 +743,35 @@ class Usuarios extends CI_Controller{
             $data['head_title'] = 'Restauración de contraseña';
             $data['view_a'] = 'usuarios/restaurar_v';
             $data['resultado'] = $resultado;
-            $this->load->view('templates/apanel3/start_v', $data);
+            $this->load->view('templates/monster/start_v', $data);
         }
+    }
+
+    /**
+     * Recibe email por post, y si encuentra usuario, envía mensaje
+     * para restaurar contraseña
+     * 2020-08-06
+     */
+    function recovery_email()
+    {
+        $data['status'] = 0;
+
+        /*$this->load->model('Validation_model');
+        $recaptcha = $this->Validation_model->recaptcha(); //Validación Google ReCaptcha V3*/
+
+        //Identificar usuario
+        $row = $this->Db_model->row('usuario', "email = '{$this->input->post('email')}'");
+
+        if ( ! is_null($row) ) 
+        {
+            //Usuario existe, se envía email para restaurar constraseña
+            $this->Usuario_model->cod_activacion($row->id);
+            if ( ENV == 'production') $this->Usuario_model->email_activacion($row->id, 'restaurar');
+            $data['status'] = 1;
+        }
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**
@@ -804,46 +853,35 @@ class Usuarios extends CI_Controller{
      */
     function cambiar_dpw()
     {
-        
         $this->load->model('Esp');
-        $condiciones = 0;
-        $destino = 'usuarios/cambiar_dpw';
-        $row_usuario = $this->Pcrn->registro_id('usuario', $this->session->userdata('usuario_id'));
+        $errors = array();
+        $row_usuario = $this->Db_model->row_id('usuario', $this->session->userdata('user_id'));
         
         //Valores iniciales para el resultado del proceso
-            $resultado['ejecutado'] = 0;
-            $resultado['mensajes'] = array();
+            $data['status'] = 0;
             
         //Verificar que la contraseña nueva no sea la contraseña por defecto
             $dpw = $this->App_model->valor_opcion(10);
-            if ( $this->input->post('password') != $dpw ) {
-                $condiciones++;
-            } else {
-                $resultado['mensajes'][] .= 'La contraseña nueva no puede ser igual a la contraseña por defecto. ';
+            if ( $this->input->post('password') == $dpw ) {
+                $errors[] .= 'La contraseña nueva no puede ser igual a la contraseña por defecto. ';
             }
         
         //Verificar que contraseña nueva coincida con la confirmación
-            if ( $this->input->post('password') == $this->input->post('passconf') ) {
-                $condiciones++;
-            } else {
-                $resultado['mensajes'][] .= 'La contraseña de confirmación no coincide.';
+            if ( $this->input->post('password') != $this->input->post('passconf') ) {
+                $errors[] .= 'La contraseña de confirmación no coincide.';
             }
         
-        //Verificar condiciones necesarias
-            if ( $condiciones == 2 )
+        //Verificar que no haya errores
+            if ( count($errors) == 0 )
             {
                 $this->Usuario_model->cambiar_contrasena($row_usuario->id, $this->input->post('password'));
-                $this->Usuario_model->marcar_pagado($row_usuario->id);  //2016-11-19, Al cambiar contraseña se considera que ya pagó
-
-                $resultado['ejecutado'] = 1;
-                $resultado['mensajes'] = array('La contraseña se cambió exitosamente.');
-                
-                $destino = 'app/index';
+                //$this->Usuario_model->establecer_pago($row_usuario->id, 1);  //Desactivado 2020-12-29
+                $data['status'] = 1;
             }
+
+            $data['errors'] = $errors;
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($resultado));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
         
     }
     
@@ -1529,10 +1567,10 @@ class Usuarios extends CI_Controller{
             $data['head_title'] = 'Usuarios';
             $data['head_subtitle'] = 'Eliminar por username';
             $data['view_a'] = 'comunes/bs4/importar_v';
-            $data['nav_2'] = 'usuarios/explorar/menu_v';
+            $data['nav_2'] = 'usuarios/explore/menu_v';
             $data['nav_3'] = 'usuarios/importar_menu_v';
         
-        $this->load->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -1564,9 +1602,9 @@ class Usuarios extends CI_Controller{
             $data['head_title'] = 'Usuarios';
             $data['head_subtitle'] = 'Resultado eliminación por username';
             $data['view_a'] = 'comunes/resultado_importacion_v';
-            $data['nav_2'] = 'usuarios/explorar/menu_v';
+            $data['nav_2'] = 'usuarios/explore/menu_v';
             $data['nav_3'] = 'usuarios/importar_menu_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
 // FUNCIONES MASIVAS

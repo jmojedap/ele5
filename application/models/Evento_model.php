@@ -267,9 +267,7 @@ class Evento_Model extends CI_Model{
     {
         //Condición para identificar el registro del evento
             $condicion = "tipo_id = {$arr_row['tipo_id']} AND referente_id = {$arr_row['referente_id']}";
-            if ( ! is_null($condicion_add) ){
-                $condicion .= " AND " . $condicion_add;
-            }
+            if ( ! is_null($condicion_add) ) $condicion .= " AND " . $condicion_add;
         
             $evento_id = $this->Pcrn->existe('evento', $condicion);
         
@@ -283,6 +281,7 @@ class Evento_Model extends CI_Model{
             $arr_row['periodo_id'] = intval(date('Ym'));
             $arr_row['creado'] = date('Y-m-d H:i:s');
             $arr_row['creador_id'] = $this->Pcrn->si_nulo($this->session->userdata('user_id'), 0);
+            $arr_row['ip_address'] = $this->input->ip_address();
             
             $this->db->insert('evento', $arr_row);
             $evento_id = $this->db->insert_id();
@@ -369,7 +368,7 @@ class Evento_Model extends CI_Model{
         
         switch ($srol){
             case 'interno';
-                $condicion = 'tipo_id IN (12,11,13,101,50)';
+                $condicion = 'tipo_id IN (12,11,13,101,50,107)';
                 break;
             case 'institucional';
                 $condicion = "institucion_id = {$this->session->userdata('institucion_id')} AND ";
@@ -378,7 +377,7 @@ class Evento_Model extends CI_Model{
                 $condicion .= ' OR ';
                 $condicion .= "(tipo_id = 50 AND entero_1 = 2 AND grupo_id IN ({$str_grupos}))";
                 $condicion .= ' OR ';
-                $condicion .= "(tipo_id IN (4,11,12,13,101) AND grupo_id IN ({$str_grupos}))";
+                $condicion .= "(tipo_id IN (4,11,12,13,101,107) AND grupo_id IN ({$str_grupos}))";
                 $condicion .= ' OR ';
                 $condicion .= "(tipo_id = 21 AND institucion_id = {$this->session->userdata('institucion_id')})";
                 $condicion .= ')';
@@ -439,8 +438,7 @@ class Evento_Model extends CI_Model{
     
     /**
      * Query con los eventos de la actividad de un usuario específico ($usuario_id)
-     * 
-     * @return type
+     * 2020-12-30
      */
     function noticias_usuario($usuario_id, $busqueda, $limit, $offset = 0)
     {
@@ -510,6 +508,8 @@ class Evento_Model extends CI_Model{
                 $condicion .= "(tipo_id = 11)";
                 $condicion .= ' OR ';
                 $condicion .= "(tipo_id = 12)";
+                $condicion .= ' OR ';
+                $condicion .= "(tipo_id = 107)";
                 $condicion .= ' OR ';
                 $condicion .= "(tipo_id = 50 AND entero_1 = 1 AND institucion_id = {$this->session->userdata('institucion_id')})";
                 $condicion .= ' OR ';

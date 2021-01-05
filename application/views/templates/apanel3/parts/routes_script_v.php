@@ -1,5 +1,6 @@
 <script>
     const app_r = '<?php echo $this->session->userdata('role_abbr') ?>';
+    const app_rid = <?= $this->session->userdata('role') ?>;
     var app_cf = '<?php echo $this->uri->segment(1) . '/' . $this->uri->segment(2); ?>';
 
     //Set New CF (Controller Function), and load sections

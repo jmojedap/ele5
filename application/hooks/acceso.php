@@ -60,7 +60,7 @@ class Acceso {
         $funciones_publicas[] = 'usuarios/activar';
         $funciones_publicas[] = 'usuarios/activar_e';
         $funciones_publicas[] = 'usuarios/restaurar';
-        $funciones_publicas[] = 'usuarios/restaurar_e';
+        $funciones_publicas[] = 'usuarios/recovery_email';
         $funciones_publicas[] = 'usuarios/get_by_username';
         
         $funciones_publicas[] = 'posts/leer';

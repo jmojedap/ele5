@@ -3,7 +3,6 @@
     if ( is_null($tipo_evento_id) ) { $clases['todos'] = 'active'; }
     $clases[$tipo_evento_id] = 'active';
 ?>
-
 <div class="row">
     <div class="col-md-3 div2">
         <div class="panel panel-default">

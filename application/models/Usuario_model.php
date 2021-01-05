@@ -86,8 +86,198 @@ class Usuario_model extends CI_Model{
         
         return $mostrar;
     }
+
+// EXPLORACIÓN DE USUARIOS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Array con los datos para la vista de exploración
+     */
+    function explore_data($filters, $num_page, $per_page = 10)
+    {
+        //Data inicial, de la tabla
+            $data = $this->get($filters, $num_page, $per_page);
+        
+        //Elemento de exploración
+            $data['controller'] = 'usuarios';                      //Nombre del controlador
+            $data['cf'] = 'usuarios/explorar/';                     //Nombre del controlador
+            $data['views_folder'] = 'usuarios/explore/';           //Carpeta donde están las vistas de exploración
+            
+        //Vistas
+            $data['head_title'] = 'Usuarios';
+            $data['head_subtitle'] = $data['search_num_rows'];
+            $data['view_a'] = $data['views_folder'] . 'explore_v';
+            $data['nav_2'] = $data['views_folder'] . 'menu_v';
+        
+        return $data;
+    }
+
+    function get($filters, $num_page, $per_page)
+    {
+        //Referencia
+            $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
+
+        //Búsqueda y Resultados
+            $data['filters'] = $filters;
+            $data['list'] = $this->list($filters, $per_page, $offset);    //Resultados para página
+        
+        //Cargar datos
+            $data['str_filters'] = $this->Search_model->str_filters($filters);
+            $data['search_num_rows'] = $this->search_num_rows($filters);
+            $data['max_page'] = ceil($this->pml->if_zero($data['search_num_rows'],1) / $per_page);   //Cantidad de páginas
+
+        return $data;
+    }
+
+    /**
+     * Segmento Select SQL, con diferentes formatos, consulta de usuarios
+     * 2020-12-12
+     */
+    function select($format = 'general')
+    {
+        $arr_select['general'] = 'usuario.id, username, usuario.email, nombre, apellidos, sexo, rol_id, estado, institucion_id, grupo_id, pago, ultimo_login, nombre_institucion';
+
+        $arr_select['export'] = 'usuario.id, username, usuario.email, nombre, apellidos, sexo, rol_id, estado, no_documento, tipo_documento_id, institucion_id, grupo_id';
+
+        return $arr_select[$format];
+    }
     
-// Exploraración
+    /**
+     * Query usuarios, aplicando filtros, paginado y orden
+     * 2020-12-12
+     */
+    function search($filters, $per_page = NULL, $offset = NULL)
+    {
+        //Construir consulta
+            $this->db->select($this->select());
+            $this->db->join('institucion', 'usuario.institucion_id = institucion.id', 'left');
+            
+            
+        //Orden
+            if ( $filters['o'] != '' )
+            {
+                $order_type = $this->pml->if_strlen($filters['ot'], 'ASC');
+                $this->db->order_by($filters['o'], $order_type);
+            } else {
+                $this->db->order_by('usuario.ultimo_login', 'DESC');
+                $this->db->order_by('usuario.id', 'DESC');
+            }
+            
+        //Filtros
+            $search_condition = $this->search_condition($filters);
+            if ( $search_condition ) { $this->db->where($search_condition);}
+            
+        //Obtener resultados
+        $query = $this->db->get('usuario', $per_page, $offset);
+        
+        return $query;
+    }
+
+    /**
+     * Array Listado elemento resultado de la búsqueda (filtros).
+     * 2020-01-21
+     */
+    function list($filters, $per_page = NULL, $offset = NULL)
+    {
+        $query = $this->search($filters, $per_page, $offset);
+        $list = array();
+
+        foreach ($query->result() as $row)
+        {
+            //$row->qty_students = $this->Db_model->num_rows('product_user', "product_id = {$row->id}");  //Cantidad de estudiantes
+            $list[] = $row;
+        }
+
+        return $list;
+    }
+
+    /**
+     * String con condición WHERE SQL para filtrar usuario
+     * 2020-08-01
+     */
+    function search_condition($filters)
+    {
+        $condition = NULL;
+
+        $condition .= $this->role_filter() . ' AND ';
+
+        //q words condition
+        $words_condition = $this->Search_model->words_condition($filters['q'], array('username', 'nombre', 'apellidos', 'no_documento', 'usuario.email'));
+        if ( $words_condition )
+        {
+            $condition .= $words_condition . ' AND ';
+        }
+        
+        //Otros filtros
+        if ( $filters['rol'] != '' ) { $condition .= "rol_id = {$filters['rol']} AND "; }
+        if ( $filters['i'] != '' ) { $condition .= "institucion_id = {$filters['i']} AND "; }
+        
+        //Quitar cadena final de ' AND '
+        if ( strlen($condition) > 0 ) { $condition = substr($condition, 0, -5);}
+        
+        return $condition;
+    }
+    
+    /**
+     * Devuelve la cantidad de registros encontrados en la tabla con los filtros
+     * establecidos en la búsqueda
+     */
+    function search_num_rows($filters)
+    {
+        $query = $this->search($filters); //Para calcular el total de resultados
+        return $query->num_rows();
+    }
+
+    /**
+     * Query para exportar
+     * 2020-12-12
+     */
+    function export($filters)
+    {
+        $this->db->select($this->select('export'));
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+        $query = $this->db->get('usuario', 5000);  //Hasta 5000 usuarios
+
+        return $query;
+    }
+    
+    /**
+     * Devuelve segmento Where SQL, aplicando filtro de usuarios según el rol del usuario en sesión
+     * 2020-12-22
+     */
+    function role_filter()
+    {
+        $role = $this->session->userdata('role');
+        $condition = 'usuario.id = 0';  //Valor por defecto, ningún user, se obtendrían cero user.
+
+        $usuario_id = $this->session->userdata('user_id');
+        $row_usuario = $this->Db_model->row_id('usuario', $usuario_id);
+
+        
+        if ( $role <= 2 ) {
+            //Desarrollador, todos los usuarios
+            $condition = 'usuario.id > 0';
+        } elseif ( in_array($role, array(3,4)) ) {
+            //Directivo y Administrador institucional, todos los usuarios de su institución
+            $condition = "institucion_id = {$row_usuario->institucion_id} ";
+        } elseif ( $role == 5 ) {
+            //Profesor, todos los estudiantes de sus grupos asignados
+            $sql = "SELECT grupo_id FROM grupo_profesor WHERE (profesor_id) = {$usuario_id}";
+            $condition = "grupo_id IN ({$sql})";
+        } elseif ( $row_usuario->rol_id == 6 ) {
+            //Estudiante, todos los estudiantes de su grupo
+            $condition = "( grupo_id = ({$row_usuario->grupo_id})";
+            $condition .= " OR id IN (SELECT profesor_id FROM grupo_profesor WHERE (grupo_id) = ({$row_usuario->grupo_id})) )";
+        } elseif ( $row_usuario->rol_id == 8 ) {
+            //Comercial
+            $condition = "institucion_id IN (SELECT id FROM institucion WHERE ejecutivo_id = {$usuario_id})";
+        }
+        
+        return $condition;
+    }
+    
+// Exploración
 //-----------------------------------------------------------------------------
     
     /**
@@ -1100,7 +1290,7 @@ class Usuario_model extends CI_Model{
             $config['mailtype'] = 'html';
 
             $this->email->initialize($config);
-            $this->email->from('info@plataformaenlinea.com', 'Plataforma en Línea');
+            $this->email->from('info@plataformaenlinea.com', COMPANY_NAME);
             $this->email->to($row_usuario->email);
             $this->email->message($this->Usuario_model->mensaje_activacion($usuario_id, $tipo_activacion));
             $this->email->subject($subject);
@@ -1125,8 +1315,6 @@ class Usuario_model extends CI_Model{
     
     /**
      * Establece un código de activación o recuperación de cuenta de usuario
-     * 
-     * @param type $usuario_id
      */
     function cod_activacion($usuario_id)
     {
@@ -1788,14 +1976,16 @@ class Usuario_model extends CI_Model{
         
     }
     
+    /**
+     * Establece la contraseña de un usuario
+     * 2020-12-30
+     */
     function cambiar_contrasena($usuario_id, $password)
     {
-        $data = array(
-            'password'  => $this->encriptar_pw($password)
-        );
+        $arr_row['password'] = $this->encriptar_pw($password);
         
         $this->db->where('id', $usuario_id);
-        $this->db->update('usuario', $data);
+        $this->db->update('usuario', $arr_row);
     }
     
     /**
@@ -1822,10 +2012,15 @@ class Usuario_model extends CI_Model{
 
                 $this->Evento_model->guardar_evento($arr_row);
             }
+
+        $data = array('status' => 1);
+
+        return $data;
     }
     
     /**
      * Cambia el estado de activación de un usuario
+     * 2020-12-30
      */
     function cambiar_activacion($usuario_id, $valor)
     {
@@ -1849,23 +2044,42 @@ class Usuario_model extends CI_Model{
                 $this->Evento_model->guardar_evento($arr_row);
             }
     }
-    
+
     /**
-     * Se marca un usuario como pagado, y su estado es activo.
+     * Establece el valor del campo usuario.pago, y dependiendo de este, también el de usuario.estado
+     * 2020-12-29
      */
-    function marcar_pagado($usuario_id)
+    function establecer_pago($usuario_id, $pago)
     {
-        $registro['estado'] = 1;    //Agregado 2019-05-29
-        $registro['pago'] = 1;
+        $arr_row['pago'] = $pago;
+        if ( $pago == 1 ) $arr_row['estado'] = 1;   //Activo
+        if ( $pago == 0 ) $arr_row['estado'] = 2;   //Temporal
+
         $this->db->where('id', $usuario_id);
-        $this->db->update('usuario', $registro);
-    }
-    
-    function marcar_no_pagado($usuario_id)
-    {
-        $registro['pago'] = 0;
-        $this->db->where('id', $usuario_id);
-        $this->db->update('usuario', $registro);
+        $this->db->update('usuario', $arr_row);
+
+        $data = array('affected_rows' => $this->db->affected_rows(), 'arr_row' => $arr_row);
+
+        //Guardar evento de cambio de estado de pago
+        if ( $data['affected_rows'] > 0 )
+        {
+            $row_usuario = $this->Db_model->row_id('usuario', $usuario_id);
+
+            $evento['tipo_id'] = 107;   //Ver items, tipo de eventos
+            $evento['referente_id'] = date('YmdHis');   //Para diferenciarlo como evento único
+            $evento['entero_1'] = $pago;
+            $evento['fecha_inicio'] = date('Y-m-d');
+            $evento['hora_inicio'] = date('H:i:s');
+            $evento['descripcion'] = "Modificado: Usuario ID {$usuario_id}, pago = {$pago}, por Usuario ID = {$this->session->userdata('user_id')}";
+            $evento['usuario_id'] = $usuario_id;
+            $evento['institucion_id'] = $row_usuario->institucion_id;
+            $evento['grupo_id'] = $row_usuario->grupo_id;
+
+            $this->load->model('Evento_model');
+            $data['evento_id'] = $this->Evento_model->guardar_evento($evento);            
+        }
+
+        return $data;
     }
     
     function procesar_usuarios($usuarios, $cod_proceso)

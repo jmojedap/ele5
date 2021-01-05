@@ -11,8 +11,6 @@
         <div class="mb-2">
             <?php $this->load->view('eventos/filtro_tipos_v'); ?>
         </div>
-        
-        
     </div>
     <div class="col-md-9">
         

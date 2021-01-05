@@ -1,5 +1,5 @@
 <?php
-    $arr_tipos_visibles = array(1,2,3,4,11,12,13,21,50,101);
+    $arr_tipos_visibles = array(1,2,3,4,11,12,13,21,50,101,107);
 ?>
 
 <?php foreach ($noticias->result() as $row_noticia) : ?>

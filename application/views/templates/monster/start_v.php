@@ -8,12 +8,11 @@
     <head>
         <?php $this->load->view('templates/monster/parts/head_v') ?>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" integrity="sha256-PHcOkPmOshsMBC+vtJdVr5Mwb7r0LkSVJPlPrp/IMpU=" crossorigin="anonymous" />
-        <link rel="stylesheet" href="<?php echo URL_RESOURCES ?>css/monster/start.css">
     </head>
 
-    <body>
+    <body class="body_start">
         <div class="start_container">
-            <img src="<?php echo URL_IMG . 'admin/start_logo.png' ?>" alt="Logo En Línea Editores" class="mb-3 animated zoomIn">
+            <img src="<?php echo URL_IMG . 'admin/start_logo.png' ?>" alt="Logo En Línea Editores" class="mb-3 start_logo">
 
             <div class="mb-3 text-center start_links">
                 <a href="<?php echo base_url('app/login') ?>">

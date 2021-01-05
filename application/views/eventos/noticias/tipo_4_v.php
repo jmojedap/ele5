@@ -14,7 +14,7 @@
 
 <span class="suave">asignó un link</span>
 <br/>
-<span class="suave" title="<?= $this->Pcrn->fecha_formato($row_noticia->fecha_inicio, 'Y-M-d') ?>"><?= $this->Pcrn->tiempo_hace($row_noticia->creado); ?></span>
+<span class="suave" title="<?= $this->Pcrn->fecha_formato($row_noticia->fecha_inicio, 'Y-M-d') ?>"><?= $this->pml->ago($row_noticia->creado); ?></span>
 <p>
     <?= $row_noticia->contenido ?>
 </p>

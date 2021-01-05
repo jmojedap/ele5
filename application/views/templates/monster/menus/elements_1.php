@@ -8,7 +8,7 @@
                 cf: 'usuarios/explorar',
                 submenu: false,
                 subelements: [],
-                sections: []
+                sections: ['usuarios/explorar', 'usuarios/importar_estudiantes', 'usuarios/importar_estudiantes_e', 'usuarios/nuevo']
             },
             {
                 text: 'Instituciones',
