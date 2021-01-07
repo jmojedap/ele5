@@ -103,9 +103,9 @@ class App extends CI_Controller{
 
     function inicio()
     {
-        $data['vista_a'] = 'app/inicio_v';
-        $data['titulo_pagina'] = NOMBRE_APP;
-        $this->load->view(PTL_ADMIN, $data);
+        $data['view_a'] = 'app/inicio_v';
+        $data['head_title'] = APP_NAME;
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     function logout()

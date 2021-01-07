@@ -1274,7 +1274,7 @@ class Usuario_model extends CI_Model{
      */
     function email_activacion($usuario_id, $tipo_activacion = 'activar')
     {
-        $row_usuario = $this->Pcrn->registro_id('usuario', $usuario_id);
+        $row_usuario = $this->Db_model->row_id('usuario', $usuario_id);
         
         //Establecer código de activación
             $this->cod_activacion($usuario_id);
@@ -1332,6 +1332,7 @@ class Usuario_model extends CI_Model{
         return $row_usuario;
     }
     
+
     function activar($cod_activacion)
     {
         $row_activacion = $this->row_activacion($cod_activacion);
@@ -1401,17 +1402,13 @@ class Usuario_model extends CI_Model{
     
     /**
      * Asigna una contraseña a un usuario.
-     * 
-     * @param type $usuario_id
-     * @param type $password
-     * @return type
+     * 2021-01-06
      */
     function establecer_contrasena($usuario_id, $password)
     {
-        $registro['password'] = $this->encriptar_pw($password);
-        $registro['cpw'] = 1;   //Campo temporal para ELE, agregado 2018-11-14
+        $arr_row['password'] = $this->encriptar_pw($password);
         $this->db->where('id', $usuario_id);
-        $action = $this->db->update('usuario', $registro);
+        $action = $this->db->update('usuario', $arr_row);
         return $action;
     }
     

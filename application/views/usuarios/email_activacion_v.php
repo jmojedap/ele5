@@ -13,7 +13,7 @@
     }
 
 //Estilos
-    $styles['body'] = 'font-family: Helvetica, Sans-Serif; text-align: center; padding-top: 1em;';
+    $styles['body'] = 'font-family: Tahoma, Sans-Serif; text-align: center; padding-top: 1em;';
     $styles['h1'] = 'color: #89CB4E';
     $styles['h3'] = 'color: #666';
     $styles['a'] = 'color: #00b0f0';

@@ -381,55 +381,55 @@ class Usuarios extends CI_Controller{
         $this->Usuario_model->email_activacion($usuario_id);
     }
     
+    /**
+     * Formulario para establecer contraseña
+     */
     function activar($cod_activacion, $tipo_activacion = 'activar')
     {
-        $this->load->model('Esp');
-        $row_usuario = $this->Pcrn->registro('usuario', "cod_activacion = '{$cod_activacion}'");        
-        
-        //Variables
-            $data['destino_form'] = "usuarios/activar_e/{$this->uri->segment(3)}";
-            $data['cod_activacion'] = $cod_activacion;
-            $data['tipo_activacion'] = $tipo_activacion;
-            $data['row'] = $row_usuario;
-            $data['view_a'] = 'usuarios/activar_v';
-            $data['head_title'] = "Cuenta de {$row_usuario->nombre}";
-            
-        //Evaluar condiciones
-            $condiciones = 0;
-            if ( ! is_null($row_usuario) ) { $condiciones++; }
-            if ( $this->session->userdata('logged') != TRUE ) { $condiciones++; }
-        
-        if ( $condiciones == 2 ) {
-            $this->load->view('templates/apanel3/start_v', $data);
+        $row = $this->Db_model->row('usuario', "cod_activacion = '{$cod_activacion}'");
+
+        if ( $row && ! $this->session->userdata('logged') )
+        {
+            //Variables
+                $data['destino_form'] = "usuarios/activar_e/{$this->uri->segment(3)}";
+                $data['cod_activacion'] = $cod_activacion;
+                $data['tipo_activacion'] = $tipo_activacion;
+                $data['row'] = $row;
+                $data['view_a'] = 'usuarios/activar_v';
+                $data['head_title'] = "Cuenta de {$row->nombre}";
+                
+                $this->load->view('templates/monster/start_v', $data);
         } else {
-            'no permitido';
-            //redirect('app/no_permitido');
+            redirect('app/no_permitido');
         }
     }
     
     /**
-     * Activar usuario
-     * @param type $cod_activacion
+     * Activar usuario o reestablecer contraseña
      */
-    function activar_ajax($cod_activacion)
-    {
-        
+    function establecer_contrasena($cod_activacion)
+    {   
         $usuario_id = 0;
-        $row_usuario = $this->Usuario_model->row_activacion($cod_activacion);
-        
-        if ( ! is_null($row_usuario) ) 
-        {
-            $this->Usuario_model->activar($row_usuario->id);
+        $row = $this->Db_model->row('usuario', "cod_activacion = '{$cod_activacion}'");
 
-            $this->load->model('Esp');
-            $this->Esp->crear_sesion($row_usuario, 1);
-            $usuario_id = $row_usuario->id;
+        $data = array('status' => 0, 'usuario_id' => 0);
+        
+        if ( ! is_null($row) ) 
+        {
+            $data['action'] = $this->Usuario_model->establecer_contrasena($row->id, $this->input->post('password'));
+
+            $this->load->model('Login_model');
+            $this->Login_model->crear_sesion($row->username, 1);
+
+            $data['status'] = '1';
+            $data['usuario_id'] = $row->id;
         }
         
-        echo $usuario_id;
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
-    function activar_e($cod_activacion)
+    /*function activar_e($cod_activacion)
     {
         //$this->output->enable_profiler(TRUE);
         $validar_contrasenas = $this->Usuario_model->validar_contrasenas();
@@ -443,7 +443,7 @@ class Usuarios extends CI_Controller{
         } else {
             $this->activar($cod_activacion);
         }
-    }
+    }*/
     
     function test_email($usuario_id, $tipo_activacion = 'activar')
     {
@@ -586,9 +586,7 @@ class Usuarios extends CI_Controller{
                 $resultado['mensaje'] = 'La contraseña se cambió exitosamente.';
             }
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($resultado));
+        $this->output->set_content_type('application/json')->set_output(json_encode($resultado));
         
     }
     
@@ -639,9 +637,6 @@ class Usuarios extends CI_Controller{
     
     /**
      * AJAX, Cambia el valor de la contraseña de un usuario al valor definido por defecto.
-     * 
-     * @param type $usuario_id
-     * @param type $rapido 
      */
     function restaurar_contrasena($usuario_id)
     {
@@ -727,29 +722,28 @@ class Usuarios extends CI_Controller{
     }
 
     /**
-     * Formulario para restaurar contraseña o reactivar cuenta
-     * se ingresa con nombre de usuario y contraseña
+     * Formulario para restaurar contraseña cuenta mediante el email, se envía email
+     * a usuarios/recovery_email
+     * 2021-01-06
      */
     function restaurar($resultado = NULL)
     {
         
-        if ( $this->session->userdata('logged') )
+        if ( ! $this->session->userdata('logged') )
         {
-            redirect('app');
-        } else {
-            
             $data['destino_form'] = 'usuarios/restaurar_e';
             
             $data['head_title'] = 'Restauración de contraseña';
             $data['view_a'] = 'usuarios/restaurar_v';
             $data['resultado'] = $resultado;
             $this->load->view('templates/monster/start_v', $data);
+        } else {
+            redirect('app');
         }
     }
 
     /**
-     * Recibe email por post, y si encuentra usuario, envía mensaje
-     * para restaurar contraseña
+     * Recibe email por post, y si encuentra usuario, envía mensaje para restaurar contraseña
      * 2020-08-06
      */
     function recovery_email()
@@ -814,7 +808,7 @@ class Usuarios extends CI_Controller{
             $row_usuario = $this->Pcrn->registro_id('usuario', $usuario_id);
 
             $this->email->initialize($config);
-            $this->email->from('info@plataformaenlinea.com', 'Plataforma en Línea');
+            $this->email->from('info@plataformaenlinea.com', 'En Línea Editores');
             $this->email->to('jmojedap@gmail.com');
             $this->email->message('Este es el contenido del mensaje');
             $this->email->subject('Subject del mensaje');

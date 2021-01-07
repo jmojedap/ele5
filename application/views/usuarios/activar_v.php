@@ -1,45 +1,75 @@
 <?php
-
     //Textos
         $textos['subtitulo'] = 'Activación de cuenta';
         $textos['boton'] = 'Activar mi cuenta';
         
         if ( $tipo_activacion == 'restaurar' ) {
             $textos['subtitulo'] = 'Restauración de contraseña';
-            $textos['boton'] = 'Enviar';
+            $textos['boton'] = 'Guardar';
         }
 ?>
 
-<div class="center_box_450 text-center">
-    <h2 class="resaltar"><?= $row->nombre . ' ' . $row->apellidos ?></h2>
-    <h3 class="suave"><?= $textos['subtitulo'] ?></h3>
-    <p class="suave"><?= $row->username ?></p>
-    <p>Establezca su contraseña para la Plataforma Enlace</p>
+<div id="password_app">
+    <div class="text-center">
+        <h4 class="text-primary"><?= $row->nombre . ' ' . $row->apellidos ?></h4>
+        <p class="text-muted"><?= $row->username ?></p>
+        <p>Establezca su contraseña</p>
 
-    <?= form_open($destino_form); ?>
-        <div class="form-group">
-            <input
-                name="password" type="password" class="form-control form-control-lg"
-                required autofocus pattern=".{8,}"
-                title="Debe tener al menos 8 caracteres" placeholder="Contraseña"
-            >
-        </div>
-        <div class="form-group">
-            <input
-                name="passconf" type="password" class="form-control form-control-lg"
-                required minlength="8"
-                title="Confirme su contraseña" placeholder="Confirme su contraseña"
-            >
-        </div>
-        <div class="form-group">
-            <button class="btn btn-success btn-lg btn-block" type="submit">
-                <?= $textos['boton'] ?>
-            </button>
-        </div>
-    <?= form_close(); ?>
-
-    <div class="mt-2">
-        <?= validation_errors('<div class="alert alert-danger" role="alert">', '</div>') ?>
+        <form accept-charset="utf-8" method="POST" id="password_form" @submit.prevent="send_form">
+            <div class="form-group">
+                <div class="input-group mb-3">
+                    <input
+                        name="password" v-bind:type="pw_type" autofocus
+                        class="form-control form-control-lg"
+                        required pattern=".{8,}"
+                        title="Debe tener al menos 8 caracteres"
+                        >
+                    <div class="input-group-append">
+                        <button class="btn btn-light" type="button" v-on:click="toggle_password">
+                            <i class="far fa-eye-slash" v-show="pw_type == 'password'"></i>
+                            <i class="far fa-eye" v-show="pw_type == 'text'"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">
+                    <?= $textos['boton'] ?>
+                </button>
+            </div>
+        </form>
     </div>
 </div>
+
+<script>
+    new Vue({
+        el: '#password_app',
+        data: {
+            cod_activacion: '<?= $cod_activacion ?>',
+            pw_type: 'password',
+        },
+        methods: {
+            send_form: function(){
+                axios.post(url_api + 'usuarios/establecer_contrasena/' + this.cod_activacion, $('#form_id').serialize())
+                .then(response => {
+                    console.log(response.data);
+                    if ( response.data.status == 1 ) {
+                        window.location = url_app   
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });  
+            },
+            toggle_password: function(){
+                if ( this.pw_type == 'text' )
+                {
+                    this.pw_type = 'password'
+                } else {
+                    this.pw_type = 'text'
+                }
+            },
+        }
+    });
+</script>
 
