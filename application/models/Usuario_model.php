@@ -1095,9 +1095,7 @@ class Usuario_model extends CI_Model{
     
     /**
      * Inserta masivamente estudiantes
-     * tabla usuario, ACT 2019-01-14
-     * 
-     * @param type $array_hoja    Array con los datos de los estudiantes
+     * tabla usuario, ACT 2021-01-12
      */
     function importar_estudiantes($array_hoja)
     {
@@ -1113,8 +1111,8 @@ class Usuario_model extends CI_Model{
             
         //Predeterminados registro nuevo
             $registro['rol_id'] = 6;    //Estudiante
-            $registro['cpw'] = 1;   //Nueva encriptación de contraseña
-            $registro['estado'] = 1;    //
+            $registro['cpw'] = 1;       //Nueva encriptación de contraseña
+            $registro['estado'] = 2;    //Temporal
             $registro['creado'] = date('Y-m-d h:i:s');
             $registro['editado'] = date('Y-m-d h:i:s');
             $registro['creado_usuario_id'] = $this->session->userdata('usuario_id');
