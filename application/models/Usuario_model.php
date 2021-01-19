@@ -972,10 +972,6 @@ class Usuario_model extends CI_Model{
      * Después de actualizar estudiante
      * 
      * Actualizar usuario.institucion_id y la tabla usuario_grupo
-     * 
-     * @param type $post_array
-     * @param type $primary_key
-     * @return boolean
      */
     function gc_after_estudiantes($post_array, $primary_key)
     {
@@ -990,7 +986,6 @@ class Usuario_model extends CI_Model{
                 $registro = array(
                     'institucion_id' => $institucion_id,
                     'iniciado' => 1,    //El estudiante se marca como iniciado
-                    'pago' => 1         //El estudiante se marca como pagado, 2017-02-15
                 );
 
                 $this->db->where('id', $primary_key);
@@ -1095,7 +1090,7 @@ class Usuario_model extends CI_Model{
     
     /**
      * Inserta masivamente estudiantes
-     * tabla usuario, ACT 2021-01-12
+     * tabla usuario, ACT 2021-01-19
      */
     function importar_estudiantes($array_hoja)
     {
@@ -1134,6 +1129,7 @@ class Usuario_model extends CI_Model{
                 $registro['password'] = $this->Usuario_model->encriptar_pw($dpw);
                 $registro['sexo'] = $sexo;
                 $registro['username'] = $this->Pcrn->si_strlen($array_fila[6], $username_alt);
+                $registro['pago'] = $array_fila[7];
                 
                 if ( ! is_null($row_grupo) )
                 {

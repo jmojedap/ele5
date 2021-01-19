@@ -64,7 +64,7 @@ class Order_model extends CI_Model{
         $condition .= $this->role_filter() . ' AND ';
 
         //q words condition
-        $words_condition = $this->Search_model->words_condition($filters['q'], array('name', 'code', 'description', 'text_1', 'text_2'));
+        $words_condition = $this->Search_model->words_condition($filters['q'], array('buyer_name', 'order_code', 'orders.email', 'id_number', 'phone_number', 'notes_admin'));
         if ( $words_condition )
         {
             $condition .= $words_condition . ' AND ';
@@ -73,6 +73,9 @@ class Order_model extends CI_Model{
         if ( $filters['status'] != '' ) { $condition .= "orders.status = {$filters['status']} AND "; } //Estado compra
         if ( $filters['i'] != '' ) { $condition .= "orders.institution_id = {$filters['i']} AND "; } //Institución asociada
         if ( $filters['fi'] != '' ) { $condition .= "orders.created_at >= '{$filters['fi']}' AND "; } //Fecha de creación posterior a
+        if ( $filters['ff'] != '' ) { $condition .= "orders.created_at <= '{$filters['fi']} 23:59:59' AND "; } //Fecha de creación anterior a
+        if ( $filters['f1'] != '' ) { $condition .= "orders.updated_at >= '{$filters['f1']}' AND "; } //Fecha de actualización posterior a
+        if ( $filters['f2'] != '' ) { $condition .= "orders.updated_at <= '{$filters['f2']} 23:59:59' AND "; } //Fecha de actualización anterior a
         
         if ( strlen($condition) > 0 )
         {

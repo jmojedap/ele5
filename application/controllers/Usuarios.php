@@ -318,12 +318,13 @@ class Usuarios extends CI_Controller{
     
     /**
      * Importar estudiantes, (e) ejecutar.
+     * 2021-01-19
      */
     function importar_estudiantes_e()
     {
         //Proceso
             $this->load->model('Pcrn_excel');
-            $letra_columna = 'G';   //Última columna con datos
+            $letra_columna = 'H';   //Última columna con datos
             
             $resultado = $this->Pcrn_excel->array_hoja_default($letra_columna);
 

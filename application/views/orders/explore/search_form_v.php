@@ -4,10 +4,10 @@
 
 <form accept-charset="utf-8" method="POST" id="search_form" @submit.prevent="get_list">
     <div class="form-group row">
-        <div class="col-md-9">
+        <div class="col-md-8">
             <div class="input-group mb-2">
                 <input
-                    place="text"
+                    type="text"
                     name="q"
                     class="form-control"
                     placeholder="Buscar"
@@ -24,7 +24,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <button class="btn btn-primary btn-block">
                 <i class="fa fa-search"></i>
                 Buscar
@@ -33,24 +33,34 @@
     </div>
     <div id="adv_filters" style="<?= $filters_style ?>">
         <div class="form-group row">
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <?= form_dropdown('status', $options_status, $filters['status'], 'class="form-control" title="Filtrar por Estado"'); ?>
             </div>
-            <label for="status" class="col-md-3 control-label col-form-label">Estado compra</label>
+            <label for="status" class="col-md-4 control-label col-form-label">Estado compra</label>
         </div>
         <div class="form-group row">
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <?= form_dropdown('i', $options_institucion, $filters['i'], 'class="form-control form-control-chosen" title="Filtrar por institución"'); ?>
             </div>
-            <label for="i" class="col-md-3 col-form-label">Institución</label>
+            <label for="i" class="col-md-4 col-form-label">Institución</label>
         </div>
         <div class="form-group row">
-            <div class="col-md-9">
-                <input
-                    name="fi" type="date" class="form-control"
-                >
+            <div class="col-md-4">
+                <input name="fi" type="date" class="form-control" value="<?= $filters['fi'] ?>">
             </div>
-            <label for="i" class="col-md-3 col-form-label">Creada a partir de</label>
+            <div class="col-md-4">
+                <input name="ff" type="date" class="form-control" value="<?= $filters['ff'] ?>">
+            </div>
+            <label for="i" class="col-md-4 col-form-label">Creada entre</label>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+                <input name="f1" type="date" class="form-control" value="<?= $filters['f1'] ?>">
+            </div>
+            <div class="col-md-4">
+                <input name="f2" type="date" class="form-control" value="<?= $filters['f2'] ?>">
+            </div>
+            <label for="i" class="col-md-4 col-form-label">Actualizada entre</label>
         </div>
     </div>
 </form>

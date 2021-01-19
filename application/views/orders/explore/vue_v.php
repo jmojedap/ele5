@@ -52,7 +52,8 @@
             str_filters: '<?= $str_filters ?>',
             showing_filters: false,
             search_num_rows: <?= $search_num_rows ?>,
-            loading: false
+            loading: false,
+            
         },
         methods: {
             get_list: function(){

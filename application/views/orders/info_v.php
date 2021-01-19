@@ -12,7 +12,7 @@
                         <tr>
                             <td>Usuario</td>
                             <td>
-                                <a href="<?= base_url("usuarios/actividad/{$row->user_id}") ?>" class="">
+                                <a href="<?= base_url("usuarios/actividad/{$row->user_id}") ?>">
                                     <?= $this->App_model->nombre_usuario($row->user_id); ?>
                                 </a>
                             </td>
@@ -31,16 +31,19 @@
                         </tr>
                         <tr>
                             <td>E-mail</td>
-                            <td>
-                                <?= $row->email ?>
-                                <button class="btn btn-success" v-on:click="send_status_email">
-                                    Enviar Email Estado
-                                </button>
-                            </td>
+                            <td><?= $row->email ?></td>
                         </tr>
                         <tr>
                             <td>Valor total</td>
                             <td><strong><?= $this->pml->money($row->amount); ?></strong></td>
+                        </tr>
+                        <tr>
+                            <td>Actualizada en</td>
+                            <td><?= $this->pml->date_format($row->updated_at); ?> &middot; <?= $this->pml->ago($row->updated_at); ?></td>
+                        </tr>
+                        <tr>
+                            <td>Creada en</td>
+                            <td><?= $this->pml->date_format($row->created_at); ?> &middot; <?= $this->pml->ago($row->created_at); ?></td>
                         </tr>
                     </tbody>
                 </table>

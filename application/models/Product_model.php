@@ -722,7 +722,7 @@ class Product_model extends CI_Model{
 
     /**
      * Listado de productos según la institución y nivel escolar
-     * 2020-07-27
+     * 2021-01-19
      */
     function get_by_institution($institution_id, $level = NULL)
     {
@@ -730,6 +730,7 @@ class Product_model extends CI_Model{
         $this->db->join('product_meta', 'product.id = product_meta.product_id');
         $this->db->where('product_meta.related_1', $institution_id);
         $this->db->where('product_meta.type_id', 310022);   //Asignación de institución
+        $this->db->where('product.status', 1);   //Producto activo
         if ( ! is_null($level) ) { $this->db->where('product.level', $level); }
         //$this->db->where("kit_id IN (SELECT kit_id FROM kit_elemento WHERE tipo_elemento_id = 0 AND elemento_id = {$institution_id})");
         
