@@ -1,5 +1,5 @@
 <?php $this->load->view('assets/chosen_jquery'); ?>
-<?php $this->load->view('assets/icheck'); ?>
+<?php //$this->load->view('assets/icheck'); ?>
 
 <?php
     $carpeta_iconos = RUTA_IMG . 'flipbook/';
@@ -17,7 +17,7 @@
         );
 
         $att_q = array(
-            'class' =>  'form-control',
+            'class' =>  'form-control mr-2',
             'name' => 'q',
             'placeholder' => 'Buscar',
             'value' => $busqueda['q']
@@ -31,7 +31,7 @@
         
 
         $att_submit = array(
-            'class' =>  'btn btn-primary',
+            'class' =>  'btn btn-primary w100p',
             'value' =>  'Buscar'
         );
         
@@ -53,14 +53,12 @@
         }
         
     //Clases columnas
-        $clases_col['disponible'] = 'hidden-xs';
-        $clases_col['tema'] = 'hidden-xs';
-        $clases_col['nivel_area'] = 'hidden-xs hidden-sm';
-        $clases_col['usuario'] = 'hidden-xs hidden-sm';
-        $clases_col['editado'] = 'hidden-xs hidden-sm';
+        $clases_col['disponible'] = 'only-lg';
+        $clases_col['tema'] = 'only-lg';
+        $clases_col['nivel_area'] = 'only-lg';
+        $clases_col['usuario'] = 'only-lg';
+        $clases_col['editado'] = 'only-lg';
 ?>
-
-<?php $this->load->view('recursos/menu_archivos_v') ?>
 
 <script>
     //Variables
@@ -77,7 +75,7 @@
 <script>
     $(document).ready(function(){
         
-        $('.check_registro').on('ifChanged', function(){
+        $('.check_registro').change(function(){
             registro_id = '-' + $(this).data('id');
             if( $(this).is(':checked') ) {  
                 seleccionados += registro_id;
@@ -85,23 +83,23 @@
                 seleccionados = seleccionados.replace(registro_id, '');
             }
             
-            //$('#seleccionados').html(seleccionados.substring(1));
+            $('#seleccionados').html(seleccionados.substring(1));
         });
         
-        $('#check_todos').on('ifChanged', function(){
+        $('#check_todos').change(function(){
             
             if($(this).is(":checked"))
             {
                 //Activado
-                $('.check_registro').iCheck('check');
+                $('.check_registro').attr('checked', true);
                 seleccionados = seleccionados_todos;
             } else {
                 //Desactivado
-                $('.check_registro').iCheck('uncheck');
+                $('.check_registro').attr('checked', false);
                 seleccionados = '';
             }
-            
-            //$('#seleccionados').html(seleccionados.substring(1));
+           
+            $('#seleccionados').html(seleccionados.substring(1));
         });
         
         $('#eliminar_seleccionados').click(function(){
@@ -126,42 +124,39 @@
     }
 </script>
 
-<div class="">
+<div class="mb-2">
     <div class="row">
-        <div class="col-md-6 sep2">
+        <div class="col-md-8">
             <?= form_open("recursos/archivos/", $att_form) ?>
             <?= form_input($att_q) ?>
-            <?= form_dropdown('a', $opciones_area, $busqueda['a'], 'title="Filtrar por área" class="form-control chosen-select"'); ?>
-            <?= form_dropdown('n', $opciones_nivel, $busqueda['n'], 'title="Filtrar por nivel" class="form-control chosen-select"'); ?>
-            <?= form_dropdown('tp', $opciones_tipo, $busqueda['tp'], 'title="Filtrar por tipo de archivo" class="form-control chosen-select"'); ?>
+            <?= form_dropdown('a', $opciones_area, $busqueda['a'], 'title="Filtrar por área" class="form-control mr-2"'); ?>
+            <?= form_dropdown('n', $opciones_nivel, $busqueda['n'], 'title="Filtrar por nivel" class="form-control mr-2"'); ?>
+            <?= form_dropdown('tp', $opciones_tipo, $busqueda['tp'], 'title="Filtrar por tipo de archivo" class="form-control mr-2"'); ?>
             <?= form_submit($att_submit) ?>
             <?= form_close() ?>
         </div>
         
-        <div class="col-md-3 col-xs-6 sep2">
+        <div class="col-md-2">
             <div class="btn-toolbar" role="toolbar" aria-label="...">
                 <div class="btn-group" role="group" aria-label="...">
-                    <a class="btn btn-warning" title="Eliminar los elementos seleccionados" data-toggle="modal" data-target="#modal_eliminar">
-                        <i class="fa fa-trash-o"></i>
-                    </a>
+                    <button class="btn btn-warning mr-2" title="Eliminar los elementos seleccionados" data-toggle="modal" data-target="#modal_eliminar">
+                        <i class="fa fa-trash"></i>
+                    </button>
                 </div>
 
-                <div class="btn-group hidden-xs" role="group">
-                    <?= anchor("archivos/exportar/?{$busqueda_str}", '<i class="fa fa-file-excel-o"></i> Exportar', 'class="btn btn-success" title="Exportar los ' . $cant_resultados . ' registros a archivo de MS Excel"') ?>
+                <div class="btn-group only-lg" role="group">
+                    <?= anchor("archivos/exportar/?{$busqueda_str}", '<i class="fa fa-download"></i> Exportar', 'class="btn btn-success" title="Exportar los ' . $cant_resultados . ' registros a archivo de MS Excel"') ?>
                 </div>
             </div>
         </div>
         
-        <div class="col-md-3 col-xs-6 sep2">
-            <div class="pull-right">
-                <p id="seleccionados"></p>
-                <?= $this->pagination->create_links(); ?>
-            </div>
+        <div class="col-md-2">
+            <?= $this->pagination->create_links(); ?>
         </div>
     </div>
 </div>
     
-<table class="table table-default bg-blanco">
+<table class="table bg-white">
     <thead>
         <th width="10px;"><?= form_checkbox($att_check_todos) ?></th>
         <th width="50px;">ID</th>
@@ -219,7 +214,7 @@
                 <td class="<?= $clases_col['editado'] ?>"><?= $this->Pcrn->tiempo_hace($row_resultado->editado) ?></td>
                 <?php if ( $this->session->userdata('rol_id') <= 2 ) : ?>                
                     <td class="<?= $clases_col['editar'] ?>">
-                        <?= anchor("temas/archivos/{$row_resultado->tema_id}/edit/{$row_resultado->recurso_id}", '<i class="fa fa-pencil"></i>', 'class="a4"') ?>
+                        <?= anchor("temas/archivos/{$row_resultado->tema_id}/edit/{$row_resultado->recurso_id}", '<i class="fa fa-pencil-alt"></i>', 'class="a4"') ?>
                     </td>
                 <?php endif ?>
             </tr>

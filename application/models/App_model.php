@@ -688,6 +688,27 @@ class App_model extends CI_Model {
             $config['cur_tag_open'] = '<li class="page-item active"><span>';
             $config['cur_tag_close'] = '</span></li>';
             $config['page_query_string'] = TRUE;    //Variables por GET
+        } elseif ($formato == 4) {
+            $config['full_tag_open'] = '<nav><ul class="pagination" style="margin: 0px; float: right;">';
+            $config['full_tag_close'] = '</ul></nav>';
+            $config['prev_link'] = '<i class="fa fa-caret-left"></i>';
+            $config['next_link'] = '<i class="fa fa-caret-right"></i>';
+            $config['last_link'] = '<i class="fa fa-step-forward"></i>';
+            $config['first_link'] = '<i class="fa fa-step-backward"></i>';
+            $config['first_tag_open'] = '<li class="page-item">';
+            $config['first_tag_close'] = '</li>';
+            $config['last_tag_open'] = '<li class="page-item">';
+            $config['last_tag_close'] = '</li>';
+            $config['next_tag_open'] = '<li class="page-item">';
+            $config['next_tag_close'] = '</li>';
+            $config['prev_tag_open'] = '<li class="page-item">';
+            $config['prev_tag_close'] = '</li>';
+            $config['num_tag_open'] = '<li class="page-item">';
+            $config['num_tag_close'] = '</li>';
+            $config['cur_tag_open'] = '<li class="page-item active"><span class="page-link">';
+            $config['cur_tag_close'] = '</span></li>';
+            $config['page_query_string'] = TRUE;    //Variables por GET
+            $config['attributes'] = array('class' => 'page-link');
         }
 
         return $config;

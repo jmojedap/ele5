@@ -10,8 +10,8 @@
 
 <div class="seccion group">
     
-    <div class="col col_box span_1_of_3">
-        <div class="info_container_body">
+    <div class="col col_box">
+        <div class="card">
             <h4>Instrucciones para cargar lista de asignación de archivos a temas</h4>
             <ul>
                 <li>El tipo de archivo requerido es: <span class="resaltar">MS Excel 97-2003 (.xls) o 2007 (.xlsx)</span>.</li>
@@ -23,9 +23,9 @@
     </div>
     
     
-    <div class="col col_box span_2_of_3">
-        <div class="info_container_body">      
-            <div class="div1">
+    <div class="col">
+        <div class="card">      
+            <div class="card-body">
                 <label for="file" class="label1">Seleccionar archivo</label><br/>
                 <input type="file" name="file" required>
             </div>
@@ -45,7 +45,7 @@
             <?php //Mensajes de validación del formulario ?>
 
             <?php if ( isset($resultado) ):?>
-                <div class="div1">
+                <div class="mb-2">
                     <?php foreach ($resultado as $mensaje_resultado): ?>
                         <h4 class="alert_error"><?= $mensaje_resultado ?></h4>
                     <?php endforeach ?>
@@ -53,18 +53,12 @@
             <?php endif ?>
 
             <?php if ( validation_errors() ):?>
-                <div class="div1">
+                <div class="mb-2">
                     <h4 class="alert_error"><?= validation_errors() ?></h4>    
                 </div>
             <?php endif ?>
-
-            
         </div>
     </div>
-    
-    
-    
-    
 </div>
 
 <?= form_close() ?>

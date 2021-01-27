@@ -304,9 +304,11 @@ class Paginas extends CI_Controller{
             $data['paginas'] = $paginas;
         
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Cargar página';
-            $data['vista_b'] = 'paginas/cargar_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Cargar página';
+            $data['view_a'] = 'paginas/cargar_v';
+            $this->load->view(TPL_ADMIN, $data);
+            //Salida JSON
+            //$this->output->set_content_type('application/json')->set_output(json_encode($data));
          
     }
     

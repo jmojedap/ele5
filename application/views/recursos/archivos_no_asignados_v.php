@@ -97,8 +97,6 @@
         
     }
 </script>
-
-<?php $this->load->view('recursos/menu_archivos_v') ?>
     
 <h4 class="" id="mensaje_resultado"></h4>
     
@@ -114,25 +112,22 @@
     
 </div>
 
-<div class="sep2">
-    <ul class="nav nav-pills">
-        <?php foreach ($carpetas as $key => $carpeta) : ?>
-            <?php
-                $clase = '';
-                if ( $key == $tipo_archivo_id ) { $clase = 'active'; }
-            ?>
-            <li role="presentation" class="<?= $clase ?>">
-                <?= anchor("recursos/archivos_no_asignados/{$key}/", $carpeta) ?>
-            </li>
+<nav class="nav nav-pills mb-2">
+    <?php foreach ($carpetas as $key => $carpeta) : ?>
+        <?php
+            $clase = '';
+            if ( $key == $tipo_archivo_id ) { $clase = 'active'; }
+        ?>
+        <a href="<?= base_url("recursos/archivos_no_asignados/{$key}/") ?>" class="nav-item nav-link <?= $clase ?>">
+            <?= $carpeta ?>
+        </a>
 
-        <?php endforeach ?>
-    </ul>
-</div>
-
+    <?php endforeach ?>
+</nav>
 
 <div class="row">
     <div class="col col-md-8">
-        <table class="table table-default bg-blanco">
+        <table class="table bg-white">
             <thead>
                 <th width="50px">Tipo</th>
                 <th>Nombre archivo</th>
@@ -172,11 +167,11 @@
     </div>
     
     <div class="col col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card ">
+            <div class="card-header">
                 Archivos no asignados
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <ul>
                     <li>Los archivos que aparecen en esta sección están en la plataforma, pero no están asignados a ningún tema.</li>
                     <li>Para asignarlos puede cambiar el nombre del archivo. Haga clic en el botón <i class="fa fa-pencil"></i>.</li>

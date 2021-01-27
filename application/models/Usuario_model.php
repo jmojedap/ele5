@@ -1107,7 +1107,7 @@ class Usuario_model extends CI_Model{
         //Predeterminados registro nuevo
             $registro['rol_id'] = 6;    //Estudiante
             $registro['cpw'] = 1;       //Nueva encriptación de contraseña
-            $registro['estado'] = 2;    //Temporal
+            //$registro['estado'] = 2;    //Temporal
             $registro['creado'] = date('Y-m-d h:i:s');
             $registro['editado'] = date('Y-m-d h:i:s');
             $registro['creado_usuario_id'] = $this->session->userdata('usuario_id');
@@ -1130,6 +1130,7 @@ class Usuario_model extends CI_Model{
                 $registro['sexo'] = $sexo;
                 $registro['username'] = $this->Pcrn->si_strlen($array_fila[6], $username_alt);
                 $registro['pago'] = $array_fila[7];
+                $registro['estado'] = ($array_fila[7] == 1) ? 1 : 2 ;    //Si pagó, se activa: No pagó: Temporal
                 
                 if ( ! is_null($row_grupo) )
                 {

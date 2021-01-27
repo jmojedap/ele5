@@ -97,7 +97,7 @@
                         active: false,
                         icon: 'far fa-folder',
                         cf: 'recursos/archivos',
-                        sections: []
+                        sections: ['recursos/archivos', 'recursos/asignar', 'recursos/asignar_e', 'recursos/procesos_archivos', 'recursos/archivos_no_asignados']
                     },
                     {
                         text: 'Links',

@@ -50,7 +50,7 @@ class Recursos extends CI_Controller{
         
         //Paginación
             $this->load->library('pagination');
-            $config = $this->App_model->config_paginacion(2);
+            $config = $this->App_model->config_paginacion(4);
             $config['base_url'] = base_url("recursos/archivos/?{$busqueda_str}");
             $config['total_rows'] = $resultados_total->num_rows();
             $this->pagination->initialize($config);
@@ -66,10 +66,11 @@ class Recursos extends CI_Controller{
             $data['resultados'] = $resultados;
         
         //Solicitar vista
-            $data['titulo_pagina'] = 'Archivos';
-            $data['subtitulo_pagina'] = $resultados_total->num_rows();
-            $data['vista_a'] = 'recursos/archivos_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_title'] = 'Archivos';
+            $data['head_subtitle'] = $resultados_total->num_rows();
+            $data['view_a'] = 'recursos/archivos_v';
+            $data['nav_2'] = 'recursos/menu_archivos_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -117,12 +118,12 @@ class Recursos extends CI_Controller{
             $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
             
         //Variables generales
-            $data['titulo_pagina'] = 'Archivos';
-            $data['subtitulo_pagina'] = 'Asignar archivos';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'recursos/menu_archivos_v';
+            $data['head_title'] = 'Archivos';
+            $data['head_subtitle'] = 'Asignar';
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_2'] = 'recursos/menu_archivos_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -130,7 +131,6 @@ class Recursos extends CI_Controller{
      */
     function asignar_e()
     {
-        
         //Proceso
             $this->load->model('Pcrn_excel');
             $no_importados = array();
@@ -153,11 +153,11 @@ class Recursos extends CI_Controller{
             $data['destino_volver'] = "recursos/archivos/";
         
         //Cargar vista
-            $data['titulo_pagina'] = 'Archivos';
-            $data['subtitulo_pagina'] = 'Asignar';
-            $data['vista_a'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'recursos/menu_archivos_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_title'] = 'Archivos';
+            $data['head_subtitle'] = 'Asignar';
+            $data['view_a'] = 'comunes/bs4/resultado_importacion_v';
+            $data['nav_2'] = 'recursos/menu_archivos_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function procesos_archivos()
@@ -170,10 +170,10 @@ class Recursos extends CI_Controller{
         $data['carpetas'] = $carpetas;
         
         //Solicitar vista
-            $data['titulo_pagina'] = 'Archivos';
-            $data['subtitulo_pagina'] = 'Asociación automática';
-            $data['vista_a'] = 'recursos/procesos_archivos_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_title'] = 'Archivos';
+            $data['head_subtitle'] = 'Asociación automática';
+            $data['view_a'] = 'recursos/procesos_archivos_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -220,10 +220,11 @@ class Recursos extends CI_Controller{
             $data['carpeta_uploads'] = base_url() . RUTA_UPLOADS . $this->Pcrn->campo_id('item', $tipo_archivo_id, 'slug') . '/';
         
         //Solicitar vista
-            $data['titulo_pagina'] = 'Archivos';
-            $data['subtitulo_pagina'] = 'Disponibles sin asignar a un tema';
-            $data['vista_a'] = 'recursos/archivos_no_asignados_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_title'] = 'Archivos';
+            $data['head_subtitle'] = 'Disponibles sin asignar a un tema';
+            $data['view_a'] = 'recursos/archivos_no_asignados_v';
+            $data['nav_2'] = 'recursos/menu_archivos_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -300,7 +301,7 @@ class Recursos extends CI_Controller{
             $data['options_grupo'] = $this->App_model->opciones_grupo("grupo.id IN ({$str_grupos})");
             
         //Cargar vista
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -374,7 +375,7 @@ class Recursos extends CI_Controller{
             $data['head_title'] = 'Links';
             $data['head_subtitle'] = 'Programados';
             
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -425,7 +426,7 @@ class Recursos extends CI_Controller{
             $data['view_a'] = 'common/import_v';
             $data['nav_2'] = 'recursos/links/explore/menu_v';
         
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -457,6 +458,6 @@ class Recursos extends CI_Controller{
             $data['view_a'] = 'common/import_result_v';
             $data['nav_2'] = 'recursos/links/explore/menu_v';
 
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 }

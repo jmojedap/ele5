@@ -545,9 +545,9 @@ class Grupos extends CI_Controller{
         //Cargar vista
             $data['head_title'] = 'Grupos';
             $data['head_subtitle'] = 'Resultado desasignar profesores';
-            $data['vista_a'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'grupos/explorar/menu_v';
-            $data['vista_submenu'] = 'grupos/importar_menu_v';
+            $data['view_a'] = 'comunes/bs4/resultado_importacion_v';
+            $data['nav_2'] = 'grupos/explorar/menu_v';
+            $data['nav_3'] = 'grupos/importar_menu_v';
             $this->App_model->view(TPL_ADMIN, $data);
     }
 

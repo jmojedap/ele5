@@ -12,7 +12,7 @@
 
 <div class="row">
     <div class="col col-md-6">
-        <table class="table table-default bg-blanco">
+        <table class="table bg-white">
             <thead>
                 <th width="50px"></th>
                 <th>Carpeta</th>
@@ -28,20 +28,20 @@
                     <tr>
                         <td><?= img($src) ?></td>
                         <td><?= $row_carpeta->slug ?></td>
-                        <td><?= anchor("recursos/asociar_archivos_e/{$row_carpeta->id}", '<i class="fa fa-refresh"></i>', 'class="btn btn-default" title=""') ?></td>
-                        <td><?= anchor("recursos/act_archivos_disponibles/{$row_carpeta->id}", '<i class="fa fa-check-square-o"></i>', 'class="btn btn-default" title=""') ?></td>
-                        <td><?= anchor("recursos/cambiar_nombres_e/{$row_carpeta->id}", '<i class="fa fa-font"></i> |', 'class="btn btn-default" title=""') ?></td>
+                        <td><?= anchor("recursos/asociar_archivos_e/{$row_carpeta->id}", '<i class="fa fa-sync"></i>', 'class="btn btn-light"') ?></td>
+                        <td><?= anchor("recursos/act_archivos_disponibles/{$row_carpeta->id}", '<i class="fa fa-check"></i>', 'class="btn btn-light"') ?></td>
+                        <td><?= anchor("recursos/cambiar_nombres_e/{$row_carpeta->id}", '<i class="fa fa-font"></i> |', 'class="btn btn-light"') ?></td>
                     </tr>
                 <?php endforeach ?>
             </tbody>
         </table>
     </div>
     <div class="col col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card">
+            <div class="card-header">
                 Descripción de los procesos
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <h3>Asociar</h3>
                 <h4>Asociación automática de archivos</h4>
 

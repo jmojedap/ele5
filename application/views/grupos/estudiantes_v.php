@@ -110,8 +110,7 @@
                             </div>
                         </div>
                         <div v-else>
-                            <span v-if="element.pago == 0">Sí</span>
-                            <span v-if="element.pago == 1">No</span>
+                            <span v-if="element.pago == 1" class="text-success"><i class="fa fa-check"></i></span>
                         </div>
                     </td>
                 </tr>

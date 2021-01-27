@@ -458,10 +458,12 @@ class Programa_Model extends CI_Model{
     
     /**
      * Genera multiples flipbooks desde múltiples programas
-     * 2020-02-13, se agregó  los tipos de contenidos permitidos
+     * 2021-01-27, Se agrega la función de crear archivo JSON
      */
     function generar_flipbooks_multi($array_hoja)
     {
+        $this->load->model('Flipbook_model');
+
         $no_importados = array();
         $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
         $arr_tipos = array(0,1,3,4,5);  //Tipos de flipbook existentes
@@ -507,12 +509,15 @@ class Programa_Model extends CI_Model{
                 if ( $flipbook_id == 0 )
                 {
                     //Crear nuevo flipbook
-                    $this->generar_flipbook($row_programa->id, $registro);
+                    $flipbook_id = $this->generar_flipbook($row_programa->id, $registro);
                 } else {
                     //Sobreescribir
                     $registro['descripcion'] = $row_programa->descripcion;
                     $this->sobreescribir_fb($row_programa->id, $flipbook_id, $registro);
                 }
+
+                //Generar archivo JSON del Flipbook
+                $this->Flipbook_model->crear_json($flipbook_id);
             } else {
                 $no_importados[] = $fila;
             }

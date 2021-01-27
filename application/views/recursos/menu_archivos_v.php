@@ -6,7 +6,7 @@
     
     //Atributos de los elementos del menú
         $arr_menus['archivos'] = array(
-            'icono' => '<i class="fa fa-list-alt"></i>',
+            'icono' => '<i class="fa fa-search"></i>',
             'texto' => 'Explorar',
             'link' => "recursos/archivos/",
             'atributos' => 'title="Explorar archivos"'
@@ -48,4 +48,4 @@
         $data_menu['seccion'] = $seccion;
     
     //Cargue vista
-        $this->load->view('comunes/menu_v', $data_menu);
+        $this->load->view('comunes/bs4/menu_v', $data_menu);
