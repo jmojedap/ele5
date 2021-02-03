@@ -141,7 +141,7 @@
                 <tr>
                     <td>Valor total</td>
                     <td class="td_price">
-                        {{ order.amount | currency }}
+                        <strong class="text-success">{{ order.amount | currency }}</strong>
                         <small>COP</small>
                     </td>
                 </tr>
@@ -176,28 +176,17 @@
             <i class="fa fa-arrow-left"></i>
             Agregar más productos
         </a>
-
+        <button class="btn btn-warning" data-toggle="modal" data-target="#cancel_modal" title="Cancelar la compra">
+            <i class="fa fa-trash-alt mr-2"></i> Vaciar carrito
+        </button>
     </div>
     
     <?php $this->load->view('common/modal_single_delete_v') ?>
+    <?php $this->load->view('orders/checkout/modal_cancel_v') ?>
 
 </div>
 
 <script>
-// Variables
-//-----------------------------------------------------------------------------
-    var data_test = {
-        user_id: 0,
-        buyer_name: 'Juan Pérez Pruebas',
-        id_number: '123456789012',
-        email: 'elindustrial252@hotmail.com',
-        city_id: '0909',
-        address: 'Calle 13 10-23',
-        phone_number: '3007838911',
-        student_name: 'George'
-    }
-
-
 // Filters
 //-----------------------------------------------------------------------------
     Vue.filter('currency', function (value) {
@@ -274,6 +263,17 @@
             set_data_test: function(){
                 this.order = data_test
                 this.city_id = data_test.city_id
+            },
+            cancel_order: function(){
+                axios.get(url_api + 'orders/cancel/')
+                .then(response => {
+                    if ( response.data.status == 1 ) {
+                        window.location = url_app + 'orders/pays'
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });  
             },
 
         }

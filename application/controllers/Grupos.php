@@ -546,9 +546,11 @@ class Grupos extends CI_Controller{
             $data['head_title'] = 'Grupos';
             $data['head_subtitle'] = 'Resultado desasignar profesores';
             $data['view_a'] = 'comunes/bs4/resultado_importacion_v';
-            $data['nav_2'] = 'grupos/explorar/menu_v';
+            $data['nav_2'] = 'grupos/explore/menu_v';
             $data['nav_3'] = 'grupos/importar_menu_v';
             $this->App_model->view(TPL_ADMIN, $data);
+            //Salida JSON
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
 //---------------------------------------------------------------------------------------------------

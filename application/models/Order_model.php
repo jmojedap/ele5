@@ -95,7 +95,7 @@ class Order_model extends CI_Model{
 
         $arr_select['export'] = 'orders.id, orders.status, order_code AS referencia, buyer_name AS comprador, orders.email, id_number AS no_documento, address AS direccion';
         $arr_select['export'] .= ', city AS ciudad, phone_number AS telefono, amount, orders.updated_at, orders.created_at';
-        $arr_select['export'] .= ', orders.institution_id, nombre_institucion AS institution_name, orders.level, notes_admin, bill AS no_factura, shipping_code AS no_guia, wompi_id, wompi_status, wompi_payment_method_type, confirmed_at, user_id, student_name AS nombre_estudiante';
+        $arr_select['export'] .= ', orders.institution_id, nombre_institucion AS institution_name, orders.level, notes_admin, bill AS no_factura, shipping_code AS no_guia, wompi_id, wompi_status, wompi_payment_method_type, confirmed_at, CONCAT((usuario.apellidos), " ", (usuario.nombre)) AS nombre_usuario, user_id AS usuario_id, student_name AS nombre_estudiante';
         $arr_select['export'] .= ', order_product.product_id AS producto_id, product.name AS nombre_producto, product.code AS referencia_producto, order_product.quantity AS cantidad_productos';
 
         return $arr_select[$format];
@@ -152,6 +152,7 @@ class Order_model extends CI_Model{
         $this->db->join('institucion', 'orders.institution_id = institucion.id', 'left');
         $this->db->join('order_product', 'orders.id = order_product.order_id');
         $this->db->join('product', 'order_product.product_id = product.id');
+        $this->db->join('usuario', 'orders.user_id = usuario.id', 'left');        
 
         $search_condition = $this->search_condition($filters);
         if ( $search_condition ) { $this->db->where($search_condition);}
@@ -829,11 +830,22 @@ class Order_model extends CI_Model{
     /**
      * String con contenido del mensaje del correo electrónico enviado al comprador
      * después de recibir la confirmación de pago
+     * 2021-01-29
      */
     function message_buyer($row_order)
     {
         $data['row_order'] = $row_order;
         $data['products'] = $this->products($row_order->id);
+        $data['student_name'] = $data['row_order']->student_name;
+        $data['username'] = NULL;
+
+        //Identificación del estudiante
+        if ( $data['row_order']->user_id > 0 )
+        {
+            $row_user = $this->Db_model->row_id('usuario', $data['row_order']->user_id);
+            $data['username'] = $row_user->username;
+            $data['student_name'] = $row_user->nombre . ' ' . $row_user->apellidos;
+        }
 
         $style_file_path = PATH_RESOURCES . 'css/email.json';
         $style_file = fopen($style_file_path, 'r');

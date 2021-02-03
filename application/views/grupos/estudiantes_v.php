@@ -44,6 +44,10 @@
     //Definir si se tiene permiso para ejecutar proceso
     $process_allowed = FALSE;
     if ( in_array($this->session->userdata('rol_id'), array(0,1,2,3,5,8)) ) $process_allowed = TRUE;
+
+    //Máximo login
+    $max_login = 0;
+    if ( $estudiantes->num_rows() > 0 ) $max_login = $estudiantes->row()->qty_login;
 ?>
 
 <div id="estudiantes_app">
@@ -72,6 +76,7 @@
                     <input type="checkbox" id="checkbox_all_selected" @click="select_all" v-model="all_selected">
                 </th>
                 <th>Estudiante</th>
+                <th>Cantidad login</th>
                 <th>Username</th>
                 <th>Estado</th>
                 <th>Pago</th>
@@ -86,6 +91,13 @@
                         <a v-bind:href="`<?php echo base_url("usuarios/actividad/") ?>` + element.id + `/1`" class="">
                             {{ element.apellidos }} {{ element.nombre }}
                         </a>
+                    </td>
+                    <td>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" v-bind:style="`width: ` + percent_login(element.qty_login) + `%;`" v-bind:aria-valuenow="percent_login" aria-valuemin="0" aria-valuemax="100">
+                                {{ element.qty_login }}
+                            </div>
+                        </div>
                     </td>
                     <td>
                         {{ element.username }}
@@ -133,7 +145,8 @@
             selected: [],
             all_selected: false,
             options_process: <?= json_encode($options_process) ?>,
-            process: ''
+            process: '',
+            max_login: <?= $max_login ?>
         },
         methods: {
             set_payment: function(key, payment){
@@ -177,6 +190,11 @@
                 .catch(function (error) {
                     console.log(error);
                 });
+            },
+            percent_login: function(qty_login){
+                var percent_login = 100 * (parseInt(qty_login) / this.max_login)
+                percent_login = parseInt(percent_login)
+                return percent_login
             },
         }
     });

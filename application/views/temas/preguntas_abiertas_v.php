@@ -1,8 +1,10 @@
-<div id="pa_app">
+<div id="pa_app" class="container">
         
     <table class="table bg-white">
         <thead>
             <th>Texto pregunta</th>
+            <th>Tipo</th>
+            <th>Creador: Usuario ID</th>
             <th width="50px">
                 <button class="btn btn-success btn-block" type="button" title="Agregar pregunta" data-toggle="modal" data-target="#modal_form" v-on:click="new_pa">
                     Agregar
@@ -10,10 +12,17 @@
             </th>
         </thead>
         <tbody>
-            <!-- LISTADO DE LINKS -->
+            <!-- LISTADO DE PREGUNTAS -->
             <tr v-for="(pregunta, key) in preguntas_abiertas" v-bind:class="{'table-success': key == pa_key}">
                 <td>
                     {{ pregunta.contenido }}
+                </td>
+                <td>
+                    <span class="text-warning" v-show="pregunta.publica == 1">Privada</span>
+                    <span class="text-success" v-show="pregunta.publica == 2">Editores</span>
+                </td>
+                <td>
+                    {{ pregunta.usuario_id }}
                 </td>
                 <td>
                     <button class="btn btn-light btn-sm" type="button" data-toggle="modal" data-target="#modal_form" v-on:click="set_current(key)">

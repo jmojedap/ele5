@@ -103,16 +103,27 @@
         </p>
 
         <p>
-            Ahora usted podrá adquirir nuestros productos desde la comodidad de su hogar.
+            Ahora usted podrá adquirir nuestros productos desde la comodidad de su casa.
         </p>
 
-        <p>
-            Solicite ya el Código del Colegio para que así pueda realizar su compra a partir del 12 de diciembre del 2020.
+        <p classs="text-left">
+            Realice la compra SOLO por una de estas dos modalidades:
         </p>
+        <ul class="text-left">
+            <li>
+                <strong>CÓDIGO DE LA INSTITUCIÓN</strong>:
+                El colegio entrega el CÓDIGO DE LA INSTITUCIÓN para que usted pueda realizar el pago.
+            </li>
+            <li>
+                <strong>CÓDIGO DE USUARIO</strong>:
+                Algunos colegios asignan al estudiante un CÓDIGO DE USUARIO, con este se
+                ingresa directamente a la Plataforma En Línea y se realiza
+                el pago. La institución o el Director de Grupo se lo harán
+                llegar.
+            </li>
+        </ul>
  
     </div>
-
-    <div class="clearfix"></div>
 
     <div class="mb-2" id="mensajes"></div>
 </div>

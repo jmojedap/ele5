@@ -40,6 +40,14 @@
                     <h1 style="<?= $style->h1 ?>">
                         <?= $row_order->buyer_name ?>
                     </h1>
+                    <h3 style="<?= $style->h4 ?>">
+                        Estudiante: 
+                        <?= $student_name ?>
+                        <?php if ( $username ) : ?>
+                            &middot;
+                            <?= $username ?>
+                        <?php endif; ?>
+                    </h3>
                     
                 </td>
             </tr>

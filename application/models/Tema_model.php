@@ -1326,11 +1326,14 @@ class Tema_Model extends CI_Model{
      * Listado de preguntas abiertas asociadas a un tema
      * 2019-09-02
      */
-    function preguntas_abiertas($tema_id)
+    function preguntas_abiertas($tema_id, $publica = 1)
     {
-        $this->db->select('id, contenido');
+        $this->db->select('id, contenido, usuario_id, referente_2_id AS publica');
         $this->db->where('referente_1_id', $tema_id);
-        $this->db->where('referente_2_id', 1);  //Pública, creadas por ELE
+        
+        //Pública, creadas por ELE
+        if ( $publica == 1 ) { $this->db->where('referente_2_id', 1); }
+
         $this->db->where('tipo_id', 121);   //Post tipo 121
         $preguntas_abiertas = $this->db->get('post');
         

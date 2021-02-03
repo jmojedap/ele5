@@ -1143,13 +1143,11 @@ class Temas extends CI_Controller{
      */
     function get_pa($tema_id)
     {
-        $preguntas_abiertas = $this->Tema_model->preguntas_abiertas($tema_id);
+        $preguntas_abiertas = $this->Tema_model->preguntas_abiertas($tema_id, 0);
 
         $data['preguntas_abiertas'] = $preguntas_abiertas->result();
 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -1160,9 +1158,7 @@ class Temas extends CI_Controller{
     {
         $data = $this->Tema_model->save_pa($tema_id, $pa_id);
 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**

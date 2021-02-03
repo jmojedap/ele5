@@ -301,6 +301,19 @@ class Orders extends CI_Controller{
     }
 
     /**
+     * Cancelar una compra, se eliminan variables de sesión asociadas a la compra
+     * 2021-01-28
+     */
+    function cancel()
+    {
+        $this->session->unset_userdata('order_id');
+        $data['status'] = 1;
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
      * Página de confirmación que ejecuta remotamente PagosOnLine (pol) al 
      * terminar una transacción. Recibe datos de POL vía post, actualiza 
      * datos del pago del pedido

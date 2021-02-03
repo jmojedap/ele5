@@ -10,11 +10,17 @@
                         <button class="btn btn-lg btn-info btn-block" v-on:click="set_code_type('institution')">
                             Por Código de Institución
                         </button>
+                        <p class="mt-2 text-center">
+                            Ingrese CÓDIGO INSTITUCIÓN y siga los pasos indicados.
+                        </p>
                     </div>
                     <div class="col">
                         <button class="btn btn-lg btn-primary btn-block" v-on:click="set_code_type('user')">
                             Por Código de Usuario
                         </button>
+                        <p class="mt-2 text-center">
+                            Ingrese CÓDIGO USUARIO y siga los pasos indicados.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -60,9 +66,11 @@
                     No se encontraron instituciones con el código <strong>"{{ institution_cod }}"</strong>
                 </div>
 
+                
+
                 <form accept-charset="utf-8" method="POST" id="user_form" @submit.prevent="get_user" v-show="code_type == 'user'">
                     <div class="form-group row">
-                        <label for="cod" class="col-md-4 col-form-label text-right">Código Usuario</label>
+                        <label for="cod" class="col-md-4 col-form-label text-right">Código Usuario:</label>
                         <div class="col-md-5">
                             <input
                                 name="username" id="field-username" type="text" class="form-control"
@@ -78,6 +86,11 @@
                         </div>
                     </div>
                 </form>
+
+                <div class="alert alert-info" v-show="no_users">
+                    <i class="fa fa-info-circle"></i>
+                    No se encontró usuario con el código: <strong>"{{ username }}"</strong>
+                </div>
                 
             </div>
 

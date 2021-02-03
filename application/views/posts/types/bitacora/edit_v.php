@@ -29,6 +29,7 @@
         'Evidencias' => 'Evidencias',
         'Cuestionarios' => 'Cuestionarios',
         'Preguntas' => 'Preguntas',
+        'Pagos' => 'Pagos',
         'Otro' => 'Otro'
     );
 ?>

@@ -374,15 +374,17 @@ class Grupo_model extends CI_Model{
     
     /**
      * Devuelve un query con los estudiantes que pertenecen a un grupo
-     * 
-     * @param type $grupo_id
-     * @return type
      */
     function estudiantes($grupo_id, $condicion = NULL)
     {
         //Construyendo consulta
-            $this->db->select('usuario.*, id AS usuario_id');
-            $this->db->where("id IN (SELECT usuario_id FROM usuario_grupo WHERE grupo_id = {$grupo_id})");
+            $this->db->select('usuario.id, usuario.id AS usuario_id, nombre, apellidos, username, usuario.estado, pago, usuario.grupo_id, usuario.institucion_id, COUNT(evento.id) AS qty_login');
+            //$this->db->select('id, id AS usuario_id, nombre, apellidos, username, estado, pago, grupo_id, institucion_id');
+            $this->db->where("usuario.id IN (SELECT usuario_id FROM usuario_grupo WHERE grupo_id = {$grupo_id})");
+            $this->db->join('evento', 'evento.usuario_id = usuario.id AND evento.tipo_id = 101', 'left');
+            $this->db->group_by('usuario.id');
+            $this->db->order_by('COUNT(evento.id)', 'DESC');
+            
             if ( ! is_null($condicion) ) { $this->db->where($condicion); }
             $query = $this->db->get('usuario');
             

@@ -24,16 +24,17 @@ var arr_niveles = <?= json_encode($arr_niveles); ?>;
             this.start_step();
         },
         data: {
-            step: 2,
+            step: 1,
             code_type: 'institution',
             institutions: [],
             institution_cod: '<?= $institution_cod ?>',
             curr_institution: <?= json_encode($curr_institution) ?>,
-            username: 'kdquinto7',
+            username: '',
             user: { id: 0 },
             level: '',
             products: [],
-            no_institutions: false
+            no_institutions: false,
+            no_users: false
         },
         methods: {
             start_step: function(){
@@ -68,6 +69,7 @@ var arr_niveles = <?= json_encode($arr_niveles); ?>;
                 this.get_products();
             },
             get_user: function(){
+                this.no_users = false
                 axios.post(url_app + 'usuarios/get_by_username/', $("#user_form").serialize())
                 .then(response => {
                     if ( response.data.users.length > 0 )
@@ -80,6 +82,8 @@ var arr_niveles = <?= json_encode($arr_niveles); ?>;
                         this.level = this.user.level;
 
                         this.get_products();
+                    } else {
+                        this.no_users = true
                     }
                 })
                 .catch(function (error) {
