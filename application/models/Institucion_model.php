@@ -929,7 +929,10 @@ class Institucion_model extends CI_Model{
         $this->db->query($sql);
     }
     
-    //ACTUALIZADA 2018-11-16
+    /**
+     * 
+     * 2021-02-09
+     */
     function desactivar_morosos($institucion_id = NULL)
     {
         
@@ -940,6 +943,7 @@ class Institucion_model extends CI_Model{
         $sql .= 'SET estado = 0 ';
         $sql .= 'WHERE ';
         $sql .= 'DATE_FORMAT(NOW(),"%Y-%m-%d 00:00:00") > institucion.vencimiento_cartera ';
+        $sql .= 'AND institucion.vencimiento_cartera <> "0000-00-00" ';
         $sql .= 'AND rol_id = 6 ';  //Es estudiante
         $sql .= 'AND pago = 0 ';
         if ( ! is_null($institucion_id) ) {$sql .= "AND institucion_id = {$institucion_id}";}

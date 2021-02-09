@@ -280,7 +280,7 @@ class Evento_Model extends CI_Model{
             //No existe, se inserta
             $arr_row['periodo_id'] = intval(date('Ym'));
             $arr_row['creado'] = date('Y-m-d H:i:s');
-            $arr_row['creador_id'] = $this->Pcrn->si_nulo($this->session->userdata('user_id'), 0);
+            $arr_row['creador_id'] = $this->Pcrn->si_nulo($this->session->userdata('user_id'), 1001);   //1001, ELE Automático
             $arr_row['ip_address'] = $this->input->ip_address();
             
             $this->db->insert('evento', $arr_row);

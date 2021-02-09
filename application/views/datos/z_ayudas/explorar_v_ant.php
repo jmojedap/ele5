@@ -53,7 +53,7 @@
                 <td><span class="etiqueta primario w1"><?= $row_resultado->id ?></span></td>
                 <td>
                     <b>
-                        <a href="https://plataformaenlinea.com/ayuda/?p=<?= $row_resultado->abreviatura ?>" target="_blank">
+                        <a href="https://www.plataformaenlinea.com/ayuda/?p=<?= $row_resultado->abreviatura ?>" target="_blank">
                             <?= $row_resultado->item_largo ?>
                         </a>
                     </b>

@@ -2,6 +2,11 @@
     <div class="card center_box_750">
         <div class="card-body">
             <h1 class="text-center">Pagos En Línea Editores</h1>
+            <div class="mb-2 text-center" v-show="cancelable">
+                <button class="btn btn-warning w120p" v-on:click="cancel_order">
+                    Nuevo pago
+                </button>
+            </div>
 
             <div class="mb-2" v-show="step == 1">
                 <p class="text-center">Realizar pago</p>

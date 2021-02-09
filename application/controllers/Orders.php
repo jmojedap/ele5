@@ -314,8 +314,8 @@ class Orders extends CI_Controller{
     }
 
     /**
-     * Página de confirmación que ejecuta remotamente PagosOnLine (pol) al 
-     * terminar una transacción. Recibe datos de POL vía post, actualiza 
+     * Página de confirmación que ejecuta remotamente Wompi  al 
+     * terminar una transacción. Recibe datos de Wompi vía post, actualiza 
      * datos del pago del pedido
      */
     function confirmation_wompi()

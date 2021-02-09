@@ -51,9 +51,6 @@
             <i class="fa fa-clock-o"></i>
         </th>
         <th>
-            ID L/S
-        </th>
-        <th>
             <?= anchor("sincro/panel/?ob=cant_registros&ot={$ot_alt}", 'Reg L/S') ?>
         </th>
         <th>Dif</th>
@@ -110,16 +107,6 @@
 
                 <td class="text-center">
                     <?= $this->Pcrn->lapso($tiempo_estimado) ?>
-                </td>
-                
-                <td class="text-right">
-                    <span class="suave">
-                        <?= number_format($row_tabla->max_id, 0, ',', '.') ?>
-                    </span>
-                    <br/>
-                    <span class="suave">
-                        <?= number_format($row_tabla->max_ids, 0, ',', '.') ?>
-                    </span>
                 </td>
                 
                 <td class="text-right">

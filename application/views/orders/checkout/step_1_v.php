@@ -244,6 +244,8 @@
                     if ( response.data.status == 1 ) {
                         toastr['info']('El producto fue retirado de tu compra')
                         this.get_order_info()
+                    } else {
+                        toastr['error'](response.data.message)
                     }
                 })
                 .catch(function (error) {

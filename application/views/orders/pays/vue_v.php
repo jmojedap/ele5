@@ -34,7 +34,8 @@ var arr_niveles = <?= json_encode($arr_niveles); ?>;
             level: '',
             products: [],
             no_institutions: false,
-            no_users: false
+            no_users: false,
+            cancelable: false
         },
         methods: {
             start_step: function(){
@@ -109,11 +110,25 @@ var arr_niveles = <?= json_encode($arr_niveles); ?>;
                 .then(response => {
                     if ( response.data.status == 1 ) {
                         window.location = url_app + 'orders/checkout';
+                    } else {
+                        this.cancelable = true
+                        toastr['error'](response.data.message)
                     }
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
+            },
+            cancel_order: function(){
+                axios.get(url_api + 'orders/cancel/')
+                .then(response => {
+                    if ( response.data.status == 1 ) {
+                        window.location = url_app + 'orders/pays'
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });  
             },
         }
     });

@@ -1065,7 +1065,7 @@ class Cuestionario_model extends CI_Model
      * como referencia la asignación de grupo guardada en la tabla evento.
      * Solo se asignan estudiantes "activos (1) o temporales (2)".
      * 
-     * 2021-02-02
+     * 2021-02-03
      */
     function asignar_estudiantes($cg_id)
     {
@@ -1091,7 +1091,7 @@ class Cuestionario_model extends CI_Model
         
         //Se carga la lista de estudiantes que pertenecen un grupo
             $this->load->model('Grupo_model');
-            $estudiantes = $this->Grupo_model->estudiantes($row_asignacion->grupo_id, 'estado >= 1');  //Mod 2019-02-27, antes tenía restricción con el campo usuario.iniciado
+            $estudiantes = $this->Grupo_model->estudiantes($row_asignacion->grupo_id, 'usuario.estado >= 1');  //Mod 2019-02-27, antes tenía restricción con el campo usuario.iniciado
 
             foreach ($estudiantes->result() as $row_estudiante)
             {

@@ -95,7 +95,7 @@ class Order_model extends CI_Model{
 
         $arr_select['export'] = 'orders.id, orders.status, order_code AS referencia, buyer_name AS comprador, orders.email, id_number AS no_documento, address AS direccion';
         $arr_select['export'] .= ', city AS ciudad, phone_number AS telefono, amount, orders.updated_at, orders.created_at';
-        $arr_select['export'] .= ', orders.institution_id, nombre_institucion AS institution_name, orders.level, notes_admin, bill AS no_factura, shipping_code AS no_guia, wompi_id, wompi_status, wompi_payment_method_type, confirmed_at, CONCAT((usuario.apellidos), " ", (usuario.nombre)) AS nombre_usuario, user_id AS usuario_id, student_name AS nombre_estudiante';
+        $arr_select['export'] .= ', orders.institution_id, nombre_institucion AS institution_name, orders.level, notes_admin, bill AS no_factura, shipping_code AS no_guia, wompi_id, wompi_status, wompi_payment_method_type, confirmed_at, CONCAT((usuario.apellidos), " ", (usuario.nombre)) AS nombre_usuario, usuario.username AS cod_usuario, student_name AS nombre_estudiante';
         $arr_select['export'] .= ', order_product.product_id AS producto_id, product.name AS nombre_producto, product.code AS referencia_producto, order_product.quantity AS cantidad_productos';
 
         return $arr_select[$format];
@@ -150,8 +150,8 @@ class Order_model extends CI_Model{
     {
         $this->db->select($this->select('export'));
         $this->db->join('institucion', 'orders.institution_id = institucion.id', 'left');
-        $this->db->join('order_product', 'orders.id = order_product.order_id');
-        $this->db->join('product', 'order_product.product_id = product.id');
+        $this->db->join('order_product', 'orders.id = order_product.order_id', 'left');
+        $this->db->join('product', 'order_product.product_id = product.id', 'left');
         $this->db->join('usuario', 'orders.user_id = usuario.id', 'left');        
 
         $search_condition = $this->search_condition($filters);
@@ -299,27 +299,34 @@ class Order_model extends CI_Model{
     /**
      * Agrega un producto en una cantidad definida a una orden, guarda el registro
      * en la tabla order_producto (op), devuelve ID del registro guardado.
-     * 2019-06-17
+     * 2021-02-09 (No modificar pagos ya procesados)
      */
     function add_product($product_id, $quantity = 1)
     {
         $order_id = $this->session->userdata('order_id');
+        $row = $this->Db_model->row_id('orders', $order_id);
 
-        $this->load->model('Product_model');
-        $row_product = $this->Db_model->row_id('product', $product_id);
+        $data = array('status' => 0, 'message' => "El pago [{$order_id}] ya fue procesado, inicie uno nuevo");
 
-        $arr_row['order_id'] = $order_id;
-        $arr_row['product_id'] = $product_id;
-        $arr_row['original_price'] = $row_product->price;
-        $arr_row['price'] = $row_product->price;
-        $arr_row['quantity'] = $quantity;
-
-        $data['op_id'] = $this->Db_model->save('order_product', "order_id = {$arr_row['order_id']} AND product_id = {$arr_row['product_id']}", $arr_row);
-
-        //Actualizar totales del pedido
-        $this->update_totals($order_id);
-        
-        $data['status'] = ($data['op_id'] > 0 ) ? 1 : 0 ;
+        //Se puede quitar si no hay intentos de pago
+        if ( $row->status > 5 )
+        {
+            $this->load->model('Product_model');
+            $row_product = $this->Db_model->row_id('product', $product_id);
+    
+            $arr_row['order_id'] = $order_id;
+            $arr_row['product_id'] = $product_id;
+            $arr_row['original_price'] = $row_product->price;
+            $arr_row['price'] = $row_product->price;
+            $arr_row['quantity'] = $quantity;
+    
+            $data['op_id'] = $this->Db_model->save('order_product', "order_id = {$arr_row['order_id']} AND product_id = {$arr_row['product_id']}", $arr_row);
+    
+            //Actualizar totales del pedido
+            $this->update_totals($order_id);
+            
+            $data['status'] = ($data['op_id'] > 0 ) ? 1 : 0 ;
+        }
 
         return $data;
     }
@@ -327,22 +334,30 @@ class Order_model extends CI_Model{
     /**
      * Quita un producto de la orden y recalcula totales, elimina de la tabla order_product
      * y recalcula totales.
+     * 2021-02-09 (No modificar pagos ya procesados)
      */
     function remove_product($product_id)
     {
         $order_id = $this->session->userdata('order_id');
-
-        $this->db->where('product_id', $product_id);
-        $this->db->where('order_id', $order_id);
-        $this->db->where('type_id', 1); //Es un producto
-        $this->db->delete('order_product');
         
-        $data['qty_deleted'] = $this->db->affected_rows();
-
-        //Actualizar totales del pedido
-        $this->update_totals($order_id);
+        $data = array('status' => 0, 'message' => "El producto NO fue retirado, el pago [{$order_id}] ya fue procesado, vacíe el carrito e inicie un nuevo pago.");
         
-        $data['status'] = ($data['qty_deleted'] > 0 ) ? 1 : 0 ;
+        $row = $this->Db_model->row_id('orders', $order_id);
+        //Se puede quitar si no hay intentos de pago
+        if ( $row->status > 5 )
+        {
+            $this->db->where('product_id', $product_id);
+            $this->db->where('order_id', $order_id);
+            $this->db->where('type_id', 1); //Es un producto
+            $this->db->delete('order_product');
+            
+            $data['qty_deleted'] = $this->db->affected_rows();
+    
+            //Actualizar totales del pedido
+            $this->update_totals($order_id);
+            
+            $data['status'] = ($data['qty_deleted'] > 0 ) ? 1 : 0 ;
+        }
 
         return $data;
     }
@@ -515,7 +530,7 @@ class Order_model extends CI_Model{
     /**
      * Tomar y procesar los datos POST que envía Wompi a la url de eventos
      * 2020-12-09
-     * url_confirmacion >> 'orders/confirmation_wompi'
+     * url de eventos >> 'orders/confirmation_wompi'
      */
     function confirmation_wompi()
     {   
@@ -523,7 +538,6 @@ class Order_model extends CI_Model{
         $confirmation_id = 0;
         $wompi_response = $this->wompi_response();
         $row = $this->row_by_code($wompi_response->data->transaction->reference);
-        $row_confirmation = $this->save_confirmation($row, $wompi_response);
 
         if ( ! is_null($row) )
         {
@@ -532,11 +546,17 @@ class Order_model extends CI_Model{
                 $confirmation_id = $row_confirmation->id;
 
             //Actualizar estado registro en la tabla orders
-                $this->update_status($row->id, $wompi_response);
+                $order_status = $this->update_status($row->id, $wompi_response);
+
+            //Actualizar estado y pago de usuario, si el pago es exitoso
+                if ( $order_status == 1 && $row->user_id > 0 )
+                {
+                    $this->load->model('Usuario_model');
+                    $this->Usuario_model->establecer_pago($row->user_id, 1);
+                }
 
             //Enviar mensaje a administradores de tienda y al cliente
                 $this->email_buyer($row->id);
-                //if ( $order_status == 1 ) { $this->email_admon($row->id); }
         }
 
         return $confirmation_id;
@@ -624,7 +644,25 @@ class Order_model extends CI_Model{
 
         $this->db->where('id', $order_id);   //Parent ID = Order ID
         $this->db->update('orders', $arr_row);
+
+        return $arr_row['status'];
     }
+
+    /**
+     * Activa a un usuario tras la realización de un pago exitoso
+     * usuario.estado = 1, usuario.pago = 1
+     * 2021-02-21
+     */
+    /*function activate_user($user_id)
+    {
+        $arr_row['estado'] = 1;     //Activado
+        $arr_row['pago'] = 1;       //Sí
+        $arr_row['editado'] = date('Y-m-s H:i:s'); 
+        $arr_row['editado_usuario_id'] = 1001;  //Wompi Automático
+
+        $this->db->where('id', $user_id);
+        $this->db->update('usuario', $arr_row);
+    }*/
 
     /**
      * Datos resultado del pago

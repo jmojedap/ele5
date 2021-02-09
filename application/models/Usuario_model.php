@@ -2039,11 +2039,16 @@ class Usuario_model extends CI_Model{
 
     /**
      * Establece el valor del campo usuario.pago, y dependiendo de este, también el de usuario.estado
-     * 2020-12-29
+     * 2020-02-04
      */
     function establecer_pago($usuario_id, $pago)
     {
+        $editor_id = 1001;
+        if ( $this->session->userdata('logged') ) { $editor_id = $this->session->userdata('user_id'); }
+
         $arr_row['pago'] = $pago;
+        $arr_row['editado'] = date('Y-m-d H:i:s');
+        $arr_row['editado_usuario_id'] = $editor_id;
         if ( $pago == 1 ) $arr_row['estado'] = 1;   //Activo
         if ( $pago == 0 ) $arr_row['estado'] = 2;   //Temporal
 
@@ -2062,7 +2067,7 @@ class Usuario_model extends CI_Model{
             $evento['entero_1'] = $pago;
             $evento['fecha_inicio'] = date('Y-m-d');
             $evento['hora_inicio'] = date('H:i:s');
-            $evento['descripcion'] = "Modificado: Usuario ID {$usuario_id}, pago = {$pago}, por Usuario ID = {$this->session->userdata('user_id')}";
+            $evento['descripcion'] = "Modificado: Usuario ID {$usuario_id}, pago = {$pago}, por Usuario ID = {$editor_id}";
             $evento['usuario_id'] = $usuario_id;
             $evento['institucion_id'] = $row_usuario->institucion_id;
             $evento['grupo_id'] = $row_usuario->grupo_id;
