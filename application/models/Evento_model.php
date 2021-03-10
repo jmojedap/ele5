@@ -195,19 +195,14 @@ class Evento_Model extends CI_Model{
     
     /**
      * Determina si un usuario tiene el permiso para eliminar un registro de evento
-     * 
-     * @param type $evento_id
-     * @return boolean
      */
     function eliminable($evento_id)
     {   
         $eliminable = FALSE;
-        $row_evento = $this->Pcrn->registro_id('evento', $evento_id);
+        $row_evento = $this->Db_model->row_id('evento', $evento_id);
         
         //El usuario creó el evento
-        if ( $row_evento->creador_id == $this->session->userdata('user_id') ) {
-            $eliminable = TRUE;
-        }
+        if ( $row_evento->creador_id == $this->session->userdata('user_id') ) { $eliminable = TRUE; }
         
         //El usuario es aministrador
         if ( $this->session->userdata('rol_id') <= 1 ) { $eliminable = TRUE; }
@@ -217,13 +212,10 @@ class Evento_Model extends CI_Model{
     
     /**
      * Elimina un registro de evento y sus registros relacionados en otras tablas
-     * 
-     * @param type $evento_id
-     * @return type
      */
     function eliminar($evento_id)
     {
-        $cant_eliminados = 0;
+        $qty_deleted = 0;
         $eliminable = $this->eliminable($evento_id);
         
         if ( $eliminable )
@@ -237,10 +229,10 @@ class Evento_Model extends CI_Model{
                 $this->db->where('id', $evento_id);
                 $this->db->delete('evento');
                 
-            $cant_eliminados = $this->db->affected_rows();
+            $qty_deleted = $this->db->affected_rows();
         }
             
-        return $cant_eliminados;
+        return $qty_deleted;
     }
     
     /**

@@ -64,18 +64,14 @@ class Eventos extends CI_Controller{
     function delete_selected()
     {
         $selected = explode(',', $this->input->post('selected'));
-        $qty_deleted = 0;
+        $data['qty_deleted'] = 0;
         
         foreach ( $selected as $row_id ) 
         {
-            $qty_deleted += $this->Evento_model->eliminar($row_id);
+            $data['qty_deleted'] += $this->Evento_model->eliminar($row_id);
         }
         
-        $result['status'] = 1;
-        $result['message'] = 'Cantidad eliminados : ' . $qty_deleted;
-        $result['qty_deleted'] = $qty_deleted;
-        
-        $this->output->set_content_type('application/json')->set_output(json_encode($result));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
 //---------------------------------------------------------------------------------------------------
@@ -416,9 +412,9 @@ class Eventos extends CI_Controller{
         $datos['flipbook_id'] = $this->input->post('flipbook_id');
         $datos['num_pagina'] = $this->input->post('num_pagina');   //Página en la que está el tema dentro del flipbook
         
-        $evento_id = $this->Evento_model->programar_tema($datos);
+        $data['evento_id'] = $this->Evento_model->programar_tema($datos);
 
-        $this->output->set_content_type('application/json')->set_output($evento_id);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
 }

@@ -324,7 +324,6 @@ class Pagina_model extends CI_Model{
     
     /**
      * Crea las imágenes miniatura de la página que se sube.
-     * @param type $nombre_archivo 
      */
     function img_pf_mini($nombre_archivo)
     { 
@@ -333,28 +332,15 @@ class Pagina_model extends CI_Model{
         //Miniatura
             $config['image_library'] = 'gd2';
             $config['source_image'] = RUTA_UPLOADS . 'pf_zoom/' . $nombre_archivo;
-            $config['new_image'] = RUTA_UPLOADS . 'pf_mini/';
+            $config['new_image'] = RUTA_UPLOADS . 'pf_mini/' . $nombre_archivo;
             $config['maintain_ratio'] = TRUE;
             $config['width'] = 256;
             $config['height'] = 256;
 
             $this->image_lib->initialize($config);
             $this->image_lib->resize();
-        
-        /*//Limpiando librería
-            $this->image_lib->clear();
-            $config = array();
-            
-        //Tamaño mediano
-            $config['image_library'] = 'gd2';
-            $config['source_image'] = RUTA_UPLOADS . 'pf_zoom/' . $nombre_archivo;
-            $config['new_image'] = RUTA_UPLOADS . 'pf/';
-            $config['maintain_ratio'] = TRUE;
-            $config['width'] = 512;
-            $config['height'] = 512;
 
-            $this->image_lib->initialize($config);
-            $this->image_lib->resize();*/
+        return $config['new_image'];
     }
     
     /**
@@ -402,7 +388,8 @@ class Pagina_model extends CI_Model{
         
         $registro['marca'] = 1;
         
-        foreach ($paginas->result() as $row_pagina) {
+        foreach ($paginas->result() as $row_pagina)
+        {
             $this->img_pf_mini($row_pagina->archivo_imagen);
             
             $this->db->where('id', $row_pagina->id);
@@ -414,8 +401,6 @@ class Pagina_model extends CI_Model{
     
 //---------------------------------------------------------------------------------------------------
 //GESTIÓN DE PÁGINAS
-    
-    
     
     /**
      * Eliminar un registro de la tabla 'pagina_flipbook'

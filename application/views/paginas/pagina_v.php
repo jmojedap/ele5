@@ -13,24 +13,24 @@
     
 ?>
 <p>
-    <span class="suave">Tema:</span>
+    <span class="text-muted">Tema:</span>
     <?= $link_tema ?>
-    <span class="suave">
-        | Editado
+    <span class="text-muted">
+        &middot; Editado
     </span>
     <span class="resaltar">
         <?= $this->Pcrn->fecha_formato($row->editado, 'Y-M-d') ?>
     </span>
     
-    <span class="suave">
-        | Hace
+    <span class="text-muted">
+        &middot; Hace
     </span>
     <span class="resaltar">
         <?= $this->Pcrn->tiempo_hace($row->editado) ?>
     </span>
     
-    <span class="suave">
-        | archivo
+    <span class="text-muted">
+        &middot; archivo
     </span>
     <span class="resaltar">
         <?= $row->archivo_imagen ?>
@@ -45,14 +45,14 @@
     
     //Atributos de los elementos del menú
         $arr_menus['explorar'] = array(
-            'icono' => '<i class="fa fa-list-alt"></i>',
+            'icono' => '<i class="fa fa-arrow-left"></i>',
             'texto' => 'Explorar',
             'link' => "paginas/explorar/",
             'atributos' => 'title="Explorar paginas"'
         );
             
         $arr_menus['ver'] = array(
-            'icono' => '<i class="fa fa-list-alt"></i>',
+            'icono' => '<i class="fa fa-file"></i>',
             'texto' => 'Ver',
             'link' => "paginas/ver/{$row->id}",
             'atributos' => ''
@@ -80,5 +80,5 @@
         $data_menu['seccion'] = $seccion;
     
     //Cargue vista
-        //$this->load->view('comunes/menu_v', $data_menu);
-        //$this->load->view($vista_b);
+        $this->load->view('comunes/menu_v', $data_menu);
+        $this->load->view($vista_b);

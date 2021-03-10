@@ -1463,75 +1463,86 @@ class Tema_Model extends CI_Model{
         return $ledin;
     }
 
+// Importar lecturas dinámicas
+//-----------------------------------------------------------------------------
+
     /**
-     * Importar masivamente ledins a temas
-     * tabla post, tipo_id = 125
-     * 2019-10-17
-     * 
-     * @param type $array_hoja    Array con los datos de preguntas
+     * Importa posts a la base de datos
+     * 2020-02-27
      */
-    function importar_ledins($array_hoja)
+    function importar_ledins($arr_sheet)
     {
-        $no_importados = array();
-        $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
-        
         $this->load->model('Post_model');
+
+        $data = array('qty_imported' => 0, 'results' => array());
         
-        foreach ( $array_hoja as $array_fila )
+        foreach ( $arr_sheet as $key => $row_data )
         {
-            //Identificar valores
-                $tema_id = $this->Pcrn->campo('tema', "cod_tema = '{$array_fila[0]}'", 'id');
-                
-            //Validar
-                $condiciones = 0;
-                if ( ! is_null($tema_id) ) { $condiciones++; }                  //Tiene tema identificado
-                if ( strlen($array_fila[1]) > 0 ) { $condiciones++; }           //Tiene título
-                
-            //Si cumple las condiciones
-            if ( $condiciones == 2 )
-            {
-                $post_id = $this->importar_ledin($tema_id, $array_fila);
-            } else {
-                $no_importados[] = $fila;
-            }
-            
-            $fila++;    //Para siguiente fila
+            $data_import = $this->import_ledin($row_data);
+            $data['qty_imported'] += $data_import['status'];
+            $data['results'][$key + 2] = $data_import;
         }
         
-        return $no_importados;
+        return $data;
+    }
+
+    /**
+     * Realiza la importación de una fila del archivo excel. Valida los campos, crea registro
+     * en la tabla product
+     * 2020-02-27
+     */
+    function import_ledin($row_data)
+    {
+        //Validar
+            $error_text = '';
+
+            $tema_id = $this->Db_model->field('tema', "cod_tema = '{$row_data[0]}'", 'id');
+
+            if ( is_null($tema_id) ) { $error_text .= 'El tema no fue identificado. '; }         //Tiene tema identificado
+            if ( strlen($row_data[1]) == 0 ) { $error_text .= 'No tiene título. '; }           //Tiene título
+
+        //Si no hay error
+            if ( $error_text == '' )
+            {
+                $arr_row = $this->arr_ledin_importado($tema_id, $row_data);
+                $post_id = $this->Post_model->guardar_post('id = 0', $arr_row);    //Condición imposible, siempre agrega
+
+                $data = array('status' => 1, 'text' => '', 'imported_id' => $post_id, 'arr_row' => $arr_row);
+            } else {
+                $data = array('status' => 0, 'text' => $error_text, 'imported_id' => 0);
+            }
+
+        return $data;
     }
 
     /**
      * Realiza la importación de lectura ledin de cada fila en el archivo excel
-     * 2019-10-17
+     * 2021-02-27
      */
-    function importar_ledin($tema_id, $array_fila)
+    function arr_ledin_importado($tema_id, $row_data)
     {
         //Construir registro
-            $arr_row['nombre_post'] = $array_fila[1];
+            $arr_row['nombre_post'] = $row_data[1];
             $arr_row['tipo_id'] = 125;
-            $arr_row['contenido_json'] = $this->ledin_json($array_fila);
-            $arr_row['contenido'] = $this->ledin_lectura($array_fila[0]);
-            $arr_row['texto_1'] = $array_fila[0] . '.txt';   //Nombre archivo de texto lectura
-            $arr_row['texto_2'] = $array_fila[2];            //Nombre archivo imagen asociada
+            $arr_row['contenido_json'] = $this->ledin_json($row_data);
+            $arr_row['contenido'] = $this->ledin_lectura($row_data[0]);
+            $arr_row['texto_1'] = $row_data[0] . '.txt';   //Nombre archivo de texto lectura
+            $arr_row['texto_2'] = $row_data[2];            //Nombre archivo imagen asociada
             $arr_row['referente_1_id'] = $tema_id;
 
-        //Guardar
-            $post_id = $this->Post_model->guardar_post('id = 0', $arr_row);    //Condición imposible, siempre agrega
-
-        return $post_id;
+        return $arr_row;
     }
 
     /**
      * A partir de la fila del archivo de excel, se construye un el contenido json de la lectura ledin,
      * que incluye la lectura original, y el conjunto de palabras y definiciones.
      */
-    function ledin_json($array_fila)
+    function ledin_json($row_data)
     {
         //$contenido = array('lectura' => '', 'palabras' => NULL);
 
-        $contenido['lectura'] = $this->ledin_lectura($array_fila[0]);
-        $contenido['palabras'] = $this->ledin_palabras($array_fila);
+        $contenido['lectura'] = $this->ledin_lectura($row_data[0]);
+        $contenido['palabras'] = $this->ledin_palabras($row_data);
         $contenido['lectura_dinamica'] = $this->ledin_lectura_dinamica($contenido);
         $contenido['diccionario'] = $this->ledin_diccionario($contenido);
 

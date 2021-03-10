@@ -7,12 +7,11 @@
 <script>
 //VARIABLES
 //---------------------------------------------------------------------------------------------------
-
-    var base_url = '<?= base_url() ?>';
     var flipbook_id = '<?= $row->id ?>';
     var grupo_id = <?= $grupo_id ?>;
     var evento_id = 0;
     var num_pagina = 0;
+    var tema_id = 0;
     //var marca_programado = '<? $marca_programado ?>';
     
 //DOCUMENT
@@ -44,7 +43,7 @@
     {
         $.ajax({        
             type: 'POST',
-            url: base_url + 'eventos/programar_tema',
+            url: url_api + 'eventos/programar_tema',
             data: {
                 flipbook_id : flipbook_id,
                 tema_id : tema_id,
@@ -52,9 +51,13 @@
                 grupo_id : grupo_id,
                 fecha_inicio : fecha_inicio
             },
-            success: function(){
-                //alert(respuesta);
-                programado();
+            success: function(response){
+                if ( response.evento_id > 0 )
+                {
+                    programado(response.evento_id)
+                    toastr['success']('Tema programado')
+                }
+                
             }
         });
     }
@@ -63,23 +66,26 @@
     function desprogramar(){
         $.ajax({        
             type: 'POST',
-            url: base_url + 'eventos/eliminar_seleccionados',
+            url: url_api + 'eventos/delete_selected',
             data: {
-                seleccionados : evento_id
+                selected : evento_id
             },
             success: function(response){
-                if ( response.status == 1) {
+                if ( response.qty_deleted > 0 ) {
                     desprogramado();
+                    toastr['info']('El tema fue desprogramado')
                 } else {
-                    toastr['error']('No se eliminó asignación de fecha, es posible que otro usuario la haya realizado');
+                    toastr['error']('No se eliminó asignación de fecha, es posible que otro usuario la haya realizado')
                 }
             }
         });
     }
     
-    function programado()
+    function programado(evento_id)
     {
         $('#fila_' + tema_id).addClass('table-info');
+        $('#btn_desprogramar_' + tema_id).attr('data-evento_id', evento_id);
+
     }
     
     function desprogramado()
@@ -147,7 +153,7 @@
                                 >
                         </td>
                         <td>
-                            <button class="btn btn-light desprogramar_tema" data-evento_id="<?= $row_evento->id ?>" data-tema_id="<?= $row_tema->id ?>">
+                            <button class="btn btn-light desprogramar_tema" data-evento_id="<?= $row_evento->id ?>" data-tema_id="<?= $row_tema->id ?>" id="btn_desprogramar_<?= $row_tema->id ?>">
                                 <i class="fa fa-times"></i>
                             </button>
                         </td>

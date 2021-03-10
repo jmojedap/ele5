@@ -134,8 +134,8 @@
     <div class="col-md-6 sep1">
         <?= form_open("busquedas/explorar_redirect/{$controlador}", $att_form) ?>
         <?= form_input($att_q) ?>
-        <?= form_dropdown('a', $opciones_area, $busqueda['a'], 'class="form-control chosen-select" title="Filtrar por área"'); ?>
-        <?= form_dropdown('n', $opciones_nivel, $busqueda['n'], 'class="form-control chosen-select" title="Filtrar por nivel"'); ?>
+        <?= form_dropdown('a', $opciones_area, $busqueda['a'], 'class="form-control" title="Filtrar por área"'); ?>
+        <?= form_dropdown('n', $opciones_nivel, $busqueda['n'], 'class="form-control" title="Filtrar por nivel"'); ?>
         <?= form_submit($att_submit) ?>
         <?= form_close() ?>
     </div>

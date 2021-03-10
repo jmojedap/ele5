@@ -113,7 +113,7 @@ class Paginas extends CI_Controller{
         //echo 'eliminados';
     } 
     
-    function ver($pf_id)
+    function ver($pf_id, $resultado = NULL)
     {
         
         $data = $this->Pagina_model->basico($pf_id);
@@ -123,6 +123,7 @@ class Paginas extends CI_Controller{
         
         //Variables
             $data['flipbooks'] = $this->Pagina_model->flipbooks($pf_id);
+            $data['resultado'] = $resultado;
         
         //Solicitar vista
             $data['subtitulo_pagina'] = 'Página';
@@ -391,9 +392,13 @@ class Paginas extends CI_Controller{
     function actualizar_miniatura($pf_id)
     {
         $row_pf = $this->Pcrn->registro_id('pagina_flipbook', $pf_id);
-        $this->Pagina_model->img_pf_mini($row_pf->archivo_imagen);
+        $data['source_image'] = $this->Pagina_model->img_pf_mini($row_pf->archivo_imagen);
+
+        $data['status'] = 0;
+        if ( strlen($data['source_image']) > 0 ) $data['status'] = 1;
         
-        redirect("paginas/ver/{$pf_id}");
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**
@@ -436,8 +441,9 @@ class Paginas extends CI_Controller{
      */
     function miniaturas()
     {
-        $cant_paginas = $this->Pagina_model->miniaturas();
-        $data['mensaje'] = 'Miniaturas creadas: ' . $cant_paginas;
+        //$cant_paginas = $this->Pagina_model->miniaturas();
+        //$data['mensaje'] = 'Miniaturas creadas: ' . $cant_paginas;
+        $data['mensaje'] = 'Este proceso masivo no está disponible por ahora.';
         $data['link_volver'] = 'paginas/explorar';
         
         //Solicitar vista
@@ -445,7 +451,6 @@ class Paginas extends CI_Controller{
             $data['subtitulo_pagina'] = 'Cargar lista de páginas';
             $data['vista_a'] = 'app/mensaje_v';
             $this->load->view(PTL_ADMIN, $data);
-        
     }
     
 }

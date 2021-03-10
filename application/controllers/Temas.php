@@ -1343,7 +1343,7 @@ class Temas extends CI_Controller{
      * Recibe archivo y datos de "temas/importar_pa"
      * 2019-09-06
      */
-    function importar_lecturas_dinamicas_e()
+    function importar_lecturas_dinamicas_e_ant()
     {
         //Proceso
             $this->load->model('Pcrn_excel');
@@ -1372,6 +1372,45 @@ class Temas extends CI_Controller{
             $data['view_a'] = 'comunes/resultado_importacion_v';
             $data['nav_2'] = 'temas/explorar/menu_v';
             $data['nav_3'] = 'temas/menu_importar_v';
-            $this->load->view(TPL_ADMIN, $data);
+            //$this->load->view(TPL_ADMIN, $data);
+
+            //Salida JSON
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
+
+    /**
+     * Importar preguntas abiertas a los temas, (e) ejecutar.
+     * Recibe archivo y datos de "temas/importar_pa"
+     * 2021-02-27
+     */
+    function importar_lecturas_dinamicas_e()
+    {
+        //Proceso
+        $this->load->library('excel_new');            
+        $imported_data = $this->excel_new->arr_sheet_default($this->input->post('sheet_name'));
+        
+        if ( $imported_data['status'] == 1 )
+        {
+            $data = $this->Tema_model->importar_ledins($imported_data['arr_sheet']);
+        }
+
+        //Cargue de variables
+            $data['status'] = $imported_data['status'];
+            $data['message'] = $imported_data['message'];
+            $data['arr_sheet'] = $imported_data['arr_sheet'];
+            $data['sheet_name'] = $this->input->post('sheet_name');
+            $data['back_destination'] = "temas/importar_lecturas_dinamicas/";
+        
+        //Cargar vista
+            $data['head_title'] = 'Lecturas dinámicas';
+            $data['head_subtitle'] = 'Resultado importación';
+            $data['view_a'] = 'common/import_result_v';
+            $data['nav_2'] = 'temas/explorar/menu_v';
+            $data['nav_3'] = 'temas/menu_importar_v';
+
+        $this->App_model->view(TPL_ADMIN, $data);
+        //Salida JSON
+        //$this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
 }

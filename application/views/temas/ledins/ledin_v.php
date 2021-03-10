@@ -141,12 +141,14 @@
                 </div>
             </div>
 
-            <div id="lectura_diccionario" class="ledin_contenido stopped">
-                <?php echo $elementos->diccionario ?>
-            </div>
-            <div id="lectura_dinamica" class="ledin_contenido playing">
-                <?php echo $elementos->lectura_dinamica ?>
-            </div>
+            <?php if ( isset($elementos) ) : ?>
+                <div id="lectura_diccionario" class="ledin_contenido stopped">
+                    <?php echo $elementos->diccionario ?>
+                </div>
+                <div id="lectura_dinamica" class="ledin_contenido playing">
+                    <?php echo $elementos->lectura_dinamica ?>
+                </div>
+            <?php endif; ?>
         <?php } ?>
     </div>
 
