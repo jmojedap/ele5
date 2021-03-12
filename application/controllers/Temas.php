@@ -586,38 +586,65 @@ class Temas extends CI_Controller{
      */
     function copiar_preguntas()
     {
-        //Iniciales
-            $nombre_archivo = '26_formato_copiar_preguntas.xlsx';
-            $parrafos_ayuda = array(
-                'La columna A y B no pueden estar vacías.'
+        //Configuración
+            $data['help_note'] = '¿Cómo copiar preguntas de un tema a otro?';
+            $data['help_tips'] = array(
+                'La columna A y B no pueden estar vacías.',
+                'Los temas destino <strong class="text-primary">no deben tener preguntas</strong>.'
             );
-        
-        //Instructivo
-            $data['titulo_ayuda'] = '¿Cómo copiar preguntas de un tema a otro?';
-            $data['nota_ayuda'] = 'Se crearán copias de preguntas del tema en la columna [A] y se asignan a los temas de la columna [B]';
-            $data['parrafos_ayuda'] = $parrafos_ayuda;
-        
-        //Variables específicas
-            $data['destino_form'] = "temas/copiar_preguntas_e";
-            $data['nombre_archivo'] = $nombre_archivo;
-            $data['nombre_hoja'] = 'temas_preguntas';
-            $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
-            
-        //Variables generales
-            //$data['ayuda_id'] = 97;
+            $data['template_file_name'] = '26_formato_copiar_preguntas.xlsx';
+            $data['url_file'] = base_url("assets/formatos_cargue/{$data['template_file_name']}");
+            $data['sheet_name'] = 'temas_preguntas';
+            $data['destination_form'] = 'temas/copiar_preguntas_e';
+
+        //Vista
             $data['head_title'] = 'Temas';
             $data['head_subtitle'] = 'Copiar preguntas de temas';
-            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['view_a'] = 'common/import_v';
             $data['nav_2'] = 'temas/explorar/menu_v';
             $data['nav_3'] = 'temas/menu_importar_v';
-        
+            
         $this->load->view(TPL_ADMIN, $data);
     }
-    
+
     /**
      * Copiar preguntas de un tema a otro, desde excel. Proviene de temas/copiar_preguntas
      */
     function copiar_preguntas_e()
+    {
+        //Proceso
+        $this->load->library('excel_new');            
+        $imported_data = $this->excel_new->arr_sheet_default($this->input->post('sheet_name'));
+        
+        if ( $imported_data['status'] == 1 )
+        {
+            $data = $this->Tema_model->copiar_preguntas_masivo($imported_data['arr_sheet']);
+        }
+
+        //Cargue de variables
+            $data['status'] = $imported_data['status'];
+            $data['message'] = $imported_data['message'];
+            $data['arr_sheet'] = $imported_data['arr_sheet'];
+            $data['sheet_name'] = $this->input->post('sheet_name');
+            $data['back_destination'] = "temas/copiar_preguntas/";
+        
+        //Cargar vista
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Resultado copiar temas';
+            $data['view_a'] = 'common/import_result_v';
+            $data['nav_2'] = 'temas/explorar/menu_v';
+            $data['nav_3'] = 'temas/menu_importar_v';
+
+        $this->App_model->view(TPL_ADMIN, $data);
+        //Salida JSON
+        //$this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    
+    /**
+     * Copiar preguntas de un tema a otro, desde excel. Proviene de temas/copiar_preguntas
+     */
+    function z_copiar_preguntas_e()
     {
         //Proceso
             $this->load->model('Pcrn_excel');
@@ -646,6 +673,9 @@ class Temas extends CI_Controller{
             $data['nav_2'] = 'temas/explorar/menu_v';
             //$data['vista_submenu'] = 'usuarios/importar_menu_v';
             $this->load->view(TPL_ADMIN, $data);
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
 // ASIGNAR MASIVAMENTE QUICES DE UN TEMA A OTRO

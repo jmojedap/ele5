@@ -884,56 +884,65 @@ class Tema_Model extends CI_Model{
         
         return $no_importados;
     }
-    
+
+// Copiar preguntas entre temas, archivo Excel
+//-----------------------------------------------------------------------------
+
     /**
-     * Copia masivamente preguntas de un tema y se las asigna a otro
-     * 
-     * @param type $array_hoja    Array con los datos de los temas origen y destino
-     * @return type
+     * Copiar masivamente preguntas de un tema a otro
+     * 2021-03-12
      */
-    function copiar_preguntas_masivo($array_hoja)
+    function copiar_preguntas_masivo($arr_sheet)
     {
-        $no_importados = array();
-        $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
-        $this->load->model('Pregunta_model');
+        $data = array('qty_imported' => 0, 'results' => array());
         
-        foreach ( $array_hoja as $array_fila )
+        foreach ( $arr_sheet as $key => $row_data )
         {
-            //Datos referencia
-                $tema_id = $this->Pcrn->campo('tema', "cod_tema = '{$array_fila[0]}'", 'id');
-                $tema_destino_id = $this->Pcrn->campo('tema', "cod_tema = '{$array_fila[1]}'", 'id');
-                
-            //Validar
-                $condiciones = 0;
-                if ( ! is_null($tema_id) ) { $condiciones++; }    //Debe tener tema origen identificado
-                if ( ! is_null($tema_destino_id) ) { $condiciones++; }    //Debe tener tema origen identificado
-                
-            //Si cumple las condiciones
-            if ( $condiciones == 2 )
-            {   
-                //echo "copiar de {$tema_id} a {$tema_destino_id} <br/>";
-                $this->copiar_preguntas($tema_id, $tema_destino_id);
-            } else {
-                $no_importados[] = $fila;
-            }
-            
-            $fila++;    //Para siguiente fila
+            $data_import = $this->copiar_preguntas_detalle($row_data);
+            $data['qty_imported'] += $data_import['status'];
+            $data['results'][$key + 2] = $data_import;
         }
         
-        $res_importacion['no_importados'] = $no_importados;
-        
-        return $res_importacion;
+        return $data;
     }
-    
+
+    /**
+     * Copia preguntas de un tema a otro
+     * 2021-03-12
+     */
+    function copiar_preguntas_detalle($row_data)
+    {
+        //Validar
+            $error_text = '';
+            $tema_origen = $this->Db_model->row('tema', "cod_tema = '{$row_data[0]}'");
+            $tema_destino = $this->Db_model->row('tema', "cod_tema = '{$row_data[1]}'");
+                            
+            if ( is_null($tema_origen) ) { $error_text = "El tema origen (Columna A) con el código '{$row_data[0]}' no fue encontrado. "; }
+            if ( is_null($tema_destino) ) { $error_text .= "El tema destino (Columna B) con el código '{$row_data[1]}' no fue encontrado. "; }
+
+        //Si no hay error
+            if ( $error_text == '' )
+            {
+                //Guardar en tabla item
+                $data_copiar = $this->copiar_preguntas($tema_origen->id, $tema_destino->id);
+
+                $data = array('status' => $data_copiar['status'], 'text' => $data_copiar['message'], 'imported_id' => $data_copiar['saved_id']);
+            } else {
+                $data = array('status' => 0, 'text' => $error_text, 'imported_id' => 0);
+            }
+
+        return $data;
+    }
     
     /**
      * Crea copia de la preguntas de un tema y se las asigna a otro
-     * 
-     * @param type $tema_id
-     * @param type $tema_destino_id
+     * 2021-03-12
      */
     function copiar_preguntas($tema_id, $tema_destino_id)
     {
+        //Resultado por defecto
+        $data = array('status' => 0, 'saved_id' => 0, 'message' => 'Las preguntas no fueron copiadas');
+
         $preguntas = $this->preguntas($tema_id);
         $preguntas_destino = $this->preguntas($tema_destino_id);
         
@@ -944,7 +953,11 @@ class Tema_Model extends CI_Model{
             {
                 $this->Pregunta_model->clonar($row_pregunta->id, $tema_destino_id);
             }
+            //Modificar resultado
+            $data = array('status' => 1, 'saved_id' => $tema_destino_id, 'message' => 'Preguntas copiadas: ' . $preguntas->num_rows());
         }
+
+        return $data;
     }
     
     
