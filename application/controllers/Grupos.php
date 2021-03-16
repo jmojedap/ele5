@@ -393,13 +393,10 @@ class Grupos extends CI_Controller{
     function get_actividad_links($grupo_id, $flipbook_id, $tema_id = 0)
     {
         $actividad_links = $this->Grupo_model->actividad_links($grupo_id, $flipbook_id, $tema_id);
-
-        //$data['list'] = $actividad_links->result();
         $data['list'] = $actividad_links;
 
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
-        //$this->output->enable_profiler(TRUE);
     }
     
 // IMPORTAR CAMBIO DE AÑO DE GENERACIÓN

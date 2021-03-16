@@ -1247,9 +1247,9 @@ class Pregunta_model extends CI_Model{
     /**
      * Crea un duplicado de una Pregunta de la tabla
      * Devuelve el id de la nueva Pregunta
-     * 2020-02-21
+     * 2021-03-13
      */
-    function clonar($pregunta_id, $tema_id = NULL)
+    function clonar($pregunta_id, $tema_id = NULL, $tipo_pregunta_id = 11)
     {
         //Registro de la Pregunta
             $registro = array();
@@ -1264,7 +1264,7 @@ class Pregunta_model extends CI_Model{
                 //Preparar nuevo registro
                     unset($registro['id']);
                     $registro['tema_id'] = $tema_id;
-                    $registro['tipo_pregunta_id'] = 11; //Agregado 2020-02-21
+                    $registro['tipo_pregunta_id'] = $tipo_pregunta_id; //Agregado 2021-03-13
                     $registro['institucion_id'] = $this->session->userdata('institucion_id');
                     $registro['creado_usuario_id'] = $this->session->userdata('usuario_id');
                     $registro['editado_usuario_id'] = $this->session->userdata('usuario_id');
@@ -1288,7 +1288,6 @@ class Pregunta_model extends CI_Model{
             }
             
         return $nueva_pregunta_id;
-        
     }
     
     /**

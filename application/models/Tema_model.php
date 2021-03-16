@@ -926,7 +926,7 @@ class Tema_Model extends CI_Model{
                 //Guardar en tabla item
                 $data_copiar = $this->copiar_preguntas($tema_origen->id, $tema_destino->id);
 
-                $data = array('status' => $data_copiar['status'], 'text' => $data_copiar['message'], 'imported_id' => $data_copiar['saved_id']);
+                $data = array('status' => $data_copiar['status'], 'text' => $data_copiar['message'], 'imported_id' => $data_copiar['saved_id'], 'copiadas' => $data_copiar['copiadas']);
             } else {
                 $data = array('status' => 0, 'text' => $error_text, 'imported_id' => 0);
             }
@@ -940,8 +940,10 @@ class Tema_Model extends CI_Model{
      */
     function copiar_preguntas($tema_id, $tema_destino_id)
     {
+        $this->load->model('Pregunta_model');
+
         //Resultado por defecto
-        $data = array('status' => 0, 'saved_id' => 0, 'message' => 'Las preguntas no fueron copiadas');
+        $data = array('status' => 0, 'saved_id' => 0, 'message' => 'Las preguntas no fueron copiadas', 'copiadas' => array());
 
         $preguntas = $this->preguntas($tema_id);
         $preguntas_destino = $this->preguntas($tema_destino_id);
@@ -951,10 +953,19 @@ class Tema_Model extends CI_Model{
         {
             foreach( $preguntas->result() as $row_pregunta ) 
             {
-                $this->Pregunta_model->clonar($row_pregunta->id, $tema_destino_id);
+                //Copiar con tipo pregunta 1, (En Línea Editores)
+                $data['copiadas'][] = $this->Pregunta_model->clonar($row_pregunta->id, $tema_destino_id, 1);
             }
-            //Modificar resultado
-            $data = array('status' => 1, 'saved_id' => $tema_destino_id, 'message' => 'Preguntas copiadas: ' . $preguntas->num_rows());
+
+            if ( count($data['copiadas']) > 0 )
+            {
+                //Modificar resultado
+                $data['status'] = 1;
+                $data['saved_id'] = $tema_destino_id;
+                $data['message'] = 'Preguntas copiadas: ' . count($data['copiadas']);
+            }
+        } else {
+            $data['message'] = 'El tema destino ya tiene preguntas';
         }
 
         return $data;
