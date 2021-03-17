@@ -1528,6 +1528,56 @@ class Usuarios extends CI_Controller{
             $this->load->view(TPL_ADMIN, $data);
         
     }
+
+// SEGUIMIENTO DE APERTURA DE LINKS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Vista apertura de links usuario
+     * 2021-03-17
+     */
+    function actividad_links($usuario_id, $flipbook_id = NULL)
+    {
+        $data = $this->Usuario_model->basico($usuario_id);
+        //$data['estudiantes'] = $this->Usuario_model->estudiantes($usuario_id);
+
+        //Flipbooks
+            $flipbooks = $this->Usuario_model->flipbooks($data['row']);
+            foreach( $flipbooks->result() as $row_flipbook ) {
+                $options_flipbook['0' . $row_flipbook->flipbook_id] = $this->App_model->nombre_flipbook($row_flipbook->flipbook_id);
+            }
+            
+        //Identificando Flipbook
+            if ( $flipbooks->num_rows() > 0 && is_null($flipbook_id) ) $flipbook_id = $flipbooks->row()->flipbook_id;
+
+        //Construir array con flipbooks asociados al usuario en sesión
+            $data['user_flipbooks'] = array();
+            foreach ($this->session->userdata('arr_flipbooks') as $flipbook) $data['user_flipbooks'][] = intval($flipbook['flipbook_id']);
+            
+        //Cargando array $data
+            $data['options_flipbook'] = $options_flipbook;
+            $data['flipbook_id'] = intval($flipbook_id);
+
+        //Variables vista
+            $data['head_subtitle'] = 'Actividad links';
+            $data['view_a'] = 'usuarios/actividad_links_v';
+
+        $this->App_model->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * AJAX JSON
+     * Lista actividad apertura links de un usuario
+     * 2021-03-17
+     */
+    function get_actividad_links($usuario_id, $flipbook_id)
+    {
+        $actividad_links = $this->Usuario_model->actividad_links($usuario_id, $flipbook_id);
+        $data['list'] = $actividad_links;
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
     
 // ELIMINAR POR USERNAME CON ARCHIVO EXCEL
 //-----------------------------------------------------------------------------

@@ -2172,6 +2172,47 @@ class Usuario_model extends CI_Model{
         $this->db->where("id = {$uc_id}");
         $this->db->delete('usuario_cuestionario');
     }
+
+// APERTURA DE LINKS
+//-----------------------------------------------------------------------------
+
+    /**
+     * 
+     * 2021-03-17
+     */
+    function actividad_links($usuario_id, $flipbook_id)
+    {
+        $this->db->select('entero_1 AS flipbook_id, referente_id AS tema_id,  COUNT(evento.id) AS qty_eventos, tema.nombre_tema');
+        $this->db->where('evento.tipo_id', 73);    //Apertura de links
+        $this->db->where('evento.usuario_id', intval($usuario_id));
+        $this->db->where('evento.entero_1', intval($flipbook_id));
+        $this->db->group_by('entero_1, evento.referente_id');
+        $this->db->join('tema', 'evento.referente_id = tema.id', 'left');
+        
+
+        $eventos = $this->db->get('evento');
+        $arr_eventos = $this->pml->query_to_array($eventos, 'qty_eventos', 'tema_id');
+        
+        $this->load->model('Flipbook_model');
+        $temas = $this->Flipbook_model->temas($flipbook_id);
+        
+        $actividad_links = array();
+        foreach ($temas->result() as $row_tema)
+        {
+            $tema['tema_id'] = $row_tema->id;
+            $tema['nombre_tema'] = $row_tema->nombre_tema;
+            $tema['qty_eventos'] = 0;
+            if ( array_key_exists($row_tema->id, $arr_eventos) ) $tema['qty_eventos'] = $arr_eventos[$row_tema->id];
+
+            $actividad_links[$row_tema->id] = $tema;
+        }
+
+        return $actividad_links;
+        //return $eventos->result();
+    }
+
+//-----------------------------------------------------------------------------
+// FIN APERTURA DE LINKS
     
     /**
      * Inserta masivamente estudiantes en un grupo

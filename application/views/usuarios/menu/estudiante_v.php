@@ -45,9 +45,16 @@
         );
         
         $arr_menus['quices'] = array(
-            'icono' => '<i class="fa fa-cube"></i>',
+            'icono' => '',
             'texto' => 'Evidencias de aprendizaje',
             'link' => "usuarios/quices/{$usuario_id}",
+            'atributos' => ''
+        );
+
+        $arr_menus['actividad_links'] = array(
+            'icono' => '',
+            'texto' => 'Links',
+            'link' => "usuarios/actividad_links/{$usuario_id}",
             'atributos' => ''
         );
         
@@ -87,13 +94,13 @@
         );
         
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('grupo', 'actividad', 'anotaciones', 'flipbooks', 'quices', 'cuestionarios', 'editar');
-        $elementos_rol[1] = array('grupo', 'actividad', 'anotaciones', 'flipbooks', 'quices', 'cuestionarios', 'editar');
-        $elementos_rol[2] = array('grupo', 'actividad', 'anotaciones', 'flipbooks', 'quices', 'cuestionarios', 'editar');
-        $elementos_rol[3] = array('actividad', 'anotaciones', 'flipbooks', 'quices', 'cuestionarios');
-        $elementos_rol[4] = array('actividad', 'anotaciones', 'flipbooks', 'quices', 'cuestionarios');
-        $elementos_rol[5] = array('actividad', 'anotaciones', 'flipbooks', 'quices', 'cuestionarios');
-        $elementos_rol[6] = array('actividad');
+        $elementos_rol[0] = array('grupo', 'actividad', 'anotaciones', 'flipbooks', 'quices', 'actividad_links', 'cuestionarios', 'editar');
+        $elementos_rol[1] = array('grupo', 'actividad', 'anotaciones', 'flipbooks', 'quices', 'actividad_links', 'cuestionarios', 'editar');
+        $elementos_rol[2] = array('grupo', 'actividad', 'anotaciones', 'flipbooks', 'quices', 'actividad_links', 'cuestionarios', 'editar');
+        $elementos_rol[3] = array('actividad', 'anotaciones', 'flipbooks', 'quices', 'actividad_links', 'cuestionarios');
+        $elementos_rol[4] = array('actividad', 'anotaciones', 'flipbooks', 'quices', 'actividad_links', 'cuestionarios');
+        $elementos_rol[5] = array('actividad', 'anotaciones', 'flipbooks', 'quices', 'actividad_links', 'cuestionarios');
+        $elementos_rol[6] = array('actividad', 'actividad_links');
         $elementos_rol[7] = array('actividad');
         $elementos_rol[8] = array('grupo', 'actividad', 'anotaciones', 'flipbooks', 'quices', 'cuestionarios', 'grupos');
         
