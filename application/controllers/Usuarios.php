@@ -417,8 +417,8 @@ class Usuarios extends CI_Controller{
         
         if ( ! is_null($row) ) 
         {
-            $data['action'] = $this->Usuario_model->establecer_contrasena($row->id, $this->input->post('password'));
-
+            $data['action'] = $this->Usuario_model->cambiar_contrasena($row->id, $this->input->post('password'));
+            
             $this->load->model('Login_model');
             $this->Login_model->crear_sesion($row->username, 1);
 
@@ -720,6 +720,25 @@ class Usuarios extends CI_Controller{
     function pw_test($pw)
     {
         echo $this->Usuario_model->encriptar_pw($pw);
+    }
+
+    function pruebas_pw()
+    {
+        $userlogin = $this->input->post('username');
+        $condicion = "username = '{$userlogin}' OR email = '{$userlogin}' OR no_documento = '{$userlogin}'";
+        $row_usuario = $this->Pcrn->registro('usuario', $condicion);
+
+        
+        $password = $this->input->post('password');
+
+        $data['epw'] = crypt($password, $row_usuario->password);
+        $data['user.password'] = $row_usuario->password;
+        $data['son_iguales'] = ( $data['epw'] == $row_usuario->password );
+
+        $data['encripted_password'] = $this->Usuario_model->encriptar_pw($password);
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**

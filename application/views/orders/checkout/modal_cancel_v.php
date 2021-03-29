@@ -12,9 +12,7 @@
                 <p>¿Desea continuar?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger w100p" v-on:click="cancel_order" data-dismiss="modal">
-                    Continuar
-                </button>
+                <button type="button" class="btn btn-danger w120p" v-on:click="cancel_order" data-dismiss="modal">Sí</button>
                 <button type="button" class="btn btn-secondary w120p" data-dismiss="modal">No</button>
             </div>
         </div>

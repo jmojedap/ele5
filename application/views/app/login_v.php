@@ -94,6 +94,8 @@
         PAGOS
     </a>
 
+    <div class="mb-2" id="mensajes"></div>
+    
     <div class="alert alert-success text-center">
         <p>
             ENLINEA EDITORES se complace en presentar su nuevo servicio:
@@ -125,5 +127,4 @@
  
     </div>
 
-    <div class="mb-2" id="mensajes"></div>
 </div>

@@ -609,6 +609,10 @@ class Order_model extends CI_Model{
         return $wompi_response;
     }
 
+    /**
+     * Array con respuestas de wompi a un order
+     * 2021-03-29
+     */
     function responses($order_id)
     {
         $this->db->select('id, texto_1 AS wompi_status, creado, contenido_json');

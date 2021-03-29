@@ -564,4 +564,11 @@ class Develop extends CI_Controller {
 
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
+
+    function test()
+    {
+        $data['head_title'] = 'Pruebas contraseñas';
+        $data['view_a'] = 'app/test_v';
+        $this->App_model->view(TPL_ADMIN, $data);
+    }
 }

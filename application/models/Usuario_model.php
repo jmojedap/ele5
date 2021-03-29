@@ -1362,8 +1362,10 @@ class Usuario_model extends CI_Model{
         
     }
     
-    //GESTIÓN DE CONTRASEÑAS
+//GESTIÓN DE CONTRASEÑAS
 //---------------------------------------------------------------------------------------------------
+
+
     
     /**
      * Devuelve password encriptado
@@ -1978,6 +1980,8 @@ class Usuario_model extends CI_Model{
         
         $this->db->where('id', $usuario_id);
         $this->db->update('usuario', $arr_row);
+
+        return $arr_row['password'];
     }
     
     /**

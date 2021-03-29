@@ -29,7 +29,7 @@
         <div class="alert alert-warning" role="alert">
             <i class="fa fa-user-slash"></i>
             <br/>
-            No hay ningún unsuario registrado con el correo: <b>{{ email }}</b>.
+            No hay ningún usuario registrado con el correo: <b>{{ email }}</b>.
         </div>
     </div>
 

@@ -97,6 +97,7 @@ class Login_model extends CI_Model{
             //$epw = md5($password);
             //$pw_comparar = $row_usuario->ant_password;
 
+            
             $epw = crypt($password, $row_usuario->password);
             $pw_comparar = $row_usuario->password;
             

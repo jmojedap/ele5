@@ -70,7 +70,7 @@
                 <div class="form-group row">
                     <label for="level" class="col-md-4 col-form-label text-right">Nivel</label>
                     <div class="col-md-8">
-                        <?php echo form_dropdown('level', $options_level, '0', 'class="form-control" v-model="form_values.level"') ?>
+                        <?= form_dropdown('level', $options_level, '0', 'class="form-control" v-model="form_values.level"') ?>
                     </div>
                 </div>
 
@@ -154,7 +154,7 @@
 
 <script>
     //Cargar valor en formulario
-    var form_values = <?php echo json_encode($row) ?>;
+    var form_values = <?= json_encode($row) ?>;
     form_values.level = '0' + '<?= $row->level ?>';
     form_values.kit_id = '0' + '<?= $row->kit_id ?>';
     form_values.status = '0' + '<?= $row->status ?>';
@@ -163,7 +163,7 @@
     el: '#app_edit',
         data: {
             form_values: form_values,
-            row_id: '<?php echo $row->id ?>',
+            row_id: '<?= $row->id ?>',
             options_status: <?= json_encode($options_status) ?>
         },
         methods: {

@@ -216,27 +216,41 @@ class Orders extends CI_Controller{
 // PAGOS POR CÓDIGOS INSTITUCIÓN Y USUARIO
 //-----------------------------------------------------------------------------
 
+
     function pays($institution_cod = '')
     {
-        $data['head_title'] = 'Pagos';
-        $data['view_a'] = 'orders/pays/pays_v';
-        $data['institution_cod'] = $institution_cod;
-        $data['arr_niveles'] = $this->App_model->arr_nivel('nombre_nivel');
+        $data['order_id'] = $this->pml->if_strlen($this->session->userdata('order_id'), 0);
 
-        //Identificar institución
-        $curr_institution = array('id' => 0, 'name' => '');
-        if ( $institution_cod != '' )
+        $responses = $this->Order_model->responses($data['order_id']);
+
+        //Si no tiene respuestas, continuar
+        if ( count($responses) == 0 )
         {
-            $institucion = $this->Db_model->row('institucion', "cod = '{$institution_cod}'");
-            if ( ! is_null($institucion) ) {
-                $curr_institution['id'] = $institucion->id;
-                $curr_institution['name'] = $institucion->nombre_institucion;
+            //Variables
+            $data['head_title'] = 'Pagos';
+            $data['view_a'] = 'orders/pays/pays_v';
+            $data['institution_cod'] = $institution_cod;
+            $data['arr_niveles'] = $this->App_model->arr_nivel('nombre_nivel');
+    
+            //Identificar institución
+            $curr_institution = array('id' => 0, 'name' => '');
+            if ( $institution_cod != '' )
+            {
+                $institucion = $this->Db_model->row('institucion', "cod = '{$institution_cod}'");
+                if ( ! is_null($institucion) ) {
+                    $curr_institution['id'] = $institucion->id;
+                    $curr_institution['name'] = $institucion->nombre_institucion;
+                }
             }
+    
+            $data['curr_institution'] = $curr_institution;
+    
+            $this->App_model->view('templates/monster/public/public_v', $data);
+        } else {
+            //Ya tiene respuestas, quitar de sesión y redirigir al inicio de pagos
+            $this->session->unset_userdata('order_id');   
+            redirect('orders/pays');    
         }
-
-        $data['curr_institution'] = $curr_institution;
-
-        $this->App_model->view('templates/monster/public/public_v', $data);
     }
 
 // PROCESO DE PAGO
@@ -246,29 +260,40 @@ class Orders extends CI_Controller{
      * Pasos en el proceso de compra:
      * Step 1: formulario para completar datos personales
      * Step 2: Verificación de datos y totales
+     * 2021-03-29
      */
     function checkout($step = 1)
     {
         $order_id = $this->session->userdata('order_id');
-        $data = $this->Order_model->basic($order_id);
-
-        $data['products'] = $this->Order_model->products($order_id);
-        $data['form_data'] = $this->Order_model->wompi_form_data($order_id);
-        $data['institucion'] = $this->Db_model->row_id('institucion', $data['row']->institution_id);
-        $data['step'] = $step;
-
-        $data['head_title'] = 'Completa tus datos';
-        $data['view_a'] = "orders/checkout/step_{$step}_v";
-
-        //Opciones para formulario
-        $data['options_region'] = $this->App_model->options_place('tipo_id = 3', 'place_name', 'Departamento');
-        $data['options_city'] = $this->App_model->options_place("tipo_id = 4 AND region_id = {$data['row']->region_id}", 'place_name', 'Ciudad');
         
-        if ( $this->session->userdata('logged') ) {
-            $this->App_model->view(TPL_ADMIN_NEW, $data);
+        $responses = $this->Order_model->responses($order_id);
+
+        if ( count($responses) == 0 ) {
+            //No tiene respuestas Wompi, continuar con pago
+            $data = $this->Order_model->basic($order_id);
+    
+            $data['products'] = $this->Order_model->products($order_id);
+            $data['form_data'] = $this->Order_model->wompi_form_data($order_id);
+            $data['institucion'] = $this->Db_model->row_id('institucion', $data['row']->institution_id);
+            $data['step'] = $step;
+    
+            $data['head_title'] = 'Completa tus datos';
+            $data['view_a'] = "orders/checkout/step_{$step}_v";
+    
+            //Opciones para formulario
+            $data['options_region'] = $this->App_model->options_place('tipo_id = 3', 'place_name', 'Departamento');
+            $data['options_city'] = $this->App_model->options_place("tipo_id = 4 AND region_id = {$data['row']->region_id}", 'place_name', 'Ciudad');
+            
+            if ( $this->session->userdata('logged') ) {
+                $this->App_model->view(TPL_ADMIN_NEW, $data);
+            } else {
+                $this->App_model->view('templates/monster/public/public_v', $data);
+            }
         } else {
-            $this->App_model->view('templates/monster/public/public_v', $data);
-        }
+            //Ya tiene repsuestas de wompi, eliminar variable de sesión y redirigir
+            $this->session->unset_userdata('order_id');
+            redirect('orders/pays');
+        }   
     }
 
     /**

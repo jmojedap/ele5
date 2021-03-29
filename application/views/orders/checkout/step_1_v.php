@@ -172,7 +172,7 @@
             </tbody>
         </table>
         
-        <a href="<?= base_url("orders/pays/{$institucion->cod}") ?>" class="btn btn-light">
+        <a href="<?= base_url("orders/pays/{$institucion->cod}") ?>" class="btn btn-light mb-2">
             <i class="fa fa-arrow-left"></i>
             Agregar más productos
         </a>

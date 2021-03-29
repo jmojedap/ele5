@@ -50,7 +50,7 @@
         },
         methods: {
             send_form: function(){
-                axios.post(url_api + 'usuarios/establecer_contrasena/' + this.cod_activacion, $('#form_id').serialize())
+                axios.post(url_api + 'usuarios/establecer_contrasena/' + this.cod_activacion, $('#password_form').serialize())
                 .then(response => {
                     console.log(response.data);
                     if ( response.data.status == 1 ) {

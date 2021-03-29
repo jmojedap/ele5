@@ -35,7 +35,8 @@ var arr_niveles = <?= json_encode($arr_niveles); ?>;
             products: [],
             no_institutions: false,
             no_users: false,
-            cancelable: false
+            cancelable: false,
+            order_id: <?= $order_id ?>,
         },
         methods: {
             start_step: function(){

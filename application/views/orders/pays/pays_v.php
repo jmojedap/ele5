@@ -2,32 +2,45 @@
     <div class="card center_box_750">
         <div class="card-body">
             <h1 class="text-center">Pagos En Línea Editores</h1>
-            <div class="mb-2 text-center" v-show="cancelable">
-                <button class="btn btn-warning w120p" v-on:click="cancel_order">
-                    Nuevo pago
-                </button>
-            </div>
 
             <div class="mb-2" v-show="step == 1">
-                <p class="text-center">Realizar pago</p>
-                <div class="row">
-                    <div class="col">
-                        <button class="btn btn-lg btn-info btn-block" v-on:click="set_code_type('institution')">
-                            Por Código de Institución
-                        </button>
-                        <p class="mt-2 text-center">
-                            Ingrese CÓDIGO INSTITUCIÓN y siga los pasos indicados.
-                        </p>
-                    </div>
-                    <div class="col">
-                        <button class="btn btn-lg btn-primary btn-block" v-on:click="set_code_type('user')">
-                            Por Código de Usuario
-                        </button>
-                        <p class="mt-2 text-center">
-                            Ingrese CÓDIGO USUARIO y siga los pasos indicados.
-                        </p>
+
+                <div class="mb-2 text-center" v-show="order_id > 0">
+                    <p>Usted tiene una compra en proceso.</p>
+                    <p>
+                        Si recientemente intentó hacer un pago y falló el proceso, le recomendamos reiniciar el pago
+                        para crear una nueva referencia de pago.
+                    </p>
+                    <a class="btn btn-primary mb-2" href="<?= URL_APP ?>orders/checkout/1">
+                        Continuar compra actual
+                    </a>
+                    <button class="btn btn-warning w120p mb-2" data-toggle="modal" data-target="#cancel_modal">
+                        Reiniciar
+                    </button>
+                </div>
+
+                <div v-show="order_id == 0">
+                    <p class="text-center">Realizar pago</p>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-lg btn-info btn-block" v-on:click="set_code_type('institution')">
+                                Por Código de Institución
+                            </button>
+                            <p class="mt-2 text-center">
+                                Ingrese CÓDIGO INSTITUCIÓN y siga los pasos indicados.
+                            </p>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-lg btn-primary btn-block" v-on:click="set_code_type('user')">
+                                Por Código de Usuario
+                            </button>
+                            <p class="mt-2 text-center">
+                                Ingrese CÓDIGO USUARIO y siga los pasos indicados.
+                            </p>
+                        </div>
                     </div>
                 </div>
+
             </div>
 
             <div v-show="step == 2">
@@ -131,5 +144,6 @@
 
         </div>
     </div>
+    <?php $this->load->view('orders/checkout/modal_cancel_v') ?>
 </div>
 <?php $this->load->view('orders/pays/vue_v') ?>

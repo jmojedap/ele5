@@ -110,7 +110,7 @@
     //Estudiante visita perfil de otro estudiante
         if ( $row->id == $this->session->userdata('usuario_id') && $this->session->userdata('rol_id') == 6 )
         {
-            $elementos = array('actividad', 'anotaciones', 'flipbooks', 'quices', 'cuestionarios');
+            $elementos = array('actividad', 'anotaciones', 'flipbooks', 'quices', 'actividad_links', 'cuestionarios');
         }
         
     //Elementos especiales
