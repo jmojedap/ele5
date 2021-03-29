@@ -850,44 +850,49 @@ class Grupo_model extends CI_Model{
         
         return $res_importacion;
     }
-    
+
     /**
-     * Edita masivamente datos de años de grupos, tabla grupo
-     * 
-     * @param type $array_hoja    Array con los datos de los grupos
-     * @return type
+     * Elimina masivamente la asignación de profesores a grupos
+     * 2021-03-29
      */
-    function desasignar_profesores($array_hoja)
-    {       
-        $this->load->model('Esp');
+    function desasignar_profesores($arr_sheet)
+    {
+        $data = array('qty_imported' => 0, 'results' => array());
         
-        $no_importados = array();
-        $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
-        
-        foreach ( $array_hoja as $array_fila )
+        foreach ( $arr_sheet as $key => $row_data )
         {
-            //Datos referencia
-                $grupo_id = $array_fila[0];
-                
-            //Validar
-                $condiciones = 0;
-                if ( strlen($grupo_id) > 0 ) { $condiciones++; }    //Debe tener grupo diligenciado
-                
-            //Si cumple las condiciones
-            if ( $condiciones == 1 )
-            {
-                $this->db->where('grupo_id', $grupo_id);
-                $this->db->delete('grupo_profesor');
-            } else {
-                $no_importados[] = $fila;
-            }
-            
-            $fila++;    //Para siguiente fila
+            $data_import = $this->desasignar_profesores_detalle($row_data);
+
+            $data['qty_imported'] += $data_import['status'];
+            $data['results'][$key + 2] = $data_import;
         }
         
-        $res_importacion['no_importados'] = $no_importados;
-        
-        return $res_importacion;
+        return $data;
+    }
+
+    /**
+     * Elimina la asignación de profesores a un grupo en el proceso masivo con archivo Excel
+     * 2021-03-29
+     */
+    function desasignar_profesores_detalle($row_data)
+    {
+        //Validar
+            $error_text = '';
+            if ( strlen($row_data[0]) == 0 ) { $error_text = "El ID de grupo (Columna A) está vacía. "; }
+
+        //Si no hay error
+            if ( $error_text == '' )
+            {
+                //Eliminar asignaciones
+                $this->db->where('grupo_id', $row_data[0])->delete('grupo_profesor');
+                $affected_rows = $this->db->affected_rows();
+
+                $data = array('status' => 1, 'text' => $affected_rows . ' asignaciones eliminadas', 'imported_id' => 0);
+            } else {
+                $data = array('status' => 0, 'text' => $error_text, 'imported_id' => 0);
+            }
+
+        return $data;
     }
     
 //NOMBRE DE GRUPO

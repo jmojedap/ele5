@@ -478,76 +478,63 @@ class Grupos extends CI_Controller{
 //-----------------------------------------------------------------------------
     
     /**
-     * Mostrar formulario de importación de datos de años de generación de grupos 
+     * Mostrar formulario de importación archivo con listado de profesores para desasignar de un grupo
      * con archivo Excel. El resultado del formulario se envía a 
-     * 'grupos/importar_editar_anios_e'
-     * 
+     * 'grupos/desasignar_profesores_e'
+     * 2021-03-29
      */
     function desasignar_profesores()
     {
-        //Iniciales
-            $nombre_archivo = '28_formato_desasignar.xlsx';
-            $parrafos_ayuda = array(
+        //Configuración
+            $data['help_note'] = '¿Cómo desasignar los profesores de un grupo?';
+            $data['help_tips'] = array(
                 'Las columnas [ID grupo], no puede estar vacías.',
                 'No se eliminan profesores ni grupos, solo la asignaciones'
             );
-        
-        //Instructivo
-            $data['titulo_ayuda'] = '¿Cómo desasignar los profesores de un grupo?';
-            $data['nota_ayuda'] = 'Se eliminarán las asignaciones de profesores de los grupos en el archivo Excel';
-            $data['parrafos_ayuda'] = $parrafos_ayuda;
-        
-        //Variables específicas
-            $data['destino_form'] = "grupos/desasignar_profesores_e";
-            $data['nombre_archivo'] = $nombre_archivo;
-            $data['nombre_hoja'] = 'grupos_desasignar';
-            $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
-            
-        //Variables generales
-            //$data['ayuda_id'] = 97;
+            $data['template_file_name'] = '28_formato_desasignar.xlsx';
+            $data['url_file'] = base_url("assets/formatos_cargue/{$data['template_file_name']}");
+            $data['sheet_name'] = 'grupos_desasignar';
+            $data['destination_form'] = 'grupos/desasignar_profesores_e';
+
+        //Vista
             $data['head_title'] = 'Grupos';
             $data['head_subtitle'] = 'Desasignar profesores';
-            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['view_a'] = 'common/import_v';
             $data['nav_2'] = 'grupos/explore/menu_v';
             $data['nav_3'] = 'grupos/importar_menu_v';
-        
-        $this->App_model->view(TPL_ADMIN, $data);
+            
+        $this->load->view(TPL_ADMIN, $data);
     }
-    
+
     /**
      * Importar datos de años de generación de grupos, (e) ejecutar.
      */
     function desasignar_profesores_e()
     {
         //Proceso
-            $this->load->model('Pcrn_excel');
-            $this->load->model('Esp');
-            $letra_columna = 'A';   //Última columna con datos
-            
-            $resultado = $this->Pcrn_excel->array_hoja_default($letra_columna);
-
-            if ( $resultado['valido'] )
-            {
-                $res_importacion = $this->Grupo_model->desasignar_profesores($resultado['array_hoja']);
-            }
+        $this->load->library('excel_new');            
+        $imported_data = $this->excel_new->arr_sheet_default($this->input->post('sheet_name'));
         
+        if ( $imported_data['status'] == 1 )
+        {
+            $data = $this->Grupo_model->desasignar_profesores($imported_data['arr_sheet']);
+        }
+
         //Cargue de variables
-            $data['valido'] = $resultado['valido'];
-            $data['mensaje'] = $resultado['mensaje'];
-            $data['array_hoja'] = $resultado['array_hoja'];
-            $data['nombre_hoja'] = $this->input->post('nombre_hoja');
-            $data['no_importados'] = $res_importacion['no_importados'];
-            $data['destino_volver'] = "grupos/explorar/";
+            $data['status'] = $imported_data['status'];
+            $data['message'] = $imported_data['message'];
+            $data['arr_sheet'] = $imported_data['arr_sheet'];
+            $data['sheet_name'] = $this->input->post('sheet_name');
+            $data['back_destination'] = "grupos/desasignar_profesores/";
         
         //Cargar vista
             $data['head_title'] = 'Grupos';
             $data['head_subtitle'] = 'Resultado desasignar profesores';
-            $data['view_a'] = 'comunes/bs4/resultado_importacion_v';
+            $data['view_a'] = 'common/import_result_v';
             $data['nav_2'] = 'grupos/explore/menu_v';
             $data['nav_3'] = 'grupos/importar_menu_v';
-            $this->App_model->view(TPL_ADMIN, $data);
-            //Salida JSON
-            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+
+        $this->App_model->view(TPL_ADMIN, $data);
     }
 
 //---------------------------------------------------------------------------------------------------
