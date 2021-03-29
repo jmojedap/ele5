@@ -579,9 +579,7 @@ class Cuestionarios extends CI_Controller{
     {
         $resultado = $this->Cuestionario_model->eliminar_cg($cuestionario_id, $meta_id);
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($resultado));
+        $this->output->set_content_type('application/json')->set_output(json_encode($resultado));
     }
 
     /**
@@ -687,8 +685,6 @@ class Cuestionarios extends CI_Controller{
     /**
      * Vista inicial antes de empezar a responder un cuestionario. Informativa.
      * 
-     * @param type $uc_id
-     * @param type $origen
      */
     function preliminar($uc_id, $origen = 'bibloteca')
     {
@@ -727,8 +723,6 @@ class Cuestionarios extends CI_Controller{
      * AJAX - JSON
      * Proceso inicial para responder un cuestionario, asigna fechas y estado
      * de iniciado en las tablas usuario_cuestionario y evento.
-     * 
-     * @param type $uc_id
      */
     function iniciar($uc_id)
     {
@@ -754,9 +748,7 @@ class Cuestionarios extends CI_Controller{
         //Respuesta
             $resultado['status'] = 1;
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($resultado));
+        $this->output->set_content_type('application/json')->set_output(json_encode($resultado));
     }
     
     /**
@@ -868,6 +860,10 @@ class Cuestionarios extends CI_Controller{
 // RESOLVER VUE
 //-----------------------------------------------------------------------------
     
+    /**
+     * Vista para resolver un cuestionario
+     * 
+     */
     function n_resolver()
     {
         $uc_id = $this->session->userdata('uc_id');
@@ -894,6 +890,10 @@ class Cuestionarios extends CI_Controller{
         $this->load->view(TPL_ADMIN, $data);
     }
     
+    /**
+     * AJAX - JSON
+     * Listado de preguntas que tiene un cuestionario
+     */
     function lista_preguntas($cuestionario_id)
     {
         $preguntas = $this->Cuestionario_model->lista_preguntas($cuestionario_id);
@@ -901,9 +901,7 @@ class Cuestionarios extends CI_Controller{
         $data['lista'] = $preguntas->result();
         $data['cant_preguntas'] = $preguntas->num_rows();
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -917,17 +915,14 @@ class Cuestionarios extends CI_Controller{
         $data['lista'] = $preguntas->result();
         $data['cant_preguntas'] = $preguntas->num_rows();
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**
      * AJAX JSON
      * Guarda los datos de respuesta en la tabla usuario_cuestionario
      * Los datos provienen de cuestionarios/n_resolver
-     * Se agrega la condición de verificar que el cuestionario no haya sido
-     * finalizado anteriormente
+     * Se agrega la condición de verificar que el cuestionario no haya sido finalizado anteriormente
      * 2019-08-09
      */
     function guardar_uc($uc_id) 
@@ -952,9 +947,7 @@ class Cuestionarios extends CI_Controller{
                 $data = array('status' => 1, 'message' => 'Respuestas guardadas');
         }
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     function n_finalizar($uc_id)
@@ -970,9 +963,7 @@ class Cuestionarios extends CI_Controller{
         $resultado['mensaje'] = 'Respuestas guardadas: ' . $cant_respuestas;
         $resultado['cant_respuestas'] = $cant_respuestas;
 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($resultado));
+        $this->output->set_content_type('application/json')->set_output(json_encode($resultado));
     }
     
 // 
@@ -1000,9 +991,7 @@ class Cuestionarios extends CI_Controller{
             $resultado = $up_id;
         }
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output($resultado);
+        $this->output->set_content_type('application/json')->set_output($resultado);
     }
     
     /**

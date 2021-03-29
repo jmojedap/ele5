@@ -1216,16 +1216,11 @@ class Usuarios extends CI_Controller{
     }
     
     /**
-     * Resultados de un usuario en un cuestionario
-     * 
-     * @param type $usuario_id
-     * @param type $uc_id 
+     * Resultados de un usuario en un cuestionario, detalle por preguntas
+     * 2021-03-29
      */
     function resultados_detalle($usuario_id, $uc_id)
     {
-        
-        //$this->output->enable_profiler(TRUE);
-        
         $this->load->model('Cuestionario_model');
         
         $data = $this->Usuario_model->basico($usuario_id);

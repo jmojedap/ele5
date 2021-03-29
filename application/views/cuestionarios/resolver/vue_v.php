@@ -212,9 +212,8 @@
                     console.log(response.data.mensaje);
                     if ( response.data.cant_respuestas == this.cant_preguntas )
                     {
-                        window.location = this.app_url + 'usuarios/resultados/' + this.usuario_id + '/' + this.uc_id;
+                        window.location = this.app_url + 'usuarios/resultados_detalle/' + this.usuario_id + '/' + this.uc_id;
                     }
-                    
                 })
                 .catch(function (error) {
                     console.log(error);

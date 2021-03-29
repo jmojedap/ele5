@@ -24,8 +24,8 @@
     <tbody>
         <tr>
             <td>
-                <?= anchor("usuarios/resultados/{$usuario_id}/{$uc_id}", 'Comparativos', 'class="w3 '. $clase_resultados .'"') ?>
                 <?= anchor("usuarios/resultados_detalle/{$usuario_id}/{$uc_id}", 'Detalle', 'class="w3 '. $clase_resultados_detalle .'"') ?>
+                <?= anchor("usuarios/resultados/{$usuario_id}/{$uc_id}", 'Comparativos', 'class="w3 '. $clase_resultados .'"') ?>
                 <?= anchor("usuarios/resultados_area/{$usuario_id}/{$uc_id}", 'Por área', 'class="w3 '. $clase_resultados_area .'"') ?>
             </td>
             <td>

@@ -93,7 +93,13 @@
 
             <tr id="fila_<?= $row_tabla->nombre_tabla ?>">
                 <td>
-                    <span id="sincro_<?= $row_tabla->nombre_tabla ?>" class="btn btn-warning sincro btn-sm" data-table="<?= $row_tabla->nombre_tabla ?>" data-desde_id="<?= $row_tabla->max_id ?>" data-metodo_id="<?= $row_tabla->metodo_id ?>">
+                    <span id="sincro_<?= $row_tabla->nombre_tabla ?>"
+                        class="btn btn-warning sincro btn-sm"
+                        data-table="<?= $row_tabla->nombre_tabla ?>"
+                        data-desde_id="<?= $row_tabla->max_id ?>"
+                        data-metodo_id="<?= $row_tabla->metodo_id ?>"
+                        data-limit_rows="<?= $row_tabla->limit_rows ?>"
+                        >
                         <i class="fa fa-refresh"></i>
                     </span>
                 </td>

@@ -119,7 +119,7 @@
                 $rango = $this->App_model->rango_cuestionarios($resultado_c['porcentaje']/100);
                 $clase_barra = $this->App_model->bs_clase_pct($resultado_c['porcentaje']);
 
-                $link_resultados = anchor("usuarios/resultados/{$row->id}/{$row_cuestionario->uc_id}",'Detalle', 'class="btn btn-outline-primary btn-sm"');
+                $link_resultados = anchor("usuarios/resultados_detalle/{$row->id}/{$row_cuestionario->uc_id}",'Detalle', 'class="btn btn-outline-primary btn-sm"');
             ?>
                 <tr class="fila_cuestionario <?php echo 'area_' . $row_cuestionario->area_id ?>">
                     

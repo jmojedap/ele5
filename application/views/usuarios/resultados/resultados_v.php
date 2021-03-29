@@ -48,12 +48,12 @@
             Cuestionario: <?= $row_cuestionario->nombre_cuestionario ?>
         </h5>
         <p>
-            Fecha de respuesta: <span class="text-danger"><?= $fecha_editado ?></span> |
-            Hace: <span class="text-danger"><?= $tiempo_hace ?></span> |
+            Fecha de respuesta: <span class="text-primary"><?= $fecha_editado ?></span> &middot;
+            Hace: <span class="text-primary"><?= $tiempo_hace ?></span> &middot;
             <?php if ( $this->session->userdata('rol_id') <= 2 ) { ?>
 
-                Puntaje: <span class="text-danger"><?= $res_usuario['porcentaje'] ?>%</span> | 
-                Rango: <span class="text-danger"><?= $texto_rango[$rango_usuario] ?></span>
+                Puntaje: <span class="text-primary"><?= $res_usuario['porcentaje'] ?>%</span> &middot; 
+                Rango: <span class="text-primary"><?= $texto_rango[$rango_usuario] ?></span>
 
             <?php } ?>
         </p>

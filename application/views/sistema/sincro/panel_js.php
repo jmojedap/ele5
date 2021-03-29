@@ -13,7 +13,7 @@
         var metodo_id_url = <?= $metodo_id ?>;      //Método de sincronización en URL
         var metodo_id = <?= $metodo_id ?>;          //Método de sincronización actual
         var desde_id = 0;           //ID desde el cual se descargan los registros
-        var limit = <?= $limit ?>;  //Número máximo de registros por ciclo de descarga
+        var limit_rows = <?= $limit_rows ?>;  //Número máximo de registros por ciclo de descarga
         var cant_registros = 0;     //Cantidad de registros en la tabla actual
         var cant_ciclos = 1;        //Cantidad de ciclos necesarios para descargar todos los datos
         var cant_sincronizados = 0; //Cantidad de registros sincronizados actualmente
@@ -34,6 +34,7 @@
         $('.sincro').click(function(){
             
             tabla = $(this).data('table');          //Identificar la tabla
+            limit_rows = $(this).data('limit_rows');          //Identificar el límite máximo de rows
             desde_id = $(this).data('desde_id');    //Max ID de la tabla local
             
             metodo_id = $(this).data('metodo_id');  //Método automático definido para la tabla
@@ -140,7 +141,6 @@
      * Conociendo el número de registros de una tabla se calcula el número de ciclos
      * de descarga de registros para sincronización, según el límite de registros por ciclo
      * 
-     * @returns {undefined}
      */
     function calcular_ciclos()
     {
@@ -154,7 +154,7 @@
             success: function(respuesta)
             {   
                 cant_registros = respuesta;
-                cant_ciclos = Math.ceil( cant_registros / limit);
+                cant_ciclos = Math.ceil( cant_registros / limit_rows);
                 boton_proceso();                                    //Pone el botón en formato estado "En proceso"
                 siguiente_ciclo();
             }
@@ -174,7 +174,7 @@
     {
         if ( ciclo < cant_ciclos  ) //Faltan ciclos
         {
-            offset = ciclo * limit; //Número del registro
+            offset = ciclo * limit_rows; //Número del registro
             sincronizar();
         } else {
             //Ciclos terminados
@@ -190,8 +190,8 @@
     {
         $.ajax({
             type: 'POST',
-            //url:  sincro_url + 'registros_json/' +  tabla + '/' + limit + '/' + offset,
-            url:  sincro_url + 'registros_json_id/' +  tabla + '/' + limit + '/' + desde_id,
+            //url:  sincro_url + 'registros_json/' +  tabla + '/' + limit_rows + '/' + offset,
+            url:  sincro_url + 'registros_json_id/' +  tabla + '/' + limit_rows + '/' + desde_id,
             beforeSend : function(){
                 var ciclo_mostrar = ciclo + 1;
                 $('#estado_' + tabla).html('<i class="fa fa-download"></i> ' + ciclo_mostrar + '/' + cant_ciclos);
