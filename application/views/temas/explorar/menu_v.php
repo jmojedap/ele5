@@ -12,6 +12,10 @@
         if ( $seccion == 'asignar_quices_e' ) { $clases['importar'] = 'active'; }
         if ( $seccion == 'importar_lecturas_dinamicas' ) { $clases['importar'] = 'active'; }
         if ( $seccion == 'importar_lecturas_dinamicas_e' ) { $clases['importar'] = 'active'; }
+        if ( $seccion == 'importar_pa' ) { $clases['importar'] = 'active'; }
+        if ( $seccion == 'importar_pa_e' ) { $clases['importar'] = 'active'; }
+        if ( $seccion == 'eliminar_preguntas_abiertas' ) { $clases['importar'] = 'active'; }
+        if ( $seccion == 'eliminar_preguntas_abiertas_e' ) { $clases['importar'] = 'active'; }
 
         $clases[$seccion] = 'active';
     

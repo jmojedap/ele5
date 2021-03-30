@@ -1187,7 +1187,6 @@ class Temas extends CI_Controller{
     function save_pa($tema_id, $pa_id = 0)
     {
         $data = $this->Tema_model->save_pa($tema_id, $pa_id);
-
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
@@ -1198,10 +1197,7 @@ class Temas extends CI_Controller{
     function delete_pa($tema_id, $pa_id)
     {
         $data = $this->Tema_model->delete_pa($tema_id, $pa_id);
-        
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     /**
@@ -1271,6 +1267,65 @@ class Temas extends CI_Controller{
             $data['nav_2'] = 'temas/explorar/menu_v';
             $data['nav_3'] = 'temas/menu_importar_v';
             $this->load->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * Mostrar formulario de cargue de archivo excel con listado de temas
+     * a los cuales se les eliminará las preguntas abiertas (pa) asignadas
+     * 2021-03-30
+     */
+    function eliminar_preguntas_abiertas()
+    {
+        //Configuración
+            $data['help_note'] = '¿Cómo eliminar preguntas abiertas?';
+            $data['help_tips'] = array(
+                'La columna A no puede estar vacía.',
+            );
+            $data['template_file_name'] = 'f34_eliminacion_preguntas_abiertas.xlsx';
+            $data['url_file'] = base_url("assets/formatos_cargue/{$data['template_file_name']}");
+            $data['sheet_name'] = 'temas_preguntas';
+            $data['destination_form'] = 'temas/eliminar_preguntas_abiertas_e';
+
+        //Vista
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Eliminar preguntas abiertas';
+            $data['view_a'] = 'common/import_v';
+            $data['nav_2'] = 'temas/explorar/menu_v';
+            $data['nav_3'] = 'temas/menu_importar_v';
+            
+        $this->load->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * Ejecuta la eliminación masiva de preguntas abiertas asociadas a los temas en archivo excel.
+     * 2021-03-30
+     */
+    function eliminar_preguntas_abiertas_e()
+    {
+        //Proceso
+        $this->load->library('excel_new');            
+        $imported_data = $this->excel_new->arr_sheet_default($this->input->post('sheet_name'));
+        
+        if ( $imported_data['status'] == 1 )
+        {
+            $data = $this->Tema_model->eliminar_pa_masivo($imported_data['arr_sheet']);
+        }
+
+        //Cargue de variables
+            $data['status'] = $imported_data['status'];
+            $data['message'] = $imported_data['message'];
+            $data['arr_sheet'] = $imported_data['arr_sheet'];
+            $data['sheet_name'] = $this->input->post('sheet_name');
+            $data['back_destination'] = "temas/eliminar_preguntas_abiertas/";
+        
+        //Cargar vista
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Resultado eliminar preguntas';
+            $data['view_a'] = 'common/import_result_v';
+            $data['nav_2'] = 'temas/explorar/menu_v';
+            $data['nav_3'] = 'temas/menu_importar_v';
+
+        $this->App_model->view(TPL_ADMIN, $data);
     }
 
 // LECTURAS DINÁMICAS (ledin)

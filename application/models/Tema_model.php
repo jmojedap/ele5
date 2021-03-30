@@ -1461,6 +1461,56 @@ class Tema_Model extends CI_Model{
         return $no_importados;
     }
 
+// ELIMINACIÓN MASIVA DE PREGUNTAS ABIERTAS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Elimina masivamente preguntas abiertas de un listado de temas en archivo Excel.
+     * 2021-03-30
+     */
+    function eliminar_pa_masivo($arr_sheet)
+    {
+        $data = array('qty_imported' => 0, 'results' => array());
+        
+        foreach ( $arr_sheet as $key => $row_data )
+        {
+            $data_import = $this->eliminar_pa($row_data);
+            $data['qty_imported'] += $data_import['status'];
+            $data['results'][$key + 2] = $data_import;
+        }
+        
+        return $data;
+    }
+
+    /**
+     * Elimina preguntas abiertas de un tema. Tabla post, tipo 121
+     * 2021-03-30
+     */
+    function eliminar_pa($row_data)
+    {
+        //Validar
+            $error_text = '';
+            if ( strlen($row_data[0]) == 0 ) { $error_text = "La columna A (Tema) está vacía. "; }
+
+        //Si no hay error
+            if ( $error_text == '' )
+            {
+                //Guardar en tabla item
+                $this->db->where('referente_1_id', $row_data[0]);   //ID tema
+                $this->db->where('tipo_id', 121);   //Tipo pregunta abierta
+                if ( strlen($row_data[1]) > 0 ) $this->db->where('referente_2_id', $row_data[1]);
+                $this->db->delete('post');
+                
+                $qty_deleted = $this->db->affected_rows();
+
+                $data = array('status' => 1, 'text' => $qty_deleted . ' preguntas eliminadas', 'imported_id' => $row_data[1]);
+            } else {
+                $data = array('status' => 0, 'text' => $error_text, 'imported_id' => 0);
+            }
+
+        return $data;
+    }
+
 // LECTURAS DINAMICAS (ledin)
 //-----------------------------------------------------------------------------
 
