@@ -264,23 +264,25 @@ class Develop extends CI_Controller {
         
     }
     
+    /**
+     * Desactivar usuarios estudiantes morosos
+     * 2021-04-03
+     */
     function desactivar_morosos()
     {
+        $data = array('status' => 0, 'message' => 'Cero usuario desactivados');
+
         $this->load->model('Institucion_model');
-        $cant_reg = $this->Institucion_model->desactivar_morosos();   
+        $qty_affected = $this->Institucion_model->desactivar_morosos();   
         
-        $mensaje = "{$cant_reg} estudiantes morosos fueron desactivados";
-        
-        //Resultado
-            $data['clase_alert'] = 'alert_success';
-            $data['mensaje'] = $mensaje;
-        
-        //Cargar vista
-            $data['titulo_pagina'] = 'Procesos';
-            $data['vista_a'] = 'sistema/develop/procesos_v';
-        
-        $this->load->view('plantilla_apanel/plantilla', $data);
-            
+        if ( $qty_affected >= 0 )
+        {
+            $data['status'] = 1;
+            $data['message'] = "{$qty_affected} estudiantes morosos fueron desactivados";
+        }
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**

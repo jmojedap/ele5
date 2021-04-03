@@ -7,9 +7,8 @@
     max-width: 450px; 
     margin: 0 auto;
 }
-.center_box_750{
-    max-width: 750px; margin: 0 auto;
-}
+.center_box_750{ max-width: 750px; margin: 0 auto;}
+.center_box_920{ max-width: 920px; margin: 0 auto;}
 
 /* Ahchos en Pixeles */
 .w30p { width: 30px; }

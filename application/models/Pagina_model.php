@@ -324,10 +324,14 @@ class Pagina_model extends CI_Model{
     
     /**
      * Crea las imágenes miniatura de la página que se sube.
+     * 2021-04-03
      */
     function img_pf_mini($nombre_archivo)
     { 
+        $data = array('status' => 0, 'message' => "Miniatura no creada");
+
         $this->load->library('image_lib');
+
         
         //Miniatura
             $config['image_library'] = 'gd2';
@@ -337,10 +341,17 @@ class Pagina_model extends CI_Model{
             $config['width'] = 256;
             $config['height'] = 256;
 
+        if ( file_exists($config['source_image']) )
+        {
             $this->image_lib->initialize($config);
             $this->image_lib->resize();
 
-        return $config['new_image'];
+            $data = array('status' => 1, 'message' => 'Imagen creada: ' . $config['new_image']);
+        } else {
+            $data['message'] = "Imagen original no existe: '{$config['source_image']}'";
+        }
+
+        return $data;
     }
     
     /**
@@ -376,27 +387,96 @@ class Pagina_model extends CI_Model{
         
         return $att_img;
     }
+
+    /**
+     * Actualiza el campo pagina_flipbook.marca = 0, para poderlas procesar en lotes en proceso
+     * crear_miniaturas_faltantes
+     * 2021-04-03
+     */
+    function limpiar_marca()
+    {
+        $arr_row['marca'] = 0;
+        $this->db->where('id > 0');
+        $this->db->update('pagina_flipbook', $arr_row);
+
+        $data = array('status' => 1, 'message' => 'Todas las páginas fueron desmarcadas para ser procesadas.');
+
+        return $data;
+    }
     
     /**
      * Crea los archivos de imagenes miniaturas de las páginas
-     * @return type integer
      */
-    function miniaturas()
+    function actualizar_miniaturas()
     {
-        $this->db->where('marca IS NULL');
+        $data = array('status' => 0, 'message' => 'Miniaturas creadas: 0', 'messages' => array());
+        $qty_mini = 0;
+
+        $this->db->where('marca', 0);
         $paginas = $this->db->get('pagina_flipbook', 400);
         
-        $registro['marca'] = 1;
+        $arr_row['marca'] = 1;
         
         foreach ($paginas->result() as $row_pagina)
         {
-            $this->img_pf_mini($row_pagina->archivo_imagen);
-            
-            $this->db->where('id', $row_pagina->id);
-            $this->db->update('pagina_flipbook', $registro);
+            $data_creacion = $this->img_pf_mini($row_pagina->archivo_imagen);
+            $qty_mini += $data_creacion['status'];
+            $data['messages'][] = $data_creacion['message'];
+
+            $this->db->where('id', $row_pagina->id)->update('pagina_flipbook', $arr_row);
         }
+
+        $paginas_total = $this->Db_model->num_rows('pagina_flipbook', 'id > 0');
+        $paginas_marca = $this->Db_model->num_rows('pagina_flipbook', 'marca = 1');
+        $paginas_sin_marca = $this->Db_model->num_rows('pagina_flipbook', 'marca = 0');
+
+        $data['message'] = "Miniaturas actualizadas: <b>{$qty_mini}</b>. ";
+        $data['message'] .= "Total páginas: <b>{$paginas_total}</b>. ";
+        $data['message'] .= "Páginas revisadas: <b>{$paginas_marca}</b>. ";
+        $data['message'] .= "Páginas sin revisar: <b>{$paginas_sin_marca}</b>. ";
+
+        if ( $paginas->num_rows() > 0 ) $data['status'] = 1;
+
+        return $data;
+    }
+
+    /**
+     * Crea los archivos de imagenes miniaturas de las páginas
+     */
+    function crear_miniaturas_faltantes()
+    {
+        $data = array('status' => 0, 'message' => 'Miniaturas creadas: 0', 'messages' => array());
+        $qty_mini = 0;
+
+        $this->db->where('marca', 0);
+        $this->db->order_by('id', 'DESC');
+        $paginas = $this->db->get('pagina_flipbook', 1000);
         
-        return $paginas->num_rows();
+        $arr_row['marca'] = 1;
+        
+        foreach ($paginas->result() as $row_pagina)
+        {
+            if ( ! file_exists(RUTA_UPLOADS . 'pf_mini/' . $row_pagina->archivo_imagen) )
+            {
+                $data_creacion = $this->img_pf_mini($row_pagina->archivo_imagen);
+                $qty_mini += $data_creacion['status'];
+                $data['messages'][] = $data_creacion['message'];
+            }
+            $this->db->where('id', $row_pagina->id)->update('pagina_flipbook', $arr_row);
+        }
+
+        $paginas_total = $this->Db_model->num_rows('pagina_flipbook', 'id > 0');
+        $paginas_marca = $this->Db_model->num_rows('pagina_flipbook', 'marca = 1');
+        $paginas_sin_marca = $this->Db_model->num_rows('pagina_flipbook', 'marca = 0');
+
+        $data['message'] = "Miniaturas creadas: <b>{$qty_mini}</b>. ";
+        $data['message'] .= "Total páginas: <b>{$paginas_total}</b>. ";
+        $data['message'] .= "Páginas revisadas: <b>{$paginas_marca}</b>. ";
+        $data['message'] .= "Páginas sin revisar: <b>{$paginas_sin_marca}</b>. ";
+
+        if ( $paginas->num_rows() > 0 ) $data['status'] = 1;
+
+        return $data;
     }
     
 //---------------------------------------------------------------------------------------------------

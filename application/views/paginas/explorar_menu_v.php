@@ -26,17 +26,10 @@
             'atributos' => 'title="Cargar listado de archivos de imágenes de páginas para temas - MS Excel"'
         );
         
-        $arr_menus['miniaturas'] = array(
-            'icono' => '<i class="fa fa-file-image-o"></i>',
-            'texto' => 'Miniaturas',
-            'link' => 'paginas/miniaturas',
-            'atributos' => 'title="Actualizar las miniaturas de las imágenes"'
-        );
-        
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('explorar', 'nuevo', 'asignar', 'miniaturas');
-        $elementos_rol[1] = array('explorar', 'nuevo', 'asignar', 'miniaturas');
-        $elementos_rol[2] = array('explorar', 'nuevo', 'asignar', 'miniaturas');
+        $elementos_rol[0] = array('explorar', 'nuevo', 'asignar');
+        $elementos_rol[1] = array('explorar', 'nuevo', 'asignar');
+        $elementos_rol[2] = array('explorar', 'nuevo', 'asignar');
         
     //Definiendo menú mostrar, según el rol del visitante
         $elementos = $elementos_rol[$this->session->userdata('rol_id')];

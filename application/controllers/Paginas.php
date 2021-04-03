@@ -435,22 +435,23 @@ class Paginas extends CI_Controller{
         $this->load->view('app/redirect_v', $data);
         
     }
+
+    function limpiar_marca()
+    {
+        $data = $this->Pagina_model->limpiar_marca();
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
     
     /**
      * Crea los archivos de imagenes miniaturas de las páginas
+     * 2021-04-03
      */
-    function miniaturas()
+    function crear_miniaturas_faltantes()
     {
-        //$cant_paginas = $this->Pagina_model->miniaturas();
-        //$data['mensaje'] = 'Miniaturas creadas: ' . $cant_paginas;
-        $data['mensaje'] = 'Este proceso masivo no está disponible por ahora.';
-        $data['link_volver'] = 'paginas/explorar';
-        
-        //Solicitar vista
-            $data['titulo_pagina'] = 'Páginas';
-            $data['subtitulo_pagina'] = 'Cargar lista de páginas';
-            $data['vista_a'] = 'app/mensaje_v';
-            $this->load->view(PTL_ADMIN, $data);
+        set_time_limit(360);    //360 segundos, 6 minutos para ejecución
+        $data = $this->Pagina_model->crear_miniaturas_faltantes();
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
 }
