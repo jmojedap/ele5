@@ -6,6 +6,7 @@
     
     $cl_nav_2[$app_cf_index] = 'active';
     if ( $app_cf_index == 'recursos_links_importar_e' ) { $cl_nav_2['recursos_links_importar'] = 'active'; }
+    if ( $app_cf_index == 'recursos_links_eliminar_e' ) { $cl_nav_2['recursos_links_eliminar'] = 'active'; }
 ?>
 
 <script>
@@ -14,32 +15,48 @@
     var sections_rol = [];
     
     sections.links = {
-        'icon': 'fa fa-search',
-        'text': 'Explorar',
-        'class': '<?php echo $cl_nav_2['recursos_links'] ?>',
-        'cf': 'recursos/links',
-        'anchor': true
+        icon: 'fa fa-search',
+        text: 'Explorar',
+        class: '<?= $cl_nav_2['recursos_links'] ?>',
+        cf: 'recursos/links',
+        anchor: true
     };
 
     sections.links_importar = {
-        'icon': 'fa fa-upload',
-        'text': 'Importar',
-        'class': '<?php echo $cl_nav_2['recursos_links_importar'] ?>',
-        'cf': 'recursos/links_importar',
-        'anchor': true
+        icon: 'fa fa-upload',
+        text: 'Importar',
+        class: '<?= $cl_nav_2['recursos_links_importar'] ?>',
+        cf: 'recursos/links_importar',
+        anchor: true
     };
 
     sections.links_programados = {
-        'icon': 'far fa-calendar-alt',
-        'text': 'Programados',
-        'class': '<?php echo $cl_nav_2['recursos_links_programados'] ?>',
-        'cf': 'recursos/links_programados',
-        'anchor': true
+        icon: 'far fa-calendar-alt',
+        text: 'Programados',
+        class: '<?= $cl_nav_2['recursos_links_programados'] ?>',
+        cf: 'recursos/links_programados',
+        anchor: true
+    };
+
+    sections.links_programados = {
+        icon: 'far fa-calendar-alt',
+        text: 'Programados',
+        class: '<?= $cl_nav_2['recursos_links_programados'] ?>',
+        cf: 'recursos/links_programados',
+        anchor: true
+    };
+
+    sections.links_eliminar = {
+        icon: 'fa fa-trash',
+        text: 'Eliminar',
+        class: '<?= $cl_nav_2['recursos_links_eliminar'] ?>',
+        cf: 'recursos/links_eliminar',
+        anchor: true
     };
     
     //Secciones para cada rol
-    sections_rol.dvlp = ['links', 'links_importar'];
-    sections_rol.admn = ['links', 'links_importar'];
+    sections_rol.dvlp = ['links', 'links_importar', 'links_eliminar'];
+    sections_rol.admn = ['links', 'links_importar', 'links_eliminar'];
     sections_rol.edtr = ['links'];
     sections_rol.ains = ['links', 'links_programados'];
     sections_rol.dirc = ['links', 'links_programados'];

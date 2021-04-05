@@ -127,6 +127,8 @@
         $opciones_menus['recursos/links'] = array('recursos', 'links', 'links');
         $opciones_menus['recursos/links_importar'] = array('recursos', 'links', 'links');
         $opciones_menus['recursos/links_importar_e'] = array('recursos', 'links', 'links');
+        $opciones_menus['recursos/links_eliminar'] = array('recursos', 'links', 'links');
+        $opciones_menus['recursos/links_eliminar_e'] = array('recursos', 'links', 'links');
 
         $opciones_menus['instituciones/flipbooks'] = array('recursos', 'flipbooks', 'flipbooks');
 

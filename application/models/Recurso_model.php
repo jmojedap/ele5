@@ -450,6 +450,55 @@ class Recurso_Model extends CI_Model{
 
         return $data;
     }
+
+// Eliminar links de temas en archivo Excel
+//-----------------------------------------------------------------------------
+
+    /**
+     * Eliminar links de temas en archivo excel
+     * 2021-04-05
+     */
+    function links_eliminar($arr_sheet)
+    {
+        $data = array('qty_imported' => 0, 'results' => array());
+        
+        foreach ( $arr_sheet as $key => $row_data )
+        {
+            $data_import = $this->link_eliminar($row_data);
+            $data['qty_imported'] += $data_import['status'];
+            $data['results'][$key + 2] = $data_import;
+        }
+        
+        return $data;
+    }
+
+    /**
+     * Eliminar links de un tema específico, row de tabla Excel
+     * 2021-04-05
+     */
+    function link_eliminar($row_data)
+    {
+        //Validar
+            $error_text = '';
+            $tema = $this->Db_model->row('tema', "cod_tema = '{$row_data[0]}'");
+                            
+            if ( is_null($tema) ) { $error_text = "El tema (Columna A) con el código '{$row_data[0]}' no fue encontrado. "; }
+
+        //Si no hay error
+            if ( $error_text == '' )
+            {
+                //Guardar en tabla item
+                $this->db->where('tipo_recurso_id', 2)->where('tema_id', $tema->id)->delete('recurso');
+                
+                $qty_deleted = $this->db->affected_rows();
+
+                $data = array('status' => 1, 'text' => "{$qty_deleted} links eliminados para el tema con código '{$tema->cod_tema}'", 'imported_id' => $tema->id);
+            } else {
+                $data = array('status' => 0, 'text' => $error_text, 'imported_id' => 0);
+            }
+
+        return $data;
+    }
     
 // PROCESOS
 //---------------------------------------------------------------------------------------------------------

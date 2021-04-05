@@ -301,7 +301,7 @@ class Recursos extends CI_Controller{
             $data['options_grupo'] = $this->App_model->opciones_grupo("grupo.id IN ({$str_grupos})");
             
         //Cargar vista
-            $this->App_model->view(TPL_ADMIN_NEW, $data);
+            $this->App_model->view(TPL_ADMIN, $data);
     }
 
     /**
@@ -426,7 +426,7 @@ class Recursos extends CI_Controller{
             $data['view_a'] = 'common/import_v';
             $data['nav_2'] = 'recursos/links/explore/menu_v';
         
-        $this->load->view(TPL_ADMIN_NEW, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -459,5 +459,62 @@ class Recursos extends CI_Controller{
             $data['nav_2'] = 'recursos/links/explore/menu_v';
 
         $this->App_model->view(TPL_ADMIN_NEW, $data);
+    }
+
+    /**
+     * Mostrar formulario de cargue de archivo excel con listado de temas
+     * a los cuales se les eliminará los temas asociados
+     * 2021-04-05
+     */
+    function links_eliminar()
+    {
+        //Configuración
+            $data['help_note'] = '¿Cómo eliminar links de temas?';
+            $data['help_tips'] = array(
+                'La columna A no puede estar vacía.',
+            );
+            $data['template_file_name'] = 'f35_eliminacion_links_temas.xlsx';
+            $data['url_file'] = base_url("assets/formatos_cargue/{$data['template_file_name']}");
+            $data['sheet_name'] = 'temas_links';
+            $data['destination_form'] = 'recursos/links_eliminar_e';
+
+        //Vista
+            $data['head_title'] = 'Links';
+            $data['head_subtitle'] = 'Eliminar links de temas';
+            $data['view_a'] = 'common/import_v';
+            $data['nav_2'] = 'recursos/links/explore/menu_v';
+            
+        $this->load->view(TPL_ADMIN, $data);
+    }
+
+    /**
+     * Ejecuta la eliminación masiva de links asociados a los temas en archivo excel.
+     * 2021-04-05
+     */
+    function links_eliminar_e()
+    {
+        //Proceso
+        $this->load->library('excel_new');            
+        $imported_data = $this->excel_new->arr_sheet_default($this->input->post('sheet_name'));
+        
+        if ( $imported_data['status'] == 1 )
+        {
+            $data = $this->Recurso_model->links_eliminar($imported_data['arr_sheet']);
+        }
+
+        //Cargue de variables
+            $data['status'] = $imported_data['status'];
+            $data['message'] = $imported_data['message'];
+            $data['arr_sheet'] = $imported_data['arr_sheet'];
+            $data['sheet_name'] = $this->input->post('sheet_name');
+            $data['back_destination'] = "recursos/links_eliminar/";
+        
+        //Cargar vista
+            $data['head_title'] = 'Links';
+            $data['head_subtitle'] = 'Resultado eliminar links';
+            $data['view_a'] = 'common/import_result_v';
+            $data['nav_2'] = 'recursos/links/explore/menu_v';
+
+        $this->App_model->view(TPL_ADMIN, $data);
     }
 }

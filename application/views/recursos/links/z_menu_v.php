@@ -9,7 +9,7 @@
     if ( $this->uri->segment(2) == 'procesar_cargue' ) { $clase_menu['asignar'] = 'current'; }
 
 ?>
-
+hola
 <nav class="mini_nav">
     <?= anchor("recursos/links", '<i class="fa fa-globe"></i> Links', 'title="" class="'. $clase_menu['links'] .'"') ?>
     <?= anchor("recursos/cargar_links", '<i class="fa fa-table"></i> Cargar', 'title="Cargar listado de archivos para temas - MS Excel" class="'. $clase_menu['cargar_links'] .'"') ?>

@@ -47,7 +47,7 @@ class Usuarios extends CI_Controller{
             $data['arr_status'] = $this->Item_model->arr_interno('categoria_id = 65');
             
         //Cargar vista
-            $this->App_model->view(TPL_ADMIN_NEW, $data);
+            $this->App_model->view(TPL_ADMIN, $data);
     }
 
     /**
@@ -207,7 +207,7 @@ class Usuarios extends CI_Controller{
         
         $output = array_merge($data,(array)$output);
         
-        $this->App_model->view(TPL_ADMIN_NEW, $output);
+        $this->App_model->view(TPL_ADMIN, $output);
     }
     
     function editar()
@@ -313,7 +313,7 @@ class Usuarios extends CI_Controller{
             $data['nav_2'] = 'usuarios/explore/menu_v';
             $data['nav_3'] = 'usuarios/importar_menu_v';
         
-        $this->App_model->view(TPL_ADMIN_NEW, $data);
+        $this->App_model->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -351,7 +351,7 @@ class Usuarios extends CI_Controller{
             $data['view_a'] = 'comunes/resultado_importacion_v';
             $data['nav_2'] = 'usuarios/explore/menu_v';
             $data['nav_3'] = 'usuarios/importar_menu_v';
-            $this->App_model->view(TPL_ADMIN_NEW, $data);
+            $this->App_model->view(TPL_ADMIN, $data);
     }
     
     
@@ -1629,7 +1629,7 @@ class Usuarios extends CI_Controller{
             $data['nav_2'] = 'usuarios/explore/menu_v';
             $data['nav_3'] = 'usuarios/importar_menu_v';
         
-        $this->App_model->view(TPL_ADMIN_NEW, $data);
+        $this->App_model->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -1663,7 +1663,7 @@ class Usuarios extends CI_Controller{
             $data['view_a'] = 'comunes/resultado_importacion_v';
             $data['nav_2'] = 'usuarios/explore/menu_v';
             $data['nav_3'] = 'usuarios/importar_menu_v';
-            $this->App_model->view(TPL_ADMIN_NEW, $data);
+            $this->App_model->view(TPL_ADMIN, $data);
     }
     
 // FUNCIONES MASIVAS

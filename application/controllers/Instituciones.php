@@ -38,7 +38,7 @@ class Instituciones extends CI_Controller{
             //$data['arr_types'] = $this->Item_model->arr_cod('category_id = 33');
             
         //Cargar vista
-            $this->App_model->view(TPL_ADMIN_NEW, $data);
+            $this->App_model->view(TPL_ADMIN, $data);
     }
 
     /**
@@ -98,7 +98,7 @@ class Instituciones extends CI_Controller{
         
         $output = array_merge($data,(array)$gc_output);
         
-        $this->load->view(TPL_ADMIN_NEW, $output);
+        $this->load->view(TPL_ADMIN, $output);
     }
     
     function editar()

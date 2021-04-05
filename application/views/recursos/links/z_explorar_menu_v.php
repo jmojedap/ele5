@@ -18,10 +18,17 @@
             'link' => "recursos/importar_links/",
             'atributos' => 'title="Importar links desde archivo MS-Excel"'
         );
+
+        $arr_menus['eliminar_links'] = array(
+            'icono' => '<i class="fa fa-trash"></i>',
+            'texto' => 'Eliminar',
+            'link' => "recursos/eliminar_links/",
+            'atributos' => 'title="Eliminar links masivamente por temas desde archivo Excel"'
+        );
         
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('links', 'importar_links');
-        $elementos_rol[1] = array('links', 'importar_links');
+        $elementos_rol[0] = array('links', 'importar_links', 'eliminar_links');
+        $elementos_rol[1] = array('links', 'importar_links', 'eliminar_links');
         $elementos_rol[2] = array('links', 'importar_links');
         
     //Definiendo menú mostrar, según el rol del visitante

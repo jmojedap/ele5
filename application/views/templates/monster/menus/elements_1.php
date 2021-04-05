@@ -170,13 +170,6 @@
                         cf: 'products/explore',
                         sections: ['products/explore', 'products/import', 'products/import_e', 'products/add', 'products/info']
                     },
-                    {
-                        text: 'Catálogo',
-                        active: false,
-                        icon: 'fa fa-book',
-                        cf: 'products/catalog',
-                        sections: ['products/catalog', 'products/detail']
-                    }
                 ],
                 sections: ['products/info']
             },
