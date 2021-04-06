@@ -494,7 +494,6 @@ class Cuestionario_model extends CI_Model
     /**
      * Devuevlve TRUE o FALSE, determina si el cuestionario cumple con los
      * requisitos para ser convertido de tipo 3 a tipo 4.
-     * @param type $cuestionario_id
      */
     function convertible($cuestionario_id)
     {
@@ -744,9 +743,7 @@ class Cuestionario_model extends CI_Model
      * Convierte un cuestionario generado desde contenido (tipo 3) a cuestionario
      * simple (tipo 4), crea copia de las preguntas y las vuelve editables por
      * el usuario docente
-     * 
-     * @param type $cuestionario_id
-     * @return string
+     * 2021-04-06
      */
     function convertir($cuestionario_id)
     {
@@ -774,10 +771,14 @@ class Cuestionario_model extends CI_Model
                 $resultado['icono'] = 'fa-check';
         }
         
-        
         return $resultado;
     }
     
+    /**
+     * Clonar preguntas de un cuestionario, crea clones de preguntas y las reasigna pregunta_id
+     * a los valores actuales relacionados enla tabla cuestionario_pregunta
+     * 2021-04-06
+     */
     function clonar_preguntas($cuestionario_id)
     {
         $this->load->model('Pregunta_model');

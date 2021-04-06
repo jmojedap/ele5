@@ -857,7 +857,7 @@ class Cuestionarios extends CI_Controller{
             
     }
     
-// RESOLVER VUE
+// RESOLVER VUE.JS
 //-----------------------------------------------------------------------------
     
     /**
@@ -1123,7 +1123,6 @@ class Cuestionarios extends CI_Controller{
      * simple (tipo 4), crea copia de las preguntas y las vuelve editables por
      * el usuario docente
      * 
-     * @param type $cuestionario_id
      */
     function convertir($cuestionario_id) 
     {

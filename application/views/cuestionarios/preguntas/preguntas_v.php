@@ -19,6 +19,7 @@
                     </p>
                     
                     <p v-html="pregunta.texto_pregunta"></p>
+                    <p v-html="pregunta.enunciado_2"></p>
                     <ul style="list-style: none;">
                         <li v-bind:class="{'right_answer': pregunta.clv == 1 }">
                             <span class="badge badge-secondary">A</span>
