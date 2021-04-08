@@ -23,6 +23,22 @@
         </div>
     </div>
     <div class="form-group row">
+        <label for="enunciado_2" class="col-md-4 col-form-label text-right">Enunciado complementario</label>
+        <div class="col-md-8">
+            <textarea
+                type="text"
+                id="field-enunciado_2"
+                name="enunciado_2"
+                required
+                class="form-control"
+                placeholder="Texto de la pregunta"
+                title="Texto de la pregunta"
+                v-model="form_values.enunciado_2"
+                rows="3"
+                ></textarea>
+        </div>
+    </div>
+    <div class="form-group row">
         <label for="opcion_1" class="col-md-4 col-form-label text-right">Opción A</label>
         <div class="col-md-8">
             <input

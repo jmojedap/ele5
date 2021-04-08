@@ -83,12 +83,11 @@
                 
                 axios.post(url_api + this.controller + '/delete_selected', params)
                 .then(response => {
-                    if ( response.data.status == 1 )
+                    if ( response.data.qty_deleted > 0 )
                     {
                         this.hide_deleted();
                         toastr_cl = 'info';
-                        //toastr_text = 'Registros eliminados';
-                        toastr_text = 'Registros eliminados: ' + response.data.qty_deleted;
+                        toastr_text = 'Usuarios eliminados: ' + response.data.qty_deleted;
                         this.selected = [];
                     } else {
                         toastr_cl = 'error';

@@ -1172,12 +1172,15 @@ class Usuario_model extends CI_Model{
 //PROCESOS
 //---------------------------------------------------------------------------------------------------
 
+    /**
+     * Eliminar usuario
+     * 2021-04-07
+     */
     function eliminar($usuario_id)
     {
-        
         //tabla usuario
-            $this->db->where('id', $usuario_id);
-            $this->db->delete('usuario');
+            $this->db->where('id', $usuario_id)->delete('usuario');
+            $qty_deleted = $this->db->affected_rows();
         
         //Tablas relacionadas
             $tablas = array(
@@ -1196,6 +1199,8 @@ class Usuario_model extends CI_Model{
                 $this->db->where('usuario_id', $usuario_id);
                 $this->db->delete($tabla);
             }
+
+        return $qty_deleted;
     }
 
     function datos_usuario($usuario_id)

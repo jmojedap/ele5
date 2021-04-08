@@ -161,24 +161,18 @@ class Usuarios extends CI_Controller{
     /**
      * AJAX
      * Eliminar un grupo de registros seleccionados
-     * 2019-08-05
+     * 2021-04-07
      */
-    function eliminar_seleccionados()
+    function delete_selected()
     {
-        $str_seleccionados = $this->input->post('seleccionados');
-        $seleccionados = explode('-', $str_seleccionados);
+        $selected = explode(',', $this->input->post('selected'));
+        $data['qty_deleted'] = 0;
         
-        foreach ( $seleccionados as $elemento_id ) 
-        {
-            $this->Usuario_model->eliminar($elemento_id);
-        }
+        foreach ( $selected as $row_id ) $data['qty_deleted'] += $this->Usuario_model->eliminar($row_id);
         
-        $data = array('status' => 1, 'message' =>  count($seleccionados) . ' usuarios eliminados');
-
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
+
 
 // CRUD
 //-----------------------------------------------------------------------------

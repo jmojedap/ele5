@@ -3129,9 +3129,7 @@ class Cuestionario_model extends CI_Model
      * Devuelve el número de respuestas correctas para unos filtros específicos
      * Usado en el resumen de resultados por competencias
      * Simple, porque no incluye los filtros por competencias
-     * 
-     * @param type $filtros
-     * @return type
+     * 2021-04-08, ajuste join cuestionario_pregunta.
      */
     function cant_correctas_simple($filtros)
     {
@@ -3141,12 +3139,12 @@ class Cuestionario_model extends CI_Model
         $this->db->where($filtros);
         $this->db->join('pregunta', 'pregunta.id = usuario_pregunta.pregunta_id');
         $this->db->join('usuario_cuestionario', 'usuario_pregunta.usuario_id = usuario_cuestionario.usuario_id AND usuario_pregunta.cuestionario_id = usuario_cuestionario.cuestionario_id');
+        $this->db->join('cuestionario_pregunta', 'usuario_pregunta.pregunta_id = cuestionario_pregunta.pregunta_id AND usuario_pregunta.cuestionario_id = cuestionario_pregunta.cuestionario_id');
         $query = $this->db->get('usuario_pregunta');
         
         if ( $query->num_rows() > 0 ) { $cant_correctas = $query->row()->cant_correctas; }
         
         return $cant_correctas;
-        
     }
     
     /**
