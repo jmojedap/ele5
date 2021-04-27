@@ -740,16 +740,13 @@ class Usuarios extends CI_Controller{
      * a usuarios/recovery_email
      * 2021-01-06
      */
-    function restaurar($resultado = NULL)
+    function restaurar()
     {
-        
         if ( ! $this->session->userdata('logged') )
         {
             $data['destino_form'] = 'usuarios/restaurar_e';
-            
             $data['head_title'] = 'Restauración de contraseña';
             $data['view_a'] = 'usuarios/restaurar_v';
-            $data['resultado'] = $resultado;
             $this->load->view('templates/monster/start_v', $data);
         } else {
             redirect('app');
@@ -762,7 +759,7 @@ class Usuarios extends CI_Controller{
      */
     function recovery_email()
     {
-        $data['status'] = 0;
+        $data = array('status' => 0, 'message' => 'No existe usuario');
 
         /*$this->load->model('Validation_model');
         $recaptcha = $this->Validation_model->recaptcha(); //Validación Google ReCaptcha V3*/
@@ -770,12 +767,18 @@ class Usuarios extends CI_Controller{
         //Identificar usuario
         $row = $this->Db_model->row('usuario', "email = '{$this->input->post('email')}'");
 
+        //Si existe usuario
         if ( ! is_null($row) ) 
         {
-            //Usuario existe, se envía email para restaurar constraseña
-            $this->Usuario_model->cod_activacion($row->id);
-            if ( ENV == 'production') $this->Usuario_model->email_activacion($row->id, 'restaurar');
-            $data['status'] = 1;
+            if ( $row->estado > 0 )
+            {
+                //Se envía email para restaurar constraseña
+                $this->Usuario_model->cod_activacion($row->id);
+                if ( ENV == 'production') $this->Usuario_model->email_activacion($row->id, 'restaurar');
+                $data = array('status' => 1, 'message' => 'Mensaje restauración enviado');
+            } else {
+                $data = array('status' => 5, 'message' => 'Usuario inactivo');
+            }
         }
 
         //Salida JSON
@@ -785,8 +788,9 @@ class Usuarios extends CI_Controller{
     /**
      * Formulario para restaurar contraseña o reactivar cuenta
      * se ingresa con nombre de usuario y contraseña
+     * DESACTIVADA 2021-04-21
      */
-    function restaurar_e()
+    function no_usada_restaurar_e()
     {
         $email = $this->input->post('email');
         $resultado = $this->Usuario_model->restaurar($email);

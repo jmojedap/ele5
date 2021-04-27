@@ -1315,23 +1315,26 @@ class Usuario_model extends CI_Model{
     
     /**
      * Establece un código de activación o recuperación de cuenta de usuario
+     * 2021-04-21
      */
     function cod_activacion($usuario_id)
     {
         $this->load->helper('string');
-        $registro['cod_activacion'] = strtolower(random_string('alpha', 32));
+        $arr_row['cod_activacion'] = strtolower(random_string('alpha', 32));
         
-        $this->db->where('id', $usuario_id);
-        $this->db->update('usuario', $registro);
+        $this->db->where('id', $usuario_id)->update('usuario', $arr_row);
     }
     
+    /**
+     * Objeto registro tabla usuario, identificado por código de activación
+     * 2021-04-21
+     */
     function row_activacion($cod_activacion)
     {
-        $condicion = "cod_activacion = '{$cod_activacion}'";
-        $row_usuario = $this->Pcrn->registro('usuario', $condicion);
+        $condition = "cod_activacion = '{$cod_activacion}'";
+        $row_usuario = $this->Db_model->row('usuario', $condition);
         return $row_usuario;
     }
-    
 
     function activar($cod_activacion)
     {

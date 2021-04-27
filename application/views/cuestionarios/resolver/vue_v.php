@@ -6,6 +6,7 @@
         el: '#resolver_cuestionario',
         created: function(){
             this.obtener_lista();
+            this.auto_finalizar()
         },
         data: {
             app_url: '<?php echo base_url() ?>',
@@ -200,9 +201,7 @@
                             toastr['error'](response.data.message);
                         }
                     })
-                    .catch(function (error) {
-                         console.log(error);
-                    });
+                    .catch(function (error) { console.log(error) })
             },
             //Finaliza cuestionario y redirige a resultados
             finalizar: function() {
@@ -212,12 +211,20 @@
                     console.log(response.data.mensaje);
                     if ( response.data.cant_respuestas == this.cant_preguntas )
                     {
-                        window.location = this.app_url + 'usuarios/resultados_detalle/' + this.usuario_id + '/' + this.uc_id;
+                        toastr['success']('Cuestionario finalizado');
+                        setTimeout(() => {
+                            window.location = this.app_url + 'usuarios/resultados_detalle/' + this.usuario_id + '/' + this.uc_id;
+                        }, 3000);
                     }
                 })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                .catch(function (error) { console.log(error) })
+            },
+            auto_finalizar(){
+                var milisegundos = <?= $segundos_restantes * 1000 ?>
+                ;setTimeout(() => {
+                    $('#modal_time_over').modal('show')
+                    this.guardar_finalizar()
+                }, milisegundos)
             }
         }
     });

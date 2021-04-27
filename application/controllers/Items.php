@@ -165,5 +165,23 @@ class Items extends CI_Controller{
         
         redirect("items/listado/{$registro['categoria_id']}/{$item_id_guardado}");
     }
+
+// OPCIONES
+//-----------------------------------------------------------------------------
+
+    /**
+     * AJAX JSON
+     * Array con opciones para input select con items, según condición sql
+     * 2021-04-09
+     */
+    function get_options()
+    {
+        $condition = $this->input->post('condition');
+        $empty_value = $this->input->post('empty_value');
+        $data['options'] = $this->Item_model->options($condition, $empty_value);
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
     
 }

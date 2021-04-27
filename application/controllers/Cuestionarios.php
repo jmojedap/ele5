@@ -297,9 +297,6 @@ class Cuestionarios extends CI_Controller{
     /**
      * Grupos y estudiantes que tienen asignado el cuestionario
      * 
-     * @param type $cuestionario_id
-     * @param type $institucion_id
-     * @param type $grupo_id
      */
     function grupos($cuestionario_id, $institucion_id = NULL, $grupo_id = NULL)
     {
@@ -881,6 +878,7 @@ class Cuestionarios extends CI_Controller{
 
             $data['row_uc'] = $row_uc;
             $data['segundos_restantes'] = $segundos_restantes;
+            $data['segundos_restantes'] = 5;
             $data['view_a'] = 'cuestionarios/resolver/resolver_v';
         } else {
             $data['head_title'] = 'Cuestionario finalizado';

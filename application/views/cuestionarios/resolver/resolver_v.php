@@ -248,5 +248,7 @@
         </div>
     </div>
 
+    <?php $this->load->view('cuestionarios/resolver/modal_time_over_v') ?>
+
 <?php
 $this->load->view('cuestionarios/resolver/vue_v');

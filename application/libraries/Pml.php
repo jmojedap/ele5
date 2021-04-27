@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Pml {
 
-    /** ACTUALIZADA 2020-09-03 */
+    /** ACTUALIZADA 2021-04-12 */
     
     /**
      * Converts codeigniter query object in an array
@@ -48,6 +48,70 @@ class Pml {
         
         //Se quita el separador final con substr
         return substr($str, 0, -strlen($separator));
+    }
+
+    /**
+     * Devuelve el valor correspondiente determinado para un rango
+     * el array $intervals tiene $key => $value :: $lower_limit => $value
+     * $lower_limit es el key del intervalo, se pone límite inferior ($lower_limit) desde el cual aplica el valor $value
+     * 2021-04-12
+     */
+    function interval_value($intervals, $key_value)
+    {
+        krsort($intervals, SORT_NUMERIC);  //Ordenar el array de mayor a menor, por key
+        $interval_value = 0;               //Valor por defecto
+        
+        //Recorrer intervalos
+        foreach ( $intervals as $key => $value ) 
+        {
+            $interval_value = $value;           //Asigna el valor
+            if ( $key_value >= $key ) break;    //Si el valor comparado el mayor a la llave, fin.
+        }
+        
+        return $interval_value;
+    }
+
+// TOTALES
+//-----------------------------------------------------------------------------
+
+    /**
+     * Devuelve la sumatoria de un campo en un objeto query
+     * 2021-02-02
+     */
+    function sum_query($query, $field)
+    {
+        $sum = 0;
+        foreach ($query->result() as $row)
+        {
+            $sum += $row->$field;
+        }
+
+        return $sum;
+    }
+
+    /**
+     * Array con suma, promedio, max y min de una variable numérica de un query
+     * 2021-02-04
+     */
+    function field_summary($query, $field)
+    {
+        //Valores iniciales
+        $summary = array('sum' => 0,'avg' => 0,'min' => 0,'max' => 0,'count' => 0);
+        if ( $query->num_rows() > 0 ) { $summary['min'] = $query->row(0)->$field; }
+
+        //Recorrer query
+        foreach ($query->result() as $row)
+        {
+            $summary['sum'] += $row->$field;
+            if ( $row->$field > $summary['max'] ) $summary['max'] = $row->$field * 1;
+            if ( $row->$field < $summary['min'] ) $summary['min'] = $row->$field * 1;
+            if ( ! is_null($row->$field) ) $summary['count'] += 1;
+        }
+
+        //Calculando promedio
+        if ( $summary['count'] > 0 ) $summary['avg'] = $summary['sum'] / $summary['count'];
+
+        return $summary;
     }
     
 // CONTROL FUNCTIONS
@@ -99,6 +163,23 @@ class Pml {
             $if_strlen = $value_else;
         }
         return $if_strlen;
+    }
+
+    /**
+     * Si una variable es NULL, devuelve un value_if
+     * 2021-03-19
+     */
+    function if_null($variable, $value_if = '', $value_else = NULL)
+    {
+        if ( is_null($value_else) ) { $value_else = $variable; }
+        
+        if ( is_null($variable) ) 
+        {
+            $if_null = $value_if;
+        } else {
+            $if_null = $value_else;
+        }
+        return $if_null;
     }
 
     /**

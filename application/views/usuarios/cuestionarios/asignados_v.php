@@ -27,7 +27,7 @@
 
             if ( $row_cuestionario->usuario_id == $this->session->userdata('usuario_id') )
             {
-                $link_responder = anchor("cuestionarios/preliminar/{$row_cuestionario->uc_id}",'Responder', 'class="btn btn-default"');
+                $link_responder = anchor("cuestionarios/preliminar/{$row_cuestionario->uc_id}",'Responder', 'class="btn btn-secondary"');
             }
 
             if ( ! in_array($this->session->userdata('rol_id'), $roles['responder_lote'] ) ){

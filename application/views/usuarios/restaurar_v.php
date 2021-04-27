@@ -33,15 +33,27 @@
         </div>
     </div>
 
-
-    <div class="card" style="margin-bottom: 10px;" v-show="app_status == 'sent'">
+    <div class="card mb-2" v-show="app_status == 'sent'">
         <div class="card-body">
             <i class="fa fa-check fa-2x text-success"></i>
             <p>
-                Enviamos un link al correo electróico <strong class="text-success">{{ email }}</strong> para reestablecer su contraseña.
+                Enviamos un link al correo electrónico <strong class="text-success">{{ email }}</strong> para reestablecer su contraseña.
             <p>
             <p>Recuerde revisar la carpeta de correo no deseado.</p>
         </div>
+    </div>
+
+    <div class="mb-2" v-show="app_status == 'inactive'">
+        <a href="<?= base_url("usuarios/restaurar") ?>" class="btn btn-light mb-2">
+            <i class="fa fa-arrow-left"></i> Atrás
+        </a>
+        <i class="fa fa-exclamation-triangle fa-2x text-warning"></i>
+        <p>
+            El usuario con el correo electrónico <strong class="text-info">{{ email }}</strong> se encuentra <strong class="text-danger">inactivo</strong>.
+        <p>
+        <p>
+            Para más información contacte a su agente comercial.
+        </p>
     </div>
 </div>
 
@@ -62,6 +74,8 @@
                         this.app_status = 'sent';
                     } else if ( response.data.status == 0 ) {
                         this.app_status = 'no_user';
+                    } else if ( response.data.status == 5 ) {
+                        this.app_status = 'inactive';
                     }
                 })
                 .catch(function (error) {
