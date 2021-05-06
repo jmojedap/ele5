@@ -48,7 +48,7 @@
                 ?>
                 {
                     id: <?= $row_evento->id ?>,
-                    title: 'Tema: <?= $row_evento->nombre_evento ?>',
+                    title: 'Tema: <?= str_replace("'", "\'", $row_evento->nombre_cuestionario) ?>',
                     start: '<?= $row_evento->fecha_inicio ?>',
                     end: '<?= $row_evento->fecha_inicio ?>',
                     url: '<?= $url ?>',

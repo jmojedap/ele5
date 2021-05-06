@@ -2603,6 +2603,44 @@ class Cuestionario_model extends CI_Model
             $this->db->where('id', $uc_id);
             $this->db->update('usuario_cuestionario', $registro);
     }
+
+    /**
+     * Recalificación del cuestionario. Actualiza el campo usuario_pregunta.respuesta
+     * 
+     * 2021-05-06
+     */
+    function calificar($uc_id)
+    {
+        $qty_affected = 0;
+
+        $this->db->select('usuario_pregunta.id, pregunta.respuesta_correcta, usuario_pregunta.respuesta');
+        $this->db->join('pregunta', 'pregunta.id = usuario_pregunta.pregunta_id');
+        $this->db->where('uc_id', $uc_id);
+        $respuestas = $this->db->get('usuario_pregunta');
+
+        foreach ($respuestas->result() as $row_respuesta)
+        {
+            $arr_row['resultado'] = 0;
+            if ( $row_respuesta->respuesta == $row_respuesta->respuesta_correcta ) $arr_row['resultado'] = 1;
+
+            $this->db->where('id', $row_respuesta->id);
+            $this->db->update('usuario_pregunta', $arr_row);
+
+            $affected_rows += $this->db->affected_rows();
+        }
+
+        //Si hubo cambios
+        if ( $affected_rows )
+        {
+            $row_uc = $this->Db_model->row_id('usuario_cuestionario', $uc_id);
+
+            $this->actualizar_uc($uc_id);
+            $this->finalizar($uc_id);
+            $this->actualizar_acumuladores($row_uc->usuario_id);
+        }
+
+        return $affected_rows;
+    }
     
     /**
      * Devuelve query con las respuestas de un usuario a un cuestionario

@@ -1,5 +1,13 @@
 <div id="resultados_app">
     <div class="center_box_750">
+        <?php if ( $this->session->userdata('role') <= 1 ) : ?>
+            <div class="mb-2">
+                <button class="btn btn-info w120p" v-on:click="recalificar()">
+                    <i class="fa fa-sync mr-2"></i>
+                    Recalificar
+                </button>
+            </div>
+        <?php endif; ?>
         <div class="progress mb-2">
             <div class="progress-bar" role="progressbar" v-bind:style="`width: ` + porcentaje + `%;`" v-bind:aria-valuenow="porcentaje" aria-valuemin="0" aria-valuemax="100">{{ porcentaje }}% correctas</div>
         </div>
@@ -45,8 +53,24 @@
 var resultados_app = new Vue({
     el: '#resultados_app',
     data: {
+        usuario_id: '<?= $row->id ?>',
+        uc_id: '<?= $row_uc->id ?>',
         respuestas: <?= json_encode($respuestas_cuestionario->result()) ?>,
         porcentaje: <?= intval($res_usuario['porcentaje']) ?>
+    },
+    methods: {
+        recalificar: function(){
+            axios.get(url_api + 'cuestionarios/calificar/' + this.uc_id)
+            .then(response => {
+                if ( response.data.affected_rows >= 0 ) {
+                    toastr['success']('Se acualizó la calificación. Cargando...')
+                    setTimeout(() => {
+                        window.location = url_app + 'usuarios/resultados_detalle/' + this.usuario_id + '/' + this.uc_id
+                    }, 2000);
+                }
+            })
+            .catch(function(error) { console.log(error) })
+        },
     }
 })
 </script>

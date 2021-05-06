@@ -963,6 +963,17 @@ class Cuestionarios extends CI_Controller{
 
         $this->output->set_content_type('application/json')->set_output(json_encode($resultado));
     }
+
+    /**
+     * Recalifica un cuestionario, actualiza campo usuario_pregunta.resultado y
+     * recalcula calificaciones totales 
+     * 2021-05-06
+     */
+    function calificar($uc_id)
+    {
+        $data['affected_rows'] = $this->Cuestionario_model->calificar($uc_id);
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
     
 // 
 //-----------------------------------------------------------------------------
