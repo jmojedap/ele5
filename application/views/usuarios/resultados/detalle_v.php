@@ -16,7 +16,7 @@
             >
             <div class="card-body">
                 <p>
-                    {{ parseInt(kp) + 1 }}. {{ respuesta.texto_pregunta }}
+                    {{ parseInt(kp) + 1 }}. <span v-html="respuesta.texto_pregunta"></span>
                 </p>
                 <div class="row">
                     <div class="col-md-6">

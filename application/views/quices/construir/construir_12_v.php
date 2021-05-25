@@ -150,12 +150,12 @@
 
                 <hr/>
 
-                <div class="sep3">
+                <div class="my-2">
                     <?php if ( $imagenes->num_rows() == 0 ){ ?>
                         <?php $this->load->view('quices/construir/form_imagen_v') ?>
                     <?php } else { ?>
                         <?= $this->Pcrn->anchor_confirm("quices/eliminar_archivo/{$quiz_id}/{$imagenes->row()->id_alfanumerico}", 'Eliminar', 'class="btn btn-warning" title="Eliminar imagen"', '¿Confirma la eliminación de esta imagen?') ?>
-                        <div style="max-width: 800px;" class="sep2">
+                        <div style="max-width: 800px;" class="my-2">
                             <?= img($att_img) ?>
                         </div>
                     <?php } ?>
@@ -164,7 +164,7 @@
         </div>
     </div>
     <div class="col col-md-8">
-        <div class="card card-default">
+        <div class="card">
             <div class="card-body">
                 <?php foreach ($elementos_quiz->result() as $row_elemento) : ?>
                     <div id="div_<?= $row_elemento->id_alfanumerico ?>">
@@ -178,7 +178,6 @@
                         <p>
                             <span class="etiqueta informacion"><?= ($row_elemento->orden + 1)?></span>
                             <span class="etiqueta exito"><?= $row_elemento->detalle ?></span>
-
                         </p>
 
                         <p>

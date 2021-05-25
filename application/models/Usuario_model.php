@@ -227,20 +227,6 @@ class Usuario_model extends CI_Model{
         $query = $this->search($filters); //Para calcular el total de resultados
         return $query->num_rows();
     }
-
-    /**
-     * Query para exportar
-     * 2020-12-12
-     */
-    function export($filters)
-    {
-        $this->db->select($this->select('export'));
-        $search_condition = $this->search_condition($filters);
-        if ( $search_condition ) { $this->db->where($search_condition);}
-        $query = $this->db->get('usuario', 5000);  //Hasta 5000 usuarios
-
-        return $query;
-    }
     
     /**
      * Devuelve segmento Where SQL, aplicando filtro de usuarios según el rol del usuario en sesión
@@ -275,6 +261,20 @@ class Usuario_model extends CI_Model{
         }
         
         return $condition;
+    }
+
+    /**
+     * Query para exportar
+     * 2020-12-12
+     */
+    function export($filters)
+    {
+        $this->db->select($this->select('export'));
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+        $query = $this->db->get('usuario', 5000);  //Hasta 5000 usuarios
+
+        return $query;
     }
     
 // Exploración

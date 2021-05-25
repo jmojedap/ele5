@@ -20,8 +20,8 @@
 <script type="text/javascript" src="<?php echo URL_RESOURCES ?>js/Math.uuid.js"></script>
 <link href="<?php echo URL_RESOURCES ?>css/animate.css" rel="stylesheet">
 
-<?php $this->load->view('quices/construir/113/script_v') ?>
-<?php $this->load->view('quices/construir/113/style_v') ?>
+<?php $this->load->view('quices/construir_v2/113/script_v') ?>
+<?php $this->load->view('quices/construir_v2/113/style_v') ?>
 
 <div style="margin: 0px auto; width: 838px;">
     <div class="card mb-2">

@@ -23,14 +23,185 @@ class Quiz_Model extends CI_Model{
         
         return $basico;
     }
+
+// EXPLORACIÓN DE QUICES
+//-----------------------------------------------------------------------------
+
+    /**
+     * Array con los datos para la vista de exploración
+     */
+    function explore_data($filters, $num_page, $per_page = 10)
+    {
+        //Data inicial, de la tabla
+            $data = $this->get($filters, $num_page, $per_page);
+        
+        //Elemento de exploración
+            $data['controller'] = 'quices';                      //Nombre del controlador
+            $data['cf'] = 'quices/explorar/';                     //Nombre del controlador
+            $data['views_folder'] = 'quices/explore/';           //Carpeta donde están las vistas de exploración
+            
+        //Vistas
+            $data['head_title'] = 'Evidencias';
+            $data['head_subtitle'] = $data['search_num_rows'];
+            $data['view_a'] = $data['views_folder'] . 'explore_v';
+            $data['nav_2'] = $data['views_folder'] . 'menu_v';
+        
+        return $data;
+    }
+
+    function get($filters, $num_page, $per_page)
+    {
+        //Referencia
+            $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
+
+        //Búsqueda y Resultados
+            $data['filters'] = $filters;
+            $data['list'] = $this->list($filters, $per_page, $offset);    //Resultados para página
+        
+        //Cargar datos
+            $data['str_filters'] = $this->Search_model->str_filters($filters);
+            $data['search_num_rows'] = $this->search_num_rows($filters);
+            $data['max_page'] = ceil($this->pml->if_zero($data['search_num_rows'],1) / $per_page);   //Cantidad de páginas
+
+        return $data;
+    }
+
+    /**
+     * Segmento Select SQL, con diferentes formatos, consulta de usuarios
+     * 2021-05-12
+     */
+    function select($format = 'general')
+    {
+        $arr_select['general'] = '*';
+        $arr_select['export'] = '*';
+        
+
+        return $arr_select[$format];
+    }
     
+    /**
+     * Query usuarios, aplicando filtros, paginado y orden
+     * 2020-12-12
+     */
+    function search($filters, $per_page = NULL, $offset = NULL)
+    {
+        //Construir consulta
+            $this->db->select($this->select());
+            //$this->db->join('usuario', 'usuario.id = institucion.id', 'left');
+            
+            
+        //Orden
+            if ( $filters['o'] != '' )
+            {
+                $order_type = $this->pml->if_strlen($filters['ot'], 'ASC');
+                $this->db->order_by($filters['o'], $order_type);
+            } else {
+                $this->db->order_by('editado', 'DESC');
+            }
+            
+        //Filtros
+            $search_condition = $this->search_condition($filters);
+            if ( $search_condition ) { $this->db->where($search_condition);}
+            
+        //Obtener resultados
+        $query = $this->db->get('quiz', $per_page, $offset);
+        
+        return $query;
+    }
+
+    /**
+     * Array Listado elemento resultado de la búsqueda (filtros).
+     * 2020-01-21
+     */
+    function list($filters, $per_page = NULL, $offset = NULL)
+    {
+        $query = $this->search($filters, $per_page, $offset);
+        $list = array();
+
+        foreach ($query->result() as $row)
+        {
+            $row->cant_elementos = $this->Db_model->num_rows('quiz_elemento', "quiz_id = {$row->id}");  //Cantidad de elementos
+            $list[] = $row;
+        }
+
+        return $list;
+    }
+
+    /**
+     * String con condición WHERE SQL para filtrar usuario
+     * 2020-08-01
+     */
+    function search_condition($filters)
+    {
+        $condition = NULL;
+
+        //$condition .= $this->role_filter() . ' AND ';
+
+        //q words condition
+        $words_condition = $this->Search_model->words_condition($filters['q'], array('nombre_quiz', 'cod_quiz', 'texto_enunciado'));
+        if ( $words_condition )
+        {
+            $condition .= $words_condition . ' AND ';
+        }
+        
+        //Otros filtros
+        if ( $filters['f1'] != '' ) { $condition .= "tema_id = {$filters['f1']} AND "; }
+        if ( $filters['a'] != '' ) { $condition .= "area_id = {$filters['a']} AND "; }
+        if ( $filters['n'] != '' ) { $condition .= "nivel = {$filters['n']} AND "; }
+        if ( $filters['tp'] != '' ) { $condition .= "tipo_quiz_id = {$filters['tp']} AND "; }
+        
+        //Quitar cadena final de ' AND '
+        if ( strlen($condition) > 0 ) { $condition = substr($condition, 0, -5);}
+        
+        return $condition;
+    }
+    
+    /**
+     * Devuelve la cantidad de registros encontrados en la tabla con los filtros
+     * establecidos en la búsqueda
+     */
+    function search_num_rows($filters)
+    {
+        $query = $this->search($filters); //Para calcular el total de resultados
+        return $query->num_rows();
+    }
+    
+    /**
+     * Devuelve segmento Where SQL, aplicando filtro de usuarios según el rol del usuario en sesión
+     * 2020-12-22
+     */
+    function role_filter()
+    {
+        $role = $this->session->userdata('role');
+        $condition = 'quiz.id >= 0';  //Valor por defecto, ningún user, se obtendrían cero user.
+        
+        /*if ( $role <= 2 ) {
+            //Desarrollador, todos los usuarios
+            $condition = 'quiz.id > 0';
+        }*/
+        
+        return $condition;
+    }
+
+    /**
+     * Query para exportar
+     * 2021-05-12
+     */
+    function export($filters)
+    {
+        $this->db->select($this->select('export'));
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+        $query = $this->db->get('quiz', 5000);  //Hasta 5000 usuarios
+
+        return $query;
+    }
+
+// Otras
+//-----------------------------------------------------------------------------
     /**
      * Búsqueda de quices
      * 
-     * @param type $busqueda
-     * @param type $per_page
-     * @param type $offset
-     * @return type
      */
     function buscar($busqueda, $per_page = NULL, $offset = NULL)
     {
@@ -88,80 +259,11 @@ class Quiz_Model extends CI_Model{
             10 => 129,  //J
             12 => 132,  //L
             13 => 180,   //M
-            113 => 180   //M2
+            112 => 180,   //M2
+            113 => 180,   //M2
         );
         
         return $posts[$tipo_id];
-    }
-    
-    /**
-     * Objeto Grocery Crud para la edición de quices
-     * 2018-11-06
-     *  
-     * @param type $quiz_id
-     * @return type
-     */
-    function crud_editar($quiz_id)
-    {
-        //Grocery crud
-        $this->load->library('grocery_CRUD');
-        $this->load->model('Esp');
-        
-        $crud = new grocery_CRUD();
-        $crud->set_table('quiz');
-        $crud->set_subject('quiz');
-        $crud->unset_export();
-        $crud->unset_print();
-        $crud->unset_add();
-        $crud->unset_back_to_list();
-        $crud->unset_delete();
-        $crud->unset_read();
-        $crud->columns('nombre_quiz', 'descripcion', 'editado');
-
-        //Permisos de edición
-        
-        //Permisos de adición
-        
-        //Relaciones
-            $crud->set_relation('area_id', 'item', 'item', 'categoria_id = 1');
-        
-        //Filtro
-            $crud->where('quiz.id', 0);
-        
-        //Títulos de los campos
-            $crud->display_as('nombre_quiz', 'Nombre');
-            $crud->display_as('area_id', 'Área');
-            $crud->display_as('tipo_quiz_id', 'Tipo');
-            $crud->display_as('cod_quiz', 'Cód quiz');
-            $crud->display_as('texto_enunciado', 'Enunciado especial');
-
-        //Formulario Edit
-            $crud->edit_fields(
-                'nombre_quiz',
-                'tipo_quiz_id',
-                'clave',
-                'cod_quiz',
-                'texto_enunciado',
-                'usuario_id',
-                'editado'
-            );
-            
-        //Opciones
-            $arr_tipo_quiz = $this->Item_model->arr_item(9);
-
-        //Reglas de validación
-            $crud->required_fields('nombre_quiz', 'cod_quiz', 'nivel', 'area_id');
-            
-        //Valores por defecto
-            $crud->field_type('editado', 'hidden', date('Y-m-d H:i:s'));
-            $crud->field_type('usuario_id', 'hidden', $this->session->userdata('usuario_id'));
-            $crud->field_type('tipo_quiz_id', 'dropdown', $arr_tipo_quiz);
-            $crud->unset_texteditor('texto_enunciado');
-        
-        $output = $crud->render();
-        
-        return $output;
-        
     }
     
     function crud_elemento($quiz_id)
@@ -282,6 +384,7 @@ class Quiz_Model extends CI_Model{
             $row_imagen = $imagenes->row();
             $arr_detalle = json_decode($row_imagen->detalle);
 
+            $imagen['id'] = $row_imagen->id;
             $imagen['src'] = base_url() . RUTA_UPLOADS . 'quices/' . $row_imagen->archivo;
             $imagen['id_alfanumerico'] = $row_imagen->id_alfanumerico;
             $imagen['ancho'] = $arr_detalle->image_width;
@@ -602,7 +705,7 @@ class Quiz_Model extends CI_Model{
     }
     
     /* Función que elimina un registro de la tabla quiz_elemento
-     * 2019-11-29
+     * 2021-05-21
      */
     function eliminar_elemento($id_alfanumerico)
     {
@@ -619,9 +722,13 @@ class Quiz_Model extends CI_Model{
             $this->db->where('id', $row_elemento->id);
             $this->db->delete('quiz_elemento');
 
+            $qty_deleted = $this->db->affected_rows();
+
         //Actalizaciones
             $this->actualizar_clave($quiz_id);
             $this->enumerar_elementos($quiz_id, $row_elemento->tipo_id);
+
+        return $qty_deleted;
     }
     
     /**
@@ -703,5 +810,59 @@ class Quiz_Model extends CI_Model{
         
         return $config;
     }
-    
+
+// Versiones 2
+//-----------------------------------------------------------------------------
+
+    function save_element($arr_row)
+    {
+        $condition = "id = '{$arr_row['id']}'";
+        
+        $saved_id = $this->Db_model->save('quiz_elemento', $condition, $arr_row);
+        
+        //Actualizar quiz
+        $this->actualizar_editado($saved_id);
+        $this->actualizar_clave($arr_row['quiz_id']);
+        $this->enumerar_elementos($arr_row['quiz_id'], $arr_row['tipo_id']);
+        
+        return $saved_id;
+    }
+
+    /* Función que elimina un registro de la tabla quiz_elemento
+     * 2021-05-14
+     */
+    function delete_element($quiz_id, $elemento_id)
+    {
+        $condition = "id = {$elemento_id} AND quiz_id = {$quiz_id}";
+        $row_elemento = $this->Db_model->row('quiz_elemento', $condition);
+        
+        //Eliminar archivo si tiene
+            $file_path = RUTA_UPLOADS . 'quices/' . $row_elemento->archivo;
+            if ( strlen($row_elemento->archivo) > 0 && file_exists($file_path) ) {
+                unlink($file_path);
+            }
+
+        //Eliminar registro
+            $this->db->where('id', $row_elemento->id)->delete('quiz_elemento');
+            $qty_deleted = $this->db->affected_rows();
+
+        //Actalizaciones
+            $this->actualizar_clave($quiz_id);
+            $this->enumerar_elementos($quiz_id, $row_elemento->tipo_id);
+
+        return $qty_deleted;
+    }
+
+    /**
+     * Listado de elementos de un quiz
+     * 2021-05-14
+     */
+    function get_elements($quiz_id)
+    {
+        $this->db->select('*');
+        $this->db->where('quiz_id', $quiz_id);
+        $elements = $this->db->get('quiz_elemento');
+
+        return $elements;
+    }
 }

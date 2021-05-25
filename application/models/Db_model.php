@@ -3,7 +3,7 @@ class Db_model extends CI_Model{
     
     /* Db, is abbreviation for Database
      * Functions that complement database operations with CodeIgniter
-     * Actualizada 2019-06-17
+     * Actualizada 2021-03-18
      */
       
     /**
@@ -137,6 +137,33 @@ class Db_model extends CI_Model{
             //Already exists, update
             $this->db->where('id', $row_id);
             $this->db->update($table, $arr_row);
+        }
+        
+        return $row_id;
+    }
+
+    /**
+     * Si $arr_row['id'] no existe, inserta nuevo registro
+     * Si un el array contiene $arr_row['id'], se edita
+     * 2021-03-18
+     */
+    function save_id($table, $arr_row = NULL)
+    {
+        //Verificar si hay array con registro
+        if ( is_null($arr_row) ) $arr_row = $this->arr_row();
+
+        //Verificar si tiene id definido, insertar o actualizar
+        if ( ! isset($arr_row['id']) ) 
+        {
+            //No existe, insertar
+            $this->db->insert($table, $arr_row);
+            $row_id = $this->db->insert_id();
+        } else {
+            //Ya existe, editar
+            $row_id = $arr_row['id'];
+            unset($arr_row['id']);
+
+            $this->db->where('id', $row_id)->update($table, $arr_row);
         }
         
         return $row_id;

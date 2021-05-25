@@ -878,7 +878,7 @@ class Cuestionarios extends CI_Controller{
 
             $data['row_uc'] = $row_uc;
             $data['segundos_restantes'] = $segundos_restantes;
-            $data['segundos_restantes'] = 5;
+            //$data['segundos_restantes'] = 5;
             $data['view_a'] = 'cuestionarios/resolver/resolver_v';
         } else {
             $data['head_title'] = 'Cuestionario finalizado';
