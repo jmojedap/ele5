@@ -293,29 +293,32 @@ class Pregunta_model extends CI_Model{
 
     /**
      * Elimina archivo imagen y edita registro en la tabla pregunta, campo archivo_imagen
-     * 2019-10-04
+     * 2021-06-01
      */
     function delete_archivo_imagen($pregunta_id)
     {
         //Resultado inicial por defecto
             $data = array('status' => 0, 'message' => 'La imagen no fue eliminada');
 
-        //Eliminar archivo
-            $archivo_imagen = $this->Pcrn->campo_id('pregunta', $pregunta_id, 'archivo_imagen');
-            unlink(RUTA_UPLOADS . 'preguntas/' . $archivo_imagen);
+        //Verificar si es editable
+            $row_pregunta = $this->Db_model->row_id('pregunta', $pregunta_id);
+            $editable = $this->editable($row_pregunta);
 
-        //Modificar registro
-            $arr_row['archivo_imagen'] = '';
-            $this->db->where('id', $pregunta_id);
-            $this->db->update('pregunta', $arr_row);
-            
-        if ( $this->db->affected_rows() > 0 ) {
-            $data = array('status' => 1, 'message' => 'Imagen eliminada');
+        if ( $editable ) {
+            //Eliminar archivo
+                unlink(RUTA_UPLOADS . 'preguntas/' . $row_pregunta->archivo_imagen);
+    
+            //Modificar registro
+                $arr_row['archivo_imagen'] = '';
+                $this->db->where('id', $pregunta_id);
+                $this->db->update('pregunta', $arr_row);
+                
+            if ( $this->db->affected_rows() > 0 ) {
+                $data = array('status' => 1, 'message' => 'Imagen eliminada');
+            }
         }
 
         return $data;
-
-
     }
     
 //GROCERY CRUD DE PREGUNTAS
@@ -327,10 +330,9 @@ class Pregunta_model extends CI_Model{
         
         if ( ! is_null($row_pregunta) )
         {
-            if ( in_array($this->session->userdata('rol_id'), array(0,1,2,7)) ) { $editable = TRUE; }   //Usuario interno
+            if ( in_array($this->session->userdata('role'), array(0,1,2,7)) ) { $editable = TRUE; }   //Usuario interno
             if ( $this->session->userdata('usuario_id') == $row_pregunta->creado_usuario_id ) { $editable = TRUE; }   //Usuario que creó la pregunta
         }
-        
         
         return $editable;
     }
@@ -1062,10 +1064,10 @@ class Pregunta_model extends CI_Model{
         
         //$this->load->model('Cuestionario_model');
 
-        $row = $this->Pcrn->registro_id('pregunta', $pregunta_id);
+        $row = $this->Db_model->row_id('pregunta', $pregunta_id);
         
         //Eliminar archivos
-            $this->eliminar_img_pregunta($row->archivo_imagen);
+            $this->delete_archivo_imagen($pregunta_id);
         
         /* Modificar num_de Pregunta de las Preguntas de los cuestionarios en los que aparece
          * Al eliminarse una Pregunta, los números de Pregunta de las Preguntas siguientes deben disminuir
@@ -1113,7 +1115,7 @@ class Pregunta_model extends CI_Model{
      * 
      * @param type $nombre_archivo 
      */
-    function eliminar_img_pregunta($nombre_archivo)
+    function z_eliminar_img_pregunta($nombre_archivo)
     {
         //Construir rutas con las constantes definidas
             $ruta_archivo = FCPATH . RUTA_UPLOADS . 'preguntas/' . $nombre_archivo;

@@ -38,7 +38,8 @@
                     </div>
 
                     <!-- Mostrar si options_formato tiene elementos -->
-                    <div class="form-group row" v-show="Object.keys(options_formato).length">
+                    <?php if ( count($options_formato) > 0 ) : ?>    
+                    <div class="form-group row">
                         <label for="formato" class="col-md-4 col-form-label text-right">Formato</label>
                         <div class="col-md-8">
                             <select name="formato" v-model="form_values.formato" class="form-control" required>
@@ -46,6 +47,7 @@
                             </select>
                         </div>
                     </div>
+                    <?php endif; ?>
 
                     <div class="form-group row">
                         <label for="clave" class="col-md-4 col-form-label text-right">Clave</label>

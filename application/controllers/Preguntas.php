@@ -173,6 +173,8 @@ class Preguntas extends CI_Controller{
             }
         
         $this->load->view(TPL_ADMIN, $data);
+
+        $this->output->enable_profiler(TRUE);
     }
 
     /**
@@ -204,9 +206,7 @@ class Preguntas extends CI_Controller{
     {
         $data = $this->Pregunta_model->delete_archivo_imagen($pregunta_id);
 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     function upload_image()
