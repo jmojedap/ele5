@@ -27,6 +27,7 @@
     
     <?php $this->load->view('assets/vue'); ?>
     <?php $this->load->view('assets/toastr'); ?>
+    <?php $this->load->view('assets/summernote_editores') ?>
 
     <?php
         //Seguimiento google analytics

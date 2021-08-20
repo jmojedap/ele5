@@ -167,7 +167,8 @@ class Esp extends CI_Model {
 
         //Cuestionarios
         $data['arr_cuestionarios'] = array();
-        if ($row_usuario->rol_id == 6) {
+        if ($row_usuario->rol_id == 6) 
+        {
             $fecha_hoy = date('Y-m-d H:i:s');
             $condicion = "tipo_id IN (3,4) AND estado < 3 AND ('" . $fecha_hoy . "') > fecha_inicio AND ('" . $fecha_hoy . "') < fecha_fin";
             $cuestionarios = $this->Usuario_model->cuestionarios($row_usuario->id, $condicion);

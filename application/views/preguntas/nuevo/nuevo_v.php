@@ -1,4 +1,5 @@
 <?php $this->load->view('assets/chosen_jquery') ?>
+<?php $this->load->view('assets/summernote_editores') ?>
 
 <a href="<?php echo base_url("cuestionarios/preguntas/{$row->id}") ?>" class="btn btn-secondary mb-2">
     <i class="fa fa-arrow-left"></i>

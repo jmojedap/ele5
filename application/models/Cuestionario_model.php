@@ -567,35 +567,40 @@ class Cuestionario_model extends CI_Model
             $crud->display_as('area_id', 'Área');
             $crud->display_as('descripcion', 'Descripción');
             $crud->display_as('tipo_id', 'Tipo');
+            $crud->display_as('creado_usuario_id', 'ID usuario editor');
+            $crud->display_as('editado_usuario_id', 'ID usuario creador');
+            $crud->display_as('institucion_id', 'ID Institución');
         
         //Relaciones
             $crud->set_relation('area_id', 'item', 'item', 'categoria_id = 1');
 
         //Formulario Edit
             $crud->edit_fields(
-                    'nombre_cuestionario',
-                    'area_id',
-                    'nivel',
-                    'tipo_id',
-                    'interno',
-                    'tiempo_minutos',
-                    'descripcion',
-                    'editado',
-                    'editado_usuario_id'
+                'nombre_cuestionario',
+                'area_id',
+                'nivel',
+                'tipo_id',
+                'interno',
+                'tiempo_minutos',
+                'descripcion',
+                'editado',
+                'institucion_id',
+                'editado_usuario_id',
+                'creado_usuario_id'
             );
             
             $crud->add_fields(
-                    'nombre_cuestionario',
-                    'area_id',
-                    'nivel',
-                    'tipo_id',
-                    'interno',
-                    'tiempo_minutos',
-                    'descripcion',
-                    'creado',
-                    'editado',
-                    'creado_usuario_id',
-                    'editado_usuario_id'
+                'nombre_cuestionario',
+                'area_id',
+                'nivel',
+                'tipo_id',
+                'interno',
+                'tiempo_minutos',
+                'descripcion',
+                'creado',
+                'editado',
+                'creado_usuario_id',
+                'editado_usuario_id'
             );
 
         //Procesos
@@ -603,7 +608,7 @@ class Cuestionario_model extends CI_Model
 
         //Reglas de validación
             $crud->required_fields('nombre_cuestionario', 'nivel');
-            $crud->set_rules('nivel', 'Nivel', 'greater_than[0]|less_than[12]');
+            $crud->set_rules('nivel', 'Nivel', 'greater_than[-10]|less_than[12]');
             $crud->set_rules('anio_generacion', 'Año generación', 'numeric|greater_than[2000]|less_than[2022]');
             $crud->set_rules('tiempo_minutos', 'Tiempo minutos', 'numeric|greater_than[9]|less_than[2000]');   //Rango de tiempo para resolver un cuestionario
             
@@ -618,9 +623,9 @@ class Cuestionario_model extends CI_Model
             $crud->field_type('interno', 'dropdown', $opciones_interno);
             $crud->field_type('tipo_id', 'dropdown', $opciones_tipo);
             $crud->field_type('creado', 'hidden', date('Y-m-d H:i:s'));
-            $crud->field_type('creado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
+            //$crud->field_type('creado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
             $crud->field_type('editado', 'hidden', date('Y-m-d H:i:s'));
-            $crud->field_type('editado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
+            //$crud->field_type('editado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
             
         //Opciones nivel
             $opciones_nivel = $this->App_model->opciones_nivel('item_largo');

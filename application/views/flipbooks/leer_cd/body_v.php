@@ -253,7 +253,7 @@
                     <div class="">
                         <textarea
                             rows="7"
-                            class="anotacion"
+                            class="anotacion_no summernote"
                             placeholder="Escribe aquí una anotación sobre este tema"
                             required
                             v-model="anotacion.anotacion"

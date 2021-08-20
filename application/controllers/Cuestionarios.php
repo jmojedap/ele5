@@ -196,7 +196,7 @@ class Cuestionarios extends CI_Controller{
             $data = $this->Cuestionario_model->basico($cuestionario_id);
             
         //Render del grocery crud
-            if ( $this->session->userdata('rol_id') <= 2 )  //Usuarios Enlace
+            if ( in_array($this->session->userdata('role'), array(0,1,2)) )  //Usuarios Internos
             {
                 $gc_output = $this->Cuestionario_model->crud_editar($cuestionario_id);
             }

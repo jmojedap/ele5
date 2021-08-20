@@ -32,4 +32,5 @@
         //Seguimiento google analytics
         $this->load->view('head_includes/google_analytics');
     ?>
+    <?php $this->load->view('assets/summernote_editores') ?>
 </head>

@@ -234,17 +234,21 @@
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    Tiene <span class="label label-danger">{{ cant_preguntas - cant_respondidas }}</span> preguntas sin responder
-                    <br/>
-                    ¿Confirma la terminación del cuestionario?
+                <div class="modal-body text-center">
+                    <p v-show="cant_preguntas > cant_respondidas">
+                        Tiene <strong class="text-danger">{{ cant_preguntas - cant_respondidas }}</strong> preguntas sin responder
+                    </p>
+                    <p v-show="cant_preguntas == cant_respondidas">
+                        <i class="fa fa-check-circle text-success"></i>
+                        Todas las preguntas fueron respondidas.
+                    </p>
+                    ¿Desea finalizar el cuestionario?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary" v-on:click="guardar_finalizar" title="Finalizar cuestionario">Finalizar</button>
                 </div>
             </div>
-        </div>
         </div>
     </div>
 

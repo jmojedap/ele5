@@ -766,8 +766,8 @@ class Evento_Model extends CI_Model{
         //Consulta
         //$this->db->select('evento.id, nombre_cuestionario, fecha_inicio, fecha_fin');
         $this->db->where('usuario_id', $this->session->userdata('user_id'));
-        $this->db->where('evento.tipo_id', 1); //Tipo 1 => asignación de cuestionario
-        $this->db->where('estado', 1); //Estado 1  => sin responder
+        $this->db->where('evento.tipo_id', 1);  //Tipo 1 => asignación de cuestionario
+        $this->db->where('estado', 1);          //Estado 1  => sin responder
         $this->db->join('cuestionario', 'cuestionario.id = evento.referente_2_id');
         $query = $this->db->get('evento');
         

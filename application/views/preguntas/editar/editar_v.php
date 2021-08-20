@@ -1,4 +1,5 @@
 <?php $this->load->view('assets/chosen_jquery') ?>
+<?php $this->load->view('assets/summernote_editores') ?>
 
 <div>
     <div class="row">

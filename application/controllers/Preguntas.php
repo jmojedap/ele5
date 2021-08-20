@@ -173,8 +173,6 @@ class Preguntas extends CI_Controller{
             }
         
         $this->load->view(TPL_ADMIN, $data);
-
-        $this->output->enable_profiler(TRUE);
     }
 
     /**

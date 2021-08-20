@@ -235,9 +235,7 @@
                     v-show="pa_asignada.tema_id == pagina.tema_id"
                     >
                     <p><b>Escribe y participa:</b></p>
-                    <p>
-                        {{ pa_asignada.texto_pregunta }}
-                    </p>
+                    <p v-html="pa_asignada.texto_pregunta"></p>
                 </div>
 
                 <!-- RESPUESTA ESTUDIANTE -->
@@ -260,7 +258,7 @@
                 <form accept-charset="utf-8" @submit.prevent="guardar_anotacion" v-show="anotacion.calificacion == 0">
                     <div class="">
                         <textarea
-                            rows="7" class="anotacion" placeholder="Escribe aquí una anotación o respuesta sobre este tema"
+                            rows="7" class="anotacion_no summernote" placeholder="Escribe aquí una anotación o respuesta sobre este tema"
                             required
                             v-model="anotacion.anotacion"
                             >

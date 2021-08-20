@@ -16,6 +16,10 @@
     shuffle($array_elementos);
 ?>
 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script src="<?php echo URL_RESOURCES ?>js/jquery.ui.touch-punch.min.js"></script>
+
 <script>
     //Variables
         var respuesta_arr = [];
@@ -83,9 +87,6 @@
   #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.0em; cursor: move; }
   #sortable li span { position: absolute; margin-left: -1.3em; }
 </style>
-
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 
 <?php if ( strlen($imagen['src']) > 0 ){ ?>
     <div class="div2" style="text-align: center;">

@@ -191,7 +191,7 @@ class App extends CI_Controller{
     {
         $data['head_title'] = 'Demo: ' . $page;
         $data['view_a'] = 'app/demo/' . $page . '_v';
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
 //AJAX GENERALES

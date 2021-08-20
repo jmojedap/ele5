@@ -20,7 +20,6 @@
     <link type="text/css" rel="stylesheet" href="<?php echo URL_RESOURCES ?>css/quiz.css">
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
-    <script src="<?php echo URL_RESOURCES ?>js/jquery.ui.touch-punch.min.js"></script>
 
     <script type="text/javascript" src="<?php echo URL_RESOURCES ?>js/pcrn.js"></script> <!--Funciones especiales-->
 
