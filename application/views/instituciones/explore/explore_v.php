@@ -7,7 +7,10 @@
         </div>
 
         <div class="col">
-            <a href="<?php echo base_url("instituciones/exportar/?{$str_filters}") ?>" class="btn btn-light" title="Exportar registros encontrados a Excel">
+            <a v-bind:href="`<?= base_url() . "{$controller}/export/?" ?>` + str_filters"
+                class="btn btn-light only-lg"
+                v-show="search_num_rows > 0"
+                v-bind:title="`Exportar ` + search_num_rows + ` registros encontrados a Excel`">
                 <i class="fa fa-download"></i>
             </a>
             <a class="btn btn-light d-none"

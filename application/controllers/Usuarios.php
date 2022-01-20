@@ -1248,7 +1248,7 @@ class Usuarios extends CI_Controller{
             $data['vista_menu'] = 'usuarios/resultados/submenu_v';
             $this->load->view(TPL_ADMIN, $data);
 
-            if ( $this->session->userdata('role') == 0 ) $this->output->enable_profiler(TRUE);
+            //if ( $this->session->userdata('role') == 0 ) $this->output->enable_profiler(TRUE);
         
     }
     

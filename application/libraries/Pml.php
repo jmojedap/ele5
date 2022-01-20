@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Pml {
 
-    /** ACTUALIZADA 2021-04-12 */
+    /** ACTUALIZADA 2021-12-23 */
     
     /**
      * Converts codeigniter query object in an array
@@ -358,14 +358,71 @@ class Pml {
     }
 
     /**
+     * Sumar o restar tiempo a una fecha
+     * 2021-12-23
+     */
+    function date_add($date, $duration)
+    {
+        $old_date = date_create($date); 
+        $new_date = date_add($old_date, date_interval_create_from_date_string($duration));
+        return date_format($new_date,'Y-m-d H:i:s');
+    }
+
+    /**
+     * Sumar o restar tiempo a una fecha
+     * 2021-12-23
+     */
+    function date_add_months($date, $qty_months = 1)
+    {
+        $start_date = new DateTime($date);
+
+        $years = intdiv($qty_months, 12);   //Años totales, sin meses
+        $months = $qty_months % 12;         //Meses residuo, sin años
+        $month_day = $start_date->format('d');
+
+        //Partes de la nueva fecha
+        $new_year = $start_date->format('Y') + $years;
+        $new_month = $start_date->format('n') + $months;
+        if ( $new_month > 12 ) {
+            // Se traslada el año siguiente
+            $new_month -= 12;
+            $new_year += 1;
+        }
+        $new_month = substr('0'.$new_month,-2); //Para quedar en formato MM
+        $new_month_day = $month_day;
+
+        $month_30 = array('04','06','09','11'); //Meses con 30 días
+
+        // Si el nuevo mes tiene 30 días
+        if ( $month_day == 31 && in_array($new_month, $month_30) ) $new_month_day = 30;
+
+        // Si el nuevo mes es febrero
+        if ( $month_day >= 29 && $new_month == '02' ) $new_month_day = 28;
+        
+        $new_date = new DateTime($new_year . '-' . $new_month . '-' . $new_month_day);
+
+        return $new_date->format('Y-m-d');
+    }
+
+    /**
      * Convierte una fecha de excel en mktime de Unix
-     * @param type $date_excel
-     * @return type
+     * 2021-09-27
      */
     function dexcel_unix($date_excel)
     {
         $hours_diff = 19; //Diferencia GMT
         return (( $date_excel - 25568 ) * 86400) - ($hours_diff * 60 * 60);
+    }
+
+    /**
+     * Convierte una fecha de excel en formato fecha MySQL
+     * 2021-09-27
+     */
+    function dexcel_dmysql($date_excel)
+    {
+        $hours_diff = 19; //Diferencia GMT
+        $mktime = (( $date_excel - 25568 ) * 86400) - ($hours_diff * 60 * 60);
+        return date('Y-m-d H:i:s',$mktime);
     }
 
     /**
@@ -412,5 +469,31 @@ class Pml {
         curl_close($ch);
 
         return $content;
+    }
+
+// TABLAS DE DATOS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Devuelve contenido para archivo CSV a partir de un query CodeIgniter
+     * 2021-09-15
+     */
+    function content_query_to_csv($query)
+    {
+        //Construyento archivo
+        $content = '';
+
+        //Primera fila, columnas
+            $fields = $query->list_fields();
+            $content .= implode("\t", $fields) . "\n";
+
+        //Registros
+        foreach($query->result() as $row)
+        {
+            foreach($fields as $field) $content .= $row->$field."\t";
+            $content .= "\n";
+        }
+
+        return mb_convert_encoding($content, 'UTF-16LE', 'UTF-8');
     }
 }

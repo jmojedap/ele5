@@ -910,6 +910,15 @@ class Flipbooks extends CI_Controller{
         //Cargar vista
         $this->load->view($main_view, $data);
     }
+
+    function leer_api($flipbook_id)
+    {
+        //Datos básicos
+            $data = $this->Flipbook_model->basico($flipbook_id);
+
+            $data['view_a'] = 'flipbooks/leer_api_v';
+            $this->load->view(TPL_ADMIN, $data);
+    }
     
 //GESTIÓN DE PÁGINAS DE FLIPBOOK
 //---------------------------------------------------------------------------------------------------

@@ -103,7 +103,7 @@
                     'name' => 'casilla_' . $row_elemento->orden,
                     'id' => 'casilla_' . $row_elemento->orden,
                     'class' => 'casilla_quiz',
-                    'style' => "width: {$ancho_casilla}px; min-width: 70px;"
+                    'style' => "width: {$ancho_casilla}px; min-width: 70px; max-width: 100%;"
                 );
                 $casilla = form_input($att_casilla);
             ?>

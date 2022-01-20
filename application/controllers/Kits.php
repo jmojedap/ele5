@@ -118,8 +118,8 @@ class Kits extends CI_Controller{
             $output = $this->Kit_model->crud_basico();
         
         //Head includes específicos para la página
-            $head_includes[] = 'grocery_crud';
-            $data['head_includes'] = $head_includes;
+            //$head_includes[] = 'grocery_crud';
+            //$data['head_includes'] = $head_includes;
         
         //Array data espefícicas
             $data['titulo_pagina'] = 'Kits';

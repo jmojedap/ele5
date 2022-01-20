@@ -79,10 +79,12 @@
     </div>
 
     <?php if ( $convertible ) { ?>
-        <a href="<?php echo base_url("cuestionarios/convertir/{$row->id}") ?>" class="btn btn-secondary" title="Convertir cuestionario en Editable">
+        <a href="<?php echo base_url("cuestionarios/convertir/{$row->id}") ?>" class="btn btn-secondary" title="Convertir cuestionario en Editable, debe no haber sido respondido por ningún estudiante">
             <i class="fa fa-edit"></i>
             Convertir
         </a>
+    <?php } else { ?>
+        <button title="No se puede convertir el cuestionario" class="btn btn-light" disabled><i class="fa fa-edit"></i>Convertir</button>
     <?php } ?>
 </div>
 

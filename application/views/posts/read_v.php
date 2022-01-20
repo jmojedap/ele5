@@ -2,7 +2,7 @@
     <div class="card center_box_750">
         <div class="card-body">
             <h1><?= $head_title ?></h1> 
-            <span class="text-muted"><?= $row->editado ?></span>
+            <span class="text-muted"><?= $row->publicado ?></span>
             <p><?= $row->resumen ?></p>
             <div>
                 <?= $row->contenido ?>

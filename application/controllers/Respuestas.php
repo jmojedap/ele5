@@ -18,6 +18,10 @@ class Respuestas extends CI_Controller{
 // RESPUESTAS DE CUESTIONARIOS POR FORMATO
 //-----------------------------------------------------------------------------
 
+    /**
+     * Genera archivos PDF con formatos de respuesta de cuestionarios
+     * 2021-09-28
+     */
     function formatos($cuestionario_id, $grupo_id, $formato = 'carta')
     {
         require 'vendor/autoload.php';
@@ -41,7 +45,7 @@ class Respuestas extends CI_Controller{
         //Crear documento PDF
         $mpdf = new \Mpdf\Mpdf();
         
-        $mpdf->SetImportUse();
+        //$mpdf->SetImportUse();    //Línea desactivada 2021-09-28
 
         $pagecount = $mpdf->SetSourceFile("resources/formatos_respuestas/{$formato}.pdf");
         $tplId = $mpdf->ImportPage($pagecount);

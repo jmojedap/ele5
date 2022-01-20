@@ -709,24 +709,29 @@ class Quiz_Model extends CI_Model{
      */
     function eliminar_elemento($id_alfanumerico)
     {
-        $row_elemento = $this->Pcrn->registro('quiz_elemento', "id_alfanumerico = '{$id_alfanumerico}'");
-        $quiz_id = $row_elemento->quiz_id;
-        
-        //Eliminar archivo si tiene
-            $file_path = RUTA_UPLOADS . 'quices/' . $row_elemento->archivo;
-            if ( strlen($row_elemento->archivo) > 0 && file_exists($file_path) ) {
-                unlink($file_path);
-            }
+        $qty_deleted = 0;
+        $row_elemento = $this->Db_model->row('quiz_elemento', "id_alfanumerico = '{$id_alfanumerico}'");
 
-        //Eliminar registro
-            $this->db->where('id', $row_elemento->id);
-            $this->db->delete('quiz_elemento');
-
-            $qty_deleted = $this->db->affected_rows();
-
-        //Actalizaciones
-            $this->actualizar_clave($quiz_id);
-            $this->enumerar_elementos($quiz_id, $row_elemento->tipo_id);
+        if ( ! is_null($row_elemento) )
+        {
+            $quiz_id = $row_elemento->quiz_id;
+            
+            //Eliminar archivo si tiene
+                $file_path = RUTA_UPLOADS . 'quices/' . $row_elemento->archivo;
+                if ( strlen($row_elemento->archivo) > 0 && file_exists($file_path) ) {
+                    unlink($file_path);
+                }
+    
+            //Eliminar registro
+                $this->db->where('id', $row_elemento->id);
+                $this->db->delete('quiz_elemento');
+    
+                $qty_deleted = $this->db->affected_rows();
+    
+            //Actalizaciones
+                $this->actualizar_clave($quiz_id);
+                $this->enumerar_elementos($quiz_id, $row_elemento->tipo_id);
+        }
 
         return $qty_deleted;
     }

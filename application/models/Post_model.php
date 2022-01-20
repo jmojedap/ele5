@@ -564,10 +564,10 @@ class Post_Model extends CI_Model{
     
     function ap_filtro_usuarios()
     {
-        $rol_id = $this->session->userdata('rol_id');
-        $condicion = 'id = 0';  //Valor por defecto
+        $role = $this->session->userdata('role');
+        $condicion = 'id > 0';  //Valor por defecto
         
-        if ( in_array($rol_id, array(0,1,2)) )
+        /*if ( in_array($role, array(0,1,2)) )
         {
             $condicion = 'id > 0';
         } else {
@@ -575,7 +575,7 @@ class Post_Model extends CI_Model{
             $condicion_sub .= ' AND elemento_id = ' . $this->session->userdata('institucion_id');
             $condicion_sub .= ' AND fecha_1 >= "' . date('Y-m-d H:i:s') . '"';
             $condicion = "id IN (SELECT relacionado_id FROM meta WHERE {$condicion_sub})";
-        }
+        }*/
         
         return $condicion;
     }
@@ -622,7 +622,7 @@ class Post_Model extends CI_Model{
         //Paginación
             $data['num_pagina'] = $num_pagina;              //Número de la página de datos que se está consultado
             $data['per_page'] = 20;                         //Cantidad de registros por página
-            $offset = $num_pagina * $data['per_page'];      //Número de la página de datos que se está consultado
+            $offset = ($num_pagina - 1) * $data['per_page'];      //Número de la página de datos que se está consultado
         
         //Búsqueda y Resultados
             $this->load->model('Search_model');

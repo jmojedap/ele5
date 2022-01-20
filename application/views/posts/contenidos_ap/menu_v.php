@@ -50,4 +50,4 @@
         $data_menu['seccion'] = $seccion;
     
     //Cargar vista
-        $this->load->view('comunes/menu_v', $data_menu);
+        $this->load->view('comunes/bs4/menu_v', $data_menu);

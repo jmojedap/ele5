@@ -1562,7 +1562,7 @@ class Tema_Model extends CI_Model{
 
     /**
      * Realiza la importación de una fila del archivo excel. Valida los campos, crea registro
-     * en la tabla product
+     * en la tabla posts
      * 2020-02-27
      */
     function import_ledin($row_data)

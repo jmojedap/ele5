@@ -361,7 +361,9 @@ class Quices extends CI_Controller{
      */
     function eliminar_elemento($id_alfanumerico)
     {   
-        $this->Quiz_model->eliminar_elemento($id_alfanumerico);
+        $qty_deleted = $this->Quiz_model->eliminar_elemento($id_alfanumerico);
+        
+        echo $qty_deleted;
     }
     
     /**

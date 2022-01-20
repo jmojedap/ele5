@@ -1,14 +1,18 @@
+<?php
+    $arr_reemplazar = array("'");
+?>
+
 <script>
 // VARIABLES
 //---------------------------------------------------------------------------------------------------------
-    var base_url = '<?php echo base_url(); ?>';
+    var base_url = '<?= base_url(); ?>';
     var controlador = 'eventos';
     var evento_id = 0;
     var url = '';
     var grupo_id = 0;
-    var fecha_inicio = '<?php echo date('Y-m-d') ?>';
-    var mes_actual = '<?php echo date('Y-m') ?>';
-    var get_print = '<?php echo $get_print ?>';
+    var fecha_inicio = '<?= date('Y-m-d') ?>';
+    var mes_actual = '<?= date('Y-m') ?>';
+    var get_print = '<?= $get_print ?>';
 
 // DOCUMENT READY
 //---------------------------------------------------------------------------------------------------------
@@ -20,7 +24,7 @@ $(document).ready(function(){
         plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'bootstrap' ],
         themeSystem: 'bootstrap',
         defaultView: 'dayGridMonth',
-        defaultDate: '<?php echo date('Y-m-d') ?>',
+        defaultDate: '<?= date('Y-m-d') ?>',
         header: {
             left: 'prev,next today',
             center: 'title',
@@ -37,11 +41,11 @@ $(document).ready(function(){
                     $color = $colores_evento[1];
                 ?>
                 {
-                    id: <?php echo $row_evento->max_evento_id ?>,
-                    title: 'Cuestionario: <?php echo json_encode($nombre_cuestionario) ?>',
+                    id: <?= $row_evento->max_evento_id ?>,
+                    title: 'Cuestionario: <?= json_encode($nombre_cuestionario) ?>',
                     start: '<?= $row_evento->fecha_inicio ?>',
                     end: '<?= $this->Pcrn->suma_fecha($row_evento->fecha_fin) ?>',
-                    url: '<?= $url ?>',
+                    url: "<?= $url ?>",
                     color : '<?= $color ?>'
                 },
             <?php endforeach ?>
@@ -50,10 +54,12 @@ $(document).ready(function(){
             <?php foreach ($eventos[2]->result() as $row_evento) : ?>
                 <?php
                     $color = $colores_evento[2];
+                    $nombre_evento_ajustado = str_replace($arr_reemplazar, '', $row_evento->nombre_evento);
+                    $nombre_evento_ajustado = json_encode($nombre_evento_ajustado);
                 ?>
                 {
                     id: <?= $row_evento->id ?>,
-                    title: "Tema: <?= $row_evento->nombre_evento ?>",
+                    title: 'Tema: <?= $nombre_evento_ajustado ?>',
                     start: '<?= $row_evento->fecha_inicio ?>',
                     end: '<?= $row_evento->fecha_inicio ?>',
                     url: base_url + 'flipbooks/leer/' + <?= $row_evento->referente_2_id ?> + '/' + <?= $row_evento->entero_1 ?>,
@@ -71,11 +77,11 @@ $(document).ready(function(){
                     title: '>> <?= $this->Pcrn->texto_url($row_evento->url) ?>',
                     start: '<?= $row_evento->fecha_inicio ?>',
                     end: '<?= $row_evento->fecha_inicio ?>',
-                    url: '<?php echo $row_evento->url ?>',
+                    url: "<?= $row_evento->url ?>",
                     color : '<?= $color ?>',
                     tipo: 'link_externo',
-                    fecha_inicio: '<?php echo $row_evento->fecha_inicio ?>',
-                    grupo_id: '0<?php echo $row_evento->grupo_id ?>'
+                    fecha_inicio: '<?= $row_evento->fecha_inicio ?>',
+                    grupo_id: '0<?= $row_evento->grupo_id ?>'
                 },
             <?php endforeach ?>
 
@@ -83,17 +89,18 @@ $(document).ready(function(){
             <?php foreach ($eventos[5]->result() as $row_evento) : ?>
                 <?php
                     $color = $colores_evento[5];
+                    $evento_url = str_replace($arr_reemplazar, '', $row_evento->url);
                 ?>
                 {
                     id: <?= $row_evento->id ?>,
                     title: 'LINK >> <?= $this->Pcrn->texto_url($row_evento->url) ?>',
                     start: '<?= $row_evento->fecha_inicio ?>',
                     end: '<?= $row_evento->fecha_inicio ?>',
-                    url: '<?php echo $row_evento->url ?>',
+                    url: "<?= $row_evento->url ?>",
                     color : '<?= $color ?>',
                     tipo: 'link_interno',
-                    fecha_inicio: '<?php echo $row_evento->fecha_inicio ?>',
-                    grupo_id: '0<?php echo $row_evento->grupo_id ?>'
+                    fecha_inicio: '<?= $row_evento->fecha_inicio ?>',
+                    grupo_id: '0<?= $row_evento->grupo_id ?>'
                 },
             <?php endforeach ?>
 
@@ -104,12 +111,12 @@ $(document).ready(function(){
                     title: 'Sesión Virtual >> <?= $this->Pcrn->texto_url($row_evento->url) ?>',
                     start: '<?= $row_evento->fecha_inicio ?>',
                     end: '<?= $row_evento->fecha_inicio ?>',
-                    url: '<?= $row_evento->url ?>',
+                    url: "<?= $row_evento->url ?>",
                     color : '<?= $colores_evento[6] ?>',
                     tipo: 'sesion_virtual',
-                    descripcion: '<?php echo json_encode($row_evento->descripcion) ?>',
-                    fecha_inicio: '<?php echo $row_evento->fecha_inicio ?>',
-                    grupo_id: '0<?php echo $row_evento->grupo_id ?>'
+                    descripcion: '<?= json_encode($row_evento->descripcion) ?>',
+                    fecha_inicio: '<?= $row_evento->fecha_inicio ?>',
+                    grupo_id: '0<?= $row_evento->grupo_id ?>'
                 },
             <?php endforeach ?>
         ],
@@ -172,7 +179,7 @@ $(document).ready(function(){
                     start: $('#field-fecha_inicio').val(),
                     end: $('#field-fecha_inicio').val(),
                     url: $('#field-url').val(),
-                    color: '<?php echo $colores_evento[4] ?>',
+                    color: '<?= $colores_evento[4] ?>',
                     grupo_id: '0' + $('#field-grupo_id').val(),
                     fecha_inicio: $('#field-fecha_inicio').val(),
                     tipo: 'link_externo'
@@ -207,7 +214,7 @@ $(document).ready(function(){
                     start: $('#sesionv-fecha_inicio').val(),
                     end: $('#sesionv-fecha_inicio').val(),
                     url: $('#sesionv-url').val(),
-                    color: '<?php echo $colores_evento[6] ?>',
+                    color: '<?= $colores_evento[6] ?>',
                     grupo_id: '0' + $('#sesionv-grupo_id').val(),
                     fecha_inicio: $('#sesionv-fecha_inicio').val(),
                     tipo: 'sesion_virtual'

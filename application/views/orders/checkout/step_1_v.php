@@ -58,7 +58,7 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="city_id" class="col-md-3 col-form-label">Ciudad</label>
+            <label for="city_id" class="col-md-3 col-form-label">Ciudad de envío</label>
             <div class="col-md-9">
                 <select name="city_id" v-model="city_id" class="form-control" required>
                     <option v-for="(city_name, city_key) in options_city" v-bind:value="city_key">{{ city_name }}</option>
@@ -67,7 +67,7 @@
         </div>
 
         <div class="form-group row">
-            <label for="address" class="col-md-3 col-form-label">Dirección</label>
+            <label for="address" class="col-md-3 col-form-label">Dirección de envío</label>
             <div class="col-md-9">
                 <input
                     type="text" id="field-address" name="address" class="form-control"

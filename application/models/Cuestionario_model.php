@@ -494,19 +494,24 @@ class Cuestionario_model extends CI_Model
     /**
      * Devuevlve TRUE o FALSE, determina si el cuestionario cumple con los
      * requisitos para ser convertido de tipo 3 a tipo 4.
+     * 2021-09-09
      */
     function convertible($cuestionario_id)
     {
         $convertible = FALSE;
-        $row = $this->Pcrn->registro_id('cuestionario', $cuestionario_id);
+        $row = $this->Db_model->row_id('cuestionario', $cuestionario_id);
         
         $condiciones = 0;   //Valor por defecto
         
         if ( $row->tipo_id == 3 ) { $condiciones++; }  //Debe ser tipo 3, generado desde un contenido
         if ( $row->creado_usuario_id == $this->session->userdata('usuario_id') ) { $condiciones++; }  //El usuario en sesión debe ser el creador del cuestionario
+
+        //Cantidad de respuestas:
+        $cant_respuestas = $this->Db_model->num_rows('usuario_cuestionario', "cuestionario_id = {$cuestionario_id} AND estado > 1");
+        if ( $cant_respuestas == 0 ) { $condiciones++; }  //El cuestionario no debe haber sido respondido previamente
         
         //Si cumple con las condiciones es convertible
-        if ( $condiciones == 2 ) { $convertible = TRUE; }
+        if ( $condiciones == 3 ) { $convertible = TRUE; }
         
         return $convertible;
     }

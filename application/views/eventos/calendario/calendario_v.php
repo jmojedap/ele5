@@ -20,7 +20,7 @@
             themeSystem: 'bootstrap',
             defaultView: 'dayGridMonth',
             //defaultDate: '2019-01-05',
-            defaultDate: '<?php echo date('Y-m-d') ?>',
+            defaultDate: '<?= date('Y-m-d') ?>',
             header: {
                 left: 'prev,next today',
                 center: 'title',
@@ -31,11 +31,11 @@
                 //Eventos, programación de cuestionarios
                 <?php foreach ($eventos[1]->result() as $row_evento) : ?>
                 {
-                    id: <?php echo $row_evento->id ?>,
+                    id: <?= $row_evento->id ?>,
                     title: 'Cuestionario: <?= str_replace("'", "\'", $row_evento->nombre_cuestionario) ?>',
                     start: '<?= $row_evento->fecha_inicio ?>',
                     end: '<?= $this->Pcrn->suma_fecha($row_evento->fecha_fin) ?>',
-                    url: base_url + 'cuestionarios/preliminar/' + '<?php echo $row_evento->referente_id ?>',
+                    url: base_url + 'cuestionarios/preliminar/' + '<?= $row_evento->referente_id ?>',
                     color : '<?= $colores_evento[1] ?>'
                 },
                 <?php endforeach ?>
@@ -51,7 +51,7 @@
                     title: 'Tema: <?= str_replace("'", "\'", $row_evento->nombre_cuestionario) ?>',
                     start: '<?= $row_evento->fecha_inicio ?>',
                     end: '<?= $row_evento->fecha_inicio ?>',
-                    url: '<?= $url ?>',
+                    url: "<?= $url ?>",
                     color : '<?= $colores_evento[2] ?>'
                 },
                 <?php endforeach ?>
@@ -67,7 +67,7 @@
                     title: 'Evidencia: <?= $row_evento->nombre_quiz ?>',
                     start: '<?= $row_evento->fecha_inicio ?>',
                     end: '<?= $row_evento->fecha_inicio ?>',
-                    url: '<?= $url ?>',
+                    url: "<?= $url ?>",
                     color : '<?= $colores_evento[3] ?>'
                 },
                 <?php endforeach ?>
@@ -79,7 +79,7 @@
                         title: '>> <?= $this->Pcrn->texto_url($row_evento->url) ?>',
                         start: '<?= $row_evento->fecha_inicio ?>',
                         end: '<?= $row_evento->fecha_inicio ?>',
-                        url: '<?= $row_evento->url ?>',
+                        url: "<?= $row_evento->url ?>",
                         color : '<?= $colores_evento[4] ?>'
                     },
                 <?php endforeach ?>
@@ -94,11 +94,11 @@
                         title: 'LINK >> <?= $this->Pcrn->texto_url($row_evento->url) ?>',
                         start: '<?= $row_evento->fecha_inicio ?>',
                         end: '<?= $row_evento->fecha_inicio ?>',
-                        url: '<?php echo $row_evento->url ?>',
+                        url: "<?= $row_evento->url ?>",
                         color : '<?= $color ?>',
                         tipo: 'link_interno',
-                        fecha_inicio: '<?php echo $row_evento->fecha_inicio ?>',
-                        grupo_id: '0<?php echo $row_evento->grupo_id ?>'
+                        fecha_inicio: '<?= $row_evento->fecha_inicio ?>',
+                        grupo_id: '0<?= $row_evento->grupo_id ?>'
                     },
                 <?php endforeach ?>
 
@@ -109,12 +109,12 @@
                         title: 'Sesión Virtual >> <?= $this->Pcrn->texto_url($row_evento->url) ?>',
                         start: '<?= $row_evento->fecha_inicio ?>',
                         end: '<?= $row_evento->fecha_inicio ?>',
-                        url: '<?= $row_evento->url ?>',
+                        url: "<?= $row_evento->url ?>",
                         color : '<?= $colores_evento[6] ?>',
                         tipo: 'sesion_virtual',
-                        descripcion: '<?php echo json_encode($row_evento->descripcion) ?>',
-                        fecha_inicio: '<?php echo $row_evento->fecha_inicio ?>',
-                        grupo_id: '0<?php echo $row_evento->grupo_id ?>'
+                        descripcion: '<?= json_encode($row_evento->descripcion) ?>',
+                        fecha_inicio: '<?= $row_evento->fecha_inicio ?>',
+                        grupo_id: '0<?= $row_evento->grupo_id ?>'
                     },
                 <?php endforeach ?>
             ],

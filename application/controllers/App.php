@@ -131,8 +131,20 @@ class App extends CI_Controller{
             $this->session->sess_destroy();
             redirect('app/login');
     }
-    
-    
+
+    /**
+     * Políticas de privacidad de EleApp
+     * 2021-11-05
+     */
+    function eleapp_privacidad()
+    {
+        $data['row'] = $this->Db_model->row_id('post', 29811);
+        $data['head_title'] = $data['row']->nombre_post;
+        $data['view_a'] = 'posts/read_v';
+
+        $this->App_model->view('templates/monster/public/public_v', $data);
+
+    }
     
 //FUNCIONES DE CONTROL DE CONTENIDO
 //---------------------------------------------------------------------------------------------------
@@ -221,10 +233,7 @@ class App extends CI_Controller{
         $meta_id = $this->input->post('meta_id');
         $row_meta = $this->App_model->eliminar_meta($meta_id);
         
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($row_meta->id));
-        
+        $this->output->set_content_type('application/json')->set_output(json_encode($row_meta->id));
     }
     
 //---------------------------------------------------------------------------------------------------

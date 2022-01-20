@@ -7,15 +7,13 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Excel_new {
 
-    /** ACTUALIZADA 2021-09-27 */
-
     /**
      * Convierte un listado de una hoja de cálculo en un array
      * Desde la columna A y la fila 2
      * 
      * @param type $file
      * @param type $sheet_name
-     * @return array
+     * @return type
      */
     public function get_array($file, $sheet_name)
     {
@@ -51,10 +49,6 @@ class Excel_new {
         return $data;
     }
     
-    /**
-     * Genera un objeto excel file, a partir de un query CodeIgniter
-     * 2021-09-27
-     */
     public function file_query($data)
     {
         $spreadsheet = new Spreadsheet();
@@ -66,21 +60,20 @@ class Excel_new {
             ->setTitle($data['sheet_name']);
 
         //Encabezados
-            $fields = $data['query']->list_fields();
-            foreach ( $fields as $key => $field ) 
+            $campos = $data['query']->list_fields();
+            foreach ( $campos as $key => $campo ) 
             {
-                $field_title = str_replace('_',' ',$field);
-                $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($key + 1, 1, $field_title);
+                $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($key + 1, 1, $campo);
             }
         
         //Valores
-            $row_number = 2;
+            $fila = 2;
             foreach ( $data['query']->result() as $row ) 
             {
-                foreach ( $fields as $key => $field ) {
-                    $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($key + 1, $row_number, $row->$field);
+                foreach ( $campos as $key => $campo ) {
+                    $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($key + 1, $fila, $row->$campo);
                 }
-                $row_number++;
+                $fila++;
             }
 
         // Establecer nombre a worksheet
@@ -89,7 +82,6 @@ class Excel_new {
 
         // Objeto para crear archivo y guardar
         $writer = new Xlsx($spreadsheet);
-        
         return $writer;
     }
 }

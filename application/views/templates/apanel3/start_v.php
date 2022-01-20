@@ -39,7 +39,7 @@
                         Iniciar sesión
                     </a>
                 
-                    <span class="text-secondary">|</span>
+                    <span class="text-muted">&middot;</span>
                 
                     <a href="<?php echo base_url('usuarios/restaurar') ?>" class="text-muted">
                         Olvidé mi contraseña
@@ -50,15 +50,9 @@
             <?php $this->load->view($view_a); ?>
             
             <div class="fixed-bottom text-center pb-2">
-                <span style="color: #AAA">
-                    © 2019 &middot; En Línea Editores &middot; Colombia
-                </span>
+                <span class="text-muted">© 2019 &middot; En Línea Editores &middot; Colombia</span>
             </div>
-
-
         </div>
-        
-        
     </body>
 </html>
 

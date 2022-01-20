@@ -12,8 +12,8 @@
 	},
 	"require": {
 		"php": ">=5.3.7",
-		"phpoffice/phpspreadsheet": "^1.8",
-		"mpdf/mpdf": "^7.1",
+		"phpoffice/phpspreadsheet": "^1.18",
+		"mpdf/mpdf": "^8.0.13",
 		"smalot/pdfparser": "*",
 		"endroid/qr-code": "^2.5"
 	},
@@ -21,7 +21,6 @@
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
 	},
 	"require-dev": {
-		"mikey179/vfsStream": "1.1.*",
 		"phpunit/phpunit": "4.* || 5.*"
 	}
 }

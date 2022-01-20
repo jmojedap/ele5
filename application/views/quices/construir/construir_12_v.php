@@ -51,9 +51,10 @@
         });
         
         $('.eliminar_elemento').click(function(){
+            console.log('eliminando');
             id_alfanumerico = $(this).attr('id').substring(9);  //Quitar caracteres de "eliminar_"
             eliminar_elemento(id_alfanumerico);
-            $('#elemento_' + id_alfanumerico).hide('slow');
+            $('#div_' + id_alfanumerico).hide('slow');
         });
         
         $('.editar_elemento').click(function(){
@@ -75,7 +76,6 @@
 </script>
 
 <script>
-    
     function guardar_elemento(){
         $.ajax({
             type: 'POST',

@@ -39,7 +39,7 @@ class Sincro extends CI_Controller {
         //Variables específicas
             $data['metodo_id'] = $metodo_id;    //Método de sincronización.
             $data['tablas'] = $this->Develop_model->tablas($condicion);
-            $data['limit_rows'] = 5000;             //Número máximo de registros a transferir por ciclo
+            $data['limit_rows'] = 20000;             //Número máximo de registros a transferir por ciclo
             $data['sincro_url'] = $this->Pcrn->campo_id('sis_opcion', 2, 'valor');
             
         //Se puede sincronizar solo si es versión local, backup
@@ -196,12 +196,12 @@ class Sincro extends CI_Controller {
     /**
      * AJAX
      * devuelve el número de registros que tiene una tabla
-     * 
-     * @param type $tabla
-     * @return type
+     * 2021-09-28
      */
     function cant_registros($tabla, $desde_id = 0)
     {
+        set_time_limit(120);    //120 segundos, dos minutos por ciclo
+        
         $sql = "SELECT COUNT(id) AS cant_registros FROM {$tabla} WHERE id > {$desde_id}";
         $query = $this->db->query($sql);
         

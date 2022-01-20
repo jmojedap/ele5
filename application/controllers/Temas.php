@@ -97,9 +97,7 @@ class Temas extends CI_Controller{
         
         $data = array('status' => 1, 'message' =>  count($seleccionados) . ' usuarios eliminados');
 
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**

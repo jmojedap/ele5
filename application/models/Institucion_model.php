@@ -66,6 +66,18 @@ class Institucion_model extends CI_Model{
 
         return $data;
     }
+
+    /**
+     * Segmento Select SQL, con diferentes formatos, consulta de products
+     * 2020-12-12
+     */
+    function select($format = 'general')
+    {
+        $arr_select['general'] = 'institucion.*, lugar.nombre_completo AS ciudad, CONCAT(usuario.nombre, " ", usuario.apellidos) AS ejecutivo';
+        $arr_select['export'] = 'institucion.*, lugar.nombre_completo AS ciudad, CONCAT(usuario.nombre, " ", usuario.apellidos) AS ejecutivo';
+
+        return $arr_select[$format];
+    }
     
     /**
      * Query con resultados de posts filtrados, por página y offset
@@ -174,6 +186,22 @@ class Institucion_model extends CI_Model{
         );
         
         return $order_options;
+    }
+
+    /**
+     * Query para exportar
+     * 2021-09-27
+     */
+    function query_export($filters)
+    {
+        $this->db->select($this->select('export'));
+        $this->db->join('lugar', 'institucion.lugar_id = lugar.id', 'left');
+        $this->db->join('usuario', 'institucion.ejecutivo_id = usuario.id', 'left');
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+        $query = $this->db->get('institucion', 10000);  //Hasta 10.000 registros
+
+        return $query;
     }
 
 // FIN FUNCIONES EXPLORACIÓN
