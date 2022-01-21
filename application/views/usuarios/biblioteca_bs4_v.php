@@ -33,7 +33,7 @@
     
 ?>
 
-<link rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/biblioteca.css">
+<link rel="stylesheet" href="<?= URL_RESOURCES ?>templates/apanel3/biblioteca.css">
 
 <?php //$this->load->view('app/saludo_especial_v') ?>
 

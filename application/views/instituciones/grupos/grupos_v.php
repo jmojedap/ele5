@@ -1,6 +1,6 @@
-<?php $this->load->view('instituciones/grupos/submenu_grupos_v'); ?>
+<?php //$this->load->view('instituciones/grupos/submenu_grupos_v'); ?>
 
-<table class="table table-hover bg-blanco">
+<table class="table table-hover bg-white">
     <thead>
         <th width="45px">Id</th>
         <th width="90px">Grupo</th>            

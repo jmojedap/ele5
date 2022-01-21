@@ -39,31 +39,6 @@
                 submenu: false,
                 subelements: [],
                 sections: []
-            },
-            {
-                text: 'Tienda',
-                active: false,
-                style: '',
-                icon: 'fa fa-fw fa-shopping-cart',
-                cf: '',
-                submenu: true,
-                subelements: [
-                    {
-                        text: 'Catálogo',
-                        active: false,
-                        icon: 'fa fa-book',
-                        cf: 'products/catalog',
-                        sections: []
-                    },
-                    {
-                        text: 'Mis compras',
-                        active: false,
-                        icon: 'fa fa-shopping-cart',
-                        cf: 'orders/my_orders',
-                        sections: ['orders/my_orders', 'orders/status']
-                    },
-                ],
-                sections: ['orders/checkout']
             }
         ];
 </script>

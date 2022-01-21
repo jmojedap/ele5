@@ -213,7 +213,7 @@
         </div>
         
         <div class="col col-md-8">
-            <table class="table bg-blanco" cellspacing="0">
+            <table class="table bg-white" cellspacing="0">
                 <thead>
                     <tr>
                         <th width="10px"><?php echo form_checkbox($att_check_todos); ?></th>

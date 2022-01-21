@@ -258,7 +258,7 @@
                 <form accept-charset="utf-8" @submit.prevent="guardar_anotacion" v-show="anotacion.calificacion == 0">
                     <div class="">
                         <textarea
-                            rows="7" class="anotacion_no summernote" placeholder="Escribe aquí una anotación o respuesta sobre este tema"
+                            rows="7" class="anotacion summernote_no" placeholder="Escribe aquí una anotación o respuesta sobre este tema"
                             required
                             v-model="anotacion.anotacion"
                             >

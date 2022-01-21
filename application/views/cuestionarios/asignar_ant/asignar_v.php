@@ -19,7 +19,7 @@
                 </div>
             <?php } ?>
 
-            <table class="table bg-blanco">
+            <table class="table bg-white">
                 <thead>
                     <th width="30%">Grupo</th>
                     <th width="25px">Minutos</th>

@@ -15,7 +15,7 @@
 
 <?php $this->load->view('grupos/cuestionarios/submenu_v'); ?>
 
-<div class="sep1">
+<div class="mb-2">
     <div class="btn-group" role="group" aria-label="...">
         <?= anchor("grupos/cuestionarios/{$row->id}", 'Todas', 'class="w3 btn ' . $clase_areas . '"') ?>
         <?php foreach ($areas->result() as $row_area) : ?>
@@ -28,8 +28,8 @@
     </div>
 </div>
 
-<div class="sep1">
-    <table class="table bg-blanco">
+<div class="mt-2">
+    <table class="table bg-white">
         <thead>
             <th width="50px">Detalle</th>
             <th>Cuestionario</th>

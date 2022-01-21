@@ -44,7 +44,7 @@ class Grupos extends CI_Controller{
             //$data['arr_types'] = $this->Item_model->arr_cod('category_id = 33');
             
         //Cargar vista
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -103,7 +103,7 @@ class Grupos extends CI_Controller{
             $data['head_subtitle'] = 'Editar';
             $data['view_a'] = 'comunes/gc_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(TPL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN_NEW, $output);
     }
     
     function eliminar($grupo_id, $institucion_id)
@@ -141,7 +141,7 @@ class Grupos extends CI_Controller{
         //Solicitar vista
             $data['head_subtitle'] = 'Profesores';
             $data['view_a'] = 'grupos/profesores_v';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -196,7 +196,7 @@ class Grupos extends CI_Controller{
             $data['view_a'] = 'comunes/gc_v';
 
         $output = array_merge($data,(array)$output);
-        $this->load->view(TPL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN_NEW, $output);
         
     }
     
@@ -235,7 +235,7 @@ class Grupos extends CI_Controller{
             $data['head_title'] = $data['head_title'] . ' | Flipbooks asignados';
             $data['view_a'] = 'grupos/flipbooks_v';
             $data['nav_3'] = 'grupos/submenu_flipbooks_v';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
 // ANOTACIONES
@@ -278,7 +278,7 @@ class Grupos extends CI_Controller{
             $data['view_a'] = 'grupos/anotaciones/anotaciones_v';
             if ( $this->session->userdata('role') <= 2 ) $data['nav_3'] = 'grupos/submenu_flipbooks_v';
             
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -342,7 +342,7 @@ class Grupos extends CI_Controller{
             $data['head_subtitle'] = 'Resultados quices';
             $data['view_a'] = 'grupos/quices_v';
             //$data['nav_3'] = 'grupos/submenu_flipbooks_v';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
     function quices_exportar($grupo_id, $quiz_id)
@@ -387,7 +387,7 @@ class Grupos extends CI_Controller{
             $data['head_subtitle'] = 'Actividad links';
             $data['view_a'] = 'grupos/actividad_links_v';
 
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
     function get_actividad_links($grupo_id, $flipbook_id, $tema_id = 0)
@@ -437,7 +437,7 @@ class Grupos extends CI_Controller{
             $data['nav_2'] = 'grupos/explore/menu_v';
             $data['nav_3'] = 'grupos/importar_menu_v';
         
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -471,7 +471,7 @@ class Grupos extends CI_Controller{
             $data['view_a'] = 'comunes/bs4/resultado_importacion_v';
             $data['nav_2'] = 'grupos/explore/menu_v';
             $data['nav_3'] = 'grupos/importar_menu_v';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
 // DESASIGNAR PROFESORES CON ARCHIVO EXCEL
@@ -503,7 +503,7 @@ class Grupos extends CI_Controller{
             $data['nav_2'] = 'grupos/explore/menu_v';
             $data['nav_3'] = 'grupos/importar_menu_v';
             
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -534,7 +534,7 @@ class Grupos extends CI_Controller{
             $data['nav_2'] = 'grupos/explore/menu_v';
             $data['nav_3'] = 'grupos/importar_menu_v';
 
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
 //---------------------------------------------------------------------------------------------------
@@ -610,7 +610,7 @@ class Grupos extends CI_Controller{
         //Solicitar vista
             $data['head_subtitle'] = 'Promover grupo';
             $data['view_a'] = 'grupos/promover_v';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -735,7 +735,7 @@ class Grupos extends CI_Controller{
         //Solicitar vista
             $data['head_subtitle'] = 'Asignar contenido al grupo';
             $data['view_a'] = 'grupos/asignar_flipbook_v';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
             
     }
     
@@ -845,7 +845,7 @@ class Grupos extends CI_Controller{
         //Solicitar vista
             $data['head_subtitle'] = 'Quitar contenido a estudiantes del grupo';
             $data['view_a'] = 'grupos/quitar_flipbook_v';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -961,7 +961,7 @@ class Grupos extends CI_Controller{
             $data['head_title'] = "Asignar archivo al grupo " . $data['head_title'];
             //$data['nav_3'] = 'grupos/nav_3_estudiantes_v';
             $data['view_a'] = 'grupos/asignar_archivo_v';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
             
     }
     
@@ -1077,7 +1077,7 @@ class Grupos extends CI_Controller{
             $data['head_title'] = "Quitar archivo a estudiantes del grupo " . $data['head_title'];
             //$data['nav_3'] = '';
             $data['view_a'] = 'grupos/quitar_archivo_v';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -1162,7 +1162,7 @@ class Grupos extends CI_Controller{
             $data['head_subtitle'] = 'Listado de estudiantes';
             $data['nav_3'] = 'grupos/submenu_estudiantes_v';
             $data['view_a'] = 'grupos/estudiantes_v';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -1262,7 +1262,7 @@ class Grupos extends CI_Controller{
         //Solicitar vista
             $data['head_subtitle'] = 'Cuestionarios';
             $data['view_a'] = 'grupos/cuestionarios/cuestionarios_v';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
     function cuestionarios_flipbooks($grupo_id)
@@ -1278,7 +1278,7 @@ class Grupos extends CI_Controller{
         //Solicitar vista
             $data['head_subtitle'] = 'Cuestionarios desde Contenidos';
             $data['view_a'] = 'grupos/cuestionarios_flipbooks_v';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
     function cuestionarios_resumen01($grupo_id, $area_id = 50)
@@ -1318,7 +1318,7 @@ class Grupos extends CI_Controller{
         //Solicitar vista
             $data['head_subtitle'] = 'Desempeño por competencias';
             $data['view_a'] = 'grupos/cuestionarios/res01_v';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -1368,7 +1368,7 @@ class Grupos extends CI_Controller{
         
         //Solicitar vista
             $data['head_subtitle'] = 'Desempeño por competencias';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -1406,7 +1406,7 @@ class Grupos extends CI_Controller{
         
         //Solicitar vista
             $data['head_subtitle'] = 'Desempeño por competencias';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -1462,7 +1462,7 @@ class Grupos extends CI_Controller{
         //Solicitar vista
         $data['head_title'] = "Resultados por grupo | " . $data['head_title'];
         $data['view_a'] = 'grupos/resultados_grupo_v';
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -1517,7 +1517,7 @@ class Grupos extends CI_Controller{
         //Solicitar vista
         $data['head_title'] = "Resultados por área | " . $data['head_title'];
         $data['view_a'] = 'grupos/resultados_area_v';
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -1553,7 +1553,7 @@ class Grupos extends CI_Controller{
         //Solicitar vista
         $data['head_title'] = "Lista de resultados | " . $data['head_title'];
         $data['view_a'] = 'grupos/resultados_lista_v';
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -1618,7 +1618,7 @@ class Grupos extends CI_Controller{
         //Solicitar vista
         $data['head_title'] = "Resultados por componente | " . $data['head_title'];
         $data['view_a'] = 'grupos/resultados_componentes_v';
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -1683,7 +1683,7 @@ class Grupos extends CI_Controller{
         //Solicitar vista
         $data['head_title'] = "Resultados por competencia | " . $data['head_title'];
         $data['view_a'] = 'grupos/resultados_competencias_v';
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -1705,7 +1705,7 @@ class Grupos extends CI_Controller{
         $data['head_title'] = 'Cargar estudiantes al grupo';
         $data['view_a'] = 'grupos/cargar_estudiantes_v';
         $data['nav_3'] = 'grupos/submenu_estudiantes_v';
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
     function procesar_cargue($grupo_id)
@@ -1760,7 +1760,7 @@ class Grupos extends CI_Controller{
             $data['subseccion'] = 'cargue';
             $data['view_a'] = 'grupos/resultado_cargue_v';
             $data['head_title'] .= ' - Cargue de usuarios';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
 // PROCESOS MASIVOS

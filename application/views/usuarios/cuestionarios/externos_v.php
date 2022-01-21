@@ -14,7 +14,7 @@
     <?php echo $this->Pcrn->campo_id('institucion', $this->session->userdata('institucion_id'), 'nombre_institucion') ?>
 </p>
 
-<table class="table table-hover bs-caja-no-padding">
+<table class="table table-hover bg-white">
     <thead>
         <th>Cuestionario</th>
         <th>Respondido</th>

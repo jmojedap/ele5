@@ -487,10 +487,10 @@ class Instituciones extends CI_Controller{
             $data['anio_generacion'] = $anio_generacion;
         
         //Solicitar vista
-            $data['subseccion'] = 'listado';
-            $data['vista_b'] = 'instituciones/grupos/grupos_v';
-            $data['vista_menu'] = 'instituciones/institucion_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_title'] = 'Grupos';
+            $data['view_a'] = 'instituciones/grupos/grupos_v';
+            $data['nav_2'] = 'instituciones/grupos/submenu_grupos_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }    
 
     //Ajustada en 2015-07-16, error de Grocery Crud

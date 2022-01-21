@@ -38,7 +38,7 @@ class Flipbooks extends CI_Controller{
             $data['arr_tipos'] = $this->Item_model->arr_interno('categoria_id = 11');
         
         //Cargar vista
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -106,7 +106,7 @@ class Flipbooks extends CI_Controller{
                 $data['link_volver'] = "flipbooks/explorar/?{$busqueda_str}";
                 $data['view_a'] = 'app/mensaje_v';
                 
-                $this->load->view(TPL_ADMIN, $data);
+                $this->load->view(TPL_ADMIN_NEW, $data);
             }
             
     }
@@ -148,7 +148,7 @@ class Flipbooks extends CI_Controller{
         
         $output = array_merge($data,(array)$gc_output);
         
-        $this->load->view(TPL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN_NEW, $output);
     }
     
     function editar()
@@ -164,7 +164,7 @@ class Flipbooks extends CI_Controller{
             $data['subtitulo_pagina'] = 'Editar';
             $data['view_a'] = 'comunes/gc_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(TPL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN_NEW, $output);
     }
     
 //IMPORTAR
@@ -200,7 +200,7 @@ class Flipbooks extends CI_Controller{
             $data['nav_2'] = 'flipbooks/explorar/menu_v';
             $data['ayuda_id'] = 127;
         
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -236,7 +236,7 @@ class Flipbooks extends CI_Controller{
             $data['view_a'] = 'comunes/resultado_importacion_v';
             $data['vista_menu'] = 'flipbooks/explorar_menu_v';
             $data['ayuda_id'] = 127;
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
 // SECCIONES
@@ -255,7 +255,7 @@ class Flipbooks extends CI_Controller{
         
         //Solicitar vista
             $data['view_a'] = 'flipbooks/temas_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -304,7 +304,7 @@ class Flipbooks extends CI_Controller{
         
         //Solicitar vista
             $data['view_a'] = $arr_vistas[$data['row']->tipo_flipbook_id];
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -364,7 +364,7 @@ class Flipbooks extends CI_Controller{
         //Solicitar vista
             //$data['cargado'] = FALSE;
             $data['view_a'] = 'flipbooks/paginas_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -392,7 +392,7 @@ class Flipbooks extends CI_Controller{
         
         //Solicitar vista
             $data['view_a'] = 'flipbooks/anotaciones_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     
@@ -409,7 +409,7 @@ class Flipbooks extends CI_Controller{
         
         //Solicitar vista
             $data['view_a'] = 'flipbooks/aperturas_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function asignados($flipbook_id, $institucion_id = NULL)
@@ -435,7 +435,7 @@ class Flipbooks extends CI_Controller{
         
         //Solicitar vista
             $data['view_a'] = 'flipbooks/asignados_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -454,7 +454,7 @@ class Flipbooks extends CI_Controller{
         //Solicitar vista
             $data['subtitulo_pagina'] = 'Crecar copia';
             $data['view_a'] = 'flipbooks/copiar_flipbook_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -535,7 +535,7 @@ class Flipbooks extends CI_Controller{
             $data['head_subtitle'] = "{$data['temas']->num_rows()} temas";
             $data['view_a'] = 'flipbooks/programar/programar_temas_v';
             $data['nav_3'] = 'flipbooks/programar/submenu_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function importar_programacion($flipbook_id)
@@ -583,7 +583,7 @@ class Flipbooks extends CI_Controller{
             $data['nav_3'] = 'flipbooks/programar/submenu_v';
             $data['ayuda_id'] = 108;
         
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -630,7 +630,7 @@ class Flipbooks extends CI_Controller{
             $data['subtitulo_pagina'] = 'Resultado importación de programación';
             $data['view_a'] = 'comunes/resultado_importacion_v';
             $data['vista_submenu'] = 'flipbooks/programar/submenu_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
 // LECTURA
@@ -756,7 +756,7 @@ class Flipbooks extends CI_Controller{
         //Cargar vista
             $data['view_a'] = 'flipbooks/subquices_v';
             
-            $this->load->view(TPL_ADMIN, $data);       
+            $this->load->view(TPL_ADMIN_NEW, $data);       
     }
     
     function animacion($recurso_id)
@@ -917,7 +917,7 @@ class Flipbooks extends CI_Controller{
             $data = $this->Flipbook_model->basico($flipbook_id);
 
             $data['view_a'] = 'flipbooks/leer_api_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
 //GESTIÓN DE PÁGINAS DE FLIPBOOK
@@ -1057,7 +1057,7 @@ class Flipbooks extends CI_Controller{
         $data['cargado'] = FALSE;
         $data['titulo_pagina'] = "Estudiantes | " . $data['titulo_pagina'];
         $data['view_a'] = 'flipbooks/resultado_carga_v';
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
 
     }
     
@@ -1303,7 +1303,7 @@ class Flipbooks extends CI_Controller{
             $data['mensaje'] = "Se actualizaron {$registros_modificados} registros";
             $data['view_a'] = "app/mensaje_v";
 
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -1334,6 +1334,6 @@ class Flipbooks extends CI_Controller{
             $data['link_volver'] = 'develop/procesos';
             $data['view_a'] = "app/mensaje_v";
 
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }   
 }

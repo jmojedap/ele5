@@ -12,7 +12,7 @@
     </div>
 </div>
     
-<table class="table table-default bg-blanco">
+<table class="table table-default bg-white">
     <thead>
         <th>Estudiante</th>
         <th>Institución</th>

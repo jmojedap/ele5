@@ -51,7 +51,7 @@
                         <textarea
                             id="field-texto_pregunta"
                             name="contenido"
-                            class="form-control summernote"
+                            class="form-control summernote_no"
                             placeholder="Escriba la pregunta"
                             title="Escriba la pregunta"
                             ></textarea>

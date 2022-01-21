@@ -47,7 +47,7 @@ class Usuarios extends CI_Controller{
             $data['arr_status'] = $this->Item_model->arr_interno('categoria_id = 65');
             
         //Cargar vista
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -86,7 +86,7 @@ class Usuarios extends CI_Controller{
             $data['arr_roles'] = $this->Item_model->arr_interno('categoria_id = 58');
         
         //Cargar vista
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -154,7 +154,7 @@ class Usuarios extends CI_Controller{
                 $data['link_volver'] = "usuarios/explorar/?{$busqueda_str}";
                 $data['view_a'] = 'app/mensaje_v';
                 
-                $this->load->view(TPL_ADMIN, $data);
+                $this->load->view(TPL_ADMIN_NEW, $data);
             }
     }
     
@@ -201,7 +201,7 @@ class Usuarios extends CI_Controller{
         
         $output = array_merge($data,(array)$output);
         
-        $this->App_model->view(TPL_ADMIN, $output);
+        $this->App_model->view(TPL_ADMIN_NEW, $output);
     }
     
     function editar()
@@ -229,7 +229,7 @@ class Usuarios extends CI_Controller{
             $data['head_subtitle'] = 'Editar';
             $data['view_a'] = $vista_b;
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(TPL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN_NEW, $output);
     }
     
     /**
@@ -252,7 +252,7 @@ class Usuarios extends CI_Controller{
                     $data['head_subtitle'] = 'Editar mi perfil';
                     $data['view_a'] = $vista_b;
                     $output = array_merge($data,(array)$gc_output);
-                    $this->load->view(TPL_ADMIN, $output);
+                    $this->load->view(TPL_ADMIN_NEW, $output);
             } else {
                 //No se puede editar, se redirige
                 redirect("usuarios/contrasena/");
@@ -307,7 +307,7 @@ class Usuarios extends CI_Controller{
             $data['nav_2'] = 'usuarios/explore/menu_v';
             $data['nav_3'] = 'usuarios/importar_menu_v';
         
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -345,7 +345,7 @@ class Usuarios extends CI_Controller{
             $data['view_a'] = 'comunes/resultado_importacion_v';
             $data['nav_2'] = 'usuarios/explore/menu_v';
             $data['nav_3'] = 'usuarios/importar_menu_v';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
     
@@ -368,7 +368,7 @@ class Usuarios extends CI_Controller{
             $data['head_title'] = 'Usuario registrado';
             $data['head_subtitle'] = $row_usuario->nombre . ' ' . $row_usuario->apellidos;
             $data['view_a'] = 'app/mensaje_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function enviar_email($usuario_id = 2)
@@ -493,7 +493,7 @@ class Usuarios extends CI_Controller{
         
         //Variables vista
         $data['view_a'] = 'eventos/noticias/noticias_usuario_v';
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
         //$this->output->enable_profiler(TRUE);
         
     }
@@ -540,7 +540,7 @@ class Usuarios extends CI_Controller{
         //Solicitar vista
             $data['head_subtitle'] = 'Cambio de contraseña';
             $data['view_a'] = 'usuarios/contrasena_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -932,9 +932,9 @@ class Usuarios extends CI_Controller{
         //Array data
         $data['head_title'] = 'Biblioteca virtual';
         $data['view_a'] = $view_a;
-        $data['nav_2'] = 'usuarios/biblioteca_menu_v';
+        //$data['nav_2'] = 'usuarios/biblioteca_menu_v';
         
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     
@@ -952,7 +952,7 @@ class Usuarios extends CI_Controller{
         //Solicitar vista
         $data['head_subtitle'] = 'Grupos';
         $data['view_a'] = 'usuarios/grupos_v';
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -972,7 +972,7 @@ class Usuarios extends CI_Controller{
         //Solicitar vista
             $data['head_subtitle'] = 'Grupos asignados';
             $data['view_a'] = 'usuarios/grupos_profesor_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
 //---------------------------------------------------------------------------------------------------
@@ -1017,7 +1017,7 @@ class Usuarios extends CI_Controller{
         //Solicitar vista
             $data['head_subtitle'] = 'Evidencias';
             $data['view_a'] = 'usuarios/quices_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
             //print_r($data['quices']);
     }
     
@@ -1044,7 +1044,7 @@ class Usuarios extends CI_Controller{
         //Solicitar vista
         $data['head_subtitle'] = 'Contenidos';
         $data['view_a'] = 'usuarios/flipbooks_v';
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function quitar_flipbook($usuario_id, $flipbook_id)
@@ -1079,7 +1079,7 @@ class Usuarios extends CI_Controller{
         //Cargar vista
             $data['head_subtitle'] = 'Anotaciones';
             $data['view_a'] = 'usuarios/anotaciones_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
 
     function anotaciones($usuario_id, $flipbook_id = NULL)
@@ -1106,7 +1106,7 @@ class Usuarios extends CI_Controller{
         //Cargar vista
             $data['head_subtitle'] = 'Anotaciones';
             $data['view_a'] = 'usuarios/anotaciones/anotaciones_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
 //CUESTIONARIOS
@@ -1133,7 +1133,7 @@ class Usuarios extends CI_Controller{
         
         //Solicitar vista
             $data['view_a'] = 'usuarios/cuestionarios_n_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function cuestionarios($usuario_id, $seccion = 'respondidos')
@@ -1160,7 +1160,7 @@ class Usuarios extends CI_Controller{
         //Solicitar vista
             $data['view_a'] = 'usuarios/cuestionarios/cuestionarios_v';
             $data['nav_3'] = 'usuarios/cuestionarios/menu_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
 //---------------------------------------------------------------------------------------------------
@@ -1209,7 +1209,7 @@ class Usuarios extends CI_Controller{
             $data['view_a'] = 'usuarios/resultados/resultados_v';
             $data['vista_c'] = 'usuarios/resultados/comparativos_v';
             $data['vista_menu'] = 'usuarios/resultados/submenu_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -1246,7 +1246,7 @@ class Usuarios extends CI_Controller{
             $data['view_a'] = 'usuarios/resultados/resultados_v';
             $data['vista_c'] = 'usuarios/resultados/detalle_v';
             $data['vista_menu'] = 'usuarios/resultados/submenu_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
 
             //if ( $this->session->userdata('role') == 0 ) $this->output->enable_profiler(TRUE);
         
@@ -1309,7 +1309,7 @@ class Usuarios extends CI_Controller{
             $data['view_a'] = 'usuarios/resultados/resultados_v';
             $data['vista_c'] = 'usuarios/resultados/area_v';
             $data['vista_menu'] = 'usuarios/resultados/submenu_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -1366,7 +1366,7 @@ class Usuarios extends CI_Controller{
             $data['view_a'] = 'usuarios/resultados/resultados_v';
             $data['vista_c'] = 'usuarios/resultados/competencias_v';
             $data['vista_menu'] = 'usuarios/resultados/submenu_v';
-            $this->load->view(TPL_ADMIN, $data);   
+            $this->load->view(TPL_ADMIN_NEW, $data);   
     }
     
     function resultados_componentes($usuario_id, $uc_id, $area_id){
@@ -1422,7 +1422,7 @@ class Usuarios extends CI_Controller{
             $data['view_a'] = 'usuarios/resultados/resultados_v';
             $data['vista_c'] = 'usuarios/resultados/componentes_v';
             $data['vista_menu'] = 'usuarios/resultados/submenu_v';
-            $this->load->view(TPL_ADMIN, $data);   
+            $this->load->view(TPL_ADMIN_NEW, $data);   
     }
     
     /**
@@ -1454,7 +1454,7 @@ class Usuarios extends CI_Controller{
         //Solicitar vista
             $data['nav_3'] = 'usuarios/cuestionarios/menu_v';
             $data['view_a'] = 'usuarios/resultados/res01_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -1503,7 +1503,7 @@ class Usuarios extends CI_Controller{
         
         //Solicitar vista
             $data['head_subtitle'] = 'Desempeño por competencias';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -1539,7 +1539,7 @@ class Usuarios extends CI_Controller{
         
         //Solicitar vista
             $data['head_subtitle'] = 'Desempeño por competencias';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
         
     }
 
@@ -1576,7 +1576,7 @@ class Usuarios extends CI_Controller{
             $data['head_subtitle'] = 'Actividad links';
             $data['view_a'] = 'usuarios/actividad_links_v';
 
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -1629,7 +1629,7 @@ class Usuarios extends CI_Controller{
             $data['nav_2'] = 'usuarios/explore/menu_v';
             $data['nav_3'] = 'usuarios/importar_menu_v';
         
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -1663,7 +1663,7 @@ class Usuarios extends CI_Controller{
             $data['view_a'] = 'comunes/resultado_importacion_v';
             $data['nav_2'] = 'usuarios/explore/menu_v';
             $data['nav_3'] = 'usuarios/importar_menu_v';
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
 // FUNCIONES MASIVAS

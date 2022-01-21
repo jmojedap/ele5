@@ -17,7 +17,7 @@
 
     <div class="row">
         <div class="col col-md-4">
-            <table class="table table-default bg-blanco">
+            <table class="table bg-white">
                 <thead>
                     <th>Grupo</th>
                 </thead>

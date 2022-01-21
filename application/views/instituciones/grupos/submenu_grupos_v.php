@@ -42,10 +42,20 @@
             'link' => "instituciones/vaciar_grupos/{$row->id}",
             'atributos' => 'title="Eliminar masivamente los estudiantes de un listado de grupos"'
         );
+
+        $arr_menus['usuarios'] = array(
+            'icono' => '<i class="fa fa-users"></i>',
+            'texto' => 'Usuarios',
+            'link' => "instituciones/usuarios/{$row->id}",
+            'atributos' => 'title="Usuarios de la institucion"'
+        );
         
     //Elementos de menú según el rol del visitante
         $elementos_rol[0] = array('grupos', 'nuevo_grupo', 'importar_grupos', 'asignar_profesores', 'vaciar_grupos');
         $elementos_rol[1] = array('grupos', 'nuevo_grupo', 'importar_grupos', 'asignar_profesores', 'vaciar_grupos');
+        $elementos_rol[2] = array('grupos', 'nuevo_grupo', 'importar_grupos', 'asignar_profesores', 'vaciar_grupos');
+        $elementos_rol[3] = array('grupos', 'usuarios');
+        $elementos_rol[4] = array('grupos', 'usuarios');
         
     //Definiendo menú mostrar, según el rol del visitante
         $elementos = $elementos_rol[$this->session->userdata('rol_id')];
@@ -57,4 +67,4 @@
         $data_menu['seccion'] = $seccion;
     
     //Cargue vista
-        $this->load->view('comunes/submenu_v', $data_menu);
+        $this->load->view('comunes/bs4/submenu_v', $data_menu);

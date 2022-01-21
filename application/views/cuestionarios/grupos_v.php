@@ -198,7 +198,7 @@
             </div>
         </div>
         
-        <table class="table bg-blanco" cellspacing="0"> 
+        <table class="table bg-white" cellspacing="0"> 
             <thead>
                 <th width="10px;"><?= form_checkbox($att_check_todos) ?></th>
                 <th>Estudiante</th>
@@ -216,7 +216,10 @@
                     <?php 
                         //Variables
                         $nombre_estudiante = $row_estudiante->apellidos . ' ' . $row_estudiante->nombre;
-                        $link_estudiante = anchor("usuarios/resultados/{$row_estudiante->usuario_id}/{$row_estudiante->uc_id}", $nombre_estudiante);
+                        $link_estudiante = anchor("usuarios/cuestionarios/{$row_estudiante->usuario_id}", $nombre_estudiante);
+                        if ( $row_estudiante->estado >= 3 ) {
+                            $link_estudiante = anchor("usuarios/resultados/{$row_estudiante->usuario_id}/{$row_estudiante->uc_id}", $nombre_estudiante);
+                        }
 
                         $link_responder = anchor("cuestionarios/resolver_lote/$row_estudiante->uc_id", '<i class="fa fa-pencil-alt"></i>', 'class="btn btn-secondary btn-sm"');
                         $link_reiniciar = $this->Pcrn->anchor_confirm("cuestionarios/reiniciar/{$row_estudiante->uc_id}/1", '<i class="fa fa-sync-alt"></i>', 'class="btn btn-warning btn-sm" title="Reiniciar el cuestionario para este estudiante"', "Las respuestas de este estudiante para esta prueba se eliminarán ¿Desea continuar?");

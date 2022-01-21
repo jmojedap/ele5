@@ -57,7 +57,7 @@ class Preguntas extends CI_Controller{
             }
             
         //Cargar vista
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -106,7 +106,7 @@ class Preguntas extends CI_Controller{
                 $data['link_volver'] = "preguntas/explorar/?{$busqueda_str}";
                 $data['view_a'] = 'app/mensaje_v';
                 
-                $this->load->view(TPL_ADMIN, $data);
+                $this->load->view(TPL_ADMIN_NEW, $data);
             }
             
     }
@@ -172,7 +172,7 @@ class Preguntas extends CI_Controller{
                 $data['view_form'] = 'preguntas/editar/form_institucional_v';
             }
         
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -246,7 +246,7 @@ class Preguntas extends CI_Controller{
             $data['view_a'] = 'comunes/bs4/importar_v';
             $data['nav_2'] = 'preguntas/explorar/menu_v';
         
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -280,7 +280,7 @@ class Preguntas extends CI_Controller{
             $data['subtitulo_pagina'] = 'Resultado cargue';
             $data['vista_a'] = 'comunes/resultado_importacion_v';
             $data['vista_menu'] = 'preguntas/explorar/menu_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
 
 //CARGUE MASIVO
@@ -293,7 +293,7 @@ class Preguntas extends CI_Controller{
             $data['subtitulo_pagina'] = 'Cargar masivamente';
             $data['ayuda_id'] = 263;
             $data['vista_a'] = 'preguntas/cargar_masivo_v';
-            $this->load->view(TPL_ADMIN, $data);   
+            $this->load->view(TPL_ADMIN_NEW, $data);   
     }
     
     function cargar_masivo_e()
@@ -358,7 +358,7 @@ class Preguntas extends CI_Controller{
             $data['row_enunciado'] = $row_enunciado;
             $data['view_a'] = 'preguntas/detalle_v';
         
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -378,7 +378,7 @@ class Preguntas extends CI_Controller{
         $data['row_pregunta'] = $data['row'];
         $data['view_a'] = 'preguntas/cuestionarios_v';
         
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -404,7 +404,7 @@ class Preguntas extends CI_Controller{
         $data['row_pregunta'] = $data['row'];
         $data['view_a'] = 'preguntas/estadisticas_v';
         
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     
@@ -463,7 +463,7 @@ class Preguntas extends CI_Controller{
         //Solicitar vista
             $data['titulo_pregunta'] = "Cargar pregunta al {$tipo_mostrar}: {$referente_nombre}";
             $data['vista_b'] = 'preguntas/cargar_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -568,7 +568,7 @@ class Preguntas extends CI_Controller{
             if ( $modo == 'editar' ) { $data['view_a'] = 'preguntas/version/editar_v';}
             if ( is_null($data['row_version']) ) { $data['view_a'] = 'preguntas/version/sin_version_v';}
         
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -584,7 +584,7 @@ class Preguntas extends CI_Controller{
 
         $data['view_a'] = 'preguntas/version/log_v';
         $data['subtitle_head'] = 'Historial de edición';
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -682,7 +682,7 @@ class Preguntas extends CI_Controller{
         $data['head_title'] = 'Preguntas';
         $data['head_subtitle'] = 'Selector';
         $data['view_a'] = 'preguntas/selectorp/selectorp_v';
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
     /**

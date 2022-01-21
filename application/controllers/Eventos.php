@@ -119,9 +119,9 @@ class Eventos extends CI_Controller{
         $data['colores_evento'] = $this->App_model->arr_item(13, 'color');
 
         $data['head_title'] = 'Programador';
-        $data['nav_2'] = 'usuarios/biblioteca_menu_v';
+        //$data['nav_2'] = 'usuarios/biblioteca_menu_v';
         $data['view_a'] = $view_a;
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function imprimir_calendario($mes = NULL)
@@ -208,9 +208,9 @@ class Eventos extends CI_Controller{
             $data['url_mas'] = base_url('eventos/mas_noticias/');
         
         //Variables vista
-        $data['titulo_pagina'] = 'Noticias';
-        $data['vista_a'] = 'eventos/noticias/noticias_v';
-        $this->load->view(PTL_ADMIN, $data);
+        $data['head_title'] = 'Noticias';
+        $data['view_a'] = 'eventos/noticias/noticias_v';
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
 
     function get_noticias()

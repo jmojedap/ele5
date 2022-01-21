@@ -1,4 +1,4 @@
-<?php $this->load->view('usuarios/biblioteca_menu_bs3_v'); ?>
+<?php //$this->load->view('usuarios/biblioteca_menu_v'); ?>
 <?php $this->load->view('eventos/noticias/noticias_js'); ?>
 
 <link rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel2/noticias.css">

@@ -1,68 +1,47 @@
 <script>
     var nav_1_elements = [
             {
-                id: 'nav_1_inicio',
                 text: 'Inicio',
                 active: false,
                 style: '',
                 icon: 'fa fa-home',
-                cf: 'flipbooks/inicio',
+                cf: 'usuarios/biblioteca',
                 submenu: false,
-                subelements: []
+                subelements: [],
+                sections: []
             },
             {
-                id: 'nav_1_grupos',
+                text: 'Programador',
+                active: false,
+                style: '',
+                icon: 'fa fa-fw fa-calendar',
+                cf: 'eventos/calendario',
+                submenu: false,
+                subelements: [],
+                sections: []
+            },
+            {
+                text: 'Noticias',
+                active: false,
+                style: '',
+                icon: 'fa fa-fw fa-newspaper',
+                cf: 'eventos/noticias',
+                submenu: false,
+                subelements: [],
+                sections: []
+            },
+            {
                 text: 'Grupos',
                 active: false,
                 style: '',
                 icon: 'fa fa-users',
                 cf: 'instituciones/grupos',
                 submenu: false,
-                subelements: []
+                subelements: [],
+                sections: []
             },
+            
             {
-                id: 'nav_1_recursos',
-                text: 'Recursos',
-                active: false,
-                style: '',
-                icon: 'fa fa-book',
-                cf: '',
-                submenu: true,
-                subelements: [
-                    {
-                        text: 'Programas',
-                        active: false,
-                        icon: 'fa fa-sitemap',
-                        cf: 'programas/explorar'
-                    },
-                    {
-                        text: 'Contenidos',
-                        active: false,
-                        icon: 'fa fa-book',
-                        cf: 'flipbooks/explorar'
-                    },
-                    {
-                        text: 'Temas',
-                        active: false,
-                        icon: 'fa fa-bars',
-                        cf: 'temas/explorar'
-                    },
-                    {
-                        text: 'Evidencias',
-                        active: false,
-                        icon: 'fa fa-question',
-                        cf: 'quices/explorar'
-                    },
-                    {
-                        text: 'Archivos',
-                        active: false,
-                        icon: 'far fa-folder',
-                        cf: 'recursos/archivos'
-                    },
-                ]
-            },
-            {
-                id: 'nav_1_cuestionarios',
                 text: 'Cuestionarios',
                 active: false,
                 style: '',
@@ -74,44 +53,18 @@
                         text: 'Cuestionarios',
                         active: false,
                         icon: 'fa fa-book',
-                        cf: 'cuestionarios/explorar'
-                    },
-                    {
-                        text: 'Lecturas',
-                        active: false,
-                        icon: 'fa fa-quote-left',
-                        cf: 'datos/enunciados'
+                        cf: 'cuestionarios/explorar',
+                        sections: []
                     },
                     {
                         text: 'Preguntas',
                         active: false,
                         icon: 'fa fa-question',
-                        cf: 'preguntas/explorar'
+                        cf: 'preguntas/explorar',
+                        sections: []
                     }
-                ]
-            },
-            {
-                id: 'nav_1_ajustes',
-                text: 'Ajustes',
-                active: false,
-                style: '',
-                icon: 'fa fa-sliders-h',
-                cf: '',
-                submenu: true,
-                subelements: [
-                    {
-                        text: 'Estadísticas',
-                        active: false,
-                        icon: 'fa fa-chart-line',
-                        cf: 'estadisticas/ctn_correctas_incorrectas'
-                    },
-                    {
-                        text: 'Ayuda',
-                        active: false,
-                        icon: 'fa fa-question-circle',
-                        cf: 'datos/ayudas'
-                    }
-                ]
+                ],
+                sections: []
             },
         ];
 </script>

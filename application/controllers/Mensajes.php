@@ -41,7 +41,7 @@ class Mensajes extends CI_Controller{
             $data['head_subtitle'] = $resultados_total->num_rows();
             $data['view_a'] = 'mensajes/explorar_v';
             $data['nav_2'] = 'mensajes/explorar_menu_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -93,7 +93,7 @@ class Mensajes extends CI_Controller{
             $data['view_b'] = 'mensajes/lectura/mensajes_v';
             //$data['nav_2'] = 'usuarios/explorar_menu_v';
 
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function usuarios($conversacion_id)
@@ -110,7 +110,7 @@ class Mensajes extends CI_Controller{
             $data['head_subtitle'] = 'Usuarios';
             $data['view_b'] = 'mensajes/lectura/usuarios_v';
 
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
 // GESTIÓN DE CONVERSACIONES Y MENSAJES
@@ -155,7 +155,7 @@ class Mensajes extends CI_Controller{
             $data['conversaciones'] = $conversaciones;
             $data['destino_form'] = 'mensajes/buscar_conversacion';
         
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function conversacion_total($conversacion_id)
@@ -167,7 +167,7 @@ class Mensajes extends CI_Controller{
             $data['head_subtitle'] = 'En construcción';
             $data['view_a'] = 'app/en_construccion_v';
 
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function nuevo()
@@ -344,7 +344,7 @@ class Mensajes extends CI_Controller{
             $data['head_title'] = 'Test';
             $data['view_a'] = 'app/prueba_v';
 
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
 
     

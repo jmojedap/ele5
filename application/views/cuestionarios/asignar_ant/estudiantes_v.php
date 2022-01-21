@@ -26,7 +26,7 @@
         }
 ?>
 
-<table class="table bg-blanco" cellspacing="0"> 
+<table class="table bg-white" cellspacing="0"> 
     <thead>
     <th width="10px;" class="hidden"><?= form_checkbox($att_check_todos) ?></th>
     <th>Estudiante</th>

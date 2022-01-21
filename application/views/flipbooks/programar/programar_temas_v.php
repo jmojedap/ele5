@@ -98,7 +98,7 @@
 <?php if ( $grupos->num_rows() > 0 ){ ?>
 
     <div class="bs-caja-no-padding">
-        <table class="table table-hover" cellspacing="0">
+        <table class="table table-hover bg-white" cellspacing="0">
             <thead>
                 <tr class="">
                     <th width="45px">ID</th>

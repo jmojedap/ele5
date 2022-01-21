@@ -1,78 +1,70 @@
 <script>
     var nav_1_elements = [
             {
-                id: 'nav_1_inicio',
                 text: 'Inicio',
                 active: false,
                 style: '',
                 icon: 'fa fa-home',
-                cf: 'flipbooks/inicio',
+                cf: 'usuarios/biblioteca',
                 submenu: false,
-                subelements: []
+                subelements: [],
+                sections: []
             },
             {
-                id: 'nav_1_calendar',
                 text: 'Programador',
                 active: false,
                 style: '',
                 icon: 'fa fa-fw fa-calendar',
                 cf: 'eventos/calendario',
                 submenu: false,
-                subelements: []
+                subelements: [],
+                sections: []
             },
             {
-                id: 'nav_1_noticias',
                 text: 'Noticias',
                 active: false,
                 style: '',
                 icon: 'fa fa-fw fa-newspaper',
                 cf: 'eventos/noticias',
                 submenu: false,
-                subelements: []
+                subelements: [],
+                sections: []
             },
             {
-                id: 'nav_1_institucion',
-                text: 'Institución',
+                text: 'Grupos',
                 active: false,
                 style: '',
-                icon: 'fa fa-fw fa-university',
+                icon: 'fa fa-users',
                 cf: 'instituciones/grupos',
                 submenu: false,
-                subelements: []
+                subelements: [],
+                sections: []
             },
+            
             {
-                id: 'nav_1_cuestionarios',
                 text: 'Cuestionarios',
                 active: false,
                 style: '',
-                icon: 'fa fa-fw fa-question',
+                icon: 'fa fa-question',
                 cf: '',
                 submenu: true,
                 subelements: [
                     {
                         text: 'Cuestionarios',
                         active: false,
-                        icon: 'fa fa-fw fa-book',
-                        cf: 'cuestionarios/explorar'
+                        icon: 'fa fa-book',
+                        cf: 'cuestionarios/explorar',
+                        sections: []
                     },
                     {
                         text: 'Preguntas',
                         active: false,
-                        icon: 'fa fa-fw fa-question',
-                        cf: 'preguntas/explorar'
+                        icon: 'fa fa-question',
+                        cf: 'preguntas/explorar',
+                        sections: []
                     }
-                ]
+                ],
+                sections: []
             },
-            {
-                id: 'nav_1_estadisticas',
-                text: 'Estadísticas',
-                active: false,
-                style: '',
-                icon: 'fa fa-chart-line',
-                cf: 'estadisticas/login_usuarios',
-                submenu: false,
-                subelements: []
-            },
-
         ];
 </script>
