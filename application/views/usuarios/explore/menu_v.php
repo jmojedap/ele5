@@ -34,7 +34,7 @@
         icon: 'fa fa-plus',
         text: 'Nuevo',
         class: '<?php echo $cl_nav_2['usuarios_nuevo'] ?>',
-        cf: 'usuarios/nuevo/estudiante/0/add',
+        cf: 'usuarios/nuevo/estudiante/',
         anchor: true
     };
     

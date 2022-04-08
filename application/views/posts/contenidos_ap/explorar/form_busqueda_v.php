@@ -40,4 +40,10 @@
             <?= form_dropdown('f2', $opciones_area, $filters['f2'], 'class="form-control" title="Filtrar por área"'); ?>
         </div>
     </div>
+    <div class="form-group row filtro" style="<?= $style_filtros['n'] ?>">
+        <label for="n" class="col-sm-4 text-right">Nivel</label>
+        <div class="col-sm-8">
+            <?= form_dropdown('n', $opciones_nivel, $filters['n'], 'class="form-control" title="Filtrar por nivel"'); ?>
+        </div>
+    </div>
 </form>

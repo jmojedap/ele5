@@ -1,5 +1,5 @@
 <?php $this->load->view('assets/bootstrap_datepicker'); ?>
-<?php $this->load->view('assets/icheck'); ?>
+<?php //$this->load->view('assets/icheck'); ?>
 <?php $this->load->view('assets/toastr'); ?>
 
 <?php
@@ -102,6 +102,7 @@
     var post_id = '<?= $row->id ?>';
     var controlador = 'posts';
     var seleccionados = '<?= $row->texto_2 ?>';
+    var arr_seleccionados = [<?= $row->text_2 ?>];
     var seleccionados_todos = '<?= $seleccionados_todos ?>';
     var resultado = '<?php echo $this->uri->segment(4) ?>';
     
@@ -154,9 +155,9 @@
     //Ajax
     function ap_crud()
     {
-        $.ajax({
-            type: 'POST',
-            url: base_url + controlador + '/ap_crud/actualizar/' + post_id,
+     $.ajax({
+       type: 'POST',
+           url: base_url + controlador + '/ap_crud/actualizar/' + post_id,
             data: $('#formulario').serialize(),
             success: function(response){
                 if ( response.status == 1 )
@@ -164,13 +165,13 @@
                     toastr["success"]('Los cambios fueron guardados');    
                 }
             }
-        });
+     });
     }
     
 </script>
 
-<div class="row">
-    <div class="col col-md-8">
+<div class="center_box_750">
+    <div class="">
         <div class="card mb-2">
             <div class="card-header">
                 Datos generales
@@ -220,7 +221,7 @@
                             <?= form_input($att_texto_1) ?>
                         </div>
                     </div>
-                    <div class="form-group d-none">
+                    <div class="form-group row">
                         <label class="col-sm-3 col-form-label text-right" for="texto_2">Niveles</label>
                         <div class="col-sm-9">
                             <?= form_input($att_texto_2) ?>
@@ -276,8 +277,8 @@
         </div>
         
     </div>
-    <div class="col col-md-4">
-        <div class="card">
+    <!-- <div class="col col-md-4">
+        <div class="card  d-none">
             <div class="card-header">
                 Niveles
             </div>
@@ -302,7 +303,7 @@
                 <?php } ?>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
 
 <?php $this->load->view('comunes/modal_eliminar_simple'); ?>

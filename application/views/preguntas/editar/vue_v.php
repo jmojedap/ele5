@@ -12,7 +12,6 @@ form_values.componente_id = '0<?php echo $row->componente_id ?>';
 var edicion_preguntas = new Vue({
     el: '#edicion_pregunta',
     data: {
-        app_url: '<?php echo base_url() ?>',
         pregunta_id: <?php echo $row->id ?>,
         form_values: form_values,
         loading: false,
@@ -20,7 +19,7 @@ var edicion_preguntas = new Vue({
     methods: {
         send_form: function(){
             this.loading = true
-            axios.post(this.app_url + 'preguntas/save/' + this.pregunta_id, $('#pregunta_form').serialize())
+            axios.post(url_app + 'preguntas/save/' + this.pregunta_id, $('#pregunta_form').serialize())
             .then(response => {
                 toastr['success'](response.data.message)
                 this.loading = false

@@ -345,7 +345,7 @@
                     
                     <td class="hidden-xs">
                         <?php if ( $editable ){ ?>
-                            <?= anchor("usuarios/editar/edit/{$row_resultado->id}", '<i class="fa fa-pencil"></i>', 'class="a4" title=""') ?>
+                            <?= anchor("usuarios/editar/{$row_resultado->id}", '<i class="fa fa-pencil"></i>', 'class="a4" title=""') ?>
                         <?php } ?>
                     </td>
                 </tr>

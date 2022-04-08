@@ -467,9 +467,10 @@ class Posts extends CI_Controller{
             $data = $this->Post_model->ap_data_explorar($num_pagina);
         
         //Opciones de filtros de búsqueda
-            $data['arr_filtros'] = array('f2', 'f3');
+            $data['arr_filtros'] = array('f2', 'f3', 'n');
             $data['opciones_tipo_ap'] = $this->Item_model->opciones('categoria_id = 153', 'Todos');
             $data['opciones_area'] = $this->Item_model->opciones_id('categoria_id = 1', 'Todos');
+            $data['opciones_nivel'] = $this->App_model->opciones_nivel('item');
             
         //Arrays con valores para contenido en la tabla
             $data['arr_tipos_ap'] = $this->Item_model->arr_interno('categoria_id = 153');
@@ -483,7 +484,7 @@ class Posts extends CI_Controller{
             }
         
         //Cargar vista
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -517,7 +518,6 @@ class Posts extends CI_Controller{
      * Después de crear el post, es redirigido al
      * formulario de edición.
      * 
-     * @param type $institucion_id
      */
     function ap_nuevo()
     {

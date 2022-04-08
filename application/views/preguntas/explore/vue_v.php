@@ -66,12 +66,12 @@
             get_list: function(){
                 this.loading = true;
                 this.num_page = 1;
-                axios.post(app_url + this.controller + '/get/' + this.num_page, $('#search_form').serialize())
+                axios.post(url_app + this.controller + '/get/' + this.num_page, $('#search_form').serialize())
                 .then(response => {
                     this.list = response.data.list;
                     this.max_page = response.data.max_page;
                     $('#head_subtitle').html(response.data.search_num_rows);
-                    history.pushState(null, null, app_url + this.cf + this.num_page + '/?' + response.data.str_filters);
+                    history.pushState(null, null, url_app + this.cf + this.num_page + '/?' + response.data.str_filters);
                     this.all_selected = false;
                     this.selected = [];
                     this.loading = false;
@@ -90,11 +90,11 @@
             },
             sum_page: function(sum){
                 this.num_page = Pcrn.limit_between(+this.num_page + +sum, 1, this.max_page);
-                axios.post(app_url + this.controller + '/get/' + this.num_page, $('#search_form').serialize())
+                axios.post(url_app + this.controller + '/get/' + this.num_page, $('#search_form').serialize())
                 .then(response => {
                     this.list = response.data.list;
                     this.max_page = response.data.max_page;
-                    history.pushState(null, null, app_url + this.cf + this.num_page +'/?' + response.data.str_filters);
+                    history.pushState(null, null, url_app + this.cf + this.num_page +'/?' + response.data.str_filters);
                     this.all_selected = false;
                     this.selected = [];
                 })
@@ -106,7 +106,7 @@
                 var params = new FormData();
                 params.append('selected', this.selected);
                 
-                axios.post(app_url + this.controller + '/delete_selected', params)
+                axios.post(url_app + this.controller + '/delete_selected', params)
                 .then(response => {
                     this.hide_deleted();
                     this.selected = [];
@@ -141,7 +141,7 @@
                 var params = new FormData();
                 params.append('selected', this.selected);
                 
-                axios.post(app_url + this.controller + '/selectorp_add', params)
+                axios.post(url_app + this.controller + '/selectorp_add', params)
                 .then(response => {
                     if ( response.data.status == 1 )
                     {

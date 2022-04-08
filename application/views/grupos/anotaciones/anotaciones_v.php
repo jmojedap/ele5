@@ -27,7 +27,7 @@
             <thead>
                 <th style="min-width: 150px;"></th>
                 <th>Anotación/Respuesta</th>
-                <th width="120px">Calificación</th>
+                <th width="140px">Calificación</th>
                 <th width="120px"></th>
             </thead>
             <tbody>

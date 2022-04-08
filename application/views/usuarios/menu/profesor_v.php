@@ -1,20 +1,4 @@
 <?php
-    
-    /*$seccion = $this->uri->segment(2);
-    if ( $this->uri->segment(2) == 'cuestionarios_resumen01' ) { $seccion = 'cuestionarios'; }
-    if ( $this->uri->segment(2) == 'resultados' ) { $seccion = 'cuestionarios'; }
-    if ( $this->uri->segment(2) == 'resultados_area' ) { $seccion = 'cuestionarios'; }
-    
-    $clase_menu[$seccion] = 'current';
-    
-    $mostrar_actividad = FALSE;
-    
-    if ( $this->session->userdata('rol_id') <= 5 ) { $mostrar_actividad = TRUE; }
-    if ( $row->id == $this->session->userdata('usuario_id') ) { $mostrar_actividad = TRUE; }    //Si es él mismo*/
-    
-?>
-
-<?php
 
         $seccion = $this->uri->segment(2);
         if ( $this->uri->segment(2) == 'cuestionarios_resumen01' ) { $seccion = 'cuestionarios'; }
@@ -39,7 +23,7 @@
         $arr_menus['editar'] = array(
             'icono' => '<i class="fa fa-pencil-alt"></i>',
             'texto' => 'Editar',
-            'link' => "usuarios/editar/edit/{$usuario_id}",
+            'link' => "usuarios/editar/{$usuario_id}",
             'atributos' => ''
         );
             
@@ -67,7 +51,7 @@
         $arr_menus['editarme'] = array(
             'icono' => '<i class="fa fa-pencil-alt"></i>',
             'texto' => 'Editar',
-            'link' => "usuarios/editarme/edit/{$usuario_id}",
+            'link' => "usuarios/editarme/{$usuario_id}",
             'atributos' => ''
         );
         

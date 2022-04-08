@@ -42,70 +42,56 @@
             </div>
 
         </form>
-
-        <div class="clearfix"></div>
-
-        <div id="errors">
-            <div class="alert alert-danger" v-show="passwords_match == 0">
-                
-            </div>
-            <div class="alert alert-danger" v-for="(error, error_key) in errors">
-                {{ error }}
-            </div>
-        </div>
         
     </div>
 
 </div>
 
 <script>
-    new Vue({
-        el: '#change_password',
-        created: function(){
-            //this.get_list();
-        },
-        data: {
-            password: '',
-            passconf: '',
-            passwords_match: -1,
-            validated: -1,
-            errors: [],
-        },
-        methods: {
-            send_form: function(){
-                console.log('send form', this.validated);
-                if ( this.validated == 1 )
-                {
-                    axios.post(url_api + 'usuarios/cambiar_dpw/', $('#change_password_form').serialize())
-                    .then(response => {
-                        if ( response.data.status == 1 ) {
-                            toastr['success']('La contraseña fue cambiada')
-                            setTimeout(() => {
-                                window.location = url_app + 'app/index/';
-                            }, 2000);
-                        } else {
-                            toastr['error']('La contraseña no se cambió')
-                            this.errors = response.data.errors
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-                }
-            },
-            check_match: function(){
-                if ( this.passconf.length > 0 )
-                {
-                    if ( this.password == this.passconf ) {
-                        this.passwords_match = 1
-                        this.validated = 1
+var change_password = new Vue({
+    el: '#change_password',
+    data: {
+        password: '',
+        passconf: '',
+        passwords_match: -1,
+        validated: -1,
+        errors: [],
+    },
+    methods: {
+        send_form: function(){
+            console.log('send form', this.validated);
+            if ( this.validated == 1 )
+            {
+                axios.post(url_api + 'usuarios/cambiar_dpw/', $('#change_password_form').serialize())
+                .then(response => {
+                    if ( response.data.status == 1 ) {
+                        toastr['success']('La contraseña fue cambiada')
+                        setTimeout(() => {
+                            window.location = url_app + 'app/index/';
+                        }, 2000);
                     } else {
-                        this.passwords_match = 0
-                        this.validated = 0
+                        toastr['error']('La contraseña no se cambió')
+                        this.errors = response.data.errors
                     }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            }
+        },
+        check_match: function(){
+            if ( this.passconf.length > 0 )
+            {
+                if ( this.password == this.passconf ) {
+                    this.passwords_match = 1
+                    this.validated = 1
+                } else {
+                    this.passwords_match = 0
+                    this.validated = 0
                 }
-                console.log('check_match', this.passwords_match);
-            },
-        }
-    });
+            }
+            console.log('check_match', this.passwords_match);
+        },
+    }
+});
 </script>

@@ -21,7 +21,7 @@
         $arr_menus['editar'] = array(
             'icono' => '<i class="fa fa-pencil-alt"></i>',
             'texto' => 'Editar',
-            'link' => "usuarios/editar/edit/{$row->id}",
+            'link' => "usuarios/editar/{$row->id}",
             'atributos' => 'title="Editar datos de usuario"'
         );
         

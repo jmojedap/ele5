@@ -11,7 +11,7 @@
 </script>
 
 <div id="resolver_cuestionario">
-    <div class="row" v-show="! finalizado">
+    <div class="row" v-show="paso=='responder'">
         <div class="col-md-8">
 
             <div class="row" style="margin-bottom: 10px">
@@ -183,41 +183,7 @@
                         </ul>
                     </div>
                     
-                    <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#confirmar_finalizar">
-                        Finalizar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="jumbotron" v-show="finalizado">
-        <h1>
-            <i class="fa fa-circle-o-notch fa-spin text-success"></i>
-            Finalizando
-        </h1>
-        <p>
-            Finalizando cuestionario, por favor espere.
-        </p>
-    </div>
-    
-    <?php //Ventana modal Confirma Finalizar ?>
-
-    <div class="modal fade" id="confirmar_finalizar_ant" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Plataforma Enlace</h4>
-                </div>
-                <div class="modal-body" id="mensaje_confirmacion">
-                    Tiene <span class="label label-danger">{{ cant_preguntas - cant_respondidas }}</span> preguntas sin responder
-                    <br/>
-                    ¿Confirma la terminación del cuestionario? ANTERIOR
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-danger" v-on:click="guardar_finalizar" title="Finalizar cuestionario" data-dismiss="modal">
+                    <button class="btn btn-primary btn-block" v-on:click="set_paso('confirmar_finalizar')">
                         Finalizar
                     </button>
                 </div>
@@ -225,16 +191,9 @@
         </div>
     </div>
 
-    <div class="modal fade" id="confirmar_finalizar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">En Línea Editores</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body text-center">
+    <div class="center_box_750">
+        <div class="card" v-show="paso=='confirmar_finalizar'">
+            <div class="card-body">
                     <p v-show="cant_preguntas > cant_respondidas">
                         Tiene <strong class="text-danger">{{ cant_preguntas - cant_respondidas }}</strong> preguntas sin responder
                     </p>
@@ -243,13 +202,23 @@
                         Todas las preguntas fueron respondidas.
                     </p>
                     ¿Desea finalizar el cuestionario?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" v-on:click="guardar_finalizar" title="Finalizar cuestionario">Finalizar</button>
-                </div>
+                    <hr>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-secondary" v-on:click="set_paso('responder')">Volver al cuestionario</button>
+                        <button type="button" class="btn btn-primary w120p" v-on:click="guardar_finalizar" title="Finalizar cuestionario">Sí, Finalizar</button>
+                    </div>
             </div>
         </div>
+    </div>
+    
+    <div class="jumbotron" v-show="paso=='finalizado'">
+        <h1>
+            <i class="fa fa-circle-o-notch fa-spin text-success"></i>
+            Finalizando
+        </h1>
+        <p>
+            Finalizando cuestionario, por favor espere.
+        </p>
     </div>
 
     <?php $this->load->view('cuestionarios/resolver/modal_time_over_v') ?>

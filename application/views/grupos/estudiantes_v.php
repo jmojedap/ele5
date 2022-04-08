@@ -37,7 +37,7 @@
         foreach ( $grupos_nivel->result() as $row_grupo ) 
         {
             $indice = 'p7-' . substr('00000' . $row_grupo->id, -6, 6);
-            $options_process[$indice] = "Mover al grupo {$row_grupo->nivel}-{$row_grupo->grupo}";
+            $options_process[$indice] = "Mover al grupo {$row_grupo->nombre_grupo}";
         }
     }
 

@@ -15,6 +15,7 @@ class App extends CI_Controller{
     
     /**
      * Primera función de acceso al sistema 
+     * 2022-04-08
      */
     function index()
     {
@@ -30,10 +31,10 @@ class App extends CI_Controller{
             $destinos_rol[0] = 'usuarios/explorar';
             $destinos_rol[1] = 'usuarios/explorar';
             $destinos_rol[2] = 'usuarios/explorar';
-            $destinos_rol[3] = 'usuarios/biblioteca';
-            $destinos_rol[4] = 'usuarios/biblioteca';
-            $destinos_rol[5] = 'usuarios/biblioteca';
-            $destinos_rol[6] = 'usuarios/biblioteca';
+            $destinos_rol[3] = 'flipbooks/inicio';
+            $destinos_rol[4] = 'flipbooks/inicio';
+            $destinos_rol[5] = 'flipbooks/inicio';
+            $destinos_rol[6] = 'flipbooks/inicio';
             $destinos_rol[7] = 'app/inicio';
             $destinos_rol[8] = 'app/inicio';
             $destinos_rol[9] = 'app/inicio';
@@ -41,7 +42,7 @@ class App extends CI_Controller{
             $destino = $destinos_rol[$row_usuario->rol_id];
             
             //Si es estudiante y no ha iniciado sus datos
-                if ( $row_usuario->iniciado == 0 && $row_usuario->rol_id == 6 ) { $destino = "usuarios/editarme/edit/{$row_usuario->id}"; }
+                if ( $row_usuario->iniciado == 0 && $row_usuario->rol_id == 6 ) { $destino = "usuarios/editarme/"; }
                 
             //Verificar que no tenga contraseña por defecto, o se redirige a formulairo de cambio de contraseña
                 if ( $this->input->get('dpw') == 1 ) { $destino = 'usuarios/cambio_dpw'; }
@@ -56,16 +57,21 @@ class App extends CI_Controller{
     
     /**
      * Formulario de login, iniciar sesión con usuario y contraseña
+     * 2022-03-27 ajusteMinero
      */
     function login()
     {
+        /*$location = $this->App_model->location();
+        echo $location['country'];*/
+        
         if ( $this->session->userdata('logged') )
         {
             redirect('app/index');
         } else {
             $data['head_title'] = 'En Línea Editores :: Bienvenidos';
             $data['view_a'] = 'app/login_v';
-            $this->load->view('templates/apanel3/start_v', $data);
+            //$this->load->view('templates/apanel3/start_v', $data);
+            $this->load->view('templates/monster/start_width_v', $data);
         }
     }
     

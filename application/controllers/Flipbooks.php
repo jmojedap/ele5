@@ -632,6 +632,29 @@ class Flipbooks extends CI_Controller{
             $data['vista_submenu'] = 'flipbooks/programar/submenu_v';
             $this->load->view(TPL_ADMIN_NEW, $data);
     }
+
+// INICIO PARA ESTUDIANTES Y PROFESORES
+//-----------------------------------------------------------------------------
+
+function inicio()
+{
+    $data['arr_flipbooks'] = $this->session->userdata('arr_flipbooks');
+    $data['arr_cuestionarios'] = $this->session->userdata('arr_cuestionarios');
+    $data['arr_grupos'] = $this->session->userdata('arr_grupos');
+    $data['areas'] = $this->Item_model->arr_item(1, 'id');
+
+    $data['head_title'] = 'Plataforma En Línea';
+    //$data['head_subtitle'] = 'Bienvenidos';
+    $data['view_a'] = 'flipbooks/inicio_v';
+
+    if ( $this->session->userdata('srol') == 'institucional') {
+        $data['view_a'] = 'flipbooks/inicio_prf_v';
+    }
+
+    $this->load->view(TPL_ADMIN_NEW, $data);
+
+    $this->output->enable_profiler(TRUE);
+}
     
 // LECTURA
 //-----------------------------------------------------------------------------

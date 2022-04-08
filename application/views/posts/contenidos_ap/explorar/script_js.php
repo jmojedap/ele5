@@ -94,16 +94,16 @@
     //Elimina los registros seleccionados
     function eliminar()
     {
-        $.ajax({        
-            type: 'POST',
-            url: base_url + '/' + controlador + '/eliminar_seleccionados',
-            data: {
-                seleccionados : seleccionados.substring(1)
+     $.ajax({
+        type: 'POST',
+        url: base_url + '/' + controlador + '/delete_selected',
+        data: {
+                selected : seleccionados.substring(1)
             },
-            success: function(eliminados){
-                ocultar_eliminados(eliminados);
+            success: function(data){
+                ocultar_eliminados(data['qty_deleted']);
             }
-        });
+     });
     }
     
     //Al eliminar registros, ocultar de la tabla las filas eliminadas

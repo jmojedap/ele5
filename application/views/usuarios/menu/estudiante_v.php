@@ -75,7 +75,7 @@
         $arr_menus['editar'] = array(
             'icono' => '<i class="fa fa-pencil-alt"></i>',
             'texto' => 'Editar',
-            'link' => "usuarios/editar/edit/{$usuario_id}",
+            'link' => "usuarios/editar/{$usuario_id}",
             'atributos' => ''
         );
             
@@ -89,7 +89,7 @@
         $arr_menus['editarme'] = array(
             'icono' => '<i class="fa fa-pencil-alt"></i>',
             'texto' => 'Editar',
-            'link' => "usuarios/editarme/edit/{$usuario_id}",
+            'link' => "usuarios/editarme/{$usuario_id}",
             'atributos' => ''
         );
         
@@ -114,12 +114,12 @@
         }
         
     //Elementos especiales
-        if ( $editable && $row->id == $this->session->userdata('usuario_id') )
+        if ( $editable && $row->id == $this->session->userdata('user_id') )
         {
             $elementos[] = 'editarme';
         }
         
-        if ( $row->id == $this->session->userdata('usuario_id') ) {
+        if ( $row->id == $this->session->userdata('user_id') ) {
             $elementos[] = 'contrasena';
         }
         

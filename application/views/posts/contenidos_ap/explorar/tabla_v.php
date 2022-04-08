@@ -15,6 +15,7 @@
     $clases_col['resumen'] = '';
     $clases_col['categoria'] = 'd-none';
     $clases_col['area'] = '';
+    $clases_col['nivel'] = '';
 
     $clases_col['no_documento'] = '';
     $clases_col['rol'] = '';
@@ -39,6 +40,7 @@
         <th></th>
         <th>Contenido</th>
         <th class="<?= $clases_col['resumen'] ?>">Resumen</th>
+        <th class="<?= $clases_col['nivel'] ?>">Niveles</th>
         <th class="<?= $clases_col['tipo'] ?>">Tipo</th>
         <th class="<?= $clases_col['categoria'] ?>">Categoría</th>
         <th class="<?= $clases_col['botones'] ?>" width="35px"></th>
@@ -51,6 +53,7 @@
                 $nombre_elemento = $this->Pcrn->si_strlen($row_resultado->nombre_post, 'Post ' . $row_resultado->id);
                 $destino_elemento = "posts/ap_leer/{$row_resultado->id}";
                 $link_elemento = anchor($destino_elemento, $nombre_elemento);
+                $niveles = explode(',', $row_resultado->texto_2);
             ?>
             <tr id="fila_<?= $row_resultado->id ?>">
                 <td class="<?= $clases_col['selector'] ?>">
@@ -70,6 +73,13 @@
                 
                 <td class="<?= $clases_col['resumen'] ?>">
                     <?= $row_resultado->resumen ?>
+                </td>
+                <td class="<?= $clases_col['nivel'] ?>">
+                    <?php foreach ( $niveles as $nivel ) : ?>
+                        <?php if ( strlen($nivel) > 0 ) : ?>
+                            <?= $this->App_model->etiqueta_nivel($nivel) ?>
+                        <?php endif; ?>
+                    <?php endforeach ?>
                 </td>
 
                 <td class="<?= $clases_col['tipo'] ?>">

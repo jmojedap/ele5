@@ -596,7 +596,7 @@ class Grupos extends CI_Controller{
      * 
      * @param type $grupo_id
      */
-    function promover($grupo_id, $tipo_promocion = 1)
+    function z_romover($grupo_id, $tipo_promocion = 1)
     {
         //Cargando datos básicos (_basico)
             $data = $this->Grupo_model->basico($grupo_id);
@@ -619,7 +619,7 @@ class Grupos extends CI_Controller{
      * 
      * @param type $grupo_id
      */
-    function promover_v($grupo_id, $tipo_promocion)
+    function z_promover_v($grupo_id, $tipo_promocion)
     {
         
         $this->load->library('form_validation');
@@ -666,7 +666,7 @@ class Grupos extends CI_Controller{
      * 
      * @param type $grupo_id
      */
-    function promover_e($grupo_id, $tipo_promocion)
+    function z_promover_e($grupo_id, $tipo_promocion)
     {
         //Grupo destino
         
@@ -1203,7 +1203,7 @@ class Grupos extends CI_Controller{
             } elseif ( $process_id == 7 ) {
                 $grupo_destino_id = substr($this->input->post('process'), -6, 6);
                 $row_grupo = $this->Db_model->row_id('grupo', $grupo_destino_id);
-                $this->Usuario_model->cambiar_grupo($usuario_id, $grupo_id, $grupo_destino_id);
+                $this->Usuario_model->set_grupo($usuario_id, $grupo_destino_id);
                 $data['process'] = "Mover al grupo {$row_grupo->nivel}-{$row_grupo->grupo}" ;
             } elseif ( $process_id == 8 ) {
                 $data['process'] = 'Retirar (Sin eliminar)';

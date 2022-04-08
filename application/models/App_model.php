@@ -1229,9 +1229,6 @@ class App_model extends CI_Model {
      * Devuelve un array con las opciones de la tabla grupo, limitadas por una condición definida
      * en un formato ($formato) definido
      * 
-     * @param type $condicion
-     * @param type $formato
-     * @return type 
      */
     function opciones_grupo($condicion, $formato = 1)
     {
@@ -1433,6 +1430,27 @@ class App_model extends CI_Model {
         );
         
         return $att_img;
+    }
+
+    /**
+     * Array localización usuarios, datos de input post
+     * 2021-03-27
+     */
+    function location()
+    {
+        
+        $location = array('city' => 'ND', 'region' => 'ND', 'country' => 'ND');
+        $geoplugin = unserialize(file_get_contents('http://www.geoplugin.net/php.gp?ip='.$_SERVER['REMOTE_ADDR']));
+
+        if ( $geoplugin )
+        {
+            $location['city'] = $geoplugin['geoplugin_city'];
+            $location['region'] = $geoplugin['geoplugin_regionName'];
+            $location['country'] = $geoplugin['geoplugin_countryName'];
+        }
+
+
+        return $location;
     }
 
 //---------------------------------------------------------------------------------------------------------

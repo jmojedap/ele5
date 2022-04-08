@@ -12,6 +12,9 @@
         </div>
 
         <div class="col">
+            <a v-bind:href="`<?= URL_APP . "{$controller}/links_export/?" ?>` + str_filters" class="btn btn-light" title="Exportar registros encontrados a Excel">
+                <i class="fa fa-download"></i>
+            </a>
             <button class="btn btn-warning"
                 title="Eliminar links seleccionados"
                 data-toggle="modal"
@@ -23,6 +26,7 @@
         </div>
         
         <div class="col mb-2">
+            <span class="mr-2" v-show="!loading">{{ search_num_rows }} resultados</span>
             <?php $this->load->view('common/vue_pagination_v'); ?>
         </div>
     </div>

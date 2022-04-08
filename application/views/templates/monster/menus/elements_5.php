@@ -4,7 +4,17 @@
                 text: 'Inicio',
                 active: false,
                 style: '',
-                icon: 'fa fa-home',
+                icon: 'fa fa-fw fa-home',
+                cf: 'flipbooks/inicio',
+                submenu: false,
+                subelements: [],
+                sections: []
+            },
+            {
+                text: 'Biblioteca',
+                active: false,
+                style: '',
+                icon: 'fa fa-fw fa-book',
                 cf: 'usuarios/biblioteca',
                 submenu: false,
                 subelements: [],

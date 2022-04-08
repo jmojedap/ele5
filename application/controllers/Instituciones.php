@@ -38,7 +38,7 @@ class Instituciones extends CI_Controller{
             //$data['arr_types'] = $this->Item_model->arr_cod('category_id = 33');
             
         //Cargar vista
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -131,7 +131,7 @@ class Instituciones extends CI_Controller{
         
         $output = array_merge($data,(array)$gc_output);
         
-        $this->load->view(TPL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN_NEW, $output);
     }
     
     function editar()
@@ -303,7 +303,6 @@ class Instituciones extends CI_Controller{
             $data['vista_submenu'] = 'instituciones/submenu_usuarios_v';
             $this->load->view(PTL_ADMIN, $data);
     }
-    
 // CARGA MASIVA DE USUARIOS
 //---------------------------------------------------------------------------------------------------
     /**
@@ -487,9 +486,11 @@ class Instituciones extends CI_Controller{
             $data['anio_generacion'] = $anio_generacion;
         
         //Solicitar vista
-            $data['head_title'] = 'Grupos';
+            $data['head_title'] = $data['row']->nombre_institucion;
+            //$data['head_subtitle'] = 'Grupos';
             $data['view_a'] = 'instituciones/grupos/grupos_v';
-            $data['nav_2'] = 'instituciones/grupos/submenu_grupos_v';
+            $data['nav_2'] = 'instituciones/institucion_bs4_v';
+            $data['nav_3'] = 'instituciones/grupos/submenu_grupos_v';
             $this->load->view(TPL_ADMIN_NEW, $data);
     }    
 

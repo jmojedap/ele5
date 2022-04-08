@@ -1,6 +1,16 @@
 <script>
     var nav_1_elements = [
             {
+                text: 'Inicio',
+                active: false,
+                style: '',
+                icon: 'fa fa-fw fa-home',
+                cf: 'flipbooks/inicio',
+                submenu: false,
+                subelements: [],
+                sections: []
+            },
+            {
                 text: 'Biblioteca',
                 active: false,
                 style: '',

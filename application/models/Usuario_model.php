@@ -469,12 +469,99 @@ class Usuario_model extends CI_Model{
         
         return $query;
     }
-    
 
-    
+// CRUD
+//-----------------------------------------------------------------------------
+
+    /**
+     * Crear un usuario
+     * 2022-03-29
+     */
+    function create($arr_row)
+    {
+        $dpw = $this->App_model->valor_opcion(10);  //Default PassWord, Contraseña por defecto
+
+        $arr_row['password'] = $this->encriptar_pw($dpw);
+        $arr_row['creado'] = date('Y-m-d H:i:s');
+        $arr_row['editado'] = date('Y-m-d H:i:s');
+        $arr_row['editado_usuario_id'] = $this->session->userdata('user_id');
+        $arr_row['creado_usuario_id'] = $this->session->userdata('user_id');
+        
+        $data['saved_id'] = $this->Db_model->save_id('usuario', $arr_row);
+
+        // Si es estudiante
+        if ( $data['saved_id'] > 0 && $arr_row['rol_id'] == 6) {
+            //Insertar usuario en la tabla 'usuario_grupo'
+            $arr_row_ug['grupo_id'] = $arr_row['grupo_id'];   //Para tabla usuario_grupo
+            $arr_row_ug['usuario_id'] = $data['saved_id'];
+
+            $this->load->model('Grupo_model');
+            $this->Grupo_model->insertar_ug($arr_row_ug);
+        }
+
+        return $data;
+    }
     
 //GROCERY CRUD PARA USUARIOS
 //---------------------------------------------------------------------------------------------------
+
+    /**
+     * Valida datos de un user nuevo o existente, verificando validez respecto
+     * a users ya existentes en la base de datos.
+     * 2022-03-30
+     */
+    function validate($user_id = NULL)
+    {
+        $data = array('status' => 1, 'error' => '');
+        $this->load->model('Validation_model');
+        
+        $username_validation = $this->Validation_model->username($user_id);
+        $email_validation = $this->Validation_model->email($user_id);
+        $document_number_validation = $this->Validation_model->document_number($user_id);
+        $lower_role_validation = $this->Validation_model->lower_role($this->session->userdata('rol_id'));
+
+        $validation = array_merge(
+            $username_validation,
+            $email_validation,
+            $document_number_validation,
+            $lower_role_validation
+        );
+
+        $data['validation'] = $validation;
+
+        if ( $email_validation['email_unique'] == 0 ) $data['error'] = "El e-mail escrito ya está registrado";
+        if ( $username_validation['username_unique'] == 0 ) $data['error'] = "El username escrito lo ha tomado otro usuario";
+        if ( $document_number_validation['document_number_unique'] == 0 ) $data['error'] = "El número de documento ya está registrado";
+        if ( $lower_role_validation['lower_role'] == 0 ) $data['error'] = "El rol de usuario a asignar no es válido";
+
+        //Si hay al menos un error, no se valida
+        if ( strlen($data['error']) > 0 ) $data['status'] = 0;
+
+        return $data;
+    }
+
+    /**
+     * Actualizar datos de usuario
+     * 2022-03-28
+     * 
+     */
+    function update($usuario_id)
+    {
+        $data = array('saved_id' => 0, 'message' => 'Actualización no realizada');
+
+        $arr_row = $this->input->post();
+        unset($arr_row['rol_id']);
+        unset($arr_row['password']);
+
+        $data['saved_id'] = $this->Db_model->save('usuario', "id = {$usuario_id}", $arr_row);
+    
+        if ( $data['saved_id'] > 0 )
+        {
+            $data['message'] = 'Datos actualizados de usuario';
+        }
+    
+        return $data;
+    }
     
     /**
      * Gestión de los usuarios internos de ELE
@@ -1174,39 +1261,49 @@ class Usuario_model extends CI_Model{
 
     /**
      * Eliminar usuario
-     * 2021-04-07
+     * 2022-03-29
      */
     function eliminar($usuario_id)
     {
-        //tabla usuario
-            $this->db->where('id', $usuario_id)->delete('usuario');
-            $qty_deleted = $this->db->affected_rows();
-        
-        //Tablas relacionadas
-            $tablas = array(
-                'mensaje',
-                'mensaje_usuario',
-                'pagina_flipbook_detalle',
-                'usuario_asignacion',
-                'usuario_cuestionario',
-                'usuario_flipbook',
-                'usuario_grupo',
-                'usuario_pregunta'
-            );
-            
-            foreach ( $tablas as $tabla ) 
-            {
-                $this->db->where('usuario_id', $usuario_id);
-                $this->db->delete($tabla);
-            }
+        $qty_deleted = 0;
 
+        if ( $this->session->userdata('role') <= 1 && $this->session->userdata('user_id') > 0 ) {
+            //tabla usuario
+                $this->db->where('id', $usuario_id);
+                $this->db->where('rol_id >= 3');
+                $this->db->delete('usuario');
+                $qty_deleted = $this->db->affected_rows();
+            
+            //Tablas relacionadas
+            /*if ($qty_deleted > 0) {
+                $tablas = array(
+                    'mensaje',
+                    'mensaje_usuario',
+                    'pagina_flipbook_detalle',
+                    'usuario_asignacion',
+                    'usuario_cuestionario',
+                    'usuario_flipbook',
+                    'usuario_grupo',
+                    'usuario_pregunta'
+                );
+                
+                foreach ( $tablas as $tabla ) 
+                {
+                    $this->db->where('usuario_id', $usuario_id);
+                    $this->db->delete($tabla);
+                }
+            }*/
+
+        }
+        
         return $qty_deleted;
     }
 
     function datos_usuario($usuario_id)
     {
         //Devuelve un objeto row con los datos del usuario
-        $this->db->select('id, username, email, nombre, apellidos, rol_id, institucion_id, grupo_id, iniciado');
+        $this->db->select('id, username, email, nombre, apellidos, rol_id, 
+            institucion_id, grupo_id, iniciado, no_documento, tipo_documento_id, sexo, notas');
         $this->db->where('id', $usuario_id);
         $query = $this->db->get('usuario', 1);
         
@@ -1237,8 +1334,6 @@ class Usuario_model extends CI_Model{
     
 //REGISTRO Y ACTIVACIÓN
 //---------------------------------------------------------------------------------------------------
-    
-    
 
     function guardar($registro)
     {
@@ -1908,7 +2003,10 @@ class Usuario_model extends CI_Model{
         return $anio_usuario;
     }
     
-    function insertar_usuario($username, $email, $password)
+    /**
+     * DESACTIVADA 2022-03-31
+     */
+    function z_insertar_usuario($username, $email, $password)
     {
         $data = array(
             'username'  => $username,
@@ -1919,21 +2017,34 @@ class Usuario_model extends CI_Model{
         return $this->db->insert_id();
     }
     
-    function actualizar($usuario_id, $data)
+    /**
+     * DESCTIVADA 2022-03-31
+     */
+    function z_actualizar($usuario_id, $data)
     {
         $this->db->where('id', $usuario_id);
         $this->db->update('usuario', $data);
     }
+
+    /**
+     * Asignar a un estudiante a un grupo
+     * 2022-03-31
+     */
+    function set_grupo($usuario_id, $grupo_id)
+    {
+        $arr_row['usuario_id'] = $usuario_id;
+        $arr_row['grupo_id'] = $grupo_id;
+
+        $ug_id = $this->Db_model->save('usuario_grupo', "usuario_id = {$usuario_id}", $arr_row);
+
+        return $ug_id;
+    }
     
     /**
      * Cambiar un estudiante de un grupo a otro
-     * 2017-01-02
-     * 
-     * @param type $usuario_id
-     * @param type $grupo_id
-     * @param type $grupo_destino_id
+     * DESACTIVADA 2022-03-31
      */
-    function cambiar_grupo($usuario_id, $grupo_id, $grupo_destino_id)
+    /*function z_cambiar_grupo($usuario_id, $grupo_id, $grupo_destino_id)
     {
         //Eliminar del grupo original
             $this->db->where('usuario_id', $usuario_id);
@@ -1948,7 +2059,7 @@ class Usuario_model extends CI_Model{
             
         //Actualiar grupo actual
             $this->act_grupo_actual($usuario_id);
-    }
+    }*/
     
     /**
      * Actualizar a un estudiante el grupo actual. Campo: usuario.grupo_id

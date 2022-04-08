@@ -16,6 +16,7 @@ class Institucion_model extends CI_Model{
         $basico['grupos'] = $this->Institucion_model->grupos($institucion_id);
         $basico['row'] = $row;
         $basico['titulo_pagina'] = $row->nombre_institucion;
+        $basico['head_title'] = $row->nombre_institucion;
         //$basico['titulo_pagina'] = $institucion_id;
         $basico['vista_a'] = 'instituciones/institucion_v';
         
@@ -726,7 +727,7 @@ class Institucion_model extends CI_Model{
     function eliminar($institucion_id)
     {
         //Verificar que es administrador
-        if ( $this->session->userdata('rol_id') <= 1 )
+        /*if ( $this->session->userdata('rol_id') <= 1 )
         {
             //Tabla institucion
                 $this->db->where('id', $institucion_id);
@@ -738,7 +739,7 @@ class Institucion_model extends CI_Model{
                     $this->db->where('institucion_id', $institucion_id);
                     $this->db->delete($tabla);
                 }
-        }
+        }*/
     }
     
     function actualizar($institucion_id, $data){

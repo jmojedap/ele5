@@ -500,6 +500,11 @@ class Cuestionarios extends CI_Controller{
 // ASIGNACIÓN DE CUESTIONARIOS
 //-----------------------------------------------------------------------------
 
+    /**
+     * Formulario para asignar el cuestionario a un conjunto de estudiantes
+     * de un grupo.
+     * 2022-02-04
+     */
     function asignar($cuestionario_id, $grupo_id = 0, $institucion_id = 0)
     {
         $this->load->model('Grupo_model');
@@ -519,7 +524,8 @@ class Cuestionarios extends CI_Controller{
         //Variables
             $data['institucion_id'] = $institucion_id;
             $data['grupo_id'] = $grupo_id;
-            $data['estudiantes'] = $this->Grupo_model->estudiantes($grupo_id, 'usuario.estado >= 1');
+            //$data['estudiantes'] = $this->Grupo_model->estudiantes($grupo_id, 'usuario.estado >= 1');
+            $data['estudiantes'] = $this->Grupo_model->estudiantes($grupo_id, 'nombre NOT LIKE "*" AND apellidos NOT LIKE "*"');
             $data['destino_form'] = "cuestionarios/crear_asignacion/{$cuestionario_id}";
         
         //Solicitar vista

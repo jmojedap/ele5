@@ -62,7 +62,7 @@
         methods: {
             get_list: function(){
                 $('.table-responsive').hide()
-                axios.post(app_url + this.controller + '/get/' + this.num_page, $('#search_form').serialize())
+                axios.post(url_app + this.controller + '/get/' + this.num_page, $('#search_form').serialize())
                 .then(response => {
                     this.list = response.data.list;
                     this.max_page = response.data.max_page;
@@ -70,7 +70,7 @@
                     this.str_filters = response.data.str_filters;
                     this.filters = response.data.filters;
                     $('#head_subtitle').html(response.data.search_num_rows);
-                    history.pushState(null, null, app_url + this.cf + this.num_page +'/?' + response.data.str_filters);
+                    history.pushState(null, null, url_app + this.cf + this.num_page +'/?' + response.data.str_filters);
                     this.all_selected = false;
                     this.selected = [];
                     $('.table-responsive').show()
@@ -95,7 +95,7 @@
                 var params = new FormData();
                 params.append('selected', this.selected);
                 
-                axios.post(app_url + this.controller + '/delete_selected', params)
+                axios.post(url_app + this.controller + '/delete_selected', params)
                 .then(response => {
                     this.hide_deleted();
                     this.selected = [];

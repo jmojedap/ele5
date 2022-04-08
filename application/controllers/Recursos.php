@@ -319,43 +319,46 @@ class Recursos extends CI_Controller{
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
-    
+
     /**
-     * Exporta el resultado de la búsqueda a un archivo de Excel
+     * Exportar resultados de búsqueda de links
+     * 2021-09-27
      */
-    function links_exportar()
+    function links_export()
     {
         set_time_limit(120);    //120 segundos, 2 minutos para el proceso
-        //Cargando
-            $this->load->model('Busqueda_model');
-            $this->load->model('Pcrn_excel');
-        
-        //Datos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
-            $resultados_total = $this->Recurso_model->links($busqueda); //Para calcular el total de resultados
-        
-            if ( $resultados_total->num_rows() <= 10000 )
-            {
-                //Preparar datos
-                    $datos['nombre_hoja'] = 'Links';
-                    $datos['query'] = $resultados_total;
 
-                //Preparar archivo
-                    $objWriter = $this->Pcrn_excel->archivo_query($datos);
+        //Identificar filtros y búsqueda
+        $this->load->model('Search_model');
+        $filters = $this->Search_model->filters();
+        $str_filters = $this->Search_model->str_filters();
 
-                $data['objWriter'] = $objWriter;
-                $data['nombre_archivo'] = date('Ymd_His'). '_links'; //save our workbook as this file name
+        $data['query'] = $this->Recurso_model->links($filters);
 
-                $this->load->view('app/descargar_phpexcel_v', $data);
-            } else {
-                $data['titulo_pagina'] = 'Plataforma Enlace';
-                $data['mensaje'] = "El número de registros es de {$resultados_total->num_rows()}. El máximo permitido es de " . MAX_REG_EXPORT . " registros. Puede filtrar los datos por algún criterio para poder exportarlos.";
-                $data['link_volver'] = "recursos/links/?{$busqueda_str}";
-                $data['vista_a'] = 'app/mensaje_v';
-                
-                $this->load->view(PTL_ADMIN, $data);
-            }
+        if ( $data['query']->num_rows() <= MAX_REG_EXPORT ) {
+            //Preparar datos
+                $data['sheet_name'] = 'links';
+
+            //Objeto para generar archivo excel
+                $this->load->library('Excel_new');
+                $file_data['obj_writer'] = $this->excel_new->file_query($data);
+
+            //Nombre de archivo
+                $file_data['file_name'] = date('Ymd_His') . '_' . $data['sheet_name'];
+
+            $this->load->view('common/download_excel_file_v', $file_data);
+            //Salida JSON
+            //$this->output->set_content_type('application/json')->set_output(json_encode($file_data['obj_writer']));
+        } else {
+            $data['head_title'] = APP_NAME;
+            $data['mensaje'] = "El número de registros es de {$data['query']->num_rows()}. 
+                El máximo permitido es de " . MAX_REG_EXPORT . " registros.
+                Puede filtrar los datos por algún criterio para poder exportarlos.";
+            $data['link_volver'] = "recursos/links/?{$str_filters}";
+            $data['view_a'] = 'app/mensaje_v';
+            
+            $this->load->view(TPL_ADMIN_NEW, $data);
+        }
     }
 
     /**

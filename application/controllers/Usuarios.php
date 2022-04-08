@@ -177,86 +177,177 @@ class Usuarios extends CI_Controller{
 // CRUD
 //-----------------------------------------------------------------------------
     
-    function nuevo()
+    /**
+     * Formulario creación de nuevo usuario
+     * 2022-03-30
+     */
+    function nuevo($type = 'estudiante')
     {
+        $data['head_title'] = 'Crear usuario';
+        $data['view_a'] = "usuarios/nuevo/{$type}/nuevo_v";
+        $data['nav_2'] = 'usuarios/explore/menu_v';
+        $data['nav_3'] = 'usuarios/nuevo/menu_v';
+
+        $data['options_document_type'] = $this->Item_model->options('categoria_id = 53', 'Tipo documento');
+        $data['options_sexo'] = $this->Item_model->options('categoria_id = 59');
+
+        //Opciones rol de usuario
+        $role_condition = "categoria_id = 58 AND id_interno > 1";
+        if ( $type == 'institucional' ) {
+            $role_condition .= ' AND item_grupo = 2';
+        } elseif ( $type == 'interno' ) {
+            $role_condition .= ' AND item_grupo = 1';
+        }
+        $data['options_rol'] = $this->Item_model->options($role_condition);
         
-        $tipo = $this->uri->segment(3);
-        
-        //Render del grocery crud
-            if ( $tipo == 'estudiante' ) {
-                $output = $this->Usuario_model->crud_estudiantes();
-            } elseif ( $tipo == 'institucional' ) {
-                $output = $this->Usuario_model->crud_institucionales();
-            } elseif ( $tipo == 'interno' ) {
-                $output = $this->Usuario_model->crud_internos();
-            }
-            
-        //Array data espefícicas
-            $data['tipo'] = $tipo;
-            $data['head_title'] = 'Usuarios';
-            $data['head_subtitle'] = 'Nuevo';
-            $data['view_a'] = 'usuarios/nuevo_v';
-            $data['view_b'] = 'comunes/gc_v';
-            $data['nav_2'] = 'usuarios/explore/menu_v';
-        
-        $output = array_merge($data,(array)$output);
-        
-        $this->App_model->view(TPL_ADMIN_NEW, $output);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
-    
-    function editar()
+
+    /**
+     * AJAX JSON
+     * Crear usuario, recibe datos desde el formulario en usuarios/nuevo
+     * 2022-03-29
+     */
+    function create($type = 'estudiante')
     {
-        //Cargando datos básicos
-            $usuario_id = $this->uri->segment(4);
-            $data = $this->Usuario_model->basico($usuario_id);
-            
-        //Render del grocery crud
-            $row = $data['row'];
-            //Render del grocery crud
-            if ( $row->rol_id == 6 ) {
-                $gc_output = $this->Usuario_model->crud_estudiantes();
-            } elseif ( in_array($row->rol_id, array(3,4,5)) ) {
-                $gc_output = $this->Usuario_model->crud_institucionales();
-            } else  {
-                $gc_output = $this->Usuario_model->crud_internos();
+        $validation = $this->Usuario_model->validate();
+
+        if ( $validation['status'] == 1 ) {
+            $arr_row = $this->input->post();
+            $arr_row['rol_id'] = 6; //Estudiante
+            if ( $type == 'institucional' ) {
+                $arr_row['rol_id'] = $this->input->post('rol_id');
+            }
+
+            //Que no solicite crear administrador
+            if ( $arr_row['rol_id'] > 1 ) {
+                $data = $this->Usuario_model->create($arr_row);            
+            } else {
+                $data = array('saved_id' => 0, 'status' => 0, 'message' => 'Rol de usuario no permitido');
             }
             
-        //Definir vista según permiso de edición
-            $vista_b = 'comunes/gc_v';
-            if ( ! $data['editable'] ) { $vista_b = 'app/no_permitido_v'; }
             
-        //Solicitar vista
-            $data['head_subtitle'] = 'Editar';
-            $data['view_a'] = $vista_b;
-            $output = array_merge($data,(array)$gc_output);
-            $this->load->view(TPL_ADMIN_NEW, $output);
+        } else {
+            $data = $validation;
+        }
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * Formulario de edición de datos de usuario
+     * 2022-03-28
+     */
+    function editar($usuario_id)
+    {
+        $data = $this->Usuario_model->basico($usuario_id);
+        $data['view_a'] = 'usuarios/editar/editar_v';
+
+        $data['options_document_type'] = $this->Item_model->options('categoria_id = 53', 'Tipo documento');
+        $data['options_sexo'] = $this->Item_model->options('categoria_id = 59', 'Sexo');
+
+        if ( $data['row']->rol_id == 6 ) {
+            //Opciones de grupo
+            $usuario = $data['row'];
+            $grupo = $this->Db_model->row_id('grupo', $usuario->grupo_id);
+            $condicion_grupos = "institucion_id = {$grupo->institucion_id}";
+            
+            $data['options_grupo'] = $this->App_model->opciones_grupo($condicion_grupos);
+            $data['view_a'] = 'usuarios/editar/estudiante_v';
+        }
+
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
+    }
+
+    /**
+     * AJAX JSON
+     * Se validan los datos de un user add o existente ($user_id), los datos deben cumplir varios criterios
+     * 2021-02-02
+     */
+    function validate($user_id = NULL)
+    {
+        $data = $this->Usuario_model->validate($user_id);
+        
+        //Enviar resultado de validación
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * Actualizar datos de usuario
+     * 2022-03-28
+     */
+    function update($usuario_id)
+    {
+        $data = array('status' => 0, 'message' => 'Proceso no permitido');
+
+        $updatable = true;
+        $user = $this->Db_model->row_id('usuario', $usuario_id);
+
+        //Institucional
+        if ( in_array($this->session->userdata('role'), array(3,4,5,6)) ) {
+            if ( $user->id != $this->session->userdata('user_id') ) {
+                $data['message'] = 'No se puede actualizar a otro usuario';
+                $updatable = false;
+            }
+        }
+
+        //Coherencia ID
+        if ( $usuario_id != $this->input->post('id') ) {
+            $updatable = false;
+            $data['message'] = 'ID do not match';
+        }
+
+        //Actualizar
+        if ( $updatable ) {
+            $data = $this->Usuario_model->update($user->id);  
+        }
+
+        // Asignar a grupo en tabla usuario_grupo
+        if ( $data['saved_id'] > 0 ) {
+            $grupo_id = $this->input->post('grupo_id');
+            $this->Usuario_model->set_grupo($usuario_id, $grupo_id);
+        }
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**
      * Vista para editar datos personales del usuario en sesión.
+     * 2022-04-08
      */
     function editarme()
     {
-        //Cargando datos básicos
-            $usuario_id = $this->uri->segment(4);
-            $data = $this->Usuario_model->basico($usuario_id);
-            
-        //Render del grocery crud
-            $gc_output = $this->Usuario_model->crud_editarme();
-            
-        //Definir vista según permiso de edición
-            $vista_b = 'comunes/gc_v';
-            if ( $data['editable'] ) 
-            {
-                //Solicitar vista
-                    $data['head_subtitle'] = 'Editar mi perfil';
-                    $data['view_a'] = $vista_b;
-                    $output = array_merge($data,(array)$gc_output);
-                    $this->load->view(TPL_ADMIN_NEW, $output);
-            } else {
-                //No se puede editar, se redirige
-                redirect("usuarios/contrasena/");
+        $usuario_id = $this->session->userdata('user_id');
+        $data = $this->Usuario_model->basico($usuario_id);
+
+        if ( $data['row']->iniciado == 0 ) {
+            $data['options_document_type'] = $this->Item_model->options('categoria_id = 53', 'Tipo documento');
+            $data['options_sexo'] = $this->Item_model->options('categoria_id = 59', 'Sexo');
+    
+            //Opciones de grupo
+            $usuario = $data['row'];
+            $institucion_id = 0;
+            $nivel = -20;
+            if ( $usuario->grupo_id > 0 ) {
+                $grupo = $this->Db_model->row_id('grupo', $usuario->grupo_id);
+                if ( ! is_null($grupo) ) {
+                    $institucion_id = $grupo->institucion_id;
+                    $nivel = $grupo->nivel;
+                }
             }
+            
+            $condicion_grupos = "institucion_id = {$institucion_id} AND nivel = {$nivel}";
+            
+            $data['options_grupo'] = $this->App_model->opciones_grupo($condicion_grupos);
+            
+            $data['view_a'] = 'usuarios/editar/editarme_v';
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
+        } else {
+            redirect('app/index');
+        }
+
     }
     
     function eliminar($usuario_id)
@@ -276,7 +367,7 @@ class Usuarios extends CI_Controller{
     /**
      * Mostrar formulario de importación de estudiantes con archivo MS Excel.
      * El resultado del formulario se envía a 'usuarios/importar_estudiantes_e'
-     * 
+     * 2022-03-27 ataqueMinero
      */
     function importar_estudiantes()
     {
@@ -312,7 +403,7 @@ class Usuarios extends CI_Controller{
     
     /**
      * Importar estudiantes, (e) ejecutar.
-     * 2021-01-19
+     * 2022-03-27 ataqueMinero
      */
     function importar_estudiantes_e()
     {
@@ -326,6 +417,7 @@ class Usuarios extends CI_Controller{
             if ( $resultado['valido'] )
             {
                 $this->load->model('Institucion_model');
+                // REACTIVADO **
                 $res_importacion = $this->Usuario_model->importar_estudiantes($resultado['array_hoja']);
             }
         
@@ -529,18 +621,26 @@ class Usuarios extends CI_Controller{
 //---------------------------------------------------------------------------------------------------
     
     // Cambio de contraseña de cada usuario, el que ha iniciado sesión
+    // 2022-03-27
     function contrasena()
     {
         $data = $this->Usuario_model->basico($this->session->userdata('usuario_id'));
+
+        $user = $this->Db_model->row_id('usuario', $this->session->userdata('usuario_id'));
+
+        if ( $user->rol_id <= 2 ) {
+            redirect('usuarios/nuevo');
+        } else {
+            //Variables
+                $data['usuario_id_cambio'] = $this->session->userdata('usuario_id');
+                $data['destino_form'] = 'usuarios/contrasena_e';
+            
+            //Solicitar vista
+                $data['head_subtitle'] = 'Cambio de contraseña';
+                $data['view_a'] = 'usuarios/contrasena_v';
+                $this->load->view(TPL_ADMIN_NEW, $data);
+        }
         
-        //Variables
-            $data['usuario_id_cambio'] = $this->session->userdata('usuario_id');
-            $data['destino_form'] = 'usuarios/contrasena_e';
-        
-        //Solicitar vista
-            $data['head_subtitle'] = 'Cambio de contraseña';
-            $data['view_a'] = 'usuarios/contrasena_v';
-            $this->load->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -855,7 +955,7 @@ class Usuarios extends CI_Controller{
         //Solicitar vista
             $data['head_title'] = 'Cambio de contraseña';
             $data['view_a'] = 'usuarios/cambio_dpw_v';
-            $this->load->view('templates/apanel3/start_v', $data);
+            $this->load->view('templates/monster/start_v', $data);
     }
     
     /**
@@ -1752,6 +1852,40 @@ class Usuarios extends CI_Controller{
         $users = $this->db->get('usuario', 10);
 
         $data['users'] = $users->result();
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * Función creada para recuperar datos de usuario_grupo, a partir de 
+     * tabla usuario
+     * 2022-03-27 ataqueMinero
+     */
+    function insert_usuario_grupo()
+    {
+        $this->db->select('*');
+        $this->db->where('rol_id', 6);
+        $this->db->where('grupo_id IS NOT NULL');
+        $this->db->where('id NOT IN (SELECT usuario_id FROM usuario_grupo)');
+        $usuarios = $this->db->get('usuario');
+
+        $inserted = array();
+
+        foreach($usuarios->result() as $usuario) {
+            $arr_row['usuario_id'] = $usuario->id;
+            $arr_row['grupo_id'] = $usuario->grupo_id;
+
+            $this->db->insert('usuario_grupo', $arr_row);
+
+            $ug_id = $this->db->insert_id();
+
+            $inserted[$ug_id] = $arr_row;
+            
+        }
+
+        $data['inserted'] = $inserted;
+        $data['qty_inserted'] = count($inserted);
 
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));

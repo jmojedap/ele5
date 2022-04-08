@@ -75,7 +75,7 @@
     function delete_archivo_imagen(){
         $.ajax({        
             type: 'POST',
-            url: app_url + 'preguntas/delete_archivo_imagen/' + pregunta_id,
+            url: url_app + 'preguntas/delete_archivo_imagen/' + pregunta_id,
             success: function(response){
                 if ( response.status == 1 ){
                     $('#archivo_imagen').addClass('d-none');

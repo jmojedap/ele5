@@ -33,6 +33,7 @@
         //Opciones
             $opciones_tipo_ap = $this->Item_model->opciones('categoria_id = 153');
             $opciones_area = $this->Item_model->opciones_id('categoria_id = 1');
+            $opciones_nivel = $this->App_model->opciones_nivel('item');
 
 
         $att_submit = array(
@@ -68,16 +69,16 @@
     //Ajax
     function ap_crud()
     {
-        $.ajax({
-            type: 'POST',
-            url: base_url + controlador + '/ap_crud/insertar',
+     $.ajax({
+       type: 'POST',
+           url: base_url + controlador + '/ap_crud/insertar',
             data: $('#formulario').serialize(),
             success: function(resultado){
                 if ( resultado.nuevo_id > 0){
                     window.location = base_url + 'posts/ap_editar/' + resultado.nuevo_id;
                 }
             }
-        });
+     });
     }
 </script>
 
@@ -110,6 +111,19 @@
                 </div>
             </div>
         
+            <div class="form-group row">
+                <label for="referente_2_id" class="col-sm-4 col-form-label text-right">Niveles</label>
+                <div class="col-sm-8">
+                    <input
+                        name="texto_2" type="text" class="form-control"
+                        required
+                        title="Niveles"
+                        v-model="form_values.texto_2"
+                    >
+                    <small id="emailHelp" class="form-text text-muted">Códigos de nivel o grado, separadas por coma. Ej. 1,2,3.</small>
+                </div>
+            </div>
+
             <div class="form-group row">
                 <label for="referente_2_id" class="col-sm-4 col-form-label text-right">Área *</label>
                 <div class="col-sm-8">

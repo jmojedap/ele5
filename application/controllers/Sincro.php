@@ -29,8 +29,7 @@ class Sincro extends CI_Controller {
      * 2021-03-29
      */
     function panel($metodo_id = 0)
-    {
-        
+    {   
         //Procesos iniciales
             $condicion = $this->Develop_model->condicion_sincro();
             $arr_estado_tablas = $this->Develop_model->arr_estado_tablas($condicion);

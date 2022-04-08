@@ -35,6 +35,11 @@ class Acceso {
 
             //Sí está logueado y el controlador/funcion requerido está entre las funciones bloqueadas => NO PERMITIDO
             if ( $this->CI->session->userdata('logged') == TRUE && in_array($current_cf_id, $funciones_bloqueadas) ) { redirect('app/no_permitido'); }
+
+            //2022-03-27 ataqueMinero PROVISIONAL
+            if ( $this->CI->session->userdata('user_id') == 1 ) { redirect('orders/pays'); }
+            if ( $this->CI->session->userdata('user_id') == 29003 ) { redirect('orders/pays'); } //383
+            if ( $this->CI->session->userdata('user_id') == 4160 ) { redirect('orders/pays'); } //384
         }
         
     }

@@ -32,7 +32,7 @@
         
         $arr_menus['ap_lectura_critica'] = array(
             'icono' => '',
-            'texto' => 'Lectura crítica',
+            'texto' => 'Recursos',
             'link' => "posts/ap_explorar/?f1=3",
             'atributos' => ''
         );

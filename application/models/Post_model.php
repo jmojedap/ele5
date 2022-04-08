@@ -549,6 +549,10 @@ class Post_Model extends CI_Model{
             if ( $busqueda['f1'] != '' ) { $this->db->where('referente_1_id', $busqueda['f1']); }       //Filtro 1
             if ( $busqueda['f2'] != '' ) { $this->db->where('referente_2_id', $busqueda['f2']); }       //Filtro 2
             if ( $busqueda['f3'] != '' ) { $this->db->where('referente_3_id', $busqueda['f3']); }       //Filtro 3
+            if ( $busqueda['n'] != '' ) { 
+                $nivel_formato = strval(intval($busqueda['n']));
+                $this->db->where("texto_2 LIKE '%{$nivel_formato}%'");
+             }       //Niveles
             if ( $busqueda['condicion'] != '' ) { $this->db->where($busqueda['condicion']); }           //Condición especial
             
         //Obtener resultados

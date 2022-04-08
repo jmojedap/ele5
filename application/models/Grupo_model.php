@@ -47,7 +47,7 @@ class Grupo_model extends CI_Model{
     function get($filters, $num_page)
     {
         //Referencia
-            $per_page = 12;                             //Cantidad de registros por página
+            $per_page = 50;                             //Cantidad de registros por página
             $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
 
         //Búsqueda y Resultados
