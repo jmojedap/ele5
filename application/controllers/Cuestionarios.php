@@ -1347,11 +1347,7 @@ class Cuestionarios extends CI_Controller{
     
     /**
      * Editor de las preguntas que componen un cuestionario
-     * 
-     * Basado en la herramienta de relaciones n-n de grocery crud
-     * 
-     * @param type $proceso
-     * @param type $cuestionario_id 
+     * 2022-05-24
      */
     function preguntas($cuestionario_id)
     {   

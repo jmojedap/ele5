@@ -40,7 +40,7 @@
         $arr_menus['asignar'] = array(
             'icono' => '',
             'texto' => 'Asignar',
-            'link' => "cuestionarios/asignar/{$row->id}",
+            'link' => "cuestionarios/asignar/{$row->id}/1",
             'atributos' => 'title="Asignar cuestionario a estudiantes"'
         );
         

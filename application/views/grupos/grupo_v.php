@@ -8,7 +8,7 @@
     <span class="text-muted"> &middot; </span>
 
     <span class="text-muted">Estudiantes:</span>
-    <span class="resaltar"> <?= $row->num_estudiantes ?></span>
+    <span class="resaltar"> <?= $cant_estudiantes ?></span>
     
     <a href="<?= base_url("mensajes/nuevo_grupal/{$row->id}") ?>" class="btn btn-info btn-sm ml-3">
         <i class="far fa-comment"></i>

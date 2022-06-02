@@ -1365,7 +1365,7 @@ class Tema_Model extends CI_Model{
     }
 
     /**
-     * Guardar link asociado a un tema en la tabla recurso
+     * Asignar pregunta abierta
      * 2019-09-03
      */
     function save_pa($tema_id, $pa_id)

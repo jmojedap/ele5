@@ -2,14 +2,16 @@
 
 
 <div id="preguntas">
-    <a href="<?php echo base_url("cuestionarios/pregunta_nueva/{$cuestionario_id}/0") ?>" class="btn btn-light mb-2" title="Agregar pregunta al inicio del cuestionario">
-        <i class="fa fa-plus"></i>
-        Pregunta al inicio
-    </a>
-    <a v-bind:href="`<?php echo base_url("cuestionarios/pregunta_nueva/{$cuestionario_id}/") ?>` + lista.length" class="btn btn-light mb-2" title="Agregar pregunta al inicio del cuestionario">
-        <i class="fa fa-plus"></i>
-        Pregunta al final
-    </a>
+    <?php if ( $row->tipo_id > 3 or $this->session->userdata('role') < 3   ) : ?>
+        <a href="<?= base_url("cuestionarios/pregunta_nueva/{$cuestionario_id}/0") ?>" class="btn btn-light mb-2" title="Agregar pregunta al inicio del cuestionario">
+            <i class="fa fa-plus"></i>
+            Pregunta al inicio
+        </a>
+        <a v-bind:href="`<?= base_url("cuestionarios/pregunta_nueva/{$cuestionario_id}/") ?>` + lista.length" class="btn btn-light mb-2" title="Agregar pregunta al inicio del cuestionario">
+            <i class="fa fa-plus"></i>
+            Pregunta al final
+        </a>
+    <?php endif; ?>
     <div class="row mb-1" v-for="(pregunta, key) in lista">
         <div class="col-md-8">
             <div class="card">
@@ -40,7 +42,7 @@
                     </ul>
 
                     <a v-bind:href="pregunta.url_imagen_pregunta" data-lightbox="image-1" data-title="Imagen asociada" v-if="pregunta.archivo_imagen" class="btn btn-lg btn-light">
-                        <img src="<?php echo URL_IMG ?>flipbook/diapositivas.png" alt="Imagen asociada a la pregunta">
+                        <img src="<?= URL_IMG ?>flipbook/diapositivas.png" alt="Imagen asociada a la pregunta">
                         Imagen asociada
                     </a>
                 </div>
@@ -49,7 +51,7 @@
         <div class="col-md-4">
             <div>
                 <?php if ( $this->session->userdata('rol_id') <= 2 ) { ?>
-                    <a class="btn btn-light" v-bind:href="`<?php echo base_url('preguntas/editar/') ?>` + pregunta.pregunta_id" target="_blank">
+                    <a class="btn btn-light" v-bind:href="`<?= base_url('preguntas/editar/') ?>` + pregunta.pregunta_id" target="_blank">
                         <i class="fa fa-pencil-alt"></i>
                     </a>
                 <?php } ?>
@@ -60,22 +62,22 @@
                     </button>
                 <?php } ?>
 
-                <a class="btn btn-primary" v-show="pregunta.version_id > 0" title="Ver versión alterna de la pregunta" v-bind:href="`<?php echo base_url('preguntas/version/') ?>` + pregunta.pregunta_id" target="_blank">
+                <a class="btn btn-primary" v-show="pregunta.version_id > 0" title="Ver versión alterna de la pregunta" v-bind:href="`<?= base_url('preguntas/version/') ?>` + pregunta.pregunta_id" target="_blank">
                     Versión
                 </a>
                 <button class="btn btn-warning" v-show="pregunta.version_id > 0" title="Eliminar versión propuesta de esta pregunta" data-toggle="modal" data-target="#delete_version_modal" v-on:click="set_current(key)">
                     <i class="fa fa-trash"></i> Versión
                 </button>
 
-                <?php if ( $editable ) { ?>
+                <?php if ( $editable && $row->tipo_id == 4 ) { ?>
                     <a class="btn btn-light"
-                        v-bind:href="`<?php echo base_url('preguntas/editar/') ?>` + pregunta.pregunta_id"
+                        v-bind:href="`<?= base_url('preguntas/editar/') ?>` + pregunta.pregunta_id"
                         target="_blank"
-                        v-show="pregunta.creado_usuario_id == <?php echo $this->session->userdata('usuario_id') ?>"
+                        v-show="pregunta.creado_usuario_id == <?= $this->session->userdata('usuario_id') ?>"
                         >
                         <i class="fa fa-pencil-alt"></i>
                     </a>
-                    <a v-bind:href="`<?php echo base_url("cuestionarios/pregunta_nueva/{$row->id}/") ?>` + (key + 1)" class="btn btn-light" title="Agregar pregunta después de esta">
+                    <a v-bind:href="`<?= base_url("cuestionarios/pregunta_nueva/{$row->id}/") ?>` + (key + 1)" class="btn btn-light" title="Agregar pregunta después de esta">
                         <i class="fa fa-plus"></i>
                     </a>
                     <button class="btn btn-light" v-on:click="move_question(key, key - 1)">

@@ -470,8 +470,6 @@ class Cuestionario_model extends CI_Model
      * Devuelve TRUE o FAlSE, para determinar si se habilita la edición de un 
      * cuestionario o no.
      * 
-     * @param type $cuestionario_id
-     * @return boolean
      */
     function editable($cuestionario_id)
     {
@@ -479,13 +477,12 @@ class Cuestionario_model extends CI_Model
         
         $row_cuestionario = $this->Pcrn->registro_id('cuestionario', $cuestionario_id);
         
+        //Administrador o editos
         if ( $this->session->userdata('rol_id') <= 2 ){ $editable = TRUE; }
         
+        //El usuario actual creó el cuestionario
         if ( $row_cuestionario->creado_usuario_id == $this->session->userdata('usuario_id') )
-        {
-            //El usuario actual creó el cuestionario
-            $editable = TRUE;
-        }
+        { $editable = TRUE; }
         
         return $editable;
         

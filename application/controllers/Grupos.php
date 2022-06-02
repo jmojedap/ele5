@@ -243,7 +243,7 @@ class Grupos extends CI_Controller{
     
     /**
      * Anotaciones a temas hechas por estudiantes de un grupo_id, en un flipbook_id y tema_id
-     * 2020-09-08
+     * 2022-05-23 :: Preguntas asignadas al flipbook pa_asignadas
      */
     function anotaciones($grupo_id, $flipbook_id = NULL, $tema_id = 0)
     {        
@@ -252,6 +252,14 @@ class Grupos extends CI_Controller{
         $data = $this->Grupo_model->basico($grupo_id);
             
         $flipbooks = $this->Grupo_model->flipbooks($grupo_id);
+
+        //Identificar preguntas asignadas
+        $pa_asignadas = array();
+        foreach ($flipbooks->result() as $fb ) {
+            $row_fb = $this->Db_model->row_id('flipbook', $fb->flipbook_id);
+            $pa_asignadas_area = $this->Grupo_model->pa_asignadas($grupo_id, $row_fb->area_id);
+            $pa_asignadas[$fb->flipbook_id] = $pa_asignadas_area->result();
+        }
             
         //Identificando Flipbook
         if ( $flipbooks->num_rows() > 0 && is_null($flipbook_id) ) $flipbook_id = $flipbooks->row()->flipbook_id;
@@ -269,6 +277,7 @@ class Grupos extends CI_Controller{
             $data['temas'] = $temas;
             $data['tema_id'] = $tema_id;
             $data['anotaciones'] = $this->Flipbook_model->anotaciones_grupo($flipbook_id, $grupo_id, $tema_id);
+            $data['pa_asignadas'] = $pa_asignadas;
             $data['subseccion'] = 'anotaciones';
             $data['grupo_id'] = $grupo_id;
             $data['flipbooks'] = $flipbooks;

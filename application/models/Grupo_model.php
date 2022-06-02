@@ -13,6 +13,7 @@ class Grupo_model extends CI_Model{
         
         $data['row'] = $row;
         $data['head_title'] = 'Grupo ' . $row->nombre_grupo;
+        $data['cant_estudiantes'] = $this->Db_model->num_rows('usuario_grupo', "grupo_id = {$grupo_id}");
         $data['view_description'] = 'grupos/grupo_v';
         $data['nav_2'] = 'grupos/menu_v';
         
@@ -378,8 +379,10 @@ class Grupo_model extends CI_Model{
     function estudiantes($grupo_id, $condicion = NULL)
     {
         //Construyendo consulta
-            $this->db->select('usuario.id, usuario.id AS usuario_id, nombre, apellidos, username, usuario.estado, pago, usuario.grupo_id, usuario.institucion_id, COUNT(evento.id) AS qty_login');
-            //$this->db->select('id, id AS usuario_id, nombre, apellidos, username, estado, pago, grupo_id, institucion_id');
+            $this->db->select('usuario.id, usuario.id AS usuario_id, nombre, apellidos, 
+                username, usuario.estado, pago, usuario.grupo_id, usuario.institucion_id, 
+                COUNT(evento.id) AS qty_login'
+            );
             $this->db->where("usuario.id IN (SELECT usuario_id FROM usuario_grupo WHERE grupo_id = {$grupo_id})");
             $this->db->join('evento', 'evento.usuario_id = usuario.id AND evento.tipo_id = 101', 'left');
             $this->db->group_by('usuario.id');
@@ -654,12 +657,12 @@ class Grupo_model extends CI_Model{
         return $cuestionarios;
     }
     
-    /* Flipbooks a los que están asociados los estudiantes de un grupo */
+    /**
+     * Flipbooks a los que están asociados los estudiantes de un grupo
+     * 2022-05-23
+     */
     function flipbooks($grupo_id)
-    {
-
-        //Construyendo consulta
-        
+    {   
         $sql = "SELECT flipbook_id ";
         $sql .= "FROM usuario INNER JOIN usuario_flipbook ON usuario.id = usuario_flipbook.usuario_id ";
         $sql .= "GROUP BY flipbook_id, grupo_id ";

@@ -1270,7 +1270,7 @@ class Flipbook_model extends CI_Model {
             $select = 'pagina_flipbook_detalle.id, ';
             $select .= "CONCAT((usuario.nombre), ' ', (usuario.apellidos)) as nombre_estudiante, ";
             $select .= "pagina_flipbook_detalle.usuario_id, ";
-            $select .= "tema.nombre_tema, anotacion, ";
+            $select .= "tema.id AS tema_id, tema.nombre_tema, anotacion, ";
             $select .= 'pagina_flipbook_detalle.integer_1 AS calificacion, ';
             $select .= 'CEIL(pagina_flipbook_detalle.integer_1/20) AS estrellas, ';
             $select .= 'pagina_flipbook_detalle.editado, ';
