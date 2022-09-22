@@ -1046,23 +1046,23 @@ class Cuestionario_model extends CI_Model
      * evento
      * 2020-05-26 Se le agrega registro de área al evento
      */
-    function asignar($cuestionario_id)
+    function asignar($cuestionario_id, $grupo_id)
     {
         $row_cuestionario = $this->Db_model->row_id('cuestionario', $cuestionario_id);
 
-        $registro['fecha_inicio'] = $this->input->post('fecha_inicio');
-        $registro['hora_inicio'] = '00:00:00';
-        $registro['fecha_fin'] = $this->input->post('fecha_fin');
-        $registro['hora_fin'] = '23:59:59';
-        $registro['tipo_id'] = 22;  //Asignación de cuestionario a grupo
-        $registro['referente_id'] = $cuestionario_id;
-        $registro['grupo_id'] = $this->input->post('grupo_id');
-        $registro['area_id'] = $row_cuestionario->area_id;
-        $registro['institucion_id'] = $this->Pcrn->campo_id('grupo', $this->input->post('grupo_id'), 'institucion_id');
-        $registro['entero_1'] = $this->input->post('tiempo_minutos');
+        $aRow['fecha_inicio'] = $this->input->post('fecha_inicio');
+        $aRow['hora_inicio'] = '00:00:00';
+        $aRow['fecha_fin'] = $this->input->post('fecha_fin');
+        $aRow['hora_fin'] = '23:59:59';
+        $aRow['tipo_id'] = 22;  //Asignación de cuestionario a grupo
+        $aRow['referente_id'] = $cuestionario_id;
+        $aRow['grupo_id'] = $grupo_id;
+        $aRow['area_id'] = $row_cuestionario->area_id;
+        $aRow['institucion_id'] = $this->Db_model->field_id('grupo', $grupo_id, 'institucion_id');
+        $aRow['entero_1'] = $this->input->post('tiempo_minutos');
         
         $this->load->model('Evento_model');
-        $evento_id = $this->Evento_model->guardar_evento($registro, "grupo_id = {$registro['grupo_id']}");
+        $evento_id = $this->Evento_model->guardar_evento($aRow, "grupo_id = {$aRow['grupo_id']}");
         
         return $evento_id;
     }
@@ -1075,12 +1075,12 @@ class Cuestionario_model extends CI_Model
      * 
      * 2021-02-03
      */
-    function asignar_estudiantes($cg_id)
+    function asignar_estudiantes($cg_id, $str_estudiantes)
     {
+
         $row_asignacion = $this->Pcrn->registro_id('evento', $cg_id);
         
-        $resultado['insertados'] = '';
-        $resultado['institucion_id'] = $row_asignacion->institucion_id;
+        $assignments = [];
         
         //Creando registro
             //Variables comunes
@@ -1098,19 +1098,19 @@ class Cuestionario_model extends CI_Model
             $registro['estado'] = 1;    //Sin responder
         
         //Se carga la lista de estudiantes que pertenecen un grupo
-            $this->load->model('Grupo_model');
-            $estudiantes = $this->Grupo_model->estudiantes($row_asignacion->grupo_id, 'usuario.estado >= 1');  //Mod 2019-02-27, antes tenía restricción con el campo usuario.iniciado
+            $this->db->select('id');
+            $this->db->where("grupo_id = {$row_asignacion->grupo_id}");
+            $this->db->where('estado >= 1');
+            $this->db->where("id IN ({$str_estudiantes})");
+            $estudiantes = $this->db->get('usuario');
 
-            foreach ($estudiantes->result() as $row_estudiante)
+            foreach ($estudiantes->result() as $estudiante)
             {
-                if ( $this->input->post($row_estudiante->id) )
-                {
-                    $registro['usuario_id'] = $row_estudiante->id;
-                    $resultado['insertados'] .= $this->agregar_uc($registro) . '-';
-                }
+                $registro['usuario_id'] = $estudiante->id;
+                $assignments[] = $this->agregar_uc($registro);
             }            
             
-        return $resultado;
+        return $assignments;
         
     }
 

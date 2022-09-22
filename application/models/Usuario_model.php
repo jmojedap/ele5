@@ -1467,9 +1467,6 @@ class Usuario_model extends CI_Model{
     
 //GESTIÓN DE CONTRASEÑAS
 //---------------------------------------------------------------------------------------------------
-
-
-    
     /**
      * Devuelve password encriptado
      * 

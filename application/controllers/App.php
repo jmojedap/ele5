@@ -19,11 +19,6 @@ class App extends CI_Controller{
      */
     function index()
     {
-        
-        //Si está logueado se envía a la vista de inicio
-        
-        //echo 'logged: ' . $this->session->userdata('usuario_id');
-        
         if ( $this->session->userdata('logged') )
         {
             $row_usuario = $this->Pcrn->registro_id('usuario', $this->session->userdata('usuario_id'));
@@ -70,7 +65,6 @@ class App extends CI_Controller{
         } else {
             $data['head_title'] = 'En Línea Editores :: Bienvenidos';
             $data['view_a'] = 'app/login_v';
-            //$this->load->view('templates/apanel3/start_v', $data);
             $this->load->view('templates/monster/start_width_v', $data);
         }
     }
@@ -106,6 +100,42 @@ class App extends CI_Controller{
         //Respuesta
             $this->output->set_content_type('application/json')->set_output(json_encode($data));  
     }
+
+// LOGIN CROSS DOMAIN
+//-----------------------------------------------------------------------------
+
+    function login_form()
+    {
+        $this->load->view('app/cd_login_form_v');
+    }
+
+    function cvalidate_login()
+    {
+        //Validación de login
+            $userlogin = $this->input->post('username');
+            $password = $this->input->post('password');
+            
+            $data = $this->Login_model->validar_login($userlogin, $password);
+            
+            if ( $data['status'] )
+            {
+                $this->Login_model->crear_sesion($userlogin, TRUE);
+
+                //Verificar si tiene contraseña por defecto
+                $default_password = $this->App_model->valor_opcion(10);
+                $data['tiene_dpw'] = 0;
+                if ( $password == $default_password  )
+                {
+                    $data['tiene_dpw'] = 1;
+                }
+                redirect("app/index/?dpw={$data['tiene_dpw']}");
+            } else {
+                redirect('app/login');   
+            }
+    }
+
+//-----------------------------------------------------------------------------
+// END LOGIN CROSS DOMAIN
 
     function inicio()
     {
@@ -209,6 +239,14 @@ class App extends CI_Controller{
     {
         $data['head_title'] = 'Demo: ' . $page;
         $data['view_a'] = 'app/demo/' . $page . '_v';
+        $this->load->view(TPL_ADMIN_NEW, $data);
+    }
+
+    function proporciones()
+    {
+        $data['head_title'] = 'Proporciones';
+        $data['view_a'] = 'app/demo/proporciones_v';
+
         $this->load->view(TPL_ADMIN_NEW, $data);
     }
     

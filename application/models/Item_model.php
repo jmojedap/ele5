@@ -517,6 +517,29 @@ class Item_model extends CI_Model{
     }
 
     /**
+     * Array con items, especificando código y nombre. Filtrados por condición
+     * 2022-09-09
+     * 
+     * @param string $condition
+     * @return array $options
+     */
+    function arr_options($condition)
+    {
+        $select = 'id, CONCAT("0", (id_interno)) AS str_cod, id_interno AS cod, 
+            item AS name, item_corto AS short_name,
+            abreviatura AS abbreviation, slug';
+
+        $query = $this->db->select($select)
+            ->where($condition)
+            ->order_by('id_interno', 'ASC')
+            ->get('item');
+        
+        $options = $query->result_array();
+        
+        return $options;
+    }
+
+    /**
      * Devuelve el name de un item con el formato correspondiente.
      * 
      */

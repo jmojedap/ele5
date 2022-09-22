@@ -746,8 +746,8 @@ class Flipbook_model extends CI_Model {
     /**
      * Array con elementos que deben mostrarse en el menú de la función flipbooks/leer
      * 
-     * @param type $row_flipbook
-     * @return boolean
+     * @param object $row_flipbook
+     * @return array $elementos
      */
     function elementos_fb($row_flipbook) {
         //Valores por defecto
@@ -1059,7 +1059,7 @@ class Flipbook_model extends CI_Model {
 
     /**
      * Número de página bookmark para un flipbook de un usuario
-     * @param type $flipbook_id
+     * @param int $flipbook_id
      */
     function bookmark($flipbook_id) {
         $bookmark = $this->Pcrn->campo('usuario_flipbook', "flipbook_id = {$flipbook_id} AND usuario_id = {$this->session->userdata('usuario_id')}", 'bookmark');

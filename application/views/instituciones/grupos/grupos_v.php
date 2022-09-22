@@ -8,7 +8,7 @@
         <th>Año</th>
         
         <?php if ( $this->session->userdata('rol_id') <= 1 ) : ?>                
-            <th width="70px"></th>
+            <th width="95px"></th>
         <?php endif ?>
     </thead>
     <tbody>
@@ -37,8 +37,10 @@
                     
                     <?php if ( $this->session->userdata('rol_id') <= 1 ) : ?>                
                         <td class="centrado">
-                            <?= anchor("grupos/editar/edit/{$row_grupo->id}", '<i class="fa fa-pencil"></i>', 'class="a4" title="Editar grupo"') ?>
-                            <?= $this->Pcrn->anchor_confirm("grupos/eliminar/{$row_grupo->id}/{$row->id}", '<i class="fa fa-times"></i>', 'class="a4" title="Eliminar grupo"'); ?>
+                            <a href="<?= base_url("grupos/editar/edit/{$row_grupo->id}") ?>" class="a4" title="Editar grupo">
+                                <i class="fa fa-pencil-alt"></i>
+                            </a>
+                            <?= $this->Pcrn->anchor_confirm("grupos/eliminar/{$row_grupo->id}/{$row->id}", '<i class="fa fa-trash"></i>', 'class="a4" title="Eliminar grupo"'); ?>
                         </td>
                     <?php endif ?>
                 </tr>

@@ -374,9 +374,13 @@ class Grupo_model extends CI_Model{
     }
     
     /**
-     * Devuelve un query con los estudiantes que pertenecen a un grupo
+     * Query con los estudiantes que pertenecen a un grupo
+     * 2022-06-23
+     * @param string $condicion - SQL para limitar estudiantes
+     * @param int $grupo_id 
+     * @return object $query Listado de estudiantes
      */
-    function estudiantes($grupo_id, $condicion = NULL)
+    function estudiantes($grupo_id, $condicion = NULL):object
     {
         //Construyendo consulta
             $this->db->select('usuario.id, usuario.id AS usuario_id, nombre, apellidos, 
@@ -384,7 +388,9 @@ class Grupo_model extends CI_Model{
                 COUNT(evento.id) AS qty_login'
             );
             $this->db->where("usuario.id IN (SELECT usuario_id FROM usuario_grupo WHERE grupo_id = {$grupo_id})");
-            $this->db->join('evento', 'evento.usuario_id = usuario.id AND evento.tipo_id = 101', 'left');
+            $this->db->join('evento', 
+                'evento.usuario_id = usuario.id AND evento.tipo_id = 101',
+                'left');
             $this->db->group_by('usuario.id');
             $this->db->order_by('COUNT(evento.id)', 'DESC');
             

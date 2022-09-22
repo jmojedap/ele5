@@ -935,8 +935,8 @@ class Grupos extends CI_Controller{
 
     /**
      * AJAX JSON
-     * Listado de preguntas asignadas para un grupo y área determinadas
-     * Se solicita desde el flipook del tipo Clase Dinámica
+     * Listado de preguntas abiertas asignadas para un grupo y área determinadas
+     * Se solicita desde el flipbook del tipo Clase Dinámica
      * 2019-09-11
      */
     function pa_asignadas($grupo_id, $area_id)
@@ -1143,10 +1143,14 @@ class Grupos extends CI_Controller{
 // GESTIÓN DE USUARIOS
 //---------------------------------------------------------------------------------------------------
     
+    /**
+     * HTML
+     * Listado de estudiantes de un grupo
+     * 2022-06-23
+     * @param int $grupo_id
+     */
     function estudiantes($grupo_id)
     {
-        //$this->output->enable_profiler(TRUE);
-        
         $this->load->model('Esp');
         $this->load->model('Usuario_model');
         $this->load->model('Evento_model');
@@ -1177,7 +1181,8 @@ class Grupos extends CI_Controller{
     /**
      * AJAX JSON
      * 2021-01-13
-     * Ejecuta un proceso específico a un conjunto de usuarios estudiantes seleccionados en la sección
+     * Ejecuta un proceso específico a un conjunto de usuarios estudiantes 
+     * seleccionados en la sección
      * grupos/estudiantes.
      */
     function ejecutar_proceso($grupo_id)

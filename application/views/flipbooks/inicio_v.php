@@ -23,64 +23,7 @@
     }
 ?>
 
-<style>
-    .card_area{
-        min-height: 400px;
-    }
-
-    .card_area .card-footer{
-        background-color: #FFFFFF;
-    }
-
-    .card_area_header{
-        padding-top: 30px;
-        height: 100px;
-    }
-
-    .card_area_header{
-        color: #FFFFFF;
-    }
-
-    .card_area_51 .card_area_header {
-        background: rgb(132,64,168);
-        background: -moz-linear-gradient(90deg, rgba(132,64,168,1) 0%, rgba(172,95,213,1) 100%);
-        background: -webkit-linear-gradient(90deg, rgba(132,64,168,1) 0%, rgba(172,95,213,1) 100%);
-        background: linear-gradient(90deg, rgba(132,64,168,1) 0%, rgba(172,95,213,1) 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#8440a8",endColorstr="#ac5fd5",GradientType=1);
-    }
-    .card_area_50 .card_area_header {
-        background: rgb(0,109,176);
-        background: -moz-linear-gradient(90deg, rgba(0,109,176,1) 0%, rgba(23,155,236,1) 100%);
-        background: -webkit-linear-gradient(90deg, rgba(0,109,176,1) 0%, rgba(23,155,236,1) 100%);
-        background: linear-gradient(90deg, rgba(0,109,176,1) 0%, rgba(23,155,236,1) 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#006db0",endColorstr="#179bec",GradientType=1);
-    }
-    .card_area_52 .card_area_header {
-        background: rgb(46,184,191);
-        background: -moz-linear-gradient(90deg, rgba(46,184,191,1) 0%, rgba(59,207,214,1) 100%);
-        background: -webkit-linear-gradient(90deg, rgba(46,184,191,1) 0%, rgba(59,207,214,1) 100%);
-        background: linear-gradient(90deg, rgba(46,184,191,1) 0%, rgba(59,207,214,1) 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#2eb8bf",endColorstr="#3bcfd6",GradientType=1);
-    }
-    .card_area_53 .card_area_header {
-        background: rgb(146,186,37);
-        background: -moz-linear-gradient(90deg, rgba(146,186,37,1) 0%, rgba(178,222,59,1) 100%);
-        background: -webkit-linear-gradient(90deg, rgba(146,186,37,1) 0%, rgba(178,222,59,1) 100%);
-        background: linear-gradient(90deg, rgba(146,186,37,1) 0%, rgba(178,222,59,1) 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#92ba25",endColorstr="#b2de3b",GradientType=1);
-    }
-
-    .label_level{
-        display: inline-block;
-        background-color: #F0F01D;
-        color: #444;
-        padding: 0 8px;
-        border-radius: 3px 3px 3px 3px;
-        -moz-border-radius: 3px 3px 3px 3px;
-        -webkit-border-radius: 3px 3px 3px 3px;
-        border: 0px solid #000000;
-    }
-</style>
+<link rel="stylesheet" href="<?= URL_RESOURCES ?>css/monster/inicio_cards_v1.css">
 
 <div id="inicio_app" class="container_narrow">
     <div class="row">

@@ -54,6 +54,9 @@ class Acceso {
         $funciones_publicas[] = 'app/mantenimiento';
         $funciones_publicas[] = 'app/get_places';
         $funciones_publicas[] = 'app/eleapp_privacidad';
+
+        $funciones_publicas[] = 'app/login_form';
+        $funciones_publicas[] = 'app/cvalidate_login';
         
         $funciones_publicas[] = 'app/registro';
         $funciones_publicas[] = 'app/validar_login';

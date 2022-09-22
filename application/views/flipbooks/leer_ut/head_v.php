@@ -15,11 +15,6 @@
     <!--Bootstrap Submenú-->
     <link rel="stylesheet" href="<?= URL_ASSETS ?>bootstrap_submenu/dist/css/bootstrap-submenu.min.css">
     <script src="<?= URL_ASSETS ?>bootstrap_submenu/dist/js/bootstrap-submenu.min.js" defer></script>
-
-    <!--Slider-->
-<!--    <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
-    <script src="<?php //echo URL_RESOURCES ?>js/jquery.ui.touch-punch.min.js"></script>-->
     
     <link rel="stylesheet" href="<?php echo URL_RESOURCES ?>css/flipbook_bs4.css">
 

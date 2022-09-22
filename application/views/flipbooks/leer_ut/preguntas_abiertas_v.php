@@ -12,7 +12,6 @@
         <div class="modal-content">
             <form accept-charset="utf-8" method="POST" id="pa_form" @submit.prevent="enviar_form_pa">
                 
-            
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalScrollableTitle">Asigne una pregunta</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">

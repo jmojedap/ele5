@@ -21,6 +21,11 @@ class Develop extends CI_Controller {
 //---------------------------------------------------------------------------------------------------
 //PANEL DE CONTROL
     
+    /**
+     * HTML
+     * Panel para ejecución de diferentes procesos de datos de la aplicación
+     * 2022-06-23
+     */
     function procesos()
     {
         //Procesos
@@ -202,36 +207,38 @@ class Develop extends CI_Controller {
         redirect('develop/procesos');
     }
     
+    /**
+     * Eliminar datos huerfanos, sin IDs relacionados o similares
+     * 2022-06-23
+     */
     function eliminar_huerfanos()
     {
-        
+        $qty_deleted = 0;
+
         //Borrar asignaciones a grupos inexistentes
-        $sql = 'DELETE FROM usuario_grupo WHERE grupo_id NOT IN (SELECT id FROM grupo)';
-        $this->db->query($sql);
+            $sql = 'DELETE FROM usuario_grupo WHERE grupo_id NOT IN (SELECT id FROM grupo)';
+            $this->db->query($sql);
+
+            $qty_deleted += $this->db->affected_rows();
         
         //Borrar asignaciones de usuarios inexistentes
-        $sql = 'DELETE FROM usuario_grupo WHERE usuario_id NOT IN (SELECT id FROM usuario)';
-        $this->db->query($sql);
+            $sql = 'DELETE FROM usuario_grupo WHERE usuario_id NOT IN (SELECT id FROM usuario)';
+            $this->db->query($sql);
+
+            $qty_deleted += $this->db->affected_rows();
         
         //Actualizar grupo actual de estudiantes de grupos inexistentes a NULL
-        $sql = "UPDATE usuario SET grupo_id = NULL WHERE grupo_id NOT IN (SELECT id FROM grupo)";
-        $this->db->query($sql);
+            $sql = "UPDATE usuario SET grupo_id = NULL WHERE grupo_id NOT IN (SELECT id FROM grupo)";
+            $this->db->query($sql);
+
+            $qty_deleted += $this->db->affected_rows();        
+
+        //Preparar respuesta
+            $data['qty_affected'] = $qty_deleted;
+            $data['message'] = "Registros eliminados: {$qty_deleted}";
         
-        $this->db->where('id NOT IN (SELECT usuario_id FROM usuario_grupo)');  //Que no esté en ningún grupo
-        $this->db->where('rol_id', 6);  //Estudiante
-        $query = $this->db->get('usuario');
-        
-        $num_usuarios = $query->num_rows();
-        
-        $this->db->where('id NOT IN (SELECT usuario_id FROM usuario_grupo)');  //Que no esté en ningún grupo
-        $this->db->where('rol_id', 6);  //Estudiante
-        $this->db->delete('usuario');
-        
-        $data['mensaje'] = "Estudiantes eliminados: {$num_usuarios}";
-        $data['titulo_pagina'] = "Eliminación de huérfanos";
-        $data['vista_a'] = "app/mensaje_v";
-        
-        $this->load->view('plantilla_apanel/plantilla', $data);
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
         
     }
     

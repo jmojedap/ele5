@@ -1,0 +1,49 @@
+.card_area{
+    min-height: 400px;
+}
+
+.card_area .card-footer{
+    background-color: #FFFFFF;
+}
+
+.card_area_header{
+    padding-top: 15px;
+    height: 60px;
+}
+
+.card_area_header{
+    color: #FFFFFF;
+}
+
+.card_area_51 .card_area_header {
+    background: rgb(132,64,168);
+    background: linear-gradient(90deg, rgba(132,64,168,1) 0%, rgba(172,95,213,1) 100%);
+}
+.card_area_50 .card_area_header {
+    background: rgb(0,109,176);
+    background: linear-gradient(90deg, rgba(0,109,176,1) 0%, rgba(23,155,236,1) 100%);
+}
+.card_area_52 .card_area_header {
+    background: rgb(46,184,191);
+    background: linear-gradient(90deg, rgba(46,184,191,1) 0%, rgba(59,207,214,1) 100%);
+}
+.card_area_53 .card_area_header {
+    background: rgb(146,186,37);
+    background: linear-gradient(90deg, rgba(146,186,37,1) 0%, rgba(178,222,59,1) 100%);
+}
+
+.card_area_464 .card_area_header {
+    background: rgb(219,132,64);
+    background: linear-gradient(90deg, rgba(245,124,0,1) 0%, rgba(255,158,62,1) 100%);
+}
+
+.label_level{
+    display: inline-block;
+    background-color: #F0F01D;
+    color: #444;
+    padding: 0 8px;
+    border-radius: 3px 3px 3px 3px;
+    -moz-border-radius: 3px 3px 3px 3px;
+    -webkit-border-radius: 3px 3px 3px 3px;
+    border: 0px solid #000000;
+}

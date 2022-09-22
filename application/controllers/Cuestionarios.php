@@ -505,32 +505,22 @@ class Cuestionarios extends CI_Controller{
      * de un grupo.
      * 2022-02-04
      */
-    function asignar($cuestionario_id, $grupo_id = 0, $institucion_id = 0)
+    function asignar($cuestionario_id, $grupo_id = 0)
     {
-        $this->load->model('Grupo_model');
-
         //Función ubicada temporalmente en este punto, para calcular clave antes de la asignación.
             $this->Cuestionario_model->act_clave($cuestionario_id); 
         
         //Cargando datos básicos (Cuestionario_model->basico)
             $data = $this->Cuestionario_model->basico($cuestionario_id);
-            
-        //Institución
-            if ( $this->session->userdata('rol_id') > 2 ) 
-            {
-                $institucion_id = $this->session->userdata('institucion_id');
-            }
-            
-        //Variables
-            $data['institucion_id'] = $institucion_id;
             $data['grupo_id'] = $grupo_id;
-            //$data['estudiantes'] = $this->Grupo_model->estudiantes($grupo_id, 'usuario.estado >= 1');
-            $data['estudiantes'] = $this->Grupo_model->estudiantes($grupo_id, 'nombre NOT LIKE "*" AND apellidos NOT LIKE "*"');
-            $data['destino_form'] = "cuestionarios/crear_asignacion/{$cuestionario_id}";
+
+            $this->load->model('Grupo_model');
+            $this->load->model('Usuario_model');
+            $data['grupos'] = $this->Usuario_model->grupos_usuario($this->session->userdata('user_id'), null, $data['row']->nivel);
         
         //Solicitar vista
-            $data['view_a'] = 'cuestionarios/asignar_v';
-            $data['ayuda_id'] = 116;
+            //$data['view_a'] = 'cuestionarios/asignar_v';
+            $data['view_a'] = 'cuestionarios/asignar/asignar_v';
             $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
@@ -542,7 +532,7 @@ class Cuestionarios extends CI_Controller{
      * 
      * @param type $cuestionario_id
      */
-    function asignar_e($cuestionario_id)
+    function asignar_e_ant($cuestionario_id)
     {
         $resultado = array('ejecutado' => 0, 'mensaje' => 'Asignaciones NO creadas');
 
@@ -557,6 +547,41 @@ class Cuestionarios extends CI_Controller{
         }
         
         $this->output->set_content_type('application/json')->set_output(json_encode($resultado));
+    }
+
+    /**
+     * AJAX JSON
+     * 
+     */
+    function asignar_e($cuestionario_id)
+    {
+        $data['qty_inserted'] = 0;
+
+        $str_estudiantes = $this->input->post('estudiantes_seleccionados');
+
+        //Identificar grupos de estudiantes seleccionados
+            $this->db->select('grupo_id');
+            $this->db->where("usuario_id IN ({$str_estudiantes})");
+            $this->db->group_by('grupo_id');
+            $grupos = $this->db->get('usuario_grupo');
+
+        //Crear eventos de asignación de cuestionario a grupo
+            $eventos_cg = [];
+            foreach( $grupos->result() as $grupo ) {
+                $eventos_cg[$grupo->grupo_id] = $this->Cuestionario_model->asignar($cuestionario_id, $grupo->grupo_id);
+            }
+
+        //Seleccionar estudiantes
+            $inserted = [];
+            foreach ($eventos_cg as $grupo_id => $cg_id) {
+                $inserted[$grupo_id] = $this->Cuestionario_model->asignar_estudiantes($cg_id, $str_estudiantes);
+                $data['qty_inserted'] += count($inserted[$grupo_id]);
+            }
+        
+        $data['eventos_cg'] = $eventos_cg;
+        $data['inserted'] = $inserted;
+        
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**
@@ -1599,6 +1624,5 @@ class Cuestionarios extends CI_Controller{
 
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
-        
     }
 }

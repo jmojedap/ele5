@@ -27,10 +27,10 @@
 
 <script>
     //Variables
-    var base_url = '<?php echo base_url() ?>';
-    var cuestionario_id = '<?php echo $row->id ?>';
-    var institucion_id = '<?php echo $institucion_id ?>';
-    var grupo_id = '<?php echo $grupo_id ?>';
+    var base_url = '<?= base_url() ?>';
+    var cuestionario_id = '<?= $row->id ?>';
+    var institucion_id = '<?= $institucion_id ?>';
+    var grupo_id = '<?= $grupo_id ?>';
     var validado = false;
 
 // Document Ready
@@ -124,7 +124,7 @@
                 <div class="card-body">
                     <p class="p1">
                         En esta sección puede asignar o editar la asignación de los estudiantes de un grupo al cuestionario
-                        <span class="resaltar"><?php echo $row->nombre_cuestionario ?></span>.
+                        <span class="resaltar"><?= $row->nombre_cuestionario ?></span>.
                         Si un estudiante ya ha sido agregado previamente al cuestionario no se asignará de nuevo pero se modificarán la fecha
                         inicial y final, y el tiempo para responder.
                     </p>
@@ -140,7 +140,7 @@
                 
                     <div class="sep1">
                         <label for="grupo_id" class="label1">Grupo</label><br/>
-                        <?php echo  form_dropdown('grupo_id', $opciones_grupos, $grupo_id, 'id="grupo_id" class="form-control chosen-select"') ?><br/>
+                        <?=  form_dropdown('grupo_id', $opciones_grupos, $grupo_id, 'id="grupo_id" class="form-control chosen-select"') ?><br/>
                     </div>
                 
                     <?php if ( $grupo_id > 0 ){ ?>
@@ -153,7 +153,7 @@
                                 class="form-control"
                                 placeholder="Min para resolver cuestionario"
                                 title="El tiempo mínimo es de 10 minutos"
-                                value="<?php echo $row->tiempo_minutos ?>"
+                                value="<?= $row->tiempo_minutos ?>"
                                 required
                                 min="10"
                                 >
@@ -176,7 +176,7 @@
                                         placeholder="Fecha inicio"
                                         title="Fecha inicio"
                                         required
-                                        value="<?php echo date('Y-m-d') ?>"
+                                        value="<?= date('Y-m-d') ?>"
                                         >
                                 </div>
                                 <div class="col-md-6">
@@ -188,7 +188,7 @@
                                         placeholder="Fecha fin"
                                         title="Fecha final para resolver cuestionario"
                                         required
-                                        value="<?php echo date('Y-m-d', strtotime('+7 days')) ?>"
+                                        value="<?= date('Y-m-d', strtotime('+7 days')) ?>"
                                         >
                                 </div>
                             </div>
@@ -198,14 +198,14 @@
                 
                     <?php if ( validation_errors() ):?>
                         <div class="sep1">
-                            <?php echo validation_errors('<div class="alert alert-danger">', '</div>') ?>
+                            <?= validation_errors('<div class="alert alert-danger">', '</div>') ?>
                         </div>
                     <?php endif ?>
 
                     <?php if ( $this->session->flashdata('resultado') != NULL ):?>
                         <?php $resultado = $this->session->flashdata('resultado') ?>
                         <div class="sep1">
-                            <div class="alert alert-success">Se insertaron <?php echo $resultado['num_insertados'] ?> registros nuevos</div>
+                            <div class="alert alert-success">Se insertaron <?= $resultado['num_insertados'] ?> registros nuevos</div>
                         </div>
                     <?php endif ?>
                 </div>
@@ -216,7 +216,7 @@
             <table class="table bg-white" cellspacing="0">
                 <thead>
                     <tr>
-                        <th width="10px"><?php echo form_checkbox($att_check_todos); ?></th>
+                        <th width="10px"><?= form_checkbox($att_check_todos); ?></th>
                         <th>Nombre estudiante</th>
                         <th>Desde</th>
                         <th>Hasta</th>
@@ -244,12 +244,12 @@
                             }
                             
                         ?>
-                        <tr class="<?php echo $clase_fila ?>">
-                            <td><?php echo form_checkbox($att_check) ?></td>
-                            <td><?php echo $this->App_model->nombre_usuario($row_estudiante->id, 3) ?></td>
-                            <td><?php echo $this->Pcrn->fecha_formato($row_uc->fecha_inicio, 'Y-m-d') ?></td>
-                            <td><?php echo $this->Pcrn->fecha_formato($row_uc->fecha_fin, 'Y-m-d') ?></td>
-                            <td><?php echo $row_uc->tiempo_minutos ?></td>
+                        <tr class="<?= $clase_fila ?>">
+                            <td><?= form_checkbox($att_check) ?></td>
+                            <td><?= $this->App_model->nombre_usuario($row_estudiante->id, 3) ?></td>
+                            <td><?= $this->Pcrn->fecha_formato($row_uc->fecha_inicio, 'Y-m-d') ?></td>
+                            <td><?= $this->Pcrn->fecha_formato($row_uc->fecha_fin, 'Y-m-d') ?></td>
+                            <td><?= $row_uc->tiempo_minutos ?></td>
                         </tr>
                     <?php endforeach ?>
                 </tbody>

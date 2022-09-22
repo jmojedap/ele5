@@ -104,9 +104,7 @@
                     this.bookmark = this.num_pagina
                     console.log(response.data);
                 })
-                .catch(function (error) {
-                     console.log(error);
-                });
+                .catch(function (error) { console.log(error) })
             },
             guardar_anotacion: function() {
                 var params = new FormData();
@@ -119,16 +117,7 @@
                     this.anotaciones[this.num_pagina] = this.anotacion;
                     console.log('actualizando anotaciones: ' + this.anotacion);
                 })
-                .catch(function (error) {
-                     console.log(error);
-                });
-            },
-            clase_bookmark: function() {
-                var clase = 'btn-light';
-                if ( this.num_pagina == this.bookmark ) {
-                    clase = 'btn-success';
-                }
-                return clase;
+                .catch(function (error) { console.log(error) })
             },
             alternar_indice: function() {
                 this.ver_indice = !this.ver_indice;
@@ -142,11 +131,9 @@
             cargar_pa_asignadas: function(){
                 axios.get(this.app_url + 'grupos/pa_asignadas/' + this.grupo_id + '/' + this.area_id, )
                 .then(response => {
-                    this.pa_asignadas = response.data.pa_asignadas;
+                    this.pa_asignadas = response.data.pa_asignadas
                 })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                .catch(function (error) { console.log(error) })
             },
             seleccionar_pregunta: function(pregunta_id){
                 this.pregunta_id = pregunta_id;

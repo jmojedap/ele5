@@ -20,7 +20,7 @@ class Flipbooks extends CI_Controller{
 //---------------------------------------------------------------------------------------------------
 //
     /**
-     * Exploración y búsqueda de cuestionarios
+     * Exploración y búsqueda de contenidos
      */
     function explorar($num_pagina = 1)
     {
@@ -636,25 +636,31 @@ class Flipbooks extends CI_Controller{
 // INICIO PARA ESTUDIANTES Y PROFESORES
 //-----------------------------------------------------------------------------
 
-function inicio()
-{
-    $data['arr_flipbooks'] = $this->session->userdata('arr_flipbooks');
-    $data['arr_cuestionarios'] = $this->session->userdata('arr_cuestionarios');
-    $data['arr_grupos'] = $this->session->userdata('arr_grupos');
-    $data['areas'] = $this->Item_model->arr_item(1, 'id');
+    /**
+     * Vista HTML
+     * Inicio para usuarios estudiantes y profesores.
+     * 2022-09-08
+     */
+    function inicio()
+    {
+        $data['arr_flipbooks'] = $this->session->userdata('arr_flipbooks');
+        $data['arr_cuestionarios'] = $this->session->userdata('arr_cuestionarios');
+        $data['arr_grupos'] = $this->session->userdata('arr_grupos');
+        $data['areas'] = $this->Item_model->arr_options('categoria_id = 1');
+        $data['arrNivel'] = $this->Item_model->arr_options('categoria_id = 3');
 
-    $data['head_title'] = 'Plataforma En Línea';
-    //$data['head_subtitle'] = 'Bienvenidos';
-    $data['view_a'] = 'flipbooks/inicio_v';
+        $this->load->model('Usuario_model');
+        $data['gruposUsuario'] = $this->Usuario_model->grupos_usuario($this->session->userdata('user_id'));
 
-    if ( $this->session->userdata('srol') == 'institucional') {
-        $data['view_a'] = 'flipbooks/inicio_prf_v';
+        $data['head_title'] = 'Plataforma En Línea';
+        $data['view_a'] = 'flipbooks/inicio_v';
+
+        if ( $this->session->userdata('srol') == 'institucional') {
+            $data['view_a'] = 'flipbooks/inicio_prf_v';
+        }
+
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
-
-    $this->load->view(TPL_ADMIN_NEW, $data);
-
-    $this->output->enable_profiler(TRUE);
-}
     
 // LECTURA
 //-----------------------------------------------------------------------------
@@ -912,8 +918,6 @@ function inicio()
      */
     function leer_v5($flipbook_id, $num_pagina = NULL)
     {
-        if ( $this->input->get('profiler') ) { $this->output->enable_profiler(TRUE); }
-        
         //Datos básicos
             $data = $this->Flipbook_model->basico($flipbook_id);
             

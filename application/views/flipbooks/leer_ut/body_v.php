@@ -38,7 +38,7 @@
                         class="btn"
                         title="Separador en esta página"
                         v-on:click="establecer_bookmark"
-                        v-bind:class="clase_bookmark()"
+                        v-bind:class="{'btn-light': num_pagina != bookmark, 'btn-success': num_pagina == bookmark}"
                         >
                         <i class="fa fa-bookmark"></i>
                         {{ parseInt(num_pagina) + 1 }}
