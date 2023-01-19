@@ -580,4 +580,38 @@ class Develop extends CI_Controller {
         $data['view_a'] = 'app/test_v';
         $this->App_model->view(TPL_ADMIN, $data);
     }
+
+    /**
+     * Actualizar usuario.grupo_id según la tabla usuario_grupo.grupo_id
+     * 2022-10-07
+     */
+    function set_grupo_usuario()
+    {
+        $data = array('status' => 0, 'message' => 'No se actualizaron registros');
+        $qty_updated = 0;
+
+        $sql = "SELECT usuario.id, usuario.grupo_id AS grupo_id_actual, usuario_grupo.grupo_id AS grupo_real
+            FROM usuario
+            JOIN usuario_grupo ON usuario.id = usuario_grupo.usuario_id
+            WHERE usuario.grupo_id <> usuario_grupo.grupo_id";
+
+        $usuarios = $this->db->query($sql);
+
+
+        foreach ($usuarios->result() as $usuario) {
+            $aRow['grupo_id'] = $usuario->grupo_real;
+            $this->db->where('id', $usuario->id);
+            $this->db->update('usuario', $aRow);
+
+            $qty_updated += $this->db->affected_rows();
+        }
+
+        if ( $qty_updated > 0 ) {
+            $data['status'] = 1;
+            $data['message'] = "Usuarios actualizados: {$qty_updated}";
+        }
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
 }

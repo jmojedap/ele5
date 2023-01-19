@@ -466,7 +466,9 @@ class Tema_Model extends CI_Model{
     
     function archivos_leer($tema_id)
     {
-        $this->db->select('recurso.*, recurso.id AS archivo_id, nombre_archivo, slug AS tipo_archivo, CONCAT( (slug), (".png")) AS icono, CONCAT( (slug), ("/"),(nombre_archivo)) AS ubicacion');
+        $this->db->select('recurso.*, recurso.id AS archivo_id, nombre_archivo, 
+            slug AS tipo_archivo, CONCAT( (slug), (".png")) AS icono, 
+            CONCAT( (slug), ("/"),(nombre_archivo)) AS ubicacion');
         $this->db->where('tema_id', $tema_id);
         $this->db->join('item', 'recurso.tipo_archivo_id = item.id');
         $this->db->where('tipo_recurso_id', 1);
@@ -1283,7 +1285,6 @@ class Tema_Model extends CI_Model{
      */
     function archivos($tema_id)
     {
-        //$this->db->select('id, nombre_archivo, disponible');
         $this->db->where('tema_id', $tema_id);
         $this->db->where('tipo_recurso_id', 1);
         $archivos = $this->db->get('recurso');

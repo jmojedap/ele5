@@ -371,31 +371,6 @@ class Cuestionarios extends CI_Controller{
             $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
-    //FUNCIÓN DESACTIVADA 2019-02-25
-    function sugerencias($cuestionario_id, $area_id = 0, $competencia_id = 0)
-    {
-        //Cargando datos básicos (Cuestionario_model->basico)
-            $data = $this->Cuestionario_model->basico($cuestionario_id);
-        
-        //Variables
-            $busqueda['cuestionario_id'] = $cuestionario_id;
-            $busqueda['area_id'] = $area_id;
-            $busqueda['competencia_id'] = $competencia_id;
-            
-            $sugerencias = $this->Cuestionario_model->sugerencias($busqueda);
-        
-        //Variables
-            $data['area_id'] = $area_id;
-            $data['competencia_id'] = $competencia_id;
-            $data['sugerencias'] = $sugerencias;
-            $data['areas'] = $this->Cuestionario_model->areas($cuestionario_id);
-            $data['competencias'] = $this->Cuestionario_model->competencias($cuestionario_id, $area_id);
-        
-        //Solicitar vista
-            $data['view_a'] = 'cuestionarios/sugerencias_v';
-            $this->load->view(TPL_ADMIN_NEW, $data);
-    }
-    
 //PROCESO DE ASIGNACIÓN
 //------------------------------------------------------------------------------------------
     

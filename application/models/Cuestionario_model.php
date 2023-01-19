@@ -228,7 +228,6 @@ class Cuestionario_model extends CI_Model
         //Tablas relacionadas
             $tablas = array(
                 'cuestionario_pregunta',
-                'cuestionario_sugerencia',
                 'usuario_cuestionario',
                 'usuario_pregunta',
                 'dw_usuario_pregunta'
@@ -2322,38 +2321,6 @@ class Cuestionario_model extends CI_Model
 //---------------------------------------------------------------------------------------------------
 //FIN CUESTIONARIOS DESDE FLIPBOOKS
     
-    /**
-     * Muestra las sugerencias para un cuestionario según unos criterios definiedos en el array $busqueda
-     * 
-     * @param type $busqueda
-     * @return type
-     */
-    function sugerencias($busqueda)
-    {
-        if ( $busqueda['cuestionario_id'] && $busqueda['cuestionario_id'] > 0 ) { $this->db->where('cuestionario_id', $busqueda['cuestionario_id']); }
-        if ( $busqueda['area_id'] && $busqueda['area_id'] > 0 ) { $this->db->where('area_id', $busqueda['area_id']); }
-        if ( $busqueda['competencia_id'] && $busqueda['competencia_id'] > 0 ) { $this->db->where('competencia_id', $busqueda['competencia_id']); }
-        
-        $query = $this->db->get('cuestionario_sugerencia');
-        
-        return $query;
-    }
-    
-    /**
-     * Devuelve las áreas para las cuales hay sugerencias
-     * @param type $cuestionario_id
-     * @return type
-     */
-    function areas_sugerencias($cuestionario_id)
-    {
-        $this->db->select('area_id');
-        $this->db->where('cuestionario_id', $cuestionario_id);
-        $this->db->join('cuestionario_pregunta', 'pregunta.id = cuestionario_pregunta.pregunta_id');
-        $this->db->group_by('area_id');
-        $query = $this->db->get('pregunta');
-        
-        return $query;
-    }
     
 //ESTADÍSTICAS DE RESULTADOS
 //---------------------------------------------------------------------------------------------------

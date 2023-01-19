@@ -180,7 +180,7 @@ class Temas extends CI_Controller{
      */
     function leer($tema_id, $num_pagina = NULL)
     {
-        //$this->output->enable_profiler(TRUE);
+        
         //Datos básicos
             $data = $this->Tema_model->basico($tema_id);
 

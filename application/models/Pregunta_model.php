@@ -529,6 +529,10 @@ class Pregunta_model extends CI_Model{
         
     }
     
+    /**
+     * Agregar pregunt a tema
+     * 2023-01-13
+     */
     function crud_add_tema($tema_id, $registro, $orden)
     {
         //Libería GC
@@ -549,7 +553,7 @@ class Pregunta_model extends CI_Model{
             $crud->unset_print();
         
         //Opciones de enunciados según el rol
-            $condicion_enunciados = 'id > 0';
+            $condicion_enunciados = 'tipo_id = 4401';
             if ( $this->session->userdata('rol_id') > 2 )
             {
                 //Condición enunciados

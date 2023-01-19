@@ -180,11 +180,13 @@
                 axios.post(this.app_url + 'grupos/asignar_pa/' + this.grupo_id + '/' + this.pregunta_id, $('#pa_form').serialize())
                 .then(response => {
                     console.log(response.data.message)
-                    if ( response.data.status ) {
+                    if ( response.data.status == 1 ) {
                         toastr['success']('La pregunta fue asignada al grupo');
                         $('#modal_pa').modal('hide');
                         $('#field-texto_pregunta').val('');    //Limpiar campo
                         this.cargar_pa_asignadas();
+                    } else {
+                        toastr['warning']('No se pudo asignar la pregunta');
                     }
                 })
                 .catch(function (error) {

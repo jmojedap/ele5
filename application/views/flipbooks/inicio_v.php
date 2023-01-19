@@ -4,8 +4,8 @@
     $flipbooks = array();
     foreach ($arr_flipbooks as $flipbook)
     {
-        $flipbook['area_name'] = $areas[$flipbook['area_id']];
-        $flipbook['nivel'] = $flipbook['nivel'];
+        $flipbook['area_name'] = $this->Item_model->nombre_id($flipbook['area_id']);
+        $flipbook['nivel'] = $this->Item_model->nombre(3,$flipbook['nivel'],'abreviatura');
         
         //Agregar cuestionarios
             $cuestionarios = array();

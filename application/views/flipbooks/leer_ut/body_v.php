@@ -112,6 +112,15 @@
                         </a>
                     </div>
 
+                    <?php if ( $this->session->userdata('role') >= 0 ) : ?>
+                        <div id="listado_archivos" class="collapse_no sep2">
+                            <!--AUDIOS 621-->
+                            <?php $this->load->view('flipbooks/leer_ut/audios_v'); ?>
+                            <!-- VÍDEOS 619-->
+                            <?php $this->load->view('flipbooks/leer_ut/videos_v'); ?>
+                        </div>
+                    <?php endif; ?>
+
                     <!--HERRAMIENTAS ADICIONALES-->
                     <?php if ( $elementos_fb['herramientas_adicionales'] ){ ?>
                         <div class="dropdown sep2">

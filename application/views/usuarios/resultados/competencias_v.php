@@ -53,8 +53,6 @@
             $condicion .= "competencia_id = {$row_2->competencia_id} AND ";
             $condicion .= "rango = {$rango}";
 
-            $sugerencia = $this->Pcrn->campo('cuestionario_sugerencia', $condicion, 'texto_sugerencia');
-
             $clase_rango = '';
             if ($rango > 0) {
                 $clase_rango = $clases_rango[$rango];
@@ -73,7 +71,6 @@
                     </div>
                 </td>
                 <td><?php echo $this->Item_model->nombre(154, $rango, 'item_largo') ?></td>
-                <td><?php echo $sugerencia ?></td>
             </tr>
 
             <?php $i = $i + 1 ?>

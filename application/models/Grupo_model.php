@@ -380,7 +380,7 @@ class Grupo_model extends CI_Model{
      * @param int $grupo_id 
      * @return object $query Listado de estudiantes
      */
-    function estudiantes($grupo_id, $condicion = NULL):object
+    function estudiantes($grupo_id, $condicion = NULL)
     {
         //Construyendo consulta
             $this->db->select('usuario.id, usuario.id AS usuario_id, nombre, apellidos, 
@@ -1131,25 +1131,27 @@ class Grupo_model extends CI_Model{
             $data = array('status' => 0, 'message' => 'Pregunta no asignada');
 
         //Identificar variables
-            $row_pa = $this->Pcrn->registro_id('post', $pa_id);
-            $row_tema = $this->Pcrn->registro_id('tema', $row_pa->referente_1_id);
-
-        //Construir registro
-            $arr_row['tabla_id'] = 4100;            //Grupo
-            $arr_row['dato_id'] = 410020;           //Asignación de pregunta abierta
-            $arr_row['elemento_id'] = $grupo_id;
-            $arr_row['relacionado_id'] = $pa_id;    //ID Post, pregunta abierta
-            $arr_row['entero_1'] = $row_tema->id;
-            $arr_row['entero_2'] = $row_tema->area_id;
-
-        //Guardar
-            $condition = "dato_id = {$arr_row['dato_id']} AND elemento_id = {$arr_row['elemento_id']} AND entero_1 = {$arr_row['entero_1']}";
-            $meta_id =$this->Pcrn->guardar('meta', $condition, $arr_row);
+            $row_pa = $this->Db_model->row_id('post', $pa_id);
+            if ( ! is_null($row_pa) ) {
+                $row_tema = $this->Db_model->row_id('tema', $row_pa->referente_1_id);
     
-        //Preparar resultado
-            if ( $meta_id > 0 )
-            {
-                $data = array('status' => 1, 'message' => 'Pregunta asignada', 'meta_id' => $meta_id);
+            //Construir registro
+                $arr_row['tabla_id'] = 4100;            //Grupo
+                $arr_row['dato_id'] = 410020;           //Asignación de pregunta abierta
+                $arr_row['elemento_id'] = $grupo_id;
+                $arr_row['relacionado_id'] = $pa_id;    //ID Post, pregunta abierta
+                $arr_row['entero_1'] = $row_tema->id;
+                $arr_row['entero_2'] = $row_tema->area_id;
+    
+            //Guardar
+                $condition = "dato_id = {$arr_row['dato_id']} AND elemento_id = {$arr_row['elemento_id']} AND entero_1 = {$arr_row['entero_1']}";
+                $meta_id =$this->Pcrn->guardar('meta', $condition, $arr_row);
+        
+            //Preparar resultado
+                if ( $meta_id > 0 )
+                {
+                    $data = array('status' => 1, 'message' => 'Pregunta asignada', 'meta_id' => $meta_id);
+                }
             }
     
         return $data;

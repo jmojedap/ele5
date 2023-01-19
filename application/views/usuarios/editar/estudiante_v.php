@@ -129,15 +129,15 @@
 // Variables
 //-----------------------------------------------------------------------------
     var form_values = {
-        nombre: '<?= $row->nombre ?>',
-        apellidos: '<?= $row->apellidos ?>',
+        nombre: <?= json_encode($row->nombre) ?>,
+        apellidos: <?= json_encode($row->apellidos) ?>,
         username: '<?= $row->username ?>',
         email: '<?= $row->email ?>',
         no_documento: '<?= $row->no_documento ?>',
         tipo_documento_id: '0<?= $row->tipo_documento_id ?>',
         sexo: '0<?= $row->sexo ?>',
         grupo_id: '0<?= $row->grupo_id ?>',
-        notas: '<?= $row->notas ?>',
+        notas: <?= json_encode($row->notas) ?>,
     };
 
 // Vue App

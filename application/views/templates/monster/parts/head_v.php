@@ -46,3 +46,6 @@
     <script>
         const url_app = '<?= URL_API ?>'; const url_api = '<?= URL_API ?>';
     </script>
+
+    <!-- Google Analytics -->
+    <?php $this->load->view('head_includes/google_analytics'); ?>
