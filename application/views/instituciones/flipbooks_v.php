@@ -30,10 +30,10 @@
     //Ajax
     function quitar_flipbook()
     {
-        $.ajax({        
-            type: 'POST',
-            url: base_url + 'instituciones/quitar_flipbook/',
-            data: {
+        $.ajax({
+            type: 'POST',
+            url: base_url + 'instituciones/quitar_flipbook/',
+            data: {
                 institucion_id : institucion_id,
                 flipbook_id : flipbook_id
             },
@@ -43,11 +43,11 @@
             success: function(cant_eliminados){
                 if ( cant_eliminados > 0 ) { $('.flipbook_' + flipbook_id).hide('slow'); }
             }
-        });
+        });
     }
 </script>
 
-<table class="table table-hover bg-blanco" cellspacing="0">
+<table class="table table-hover bg-white" cellspacing="0">
     <thead>
         <th width="20px">No.</th>
         <th width="30px" class="warning">ID</th>
@@ -58,7 +58,7 @@
     </thead>
     <tbody>
         <?php foreach ($flipbooks->result() as $row_flipbook): ?>
-            <?php $row_flipbook_full = $this->Pcrn->registro_id('flipbook', $row_flipbook->flipbook_id); ?>
+            <?php $row_flipbook_full = $this->Db_model->row_id('flipbook', $row_flipbook->flipbook_id); ?>
             <?php $i += 1; ?>
             <tr class="flipbook_<?= $row_flipbook->flipbook_id ?>">
                 <td><?= $i ?></td>

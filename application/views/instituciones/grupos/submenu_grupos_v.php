@@ -9,35 +9,35 @@
     
     //Atributos de los elementos del menú
         $arr_menus['grupos'] = array(
-            'icono' => '<i class="fa fa-list"></i>',
+            'icono' => '',
             'texto' => 'Listado',
             'link' => "instituciones/grupos/{$row->id}",
             'atributos' => 'title="Grupos de la institución"'
         );
             
         $arr_menus['nuevo_grupo'] = array(
-            'icono' => '<i class="fa fa-plus"></i>',
+            'icono' => '',
             'texto' => 'Nuevo',
             'link' => "instituciones/nuevo_grupo/add/{$row->id}",
             'atributos' => 'title="Agregar grupo a la institución"'
         );
         
         $arr_menus['importar_grupos'] = array(
-            'icono' => '<i class="fa fa-upload"></i>',
+            'icono' => '',
             'texto' => 'Importar grupos',
             'link' => "instituciones/importar_grupos/{$row->id}",
             'atributos' => 'title="Imporgar grupos desde archivo Excel"'
         );
         
         $arr_menus['asignar_profesores'] = array(
-            'icono' => '<i class="fa fa-file-excel-o"></i>',
+            'icono' => '',
             'texto' => 'Asignar profesores',
             'link' => "instituciones/asignar_profesores/{$row->id}",
             'atributos' => 'title="Asignar profesores con archivo MS-Excel"'
         );
             
         $arr_menus['vaciar_grupos'] = array(
-            'icono' => '<i class="fa fa-file-excel-o"></i>',
+            'icono' => '',
             'texto' => 'Vaciar grupos',
             'link' => "instituciones/vaciar_grupos/{$row->id}",
             'atributos' => 'title="Eliminar masivamente los estudiantes de un listado de grupos"'

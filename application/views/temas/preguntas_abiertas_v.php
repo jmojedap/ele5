@@ -18,8 +18,8 @@
                     {{ pregunta.contenido }}
                 </td>
                 <td>
-                    <span class="text-warning" v-show="pregunta.publica == 1">Privada</span>
-                    <span class="text-success" v-show="pregunta.publica == 2">Editores</span>
+                    <span class="text-info" v-show="pregunta.publica == 1">Editores</span>
+                    <span class="text-success" v-show="pregunta.publica == 2">Institucional</span>
                 </td>
                 <td>
                     {{ pregunta.usuario_id }}

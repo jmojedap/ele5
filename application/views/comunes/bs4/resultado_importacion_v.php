@@ -16,14 +16,6 @@
     
 ?>
 
-<?php if ( isset($vista_menu) ) { ?>
-    <?php $this->load->view($vista_menu); ?>
-<?php } ?>
-
-<?php if ( isset($vista_submenu) ) { ?>
-    <?php $this->load->view($vista_submenu); ?>
-<?php } ?>
-
 <table class="table bg-white">
     <tbody>
         <tr class="<?= $clase_resultado ?>">

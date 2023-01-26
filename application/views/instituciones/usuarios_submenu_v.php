@@ -6,14 +6,14 @@
     
     //Atributos de los elementos del menú
         $arr_menus['usuarios'] = array(
-            'icono' => '<i class="fa fa-list-alt"></i>',
+            'icono' => '',
             'texto' => 'Listado',
             'link' => "instituciones/usuarios/{$row->id}",
             'atributos' => 'title="Usuarios de la institución"'
         );
             
         $arr_menus['importar_usuarios'] = array(
-            'icono' => '<i class="fa fa-arrow-circle-up"></i>',
+            'icono' => '',
             'texto' => 'Importar',
             'link' => "instituciones/importar_usuarios/{$row->id}",
             'atributos' => 'title="Importar instituciones"'
@@ -34,4 +34,4 @@
         $data_menu['seccion'] = $seccion;
     
     //Cargue vista
-        $this->load->view('comunes/submenu_v', $data_menu);
+        $this->load->view('comunes/bs4/submenu_v', $data_menu);

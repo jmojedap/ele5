@@ -1,50 +1,50 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Instituciones extends CI_Controller{
-    
-    function __construct() 
+class Instituciones extends CI_Controller
+{
+    public function __construct()
     {
         parent::__construct();
 
         $this->load->model('Institucion_model');
-        
+
         //Para definir hora local
         date_default_timezone_set("America/Bogota");
     }
-    
-    function index($institucion_id)
+
+    public function index($institucion_id)
     {
-        redirect("instituciones/grupos/{$institucion_id}");
+        redirect("instituciones/info/{$institucion_id}");
     }
 
 //EXPLORACIÓN
 //---------------------------------------------------------------------------------------------------
 
     /** Exploración de Instituciones */
-    function explorar($num_page = 1)
+    public function explorar($num_page = 1)
     {
         //Identificar filtros de búsqueda
         $this->load->model('Search_model');
         $filters = $this->Search_model->filters();
 
         //Datos básicos de la exploración
-            $data = $this->Institucion_model->explore_data($filters, $num_page);
-        
+        $data = $this->Institucion_model->explore_data($filters, $num_page);
+
         //Opciones de filtros de búsqueda
-            $data['options_city'] = $this->App_model->options_place('tipo_id = 4', 'full_name', 'Todas');
-            
+        $data['options_city'] = $this->App_model->options_place('tipo_id = 4', 'full_name', 'Todas');
+
         //Arrays con valores para contenido en lista
-            //$data['arr_types'] = $this->Item_model->arr_cod('category_id = 33');
-            
+        //$data['arr_types'] = $this->Item_model->arr_cod('category_id = 33');
+
         //Cargar vista
-            $this->App_model->view(TPL_ADMIN_NEW, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
      * Listado de Instituciones, filtrados por búsqueda, JSON
      */
-    function get($num_page = 1)
+    public function get($num_page = 1)
     {
         $this->load->model('Search_model');
         $filters = $this->Search_model->filters();
@@ -57,7 +57,7 @@ class Instituciones extends CI_Controller{
      * Exportar resultados de búsqueda
      * 2021-09-27
      */
-    function export()
+    public function export()
     {
         set_time_limit(120);    //120 segundos, 2 minutos para el proceso
 
@@ -67,16 +67,16 @@ class Instituciones extends CI_Controller{
 
         $data['query'] = $this->Institucion_model->query_export($filters);
 
-        if ( $data['query']->num_rows() > 0 ) {
+        if ($data['query']->num_rows() > 0) {
             //Preparar datos
-                $data['sheet_name'] = 'instituciones';
+            $data['sheet_name'] = 'instituciones';
 
             //Objeto para generar archivo excel
-                $this->load->library('Excel_new');
-                $file_data['obj_writer'] = $this->excel_new->file_query($data);
+            $this->load->library('Excel_new');
+            $file_data['obj_writer'] = $this->excel_new->file_query($data);
 
             //Nombre de archivo
-                $file_data['file_name'] = date('Ymd_His') . '_' . $data['sheet_name'];
+            $file_data['file_name'] = date('Ymd_His') . '_' . $data['sheet_name'];
 
             $this->load->view('common/download_excel_file_v', $file_data);
         } else {
@@ -85,90 +85,92 @@ class Instituciones extends CI_Controller{
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
-    
-    /**
-     * Exporta el resultado de la búsqueda a un archivo de Excel
-     */
-    function exportar()
-    {
-        
-        //Cargando
-            $this->load->model('Busqueda_model');
-            $this->load->model('Pcrn_excel');
-        
-        //Datos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $resultados_total = $this->Institucion_model->buscar($busqueda); //Para calcular el total de resultados
-        
-        //Preparar datos
-            $datos['nombre_hoja'] = 'Instituciones';
-            $datos['query'] = $resultados_total;
-            
-        //Preparar archivo
-            $objWriter = $this->Pcrn_excel->archivo_query($datos);
-        
-        $data['objWriter'] = $objWriter;
-        $data['nombre_archivo'] = date('Ymd_His'). '_instituciones'; //save our workbook as this file name
-        
-        $this->load->view('comunes/descargar_phpexcel_v', $data);
-            
-    }
-    
+
+// CRUD INSTITUCIONES
+//-----------------------------------------------------------------------------
+
     /**
      * Formulario GroceryCrud para creación de instituciones
      */
-    function nuevo()
+    public function nuevo()
     {
-        
         //Render del grocery crud
-            $gc_output = $this->Institucion_model->crud_editar();
-        
+        $gc_output = $this->Institucion_model->crud_editar();
+
         //Array data espefícicas
-            $data['head_title'] = 'Instituciones';
-            $data['head_subtitle'] = 'Nueva';
-            $data['view_a'] = 'comunes/gc_v';
-            $data['nav_2'] = 'instituciones/explore/menu_v';
-        
-        $output = array_merge($data,(array)$gc_output);
-        
+        $data['head_title'] = 'Instituciones';
+        $data['head_subtitle'] = 'Nueva';
+        $data['view_a'] = 'comunes/gc_v';
+        $data['nav_2'] = 'instituciones/explore/menu_v';
+
+        $output = array_merge($data, (array)$gc_output);
+
         $this->load->view(TPL_ADMIN_NEW, $output);
     }
-    
-    function editar()
+
+    /**
+     * Formulario de edición datos básicos de instituciones
+     * 2023-01-19
+     */
+    public function editar()
     {
         //Cargando datos básicos
-            $institucion_id = $this->uri->segment(4);
-            $data = $this->Institucion_model->basico($institucion_id);
-            
+        $institucion_id = $this->uri->segment(4);
+        $data = $this->Institucion_model->basic($institucion_id);
+
         //Render del grocery crud
-            $gc_output = $this->Institucion_model->crud_editar();
+        $gc_output = $this->Institucion_model->crud_editar();
 
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Editar';
-            $data['vista_b'] = 'comunes/gc_v';
-            $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN, $output);
+        $data['head_subtitle'] = 'Editar';
+        $data['view_a'] = 'comunes/bs4/gc_v';
+        $output = array_merge($data, (array)$gc_output);
+        $this->load->view(TPL_ADMIN_NEW, $output);
     }
-    
-    function eliminar_pre($institucion_id)
+
+    /**
+     * Formulario confirmación para eliminación de una institución
+     * 2023-01-203
+     */
+    public function eliminar_pre($institucion_id)
     {
-        $data = $this->Institucion_model->basico($institucion_id);
-        
+        $data = $this->Institucion_model->basic($institucion_id);
+
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Eliminar';
-            $data['vista_b'] = 'instituciones/eliminar_pre_v';
-            $this->load->view(PTL_ADMIN, $data);
+        $data['head_subtitle'] = 'Eliminar';
+        $data['view_a'] = 'instituciones/eliminar_pre_v';
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
-    
-    function eliminar($institucion_id)
+
+    /**
+     * REDIRECT
+     * 2023-01-19
+     */
+    public function eliminar($institucion_id)
     {
         $this->Institucion_model->eliminar($institucion_id);
         $destino = "instituciones/explorar/";
         redirect($destino);
     }
+
+// INFORMACIÓN SOBRE LA INSTITUCIÓN
+//-----------------------------------------------------------------------------
+
+    /**
+     * Información general sobre la institución
+     * 2023-01-24
+     * @param int $institucion_id
+     */
+    function info($institucion_id)
+    {
+        $data = $this->Institucion_model->basic($institucion_id);
+        $data['view_a'] = 'instituciones/info_v';
+        $this->load->view(TPL_ADMIN_NEW, $data);
+    }
+
     
 //GESTIÓN DE USUARIOS Y ESTUDIANTES
-//---------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
     
     /**
      * Listado de usuarios (no estudiantes) de la Institución
@@ -181,17 +183,17 @@ class Instituciones extends CI_Controller{
         $this->load->model('Evento_model');
         
         //Cargando datos básicos ($basico)
-        if ( in_array($this->session->userdata('rol_id'), array(3,4,5)) ) { $institucion_id = $this->session->userdata('institucion_id'); }
-        $data = $this->Institucion_model->basico($institucion_id);
+        if ( in_array($this->session->userdata('rol_id'), [3,4,5]) ) { $institucion_id = $this->session->userdata('institucion_id'); }
+        $data = $this->Institucion_model->basic($institucion_id);
         
         $data['usuarios'] = $this->Institucion_model->usuarios($institucion_id);
         
         $this->load->model('Grupo_model');
         
         //Solicitar vista
-            $data['subseccion'] = 'usuarios';
-            $data['vista_b'] = 'instituciones/usuarios_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['view_a'] = 'instituciones/usuarios_v';
+            $data['nav_3'] = 'instituciones/usuarios_submenu_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function procesar_usuarios($institucion_id)
@@ -236,11 +238,11 @@ class Instituciones extends CI_Controller{
     /**
      * Mostrar formulario de importación de usuarios (no estudiantes) con archivo MS Excel.
      * El resultado del formulario se envía a 'instituciones/importar_usuarios_e'
-     * 
+     * 2023-01-19
      */
     function importar_usuarios($institucion_id)
     {
-        $data = $this->Institucion_model->basico($institucion_id);
+        $data = $this->Institucion_model->basic($institucion_id);
         
         //Iniciales
             $nombre_archivo = '02_formato_cargue_usuarios.xlsx';
@@ -260,19 +262,20 @@ class Instituciones extends CI_Controller{
             $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
             
         //Variables generales
-            $data['subtitulo_pagina'] = 'Importar usuarios';
-            $data['vista_b'] = 'comunes/importar_v';
-            $data['vista_submenu'] = 'instituciones/submenu_usuarios_v';
+            $data['head_subtitle'] = 'Importar usuarios';
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_3'] = 'instituciones/usuarios_submenu_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
      * Importar estudiantes, (e) ejecutar.
+     * 2023-01-19
      */
     function importar_usuarios_e($institucion_id)
     {
-        $data = $this->Institucion_model->basico($institucion_id);
+        $data = $this->Institucion_model->basic($institucion_id);
         
         //Proceso
             $this->load->model('Pcrn_excel');
@@ -298,11 +301,12 @@ class Instituciones extends CI_Controller{
             $data['destino_volver'] = "instituciones/usuarios/{$institucion_id}";
         
         //Cargar vista
-            $data['subtitulo_pagina'] = 'Resultado importación';
-            $data['vista_b'] = 'comunes/resultado_importacion_v';
-            $data['vista_submenu'] = 'instituciones/submenu_usuarios_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_title'] = 'Resultado importación';
+            $data['view_a'] = 'comunes/bs4/resultado_importacion_v';
+            $data['nav_3'] = 'instituciones/usuarios_submenu_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
+
 // CARGA MASIVA DE USUARIOS
 //---------------------------------------------------------------------------------------------------
     /**
@@ -501,21 +505,17 @@ class Instituciones extends CI_Controller{
         
         //Cargando datos básicos
             $institucion_id = $this->uri->segment(4);
-            $row = $this->Pcrn->registro_id('institucion', $institucion_id);
-            
-            $data['row'] = $row;
-            $data['titulo_pagina'] = 'Institución';
-            $data['vista_a'] = 'instituciones/institucion_v';
+            $data = $this->Institucion_model->basic($institucion_id);            
             
         //Render del grocery crud
             $gc_output = $this->Grupo_model->crud_basico($institucion_id);
             
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Nuevo grupo';
-            $data['vista_b'] = 'comunes/gc_v';
-            $data['vista_menu'] = 'instituciones/grupos/submenu_grupos_v';
+            $data['head_subtitle'] = 'Nuevo grupo';
+            $data['view_a'] = 'comunes/gc_v';
+            $data['nav_3'] = 'instituciones/grupos/submenu_grupos_v';
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN_NEW, $output);
     }
     
 // IMPORTAR GRUPOS A LA INSTITUCIÓN
@@ -525,44 +525,61 @@ class Instituciones extends CI_Controller{
      * Mostrar formulario de importación de grupos a la institución con archivo 
      * Excel. El resultado del formulario se envía a 
      * instituciones/importar_grupos_e
+     * 2023-01-26
      * 
      */
     function importar_grupos($institucion_id)
     {
-        $data = $this->Institucion_model->basico($institucion_id);
-        
-        //Iniciales
-            $nombre_archivo = '12_formato_cargue_grupos.xlsx';
-            $parrafos_ayuda = array(
-                'Las columnas [nivel], [grupo] no pueden estar vacías.',
-            );
-        
-        //Instructivo
-            $data['titulo_ayuda'] = '¿Cómo importar grupos a la institución?';
-            $data['nota_ayuda'] = 'Se importarán los grupos a la institución.';
-            $data['parrafos_ayuda'] = $parrafos_ayuda;
+        $data = $this->Institucion_model->basic($institucion_id);
         
         //Variables específicas
-            $data['destino_form'] = "instituciones/importar_grupos_e/{$institucion_id}";
-            $data['nombre_archivo'] = $nombre_archivo;
-            $data['nombre_hoja'] = 'grupos';
-            $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
+            $data['help_note'] = '¿Cómo importar grupos a la institución?';
+            $data['help_tips'] = [
+                'Las columnas [nivel], [grupo] no pueden estar vacías.'
+            ];
+            $data['destination_form'] = "instituciones/importar_grupos_e/{$institucion_id}";
+            $data['template_file_name'] = '12_formato_cargue_grupos.xlsx';
+            $data['sheet_name'] = 'grupos';
+            $data['url_file'] = base_url("assets/formatos_cargue/{$data['template_file_name']}");
             
         //Variables generales
-            //$data['ayuda_id'] = 97;
-            $data['subtitulo_pagina'] = 'Importar grupos';
-            $data['vista_b'] = 'comunes/importar_v';
-            $data['vista_submenu'] = 'instituciones/grupos/submenu_grupos_v';
-        $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Importar grupos';
+            $data['view_a'] = 'common/import_v';
+            $data['nav_3'] = 'instituciones/grupos/submenu_grupos_v';
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
      * Importar grupos a institución, (e) ejecutar.
+     * 2023-01-26
      */
     function importar_grupos_e($institucion_id)
     {
-        $data = $this->Institucion_model->basico($institucion_id);
+        $data = $this->Institucion_model->basic($institucion_id);
+
+        //Proceso
+        $this->load->library('excel_new');
+        $imported_data = $this->excel_new->arr_sheet_default($this->input->post('sheet_name'));
         
+        if ( $imported_data['status'] == 1 )
+        {
+            $data = $this->Institucion_model->importar_grupos($imported_data['arr_sheet'], $institucion_id);
+        }
+
+        //Cargue de variables
+            $data['status'] = $imported_data['status'];
+            $data['message'] = $imported_data['message'];
+            $data['arr_sheet'] = $imported_data['arr_sheet'];
+            $data['sheet_name'] = $this->input->post('sheet_name');
+            $data['back_destination'] = "instituciones/grupos/{$institucion_id}";
+        
+        //Cargar vista
+            $data['head_subtitle'] = 'Resultado importación de grupos';
+            $data['view_a'] = 'common/import_result_v';
+            $data['nav_3'] = 'instituciones/grupos/submenu_grupos_v';
+
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
+        /*
         //Proceso
             $this->load->model('Pcrn_excel');
             $this->load->model('Esp');
@@ -584,67 +601,12 @@ class Instituciones extends CI_Controller{
             $data['destino_volver'] = "instituciones/grupos/{$institucion_id}";
         
         //Cargar vista
-            //$data['titulo_pagina'] = 'Grupos';
-            $data['subtitulo_pagina'] = 'Resultado importación de grupos';
-            $data['vista_b'] = 'comunes/resultado_importacion_v';
-            //$data['vista_menu'] = 'grupos/explorar/menu_v';
-            $data['vista_submenu'] = 'instituciones/grupos/submenu_grupos_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Resultado importación de grupos';
+            $data['view_a'] = 'comunes/bs4/resultado_importacion_v';
+            $data['nav_3'] = 'instituciones/grupos/submenu_grupos_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);*/
     }
     
-    function z_cargar_grupos($institucion_id)
-    {
-        $data = $this->Institucion_model->basico($institucion_id);
-        
-        //Solicitar vista
-            $data['ayuda_id'] = 150;
-            $data['vista_b'] = 'instituciones/grupos/cargar_grupos_v';
-            $data['vista_menu'] = 'instituciones/grupos/submenu_grupos_v';
-            $data['subseccion'] = 'cargar_grupos';
-            $this->load->view(PTL_ADMIN, $data);   
-    }
-    
-    function z_cargar_grupos_e($institucion_id)
-    {
-        $data = $this->Institucion_model->basico($institucion_id);
-        
-        //Variables
-        $cargados = array();
-        $no_cargados = array();
-        $mensaje = '';
-        
-        $archivo = $_FILES['file']['tmp_name'];    //Se crea un archivo temporal, no se sube al servidor, se toma el nombre temporal
-        $nombre_hoja = $this->input->post('nombre_hoja');   //Nombre de hoja digitada por el tema en el formulario
-        
-        $this->load->model('Pcrn_excel');
-        $resultado = $this->Pcrn_excel->array_hoja($archivo, $nombre_hoja, 'B');    //Hasta la columna B de la hoja de cálculo
-        $grupos = $resultado['array_hoja'];
-        
-        if ( $resultado['cargado'] ) {
-            $this->load->model('Tema_model');
-            $resultado_cargue = $this->Institucion_model->cargar_grupos($institucion_id, $grupos);
-            $cargados = $resultado_cargue['cargados'];
-            $no_cargados = $resultado_cargue['no_cargados'];
-            $mensaje = 'Se cargaron ' .  count($cargados) . ' grupos';
-        } else {
-            $mensaje = $resultado['mensaje'];
-        }
-        
-        //Cargue de variabls
-            $data['cargado'] = $resultado['cargado'];
-            $data['mensaje'] = $mensaje;
-            $data['temas'] = $grupos;
-            $data['nombre_hoja'] = $nombre_hoja;
-            $data['cargados'] = $cargados;
-            $data['no_cargados'] = $no_cargados;
-            $data['num_cargados'] = count($cargados);
-            $data['num_no_cargados'] = count($no_cargados);
-        
-        //Cargar vista
-            $data['subseccion'] = 'cargar_grupos';
-            $data['vista_b'] = 'instituciones/grupos/cargar_grupos_r_v';
-            $this->load->view(PTL_ADMIN, $data);
-    }
     
 // VACIAR GRUPOS
 //-----------------------------------------------------------------------------
@@ -654,12 +616,13 @@ class Instituciones extends CI_Controller{
      * Se eliminarán los estudiantes de los grupos en la lista del archivo de excel.
      * El resultado del formulario se envía a 'instituciones/vaciar_grupos_e'
      * 
-     * @param type $institucion_id
+     * @param int $institucion_id
+     * @return html
      */
     function vaciar_grupos($institucion_id)
     {
         
-        $data = $this->Institucion_model->basico($institucion_id);
+        $data = $this->Institucion_model->basic($institucion_id);
         
         //Iniciales
             $nombre_archivo = '22_formato_vaciar_grupos.xlsx';
@@ -677,12 +640,11 @@ class Instituciones extends CI_Controller{
             $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
             
         //Variables generales
-            $data['subtitulo_pagina'] = 'Vaciar grupos';
-            $data['vista_b'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'instituciones/grupos/submenu_grupos_v';
-            $data['ayuda_id'] = 138;
+            $data['head_subtitle'] = 'Vaciar grupos';
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_3'] = 'instituciones/grupos/submenu_grupos_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -690,7 +652,7 @@ class Instituciones extends CI_Controller{
      */
     function vaciar_grupos_e($institucion_id)
     {
-        $data = $this->Institucion_model->basico($institucion_id);
+        $data = $this->Institucion_model->basic($institucion_id);
         
         //Proceso
             $this->load->model('Pcrn_excel');
@@ -715,21 +677,20 @@ class Instituciones extends CI_Controller{
             $data['destino_volver'] = "instituciones/grupos/{$institucion_id}";
         
         //Cargar vista
-            $data['subtitulo_pagina'] = 'Resultado vaciado';
-            $data['vista_b'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'instituciones/grupos/submenu_grupos_v';
-            $data['ayuda_id'] = 138;
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Resultado vaciado';
+            $data['view_a'] = 'comunes/bs4/resultado_importacion_v';
+            $data['nav_3'] = 'instituciones/grupos/submenu_grupos_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
      * Mostrar formulario de asignación de profesores a grupos con archivo MS Excel.
      * El resultado del formulario se envía a 'instituciones/asignar_profesores_e'
-     * 
+     * 2023-01-19
      */
     function asignar_profesores($institucion_id)
     {
-        $data = $this->Institucion_model->basico($institucion_id);
+        $data = $this->Institucion_model->basic($institucion_id);
         
         //Iniciales
             $nombre_archivo = '14_formato_asignacion_profesores.xlsx';
@@ -749,11 +710,11 @@ class Instituciones extends CI_Controller{
             $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
             
         //Variables generales
-            $data['subtitulo_pagina'] = 'Asignar profesores';
-            $data['vista_b'] = 'comunes/importar_v';
-            $data['vista_submenu'] = 'instituciones/grupos/submenu_grupos_v';
+            $data['head_subtitle'] = 'Asignar profesores';
+            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['nav_3'] = 'instituciones/grupos/submenu_grupos_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -761,7 +722,7 @@ class Instituciones extends CI_Controller{
      */
     function asignar_profesores_e($institucion_id)
     {
-        $data = $this->Institucion_model->basico($institucion_id);
+        $data = $this->Institucion_model->basic($institucion_id);
         
         //Proceso
             $this->load->model('Pcrn_excel');
@@ -773,7 +734,7 @@ class Instituciones extends CI_Controller{
             if ( $resultado['valido'] )
             {
                 $this->load->model('Institucion_model');
-                $no_importados = $this->Institucion_model->asignar_profesores($resultado['array_hoja'], $institucion_id);
+                $res_importacion = $this->Institucion_model->asignar_profesores($resultado['array_hoja'], $institucion_id);
             }
         
         //Cargue de variables
@@ -781,14 +742,14 @@ class Instituciones extends CI_Controller{
             $data['mensaje'] = $resultado['mensaje'];
             $data['array_hoja'] = $resultado['array_hoja'];
             $data['nombre_hoja'] = $this->input->post('nombre_hoja');
-            $data['no_importados'] = $no_importados;
+            $data['no_importados'] = $res_importacion['no_importados'];
             $data['destino_volver'] = "instituciones/grupos/{$institucion_id}";
         
         //Cargar vista
-            $data['subtitulo_pagina'] = 'Resultado asignación';
-            $data['vista_b'] = 'comunes/resultado_importacion_v';
-            $data['vista_submenu'] = 'instituciones/grupos/submenu_grupos_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Resultado asignación';
+            $data['view_a'] = 'comunes/bs4/resultado_importacion_v';
+            $data['nav_3'] = 'instituciones/grupos/submenu_grupos_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
 //CUESTIONARIOS Y RESULTADOS
@@ -797,7 +758,7 @@ class Instituciones extends CI_Controller{
     function cuestionarios($institucion_id)
     {
         //$this->output->enable_profiler(TRUE);
-        $data = $this->Institucion_model->basico($institucion_id);
+        $data = $this->Institucion_model->basic($institucion_id);
         $this->load->model('Search_model');
         $this->load->model('Cuestionario_model');
         
@@ -813,7 +774,7 @@ class Instituciones extends CI_Controller{
         //Paginación
             $resultados_total = $this->Cuestionario_model->search($filters); //Para calcular el total de resultados
             $this->load->library('pagination');
-            $config = $this->App_model->config_paginacion(2);
+            $config = $this->App_model->config_paginacion(4);
             $config['base_url'] = base_url("instituciones/cuestionarios/{$institucion_id}/?{$str_filters}");
             $config['total_rows'] = $resultados_total->num_rows();
             $this->pagination->initialize($config);
@@ -829,9 +790,10 @@ class Instituciones extends CI_Controller{
         
         //Solicitar vista
             //$data['seccion'] = 'explorar';
-            $data['subtitulo_pagina'] = "({$config['total_rows']})";
-            $data['vista_b'] = 'instituciones/cuestionarios/cuestionarios_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = "({$config['total_rows']})";
+            $data['view_a'] = 'instituciones/cuestionarios/cuestionarios_v';
+            $data['nav_3'] = 'instituciones/cuestionarios/submenu_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function cuestionarios_resumen01($institucion_id, $area_id = 50, $nivel = 1)
@@ -840,7 +802,7 @@ class Instituciones extends CI_Controller{
         $this->load->model('Cuestionario_model');
         
         //Cargando datos básicos (_basico)
-            $data = $this->Institucion_model->basico($institucion_id);
+            $data = $this->Institucion_model->basic($institucion_id);
         
         //Head includes específicos para esta función
             $head_includes[] = 'highcharts';
@@ -867,19 +829,21 @@ class Instituciones extends CI_Controller{
             $data['head_includes'] = $head_includes;
             $data['cuestionarios'] = $cuestionarios;
             $data['competencias'] = $this->Cuestionario_model->competencias_area($area_id); //Query competencias
-            $data['vista_b'] = 'instituciones/res01_v';
+            $data['view_a'] = 'instituciones/cuestionarios/res01_v';
+            $data['nav_3'] = 'instituciones/cuestionarios/submenu_v';
         
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Desempeño histórico en cuestionarios';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Desempeño histórico en cuestionarios';
+            $this->load->view(TPL_ADMIN_NEW, $data);
         
     }
     
     /**
      * Gráfico de desempeño del grupo por competencias
      * agrupado por acumulador (usuario_pregunta.acumulador)
+     * 2023-01-20 DESACTIVADA
      */
-    function cuestionarios_resumen02($institucion_id, $area_id = 50, $nivel = NULL)
+    function z_cuestionarios_resumen02($institucion_id, $area_id = 50, $nivel = NULL)
     {
         //$this->output->enable_profiler(TRUE);
         
@@ -937,10 +901,7 @@ class Instituciones extends CI_Controller{
         $this->load->model('Cuestionario_model');
         
         //Cargando datos básicos (_basico)
-            $data = $this->Institucion_model->basico($institucion_id);
-        
-        //Head includes específicos para esta función
-            $head_includes[] = 'highcharts';
+            $data = $this->Institucion_model->basic($institucion_id);
             
         //Identificar acumuladores de la gráfica
             $filtros['usuario_cuestionario.institucion_id'] = $institucion_id;
@@ -956,13 +917,13 @@ class Instituciones extends CI_Controller{
             $data['acumuladores'] = $acumuladores;
             $data['institucion_id'] = $institucion_id;
             $data['subseccion'] = 'resumen03';
-            $data['head_includes'] = $head_includes;
             $data['competencias'] = $this->Cuestionario_model->competencias_area($area_id); //Query competencias
-            $data['vista_b'] = 'instituciones/res03_v';
+            $data['view_a'] = 'instituciones/cuestionarios/res03_v';
+            $data['nav_3'] = 'instituciones/cuestionarios/submenu_v';
         
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Desempeño por competencias';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Desempeño por competencias';
+            $this->load->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -973,7 +934,7 @@ class Instituciones extends CI_Controller{
     function resultados_grupo($institucion_id, $cuestionario_id = NULL)
     {
         //Cargando datos básicos ($basico)
-        $data = $this->Institucion_model->basico($institucion_id);
+        $data = $this->Institucion_model->basic($institucion_id);
         $data['cuestionarios'] = $this->Institucion_model->cuestionarios($institucion_id);
         
         //Verificar si la institución tiene cuestionarios asociados
@@ -981,7 +942,7 @@ class Instituciones extends CI_Controller{
         {
             //Sí tiene, cuestionario asosciados
             $cuestionario_id = $this->Pcrn->si_nulo($cuestionario_id, $data['cuestionarios']->row()->id);
-            $vista_b = 'instituciones/cuestionarios/resultados_grupo_v';
+            $view_a = 'instituciones/cuestionarios/resultados_grupo_v';
             
             //Head includes específicos para la página, para gráficos
                 $head_includes[] = 'highcharts';
@@ -1014,7 +975,7 @@ class Instituciones extends CI_Controller{
                 $data['grupos'] = $grupos;
                 $data['correctas'] = $correctas;
                 $data['resultados'] = $resultados;
-                $data['menu_sub'] = 'instituciones/cuestionarios/submenu_v';
+                $data['nav_3'] = 'instituciones/cuestionarios/submenu_v';
                 $data['subseccion'] = 'resultados_grupo';
                 $data['cuestionario_id'] = $cuestionario_id;
         }
@@ -1023,14 +984,14 @@ class Instituciones extends CI_Controller{
             
             //La institución no tiene cuestionarios asignados
             $data['mensaje'] = 'Los estudiantes de esta institución no tienen cuestionarios asignados';
-            $vista_b = 'app/mensaje_v';
+            $view_a = 'app/mensaje_v';
         }
         
         //Solicitar vista
-            $data['titulo_pagina'] = $data['titulo_pagina'];
-            $data['subtitulo_pagina'] = 'Resultados por grupo';
-            $data['vista_b'] = $vista_b;
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_title'] = $data['head_title'];
+            $data['head_subtitle'] = 'Resultados por grupo';
+            $data['view_a'] = $view_a;
+            $this->load->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -1038,11 +999,13 @@ class Instituciones extends CI_Controller{
     /**
      * Muestra el resultado obtenido por los grupos de una institución en la ejecución de un cuestionario,
      * los resultados se muestran en un gráfico.
+     * 
+     * 2023-01-20 DESACTIVADO
      *
      * @param type $institucion_id
      * @param type $cuestionario_id
      */
-    function resultados_area($institucion_id, $cuestionario_id = NULL)
+    function z_resultados_area($institucion_id, $cuestionario_id = NULL)
     {
         
         //$this->output->enable_profiler(TRUE);
@@ -1098,10 +1061,11 @@ class Instituciones extends CI_Controller{
         
     }
     
-    /* Se muestran las listas de estudiantes y sus resultados en los diferentes cuestionarios
-    * Se filtran por cuestionario, grupo.
+    /**  Se muestran las listas de estudiantes y sus resultados en los diferentes cuestionarios
+    * Se filtran por cuestionario, grupo
+    * 2023-01-20 DESACTIVADO
     */    
-    function resultados_lista($institucion_id, $cuestionario_id = NULL, $grupo_id = NULL)
+    function z_resultados_lista($institucion_id, $cuestionario_id = NULL, $grupo_id = NULL)
     {    
         
         $this->output->enable_profiler(TRUE);
@@ -1144,11 +1108,13 @@ class Instituciones extends CI_Controller{
      * Muestra el resultado obtenido por los grupos de una institución en la ejecución de un cuestionario,
      * los resultados se muestran en un gráfico.
      * 
+     * 2023-01-20 DESACTIVADO
+     * 
      * @param type $institucion_id
      * @param type $cuestionario_id
      * @param type $area_id
      */
-    function resultados_componente($institucion_id, $cuestionario_id, $area_id = NULL)
+    function z_resultados_componente($institucion_id, $cuestionario_id, $area_id = NULL)
     {
                 
         //Cargando datos básicos ($basico)
@@ -1229,12 +1195,13 @@ class Instituciones extends CI_Controller{
     /**
      * Muestra el resultado obtenido por la institucionen la ejecución de un cuestionario,
      * los resultados se muestran en un gráfico. Clasificando los resultados por competencias
+     * 2023-01-20 DESACTIVADA
      * 
      * @param type $institucion_id
      * @param type $cuestionario_id
      * @param type $area_id
      */
-    function resultados_competencia($institucion_id, $cuestionario_id, $area_id = NULL)
+    function z_resultados_competencia($institucion_id, $cuestionario_id, $area_id = NULL)
     {
         
         //Cargando datos básicos ($basico)
@@ -1303,16 +1270,18 @@ class Instituciones extends CI_Controller{
         
     }
     
-    function resctn_grupo($institucion_id)
+    /**
+     * 2023-01-20 DESACTIVADO
+     */
+    function z_resctn_grupo($institucion_id)
     {
-        $this->output->enable_profiler(TRUE);
         //Load
             $this->load->model('Busqueda_model');
             $this->load->model('Cuestionario_model');
             $this->load->model('Grupo_model');
         
         //Cargando datos básicos ($basico)
-            $data = $this->Institucion_model->basico($institucion_id);
+            $data = $this->Institucion_model->basic($institucion_id);
             
         //Datos de consulta, construyendo array de búsqueda
             $busqueda = $this->Busqueda_model->busqueda_array();
@@ -1325,11 +1294,11 @@ class Instituciones extends CI_Controller{
             $data['grupos'] = $this->Grupo_model->buscar($busqueda);
 
         //Variables generales
-            $data['subtitulo_pagina'] = 'Resultados Cuestionarios x Grupos';
-            $data['vista_b'] = 'instituciones/cuestionarios/resctn_grupo_v';
-            //$data['vista_menu'] = 'usuarios/explorar_menu_v';
+            $data['head_subtitle'] = 'Resultados Cuestionarios x Grupos';
+            $data['view_a'] = 'instituciones/cuestionarios/resctn_grupo_v';
+            $data['nav_3'] = 'instituciones/cuestionarios/submenu_v';
 
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
 //FLIPBOOKS
@@ -1344,16 +1313,15 @@ class Instituciones extends CI_Controller{
         
         //Cargando datos básicos ($basico)
         if ( in_array($this->session->userdata('rol_id'), array(3,4,5)) ) { $institucion_id = $this->session->userdata('institucion_id'); }
-        $data = $this->Institucion_model->basico($institucion_id);
+        $data = $this->Institucion_model->basic($institucion_id);
         
         //Cargando array $data
-            $data['subseccion'] = 'listado';
             $data['flipbooks'] = $this->Institucion_model->flipbooks($institucion_id);
         
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Contenidos';
-            $data['vista_b'] = 'instituciones/flipbooks_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Contenidos';
+            $data['view_a'] = 'instituciones/flipbooks_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -1376,17 +1344,22 @@ class Instituciones extends CI_Controller{
 // PROCESOS
 //---------------------------------------------------------------------------------------------------
     
+    /**
+     * HTML VIEW
+     * Listado de procesos para ejecutar sobre la institución
+     * 2023-01-19
+     */
     function procesos($institucion_id)
     {
         
         //Cargando datos básicos ($basico)
             if ( $this->session->userdata('rol_id') > 2 ) { $institucion_id = $this->session->userdata('institucion_id'); }
-            $data = $this->Institucion_model->basico($institucion_id);
+            $data = $this->Institucion_model->basic($institucion_id);
         
         //Solicitar vista
-            $data['subtitulo_pagina'] = 'Procesos';
-            $data['vista_b'] = 'instituciones/procesos_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = 'Procesos';
+            $data['view_a'] = 'instituciones/procesos_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function actualizar_acumulador($institucion_id)
@@ -1467,22 +1440,23 @@ class Instituciones extends CI_Controller{
     }
     
     /**
-     * Vista para elegir opción de mensajes masivos
+     * HTML VIEW
+     * elegir opción de mensajes masivos
+     * 2023-01-19
      * 
-     * @param type $institucion_id
+     * @param int $institucion_id
      */
     function mensajes_masivos($institucion_id)
     {
         //Cargando datos básicos ($basico)
             if ( $this->session->userdata('rol_id') > 2 ) { $institucion_id = $this->session->userdata('institucion_id'); }
-            $data = $this->Institucion_model->basico($institucion_id);
+            $data = $this->Institucion_model->basic($institucion_id);
 
         //Variables generales
-            $data['subtitulo_pagina'] = 'Mensajes';
-            $data['vista_b'] = 'instituciones/mensajes_masivos_v';
-            $data['ayuda_id'] = 119;
+            $data['head_subtitle'] = 'Mensajes';
+            $data['view_a'] = 'instituciones/mensajes_masivos_v';
 
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
 
 // Pagos y compras

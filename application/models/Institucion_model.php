@@ -23,6 +23,22 @@ class Institucion_model extends CI_Model{
         return $basico;
     }
 
+    /**
+     * Variables básicas para vista de institución
+     * 2023-01-19
+     */
+    function basic($institucion_id)
+    {   
+        $row = $this->Institucion_model->datos_institucion($institucion_id);
+        
+        $basic['row'] = $row;
+        $basic['head_title'] = $row->nombre_institucion;
+        $basic['nav_2'] = 'instituciones/institucion_bs4_v';
+        $basic['view_a'] = 'instituciones/institucion_v';
+        
+        return $basic;
+    }
+
 // EXPLORE FUNCTIONS - instituciones/explorar
 //-----------------------------------------------------------------------------
     
@@ -308,7 +324,8 @@ class Institucion_model extends CI_Model{
 //---------------------------------------------------------------------------------------------------
 
     
-    function datos_institucion($institucion_id){
+    function datos_institucion($institucion_id)
+    {
         
         //Devuelve un objeto de registro con los datos del institucion
         
@@ -524,121 +541,82 @@ class Institucion_model extends CI_Model{
     }
     
     /**
-     * Guarda masivamente grupos, tabla grupo
-     * 
-     * @param type $array_hoja    Array con los datos de los grupos
-     * @return type
+     * Importa grupos masivamente de una tabla excel
+     * 2023-01-26
      */
-    function importar_grupos($array_hoja, $institucion_id)
-    {       
-        $this->load->model('Esp');
+    function importar_grupos($arr_sheet, $institucion_id)
+    {
         $this->load->model('Grupo_model');
+
+        $data = ['qty_imported' => 0, 'results' => []];
         
-        $no_importados = array();
-        $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
-        
-        $registro['anio_generacion'] = date('Y');
-        $registro['institucion_id'] = $institucion_id;
-        
-        foreach ( $array_hoja as $array_fila )
+        foreach ( $arr_sheet as $key => $row_data )
         {
-            $registro['nivel'] = $array_fila[0]; //Columna A
-            $registro['grupo'] = $array_fila[1]; //Columna B
-            $registro['nombre_grupo'] = $this->Grupo_model->generar_nombre($registro['nivel'], $registro['grupo']);
-
-            //Condicion de verificación, grupo único
-            $condicion = "nivel = {$registro['nivel']} AND ";
-            $condicion .= "grupo = '{$registro['grupo']}' AND ";
-            $condicion .= "institucion_id = {$registro['institucion_id']} AND ";
-            $condicion .= "anio_generacion = {$registro['anio_generacion']}";
-
-            $grupo_id = $this->Pcrn->existe('grupo', $condicion);
-                
-            //Validar
-                $condiciones = 0;
-                if ( $grupo_id == 0 ) { $condiciones++; }                   //El grupo no existe
-                if ( strlen($array_fila[0]) >= 0 ) { $condiciones++; }      //Debe tener nivel
-                if ( strlen($array_fila[1]) >= 0 ) { $condiciones++; }      //Debe tener nivel
-                
-            //Si cumple las condiciones
-            if ( $condiciones == 3 )
-            {
-                $this->Pcrn->guardar('grupo', 'id = 0', $registro);
-            } else {
-                $no_importados[] = $fila;
-            }
-            
-            $fila++;    //Para siguiente fila
+            $data_import = $this->importar_grupo($row_data, $institucion_id);
+            $data['qty_imported'] += $data_import['status'];
+            $data['results'][$key + 2] = $data_import;
         }
         
-        $res_importacion['no_importados'] = $no_importados;
-        
-        return $res_importacion;
+        return $data;
+    }
+
+    /**
+     * Importa un grupo a la tabla grupo, desde archivo excel
+     * 2023-01-26
+     */
+    function importar_grupo($row_data, $institucion_id)
+    {
+        //Construyendo registro
+            $aRow['anio_generacion'] = date('Y');
+            $aRow['institucion_id'] = $institucion_id;
+            $aRow['nivel'] = $row_data[0]; //Columna A
+            $aRow['grupo'] = $row_data[1]; //Columna B
+            $aRow['nombre_grupo'] = $this->Grupo_model->generar_nombre($aRow['nivel'], $aRow['grupo']);
+
+        //Condicion de verificación, grupo único
+            $condition = "nivel = {$aRow['nivel']} AND ";
+            $condition .= "grupo = '{$aRow['grupo']}' AND ";
+            $condition .= "institucion_id = {$aRow['institucion_id']} AND ";
+            $condition .= "anio_generacion = {$aRow['anio_generacion']}";
+
+            $grupo_id = $this->Db_model->exists('grupo', $condition);
+
+        //Validar
+            $error_text = '';
+            if ( $grupo_id > 0 ) { $error_text .= 'Ya existe un grupo con estos datos. '; }
+            if ( strlen($row_data[0]) == 0 ) { $error_text .= "La columna A (Nivel) está vacía. "; }
+            if ( strlen($row_data[1]) == 0 ) { $error_text .= "La columna B (Grupo) está vacía. "; }
+
+        //Si no hay error
+            if ( $error_text == '' )
+            {
+                $saved_id = $this->Db_model->save('grupo', 'id = 0', $aRow);
+                $data = array('status' => 1, 'text' => "Grupo importado: {$aRow['nombre_grupo']}", 'imported_id' => $saved_id);
+            } else {
+                $data = array('status' => 0, 'text' => $error_text, 'imported_id' => 0);
+            }
+
+        return $data;
     }
     
     /**
-     * Inserta masivamente grupos
-     * tabla grupo
-     * 
-     * @param type $grupos    Array con los datos de los grupos
+     * Asignar profesores a gurpos de forma masiva con archivo Excel
+     * 2023-01-19
      */
-    function z_cargar_grupos($institucion_id, $grupos)
-    {   
-        //Básico
-            $this->load->model('Esp');
-        
-        $cargados = array();
-        $no_cargados = array();
-        
-        $registro['anio_generacion'] = $this->input->post('anio_generacion');
-        $registro['institucion_id'] = $institucion_id;
-        
-        foreach ( $grupos as $row_grupo ) {
-            
-            //identificar tema_id
-            $cargado = 0;
-            if ( ! is_null($row_grupo[0]) ){
-                $registro['nivel'] = $row_grupo[0]; //Columna A
-                $registro['grupo'] = $row_grupo[1]; //Columna B
-                
-                //Condicion de verificación, grupo único
-                $condicion = "nivel = {$registro['nivel']} AND ";
-                $condicion .= "grupo = '{$registro['grupo']}' AND ";
-                $condicion .= "institucion_id = {$registro['institucion_id']} AND ";
-                $condicion .= "anio_generacion = {$registro['anio_generacion']}";
-                
-                $grupo_id = $this->Pcrn->guardar('grupo', $condicion, $registro);
-            }
-            
-            if ( $grupo_id > 0 ) { $cargado = 1; }
-            
-            //Cargar según resultado
-            if ( $cargado ) { 
-                $cargados[] = $grupo_id; 
-            } else {
-                $no_cargados[] = $row_grupo[0] .  ' - ' . $row_grupo[1];
-            }
-            
-        }
-        
-        $resultado['cargados'] = $cargados;
-        $resultado['no_cargados'] = $no_cargados;
-        
-        return $resultado;
-    }
-    
     function asignar_profesores($array_excel)
     {
-        $resultado_cargue = array();
-        $cargados = array();
+        $resultado_cargue = [];
+        $cargados = [];
+        $no_importados = [];
+        $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
         
         //Referencia
         
         foreach ( $array_excel as $row_profesor ) {
             
-            $grupo_id = $this->Pcrn->campo_id('grupo', $row_profesor[0], 'id');
-            $profesor_id = $this->Pcrn->campo_id('usuario', $row_profesor[1], 'id');
-            $area_id = $this->Pcrn->campo('item', "id = $row_profesor[2] AND categoria_id = 1", 'id');  //Categoria 1, corresponde a áreas
+            $grupo_id = $this->Db_model->field_id('grupo', $row_profesor[0], 'id');
+            $profesor_id = $this->Db_model->field_id('usuario', $row_profesor[1], 'id');
+            $area_id = $this->Db_model->field('item', "id = $row_profesor[2] AND categoria_id = 1", 'id');  //Categoria 1, corresponde a áreas
             
             $condiciones = 0;
             if ( ! is_null($grupo_id) ) { $condiciones += 1; }      //Condición 1, El grupo existe
@@ -649,17 +627,23 @@ class Institucion_model extends CI_Model{
             if ( $condiciones == 3 ){
                 
                 //Preparación de registro
-                    $registro['grupo_id'] = $grupo_id;
-                    $registro['profesor_id'] = $profesor_id;
-                    $registro['area_id'] = $area_id;
+                    $aRow['grupo_id'] = $grupo_id;
+                    $aRow['profesor_id'] = $profesor_id;
+                    $aRow['area_id'] = $area_id;
 
                 //Insertar en la tabla grupo_profesor
-                    $condicion = "grupo_id = {$registro['grupo_id']} AND profesor_id = {$registro['profesor_id']} AND area_id = {$registro['area_id']}";
-                    $cargados[] = $this->Pcrn->guardar('grupo_profesor', $condicion, $registro);
+                    $condition = "grupo_id = {$aRow['grupo_id']} AND profesor_id = {$aRow['profesor_id']} AND area_id = {$aRow['area_id']}";
+                    $cargados[] = $this->Db_model->save('grupo_profesor', $condition, $aRow);
+            } else {
+                $no_importados[] = $fila;
             }
+
+            $fila++;    //Para siguiente fila
+            
         }
         
         $resultado_cargue['cargados'] = $cargados;
+        $resultado_cargue['no_importados'] = $no_importados;
         
         return $resultado_cargue;
     }

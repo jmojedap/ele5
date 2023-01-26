@@ -1301,7 +1301,7 @@ class Temas extends CI_Controller{
     function eliminar_preguntas_abiertas_e()
     {
         //Proceso
-        $this->load->library('excel_new');            
+        $this->load->library('excel_new');
         $imported_data = $this->excel_new->arr_sheet_default($this->input->post('sheet_name'));
         
         if ( $imported_data['status'] == 1 )

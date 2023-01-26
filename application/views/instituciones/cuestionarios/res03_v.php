@@ -1,3 +1,5 @@
+<?php $this->load->view('head_includes/highcharts') ?>
+
 <?php
     $condiciones[0] = "institucion_id = {$institucion_id}";
     
@@ -83,9 +85,7 @@ $(function () {
 });
 </script>
 
-<?php $this->load->view('instituciones/submenu_cuestionarios_v'); ?>
-
-<div class="sep2">
+<div class="mb-2 text-center">
     <?php foreach ($areas->result() as $row_area) : ?>
     <?php
         $clase_area = 'btn btn-default';
@@ -95,7 +95,7 @@ $(function () {
     <?php endforeach ?>
 </div>
 
-<div class="sep2">
+<div class="mb-2 text-center">
     <?= anchor("instituciones/cuestionarios_resumen03/{$institucion_id}/{$area_id}", 'Niveles', 'class="' . $clase_nivel_todos . '" title="Todos los niveles"') ?>
     <?php foreach ($niveles as $key => $nombre_nivel) : ?>
     <?php

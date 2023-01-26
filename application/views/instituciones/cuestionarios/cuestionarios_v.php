@@ -1,5 +1,3 @@
-<?php $this->load->view('instituciones/submenu_cuestionarios_v'); ?>
-
 <?php
 
     $seccion = $this->uri->segment(2);
@@ -33,16 +31,19 @@
     <div class="col col-sm-10">
         <div class="sep2" style="overflow: hidden;">
             <?= form_open("instituciones/cuestionarios/{$row->id}/{$filtro}", $att_form) ?>
-                <div class="casilla w5">
-                    <?= form_input($att_q) ?>
+                <div class="d-flex">
+                    <div class="w5 mr-2">
+                        <?= form_input($att_q) ?>
+                    </div>
+                    <div class="w4 mr-2">
+                        <?= form_dropdown('a', $opciones_area, $filters['a'], 'class="form-control"'); ?>
+                    </div>
+                    <div class="w4 mr-2">
+                        <?= form_dropdown('n', $opciones_nivel, $filters['n'], 'title="Filtrar por nivel" class="form-control"'); ?>
+                    </div>
+                    <div class="w120p mr-2"><?= form_submit($att_submit) ?></div>
+
                 </div>
-                <div class="casilla w4">
-                    <?= form_dropdown('a', $opciones_area, $filters['a'], 'class="form-control"'); ?>
-                </div>
-                <div class="casilla w4">
-                    <?= form_dropdown('n', $opciones_nivel, $filters['n'], 'title="Filtrar por nivel" class="form-control"'); ?>
-                </div>
-                <div class="casilla"><?= form_submit($att_submit) ?></div>
             <?= form_close() ?>
         </div>
     </div>
@@ -58,7 +59,7 @@
 <?php } ?>
      
 <br/>
-<table class="table table-default bg-blanco">
+<table class="table table-default bg-white">
     <thead>
         <th width="60px">Resultados</th>
         <th>Cuestionario</th>
@@ -67,7 +68,7 @@
     <tbody>
         <?php foreach ($cuestionarios->result() as $row_cuestionario) : ?>
             <tr>
-                <td><?= anchor("cuestionarios/grupos/{$row_cuestionario->id}/{$row->id}", 'Ver', 'class="btn btn-default" target="_blank"') ?></td>
+                <td><?= anchor("cuestionarios/grupos/{$row_cuestionario->id}/{$row->id}", 'Ver', 'class="btn btn-light" target="_blank"') ?></td>
                 <td><?= $row_cuestionario->nombre_cuestionario ?></td>
                 <td>
                     <span class="etiqueta nivel w1"><?= $row_cuestionario->nivel ?></span>

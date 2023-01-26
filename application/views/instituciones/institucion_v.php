@@ -100,6 +100,13 @@
             'atributos' => 'title="Explorar instituciones"'
         );
             
+        $arr_menus['info'] = array(
+            'icono' => '',
+            'texto' => 'Info',
+            'link' => "instituciones/info/{$row->id}",
+            'atributos' => 'title="Información sobre la institución"'
+        );
+
         $arr_menus['grupos'] = array(
             'icono' => '<i class="fa fa-users"></i>',
             'texto' => 'Grupos',
@@ -164,9 +171,9 @@
         );
         
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('explorar', 'grupos', 'usuarios', 'flipbooks', 'cuestionarios', 'procesos', 'mensajes_masivos', 'editar', 'eliminar_pre');
-        $elementos_rol[1] = array('explorar', 'grupos', 'usuarios', 'flipbooks', 'cuestionarios', 'procesos', 'mensajes_masivos', 'editar', 'eliminar_pre');
-        $elementos_rol[2] = array('explorar', 'grupos', 'usuarios', 'flipbooks', 'cuestionarios', 'procesos', 'editar');
+        $elementos_rol[0] = array('explorar', 'info', 'grupos', 'usuarios', 'flipbooks', 'cuestionarios', 'procesos', 'mensajes_masivos', 'editar', 'eliminar_pre');
+        $elementos_rol[1] = array('explorar', 'info', 'grupos', 'usuarios', 'flipbooks', 'cuestionarios', 'procesos', 'mensajes_masivos', 'editar', 'eliminar_pre');
+        $elementos_rol[2] = array('explorar', 'info', 'grupos', 'usuarios', 'flipbooks', 'cuestionarios', 'procesos', 'editar');
         $elementos_rol[3] = array('grupos', 'usuarios', 'flipbooks', 'cuestionarios', 'mensajes_masivos');
         $elementos_rol[4] = array('grupos', 'usuarios', 'flipbooks', 'cuestionarios', 'mensajes_masivos');
         $elementos_rol[5] = array('grupos');

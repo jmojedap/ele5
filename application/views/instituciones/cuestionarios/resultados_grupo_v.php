@@ -4,23 +4,21 @@
     $total_correctas = 0;
 ?>
 
-<?php $this->load->view('instituciones/cuestionarios/submenu_cuestionarios_v'); ?>
-
 <div class="row">
     <div class="col col-md-4">
         <p>
-            <span class="suave">Cuestionario: </span> 
+            <span class="text-muted">Cuestionario: </span> 
             <span class="resaltar"><?= $row_cuestionario->cuestionario_n1 ?></span> |
-            <span class="suave">Preguntas: </span> 
+            <span class="text-muted">Preguntas: </span> 
             <span class="resaltar"><?= $row_cuestionario->num_preguntas ?></span> |
         </p>
         <div>
-            <?php $this->load->view($menu_sub) ?>
+            
         </div>
     </div>
     <div class="col col-md-8">
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card">
+            <div class="card-body">
               <div id="container_1" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
             </div>
         </div>
@@ -28,7 +26,7 @@
         <br/>
 
         <div>
-            <table class="table table-condensed bg-blanco" cellspacing="0">
+            <table class="table table-condensed bg-white" cellspacing="0">
                 <thead>
                     <tr>
                         <th>Grupo</th>

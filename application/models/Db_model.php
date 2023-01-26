@@ -80,8 +80,8 @@ class Db_model extends CI_Model{
     }
     
     /**
-     * Determina si exists un row con una $condition sql en una $table
-     * Si no exists devuelve 0, si exists devuelve el id del row
+     * Determina si existe un row con una $condition sql en una $table
+     * Si no existe devuelve 0, si existe devuelve el id del row
      * 
      * @param type $table
      * @param type $condition string

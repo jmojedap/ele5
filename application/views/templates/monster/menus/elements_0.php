@@ -23,7 +23,7 @@
                         active: false,
                         icon: 'fa fa-university',
                         cf: 'instituciones/explorar',
-                        sections: ['instituciones/explorar', 'instituciones/nuevo']
+                        sections: ['instituciones/explorar', 'instituciones/nuevo', 'instituciones/info']
                     },
                     {
                         text: 'Grupos',
@@ -33,7 +33,7 @@
                         sections: []
                     }
                 ],
-                sections: ['instituciones/explorar', 'instituciones/nuevo']
+                sections: ['instituciones/explorar', 'instituciones/nuevo','instituciones/info']
             },
             {
                 text: 'Recursos',
