@@ -46,7 +46,6 @@ class App extends CI_Controller{
             
         } else {
             $this->login();
-            //$this->mantenimiento();
         }
     }
     

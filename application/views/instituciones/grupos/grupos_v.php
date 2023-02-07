@@ -14,7 +14,7 @@
     <tbody>
         <?php foreach ($grupos->result() as $row_grupo) : ?>
             <?php
-                $num_estudiantes = $this->Pcrn->num_registros('usuario_grupo', "grupo_id = {$row_grupo->id}");
+                $num_estudiantes = $this->Db_model->num_rows('usuario', "grupo_id = {$row_grupo->id}");
             ?>
         
             <?php if ( $anio_generacion != $row_grupo->anio_generacion ){ ?>

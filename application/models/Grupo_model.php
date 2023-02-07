@@ -97,7 +97,7 @@ class Grupo_model extends CI_Model{
 
     /**
      * Array Listado elemento resultado de la búsqueda (filtros).
-     * 2020-01-21
+     * 2023-01-07
      */
     function list($filters, $per_page = NULL, $offset = NULL)
     {
@@ -106,7 +106,7 @@ class Grupo_model extends CI_Model{
 
         foreach ($query->result() as $row)
         {
-            $row->qty_students = $this->Db_model->num_rows('usuario_grupo', "grupo_id = {$row->id}");  //Cantidad de estudiantes
+            $row->qty_students = $this->Db_model->num_rows('usuario', "grupo_id = {$row->id}");  //Cantidad de estudiantes
             $list[] = $row;
         }
 
@@ -375,7 +375,7 @@ class Grupo_model extends CI_Model{
     
     /**
      * Query con los estudiantes que pertenecen a un grupo
-     * 2022-06-23
+     * 2023-02-07 (Se filtra por usuario.grupo_id, ya no en tabla usuario_grupo)
      * @param string $condicion - SQL para limitar estudiantes
      * @param int $grupo_id 
      * @return object $query Listado de estudiantes
@@ -387,7 +387,8 @@ class Grupo_model extends CI_Model{
                 username, usuario.estado, pago, usuario.grupo_id, usuario.institucion_id, 
                 COUNT(evento.id) AS qty_login'
             );
-            $this->db->where("usuario.id IN (SELECT usuario_id FROM usuario_grupo WHERE grupo_id = {$grupo_id})");
+            //$this->db->where("usuario.id IN (SELECT usuario_id FROM usuario_grupo WHERE grupo_id = {$grupo_id})");
+            $this->db->where("usuario.grupo_id = {$grupo_id}");
             $this->db->join('evento', 
                 'evento.usuario_id = usuario.id AND evento.tipo_id = 101',
                 'left');

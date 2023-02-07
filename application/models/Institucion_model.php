@@ -513,7 +513,7 @@ class Institucion_model extends CI_Model{
     /**
      * Devuelve un query con los grupos que pertenecen a una instituciÓn
      * 
-     * @param type $institucion_id
+     * @param int $institucion_id
      * @return boolean 
      */
     

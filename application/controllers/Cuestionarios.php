@@ -123,20 +123,20 @@ class Cuestionarios extends CI_Controller{
     }
     
     /**
-     * Exporta el resultado de la búsqueda a un archivo de Excel
+     * Exportar cuestinarios filtrados a archivo Excel
+     * 2023-01-02
      */
     function exportar()
     {
         
         set_time_limit(120);    //120 segundos, 2 minutos para el proceso
         //Cargando
-            $this->load->model('Busqueda_model');
+            $this->load->model('Search_model');
             $this->load->model('Pcrn_excel');
         
         //Datos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
-            $resultados_total = $this->Cuestionario_model->buscar($busqueda); //Para calcular el total de resultados
+            $filters = $this->Search_model->filters();
+            $resultados_total = $this->Cuestionario_model->search($filters); //Para calcular el total de resultados
         
             if ( $resultados_total->num_rows() <= MAX_REG_EXPORT ) {
                 //Preparar datos
@@ -177,7 +177,7 @@ class Cuestionarios extends CI_Controller{
         
         //Array data espefícicas
             $data['head_title'] = 'Cuestionarios';
-            $data['head_subtitle'] = 'Nuevo';
+            $data['head_subtitle'] = 'Crear';
             $data['nav_2'] = 'cuestionarios/explore/menu_v';
             $data['view_a'] = 'app/gc_v';
         
@@ -220,21 +220,17 @@ class Cuestionarios extends CI_Controller{
     function info($cuestionario_id)
     {
         $data = $this->Cuestionario_model->basico($cuestionario_id);
-        
         $data['view_a'] = 'cuestionarios/info_v';
         
         //Cargar vista
         $this->load->view(TPL_ADMIN_NEW, $data);
     }
-
-
     
 // CREAR COPIA DE UN CUESTIONARIO
 //-----------------------------------------------------------------------------
     
     /**
      * Formulario para la creación de una copia de un cuestionario
-     * 
      * 
      * @param type $cuestionario_id 
      */
@@ -432,13 +428,16 @@ class Cuestionarios extends CI_Controller{
             $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
+    /**
+     * JSON
+     * 
+     */
     function lista_estudiantes($cuestionario_id, $grupo_id = NULL)
     {
         $resultado['lista'] = NULL;
         if ( ! is_null($grupo_id) )
         {
             $estudiantes = $this->Cuestionario_model->estudiantes($cuestionario_id, $grupo_id);
-            //$resultado['lista'] = $estudiantes->result();
             
             foreach ( $estudiantes->result() as $row_estudiante )
             {
@@ -494,7 +493,6 @@ class Cuestionarios extends CI_Controller{
             $data['grupos'] = $this->Usuario_model->grupos_usuario($this->session->userdata('user_id'), null, $data['row']->nivel);
         
         //Solicitar vista
-            //$data['view_a'] = 'cuestionarios/asignar_v';
             $data['view_a'] = 'cuestionarios/asignar/asignar_v';
             $this->load->view(TPL_ADMIN_NEW, $data);
     }

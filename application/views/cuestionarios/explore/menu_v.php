@@ -20,7 +20,7 @@
     var sections_rol = [];
     
     sections.explorar = {
-        icon: 'fa fa-search',
+        icon: '',
         text: 'Explorar',
         class: '<?php echo $cl_nav_2['cuestionarios_explorar'] ?>',
         cf: 'cuestionarios/explorar',
@@ -28,7 +28,7 @@
     };
 
     sections.asignaciones = {
-        icon: 'fa fa-users',
+        icon: '',
         text: 'Asignaciones',
         class: '<?php echo $cl_nav_2['cuestionarios_asignaciones'] ?>',
         cf: 'cuestionarios/asignaciones',
@@ -36,7 +36,7 @@
     };
 
     sections.asignar_masivo = {
-        icon: 'fa fa-file-excel',
+        icon: '',
         text: 'Asignar',
         class: '<?php echo $cl_nav_2['cuestionarios_asignar_masivo'] ?>',
         cf: 'cuestionarios/asignar_masivo',
@@ -44,7 +44,7 @@
     };
 
     sections.responder_masivo = {
-        icon: 'fa fa-file-excel',
+        icon: '',
         text: 'Cargar respuestas',
         class: '<?php echo $cl_nav_2['cuestionarios_responder_masivo'] ?>',
         cf: 'cuestionarios/responder_masivo',
@@ -52,7 +52,7 @@
     };
 
     sections.cargar_json = {
-        icon: 'far fa-file',
+        icon: '',
         text: 'Respuestas JSON',
         class: '<?php echo $cl_nav_2['respuestas_cargar_json'] ?>',
         cf: 'respuestas/cargar_json',
@@ -60,8 +60,8 @@
     };
 
     sections.nuevo = {
-        icon: 'fa fa-plus',
-        text: 'Nuevo',
+        icon: '',
+        text: 'Crear',
         class: '<?php echo $cl_nav_2['cuestionarios_nuevo'] ?>',
         cf: 'cuestionarios/nuevo/add',
         anchor: true

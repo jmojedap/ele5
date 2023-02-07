@@ -1177,7 +1177,7 @@ class Usuario_model extends CI_Model{
     
     /**
      * Inserta masivamente estudiantes
-     * tabla usuario, ACT 2021-01-19
+     * Función set_grupo, ACT 2023-01-23
      */
     function importar_estudiantes($array_hoja)
     {
@@ -1194,7 +1194,6 @@ class Usuario_model extends CI_Model{
         //Predeterminados registro nuevo
             $registro['rol_id'] = 6;    //Estudiante
             $registro['cpw'] = 1;       //Nueva encriptación de contraseña
-            //$registro['estado'] = 2;    //Temporal
             $registro['creado'] = date('Y-m-d h:i:s');
             $registro['editado'] = date('Y-m-d h:i:s');
             $registro['creado_usuario_id'] = $this->session->userdata('usuario_id');
@@ -1238,9 +1237,7 @@ class Usuario_model extends CI_Model{
                     $nuevo_usuario_id = $this->Pcrn->guardar('usuario', "username = '{$registro['username']}'", $registro);
                 
                 //Insertar registro en la tabla 'usuario_grupo'
-                    $registro_ug['grupo_id'] = $row_grupo->id;   //Para tabla usuario_grupo
-                    $registro_ug['usuario_id'] = $nuevo_usuario_id;
-                    $this->Grupo_model->insertar_ug($registro_ug);
+                    $this->Usuario_model->set_grupo($nuevo_usuario_id, $row_grupo->id);
                     
                 $importados[] = $nuevo_usuario_id;
             } else {
@@ -1900,10 +1897,10 @@ class Usuario_model extends CI_Model{
      * Objeto query con grupos que están asociados a un usuario, dependiendo
      * del rol de usuario, puede cambiar el alcance y selección de grupos.
      * 
-     * @param type $usuario_id
-     * @param type $institucion_id
-     * @param type $nivel
-     * @return type
+     * @param int $usuario_id
+     * @param int $institucion_id
+     * @param int $nivel
+     * @return object $grupos
      */
     function grupos_usuario($usuario_id, $institucion_id = NULL, $nivel = NULL)
     {
@@ -1999,29 +1996,6 @@ class Usuario_model extends CI_Model{
         
         return $anio_usuario;
     }
-    
-    /**
-     * DESACTIVADA 2022-03-31
-     */
-    function z_insertar_usuario($username, $email, $password)
-    {
-        $data = array(
-            'username'  => $username,
-            'email'      => $email,
-            'password'  => $password
-        );
-        $this->db->insert('usuario', $data);
-        return $this->db->insert_id();
-    }
-    
-    /**
-     * DESCTIVADA 2022-03-31
-     */
-    function z_actualizar($usuario_id, $data)
-    {
-        $this->db->where('id', $usuario_id);
-        $this->db->update('usuario', $data);
-    }
 
     /**
      * Asignar a un estudiante a un grupo
@@ -2036,27 +2010,6 @@ class Usuario_model extends CI_Model{
 
         return $ug_id;
     }
-    
-    /**
-     * Cambiar un estudiante de un grupo a otro
-     * DESACTIVADA 2022-03-31
-     */
-    /*function z_cambiar_grupo($usuario_id, $grupo_id, $grupo_destino_id)
-    {
-        //Eliminar del grupo original
-            $this->db->where('usuario_id', $usuario_id);
-            $this->db->where('grupo_id', $grupo_id);
-            $this->db->delete('usuario_grupo');
-            
-        //Agregar al nuevo grupo
-            $registro['usuario_id'] = $usuario_id;
-            $registro['grupo_id'] = $grupo_destino_id;
-            $condicion = "usuario_id = {$registro['usuario_id']} AND grupo_id = {$registro['grupo_id']}";
-            $this->Pcrn->guardar('usuario_grupo', $condicion, $registro);
-            
-        //Actualiar grupo actual
-            $this->act_grupo_actual($usuario_id);
-    }*/
     
     /**
      * Actualizar a un estudiante el grupo actual. Campo: usuario.grupo_id

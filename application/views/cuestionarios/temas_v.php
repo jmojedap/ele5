@@ -1,4 +1,4 @@
-<table class="table table-hover bg-blanco">
+<table class="table table-hover bg-white">
     <thead>
         <th class="<?= $clases_col['id'] ?> warning" width="40px">ID</th>
         <th class="<?= $clases_col['nombre_tema'] ?>">Tema</th>

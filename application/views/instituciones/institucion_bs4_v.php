@@ -1,4 +1,64 @@
 <?php
+    
+    /*$cant_login = $this->Institucion_model->cant_login($row->id);
+    $cant_estudiantes = $this->Institucion_model->cant_estudiantes($row->id);
+    $cant_pagaron = $this->Institucion_model->cant_estudiantes($row->id, 'pago = 1');
+    
+    $porcentaje_pagaron = 0; 
+    if ( $cant_estudiantes > 0 ) { $porcentaje_pagaron = 100 * $cant_pagaron / $cant_estudiantes; }
+
+    $promedio_login = 0;
+    if ( $cant_login > 0 ) { $promedio_login = $cant_login / $cant_estudiantes; } */
+
+    $cant_login = 0;
+    $cant_estudiantes = $this->Institucion_model->cant_estudiantes($row->id);
+    $cant_usuarios_institucionales = $this->Db_model->num_rows('usuario', "institucion_id = {$row->id} AND rol_id <>6");
+    $cant_pagaron = $this->Institucion_model->cant_estudiantes($row->id, 'pago = 1');
+    
+    $porcentaje_pagaron = 0; 
+    if ( $cant_estudiantes > 0 ) { $porcentaje_pagaron = 100 * $cant_pagaron / $cant_estudiantes; }
+
+    $promedio_login = 0;
+    //if ( $cant_login > 0 ) { $promedio_login = $cant_login / $cant_estudiantes; } 
+?>
+
+<div class="sep1">
+    <p>
+        <span class="text-danger"><?= $row->cod ?></span>
+        <span class="text-muted"> &middot; </span>
+
+        <span class="text-muted"><i class="fa fa-map-marker"></i></span>
+        <span class="text-danger"><?= $row->lugar_nombre ?></span>
+        <span class="text-muted"> &middot; </span>
+        
+        <span class="text-muted">Estudiantes:</span>
+        <span class="text-danger"><?= $cant_estudiantes ?></span>
+        <span class="text-muted"> &middot; </span>
+        
+
+        <!-- <span class="text-muted">Login</span>
+        <span class="text-danger"><?= $cant_login ?></span>
+        <span class="text-muted"> &middot; </span> -->
+
+        <!-- <span class="text-muted">Promedio login</span>
+        <span class="text-danger"><?= number_format($promedio_login, 1) ?></span>
+        <span class="text-muted"> &middot; </span> -->
+        
+        <?php if ( in_array($this->session->userdata('rol_id'), array(0,1,2,8)) ) : ?>                
+            <span class="text-muted">Pagaron</span>
+            <span class="text-danger"><?= $cant_pagaron ?></span>
+            <span class="text-muted">(<?= number_format($porcentaje_pagaron, 0) ?>%)</span>
+            <span class="text-muted"> &middot; </span>
+        <?php endif ?>
+
+        <span class="text-muted"> Profesores</span>
+        <span class="text-danger"><?= $cant_usuarios_institucionales ?></span>
+        <span class="text-muted"> &middot; </span>
+    </p>
+</div>
+
+
+<?php
         $seccion = $this->uri->segment(2);
         if ( $this->uri->segment(2) == 'nuevo_grupo' ) { $seccion = 'grupos'; }
         if ( $this->uri->segment(2) == 'cargar_grupos' ) { $seccion = 'grupos'; }

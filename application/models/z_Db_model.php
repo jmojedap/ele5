@@ -1,9 +1,9 @@
 <?php
 class Db_model extends CI_Model{
     
-    /* Db, abreviatura de Data Base
-     * Funciones complementarias para operación con base de datos
-     * Actualizada 2022-07-12
+    /* Db, is abbreviation for Database
+     * Functions that complement database operations with CodeIgniter
+     * Actualizada 2021-03-18
      */
       
     /**
@@ -73,14 +73,15 @@ class Db_model extends CI_Model{
     */
     function num_rows($table, $condition)
     {    
+        $this->db->select('id');
         $this->db->where($condition);
         $query = $this->db->get($table);
         return $query->num_rows();
     }
     
     /**
-     * Determina si exists un row con una $condition sql en una $table
-     * Si no exists devuelve 0, si exists devuelve el id del row
+     * Determina si existe un row con una $condition sql en una $table
+     * Si no existe devuelve 0, si existe devuelve el id del row
      * 
      * @param type $table
      * @param type $condition string
@@ -100,34 +101,27 @@ class Db_model extends CI_Model{
      * Determina si un valor para un field es único en la table. Si se agrega
      * el ID de un row específico, lo descarta en la búsqueda, valor ya
      * existente.
-     * 2021-07-26
+     * 2019-11-05
      */
     function is_unique($table, $field, $value, $row_id = NULL)
     {
-        $is_unique = 1;
+        $is_unique = TRUE;
         
         $this->db->select('id');
         $this->db->where("{$field} = '{$value}'");
-        $this->db->where("LENGTH({$field}) > 0");
+        $this->db->where("LENGTH({$field}) > 0");   //Que no esté vacío
         if ( ! is_null($row_id) ) { $this->db->where("id <> {$row_id}"); }
         $query = $this->db->get($table);
         
-        if ( $query->num_rows() > 0 && strlen($value) > 0 )
-        {
-            $is_unique = 0;
-        }
+        if ( $query->num_rows() > 0 ) { $is_unique = FALSE; }
         
         return $is_unique;
     }
     
     /**
-     * Si un row con una $condition sql exists en una $table, se edita
-     * Si no exists se inserta nuevo row. Devuelve el id del row editado o insertado
-     * 
-     * @param type $table
-     * @param type $condition
-     * @param type $arr_row
-     * @return type
+     * Si un row con una $condition sql existe en una $table, se edita
+     * Si no existe se inserta nuevo registro. Devuelve el id del row editado o insertado
+     * 2019-12-10
      */
     function save($table, $condition, $arr_row)
     {
@@ -139,6 +133,7 @@ class Db_model extends CI_Model{
             $this->db->insert($table, $arr_row);
             $row_id = $this->db->insert_id();
         } else {
+            unset($arr_row['creator_id']);
             //Already exists, update
             $this->db->where('id', $row_id);
             $this->db->update($table, $arr_row);
@@ -178,7 +173,11 @@ class Db_model extends CI_Model{
      * Si un row con una $condition sql no exists en una $table, se inserta
      * Diferente a Db_model->save(), si exists, NO se edita.
      * Devuelve el id del row editado o insertado
-     *
+     * 
+     * @param type $table
+     * @param type $condition
+     * @param type $row
+     * @return type
      */
     function insert_if($table, $condition, $row)
     {
@@ -194,63 +193,21 @@ class Db_model extends CI_Model{
         return $row_id;           
     }
 
-    /**
-     * String con condición Where SQL, a partir de un registro $arr_row, filtrando
-     * los que coinciden con los campos en $fields;
-     * 2019-09-23
-     */
-    function condition($arr_row, $fields)
-    {
-        $condition = '';
-
-        foreach ($fields as $field)
-        {
-            $condition .= "{$field} = {$arr_row[$field]} AND ";
-        }
-
-        $condition = substr($condition,0,-5);
-
-        return $condition;
-    }
-
 // HELPERS
 //-----------------------------------------------------------------------------
 
     /**
-     * Array from HTTP:POST, adding edition data
-     * 2021-06-02
+     * Array from Post, adding edition data
+     * 2019-11-29
      */
-    function arr_row($data_from_post = TRUE)
+    function arr_row($row_id)
     {
-        $arr_row = array();
-
-        if ( $data_from_post ) { $arr_row = $this->input->post(); }
+        $arr_row = $this->input->post();
         
-        $arr_row['updater_id'] = $this->session->userdata('user_id');
-        $arr_row['updated_at'] = date('Y-m-d H:i:s');
+        $arr_row['editor_id'] = $this->session->userdata('user_id');
         $arr_row['creator_id'] = $this->session->userdata('user_id');
-        $arr_row['created_at'] = date('Y-m-d H:i:s');
         
-        if ( isset($arr_row['id']) )
-        {
-            unset($arr_row['creator_id']);
-            unset($arr_row['created_at']);
-        }
-
-        return $arr_row;
-    }
-
-    /**
-     * Array predeterminado para edición de un registro
-     * 2019-06-17
-     */
-    function arr_row_edit($data_from_post = TRUE)
-    {
-        $arr_row = array();
-        if ( $data_from_post ) { $arr_row = $this->input->post(); } //Se toman los datos del POST
-        
-        $arr_row['updater_id'] = $this->session->userdata('user_id');
-        $arr_row['updated_at'] = date('Y-m-d H:i:s');
+        if ( $row_id == 0 ) { unset($arr_row['creator_id']); }
 
         return $arr_row;
     }

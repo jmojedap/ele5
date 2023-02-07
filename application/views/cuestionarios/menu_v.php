@@ -17,14 +17,14 @@
     
     //Atributos de los elementos del menú
         $arr_menus['explorar'] = array(
-            'icono' => '<i class="fa fa-arrow-left"></i>',
+            'icono' => '',
             'texto' => 'Explorar',
             'link' => "cuestionarios/explorar/",
             'atributos' => 'title="Ir a lista de cuestionarios"'
         );
             
         $arr_menus['info'] = array(
-            'icono' => '<i class="fa fa-info-circle"></i>',
+            'icono' => '',
             'texto' => 'Información',
             'link' => "cuestionarios/info/{$row->id}",
             'atributos' => 'title="Información general sobre el cuestionario"'
@@ -66,7 +66,7 @@
         );
         
         $arr_menus['copiar_cuestionario'] = array(
-            'icono' => '<i class="fa fa-files"></i>',
+            'icono' => '',
             'texto' => 'Copia',
             'link' => "cuestionarios/copiar_cuestionario/{$row->id}",
             'atributos' => 'title="Crear copia de cuestionario"'
