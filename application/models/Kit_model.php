@@ -8,8 +8,8 @@ class Kit_Model extends CI_Model{
         
         $basico['kit_id'] = $kit_id;
         $basico['row'] = $row_kit;
-        $basico['titulo_pagina'] = $row_kit->nombre_kit;
-        $basico['vista_a'] = 'kits/kit_v';
+        $basico['head_title'] = substr($row_kit->nombre_kit,0,50);
+        $basico['view_description'] = 'kits/kit_v';
         
         return $basico;
     }
@@ -202,6 +202,8 @@ class Kit_Model extends CI_Model{
     
     function asignar_flipbooks($asignacion_id)
     {
+        $qty_flipbooks_asignados = 0;
+
         $row_asignacion = $this->Pcrn->registro_id('kit_elemento', $asignacion_id);
         
         $sql = 'SELECT kit_elemento.id AS ke_id, flipbook.id AS flipbook_id, usuario_grupo.usuario_id ';
@@ -225,14 +227,22 @@ class Kit_Model extends CI_Model{
             $registro['ke_id'] = $row->ke_id;   //ke_id (kit_elemento.id)
             
             $condicion = "usuario_id = {$registro['usuario_id']} AND flipbook_id = {$registro['flipbook_id']}";
-            $this->Pcrn->guardar('usuario_flipbook', $condicion, $registro);
+            $uf_id = $this->Pcrn->guardar('usuario_flipbook', $condicion, $registro);
+            if ( $uf_id > 0 ) $qty_flipbooks_asignados++;
         }
         
-        return $query;
+        return $qty_flipbooks_asignados;
     }
+
     
+    /**
+     * Asignar cuestionarios de un kit a los estudianes de una instutición a la que está asociada
+     * dicho kit
+     * 2023-03-02
+     */
     function asignar_cuestionarios($asignacion_id)
     {
+        $qty_cuestionarios_asignados = 0;
         $row_asignacion = $this->Pcrn->registro_id('kit_elemento', $asignacion_id);
         
         $sql = 'SELECT kit_elemento.id AS ke_id, cuestionario.id AS cuestionario_id, usuario_grupo.usuario_id, usuario_grupo.grupo_id, grupo.institucion_id, tiempo_minutos ';
@@ -268,12 +278,16 @@ class Kit_Model extends CI_Model{
             $registro['ke_id'] = $row->ke_id;   //ke_id (kit_elemento.id)
             
             $condicion = "usuario_id = {$registro['usuario_id']} AND cuestionario_id = {$registro['cuestionario_id']}";
-            $this->Pcrn->guardar('usuario_cuestionario', $condicion, $registro);
+            $uc_id = $this->Pcrn->guardar('usuario_cuestionario', $condicion, $registro);
+            if ( $uc_id > 0 ) $qty_cuestionarios_asignados++;
         }
         
-        return $query;
+        return $qty_cuestionarios_asignados;
     }
     
+    /**
+     * Actualiza la fecha de la asignación
+     */
     function actualizar_asignacion($asignacion_id)
     {
         $registro['editado'] = date('Y-m-d H:i:s');
@@ -337,22 +351,29 @@ class Kit_Model extends CI_Model{
      */
     function quitar_institucion($asignacion_id)
     {
-        
+        $qty_deleted = 0;
+
         $row_ke = $this->Pcrn->registro_id('kit_elemento', $asignacion_id);
         
         //Eliminar asignaciones de contenidos
             $this->db->where("ke_id IN (SELECT id FROM kit_elemento WHERE kit_id = {$row_ke->kit_id})");
             $this->db->where("usuario_id IN (SELECT id FROM usuario WHERE institucion_id = {$row_ke->elemento_id})");
             $this->db->delete('usuario_flipbook');
+
+        $qty_deleted += $this->db->affected_rows();
         
         //Eliminar asignaciones de cuestionarios
             $this->db->where("ke_id IN (SELECT id FROM kit_elemento WHERE kit_id = {$row_ke->kit_id})");
             $this->db->where("usuario_id IN (SELECT id FROM usuario WHERE institucion_id = {$row_ke->elemento_id})");
             $this->db->delete('usuario_cuestionario');
+
+        $qty_deleted += $this->db->affected_rows();
         
-        //Eliminar elemento de la tabla elemento_kit
+        //Eliminar asignación de institución de la tabla elemento_kit
             $this->db->where('id', $asignacion_id);
             $this->db->delete('kit_elemento');
+
+        return $qty_deleted;
     }
     
     /**
@@ -361,12 +382,10 @@ class Kit_Model extends CI_Model{
      * para eliminar se reconocen por el campo ke_id (kit_elemento.id). Si el dato
      * tabla.ke_id en no existe en la tabla kit_elemento, se procede a eliminar.
      * 
-     * @param type $asignacion_id
+     * @param int $asignacion_id
      */
     function depurar($asignacion_id)
     {
-        
-        
         $row_asignacion = $this->Pcrn->registro_id('kit_elemento', $asignacion_id);
         $institucion_id = $row_asignacion->elemento_id;
         
@@ -377,6 +396,8 @@ class Kit_Model extends CI_Model{
             $sql_flipbooks .= "usuario_flipbook.usuario_id IN (SELECT id FROM usuario WHERE institucion_id = {$institucion_id})";
 
             $this->db->query($sql_flipbooks);
+
+            $data['qty_deleted_asignaciones_flipbooks'] = $this->db->affected_rows();
         
         //Asignación de cuestionarios
             $sql_cuestionarios = 'DELETE FROM usuario_cuestionario ';
@@ -385,6 +406,10 @@ class Kit_Model extends CI_Model{
             $sql_cuestionarios .= "usuario_cuestionario.institucion_id = {$institucion_id}";
 
             $this->db->query($sql_cuestionarios);
+
+            $data['qty_deleted_asignaciones_cuestionario'] = $this->db->affected_rows();
+
+        return $data;
     }
     
     function importar_elementos($kit_id, $array_hoja)

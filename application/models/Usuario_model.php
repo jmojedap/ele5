@@ -394,9 +394,10 @@ class Usuario_model extends CI_Model{
     /**
      * Condición tipo WHERE SQL, para filtrar el resultado de las búsquedas
      * según el rol de usuario de sesión.
+     * 2023-04-28
      * 
-     * @param type $usuario_id
-     * @return type 
+     * @param int $usuario_id
+     * @return string
      */
     function filtro_rol()
     {
@@ -423,8 +424,10 @@ class Usuario_model extends CI_Model{
             //$condicion .= " OR rol_id < 3 ORDER BY rol_id, apellidos";
         } elseif ( $row_usuario->rol_id == 5 ) {
             //Profesor, todos los estudiantes de sus grupos asignados
-            $sql = "SELECT grupo_id FROM grupo_profesor WHERE (profesor_id) = {$usuario_id}";
-            $condicion = "grupo_id IN ({$sql})";
+            /*$sql = "SELECT grupo_id FROM grupo_profesor WHERE (profesor_id) = {$usuario_id}";
+            $condicion = "grupo_id IN ({$sql})";*/
+            //Todos los usuarios de su institución (2023-04-28)
+            $condicion = "institucion_id = {$row_usuario->institucion_id} ";
         } elseif ( $row_usuario->rol_id == 6 ) {
             //Estudiante, todos los estudianes de su grupo
             $condicion = "( grupo_id = ({$row_usuario->grupo_id})";
@@ -1999,16 +2002,21 @@ class Usuario_model extends CI_Model{
 
     /**
      * Asignar a un estudiante a un grupo
-     * 2022-03-31
+     * 2023-02-13
      */
     function set_grupo($usuario_id, $grupo_id)
     {
+        
+        $aRow['grupo_id'] = $grupo_id;
+        $aRow['editado_usuario_id'] = $this->session->userdata('user_id');
+        $aRow['editado'] = date('Y-m-d H:i:s');
+        $saved_id = $this->Db_model->save('usuario', "id = {$usuario_id}", $aRow);
+
         $arr_row['usuario_id'] = $usuario_id;
         $arr_row['grupo_id'] = $grupo_id;
-
         $ug_id = $this->Db_model->save('usuario_grupo', "usuario_id = {$usuario_id}", $arr_row);
 
-        return $ug_id;
+        return $saved_id;
     }
     
     /**

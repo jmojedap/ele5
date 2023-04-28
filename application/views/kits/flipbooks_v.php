@@ -25,7 +25,7 @@
                                 <?= $this->App_model->etiqueta_area($row_flipbook->area_id) ?>
                             </div>
                             <div class="col col-sm-2">
-                                <?= anchor("kits/agregar_flipbook/{$row->id}/{$row_flipbook->id}/?{$busqueda_str}", '<i class="fa fa-plus"></i>', 'class="btn btn-default btn-sm pull-right" title="Agregar el contenido al kit"') ?>
+                                <?= anchor("kits/agregar_flipbook/{$row->id}/{$row_flipbook->id}/?{$busqueda_str}", '<i class="fa fa-plus"></i>', 'class="btn btn-light btn-sm pull-right" title="Agregar el contenido al kit"') ?>
                             </div>
                         </div>
 
@@ -36,7 +36,7 @@
     </div>
     
     <div class="col col-md-8">
-        <table class="table table-default bg-blanco">
+        <table class="table table-default bg-white">
             <thead>
                 <th width="40px">No.</th>
                 <th width="40px">ID</th>

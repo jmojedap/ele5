@@ -1,12 +1,12 @@
 <p>                
     <span class="suave">Creado por:</span>
-    <span class="resaltar"> <?= $this->App_model->nombre_usuario($row->usuario_id, 2) ?></span> |
+    <span class="resaltar"> <?= $this->App_model->nombre_usuario($row->usuario_id, 2) ?></span> &middot;
 
     <span class="suave">Editado:</span>
-    <span class="resaltar"> <?= $this->Pcrn->fecha_formato($row->editado, 'Y-M-d h:i a') ?></span> |
+    <span class="resaltar"> <?= $this->Pcrn->fecha_formato($row->editado, 'Y-M-d h:i a') ?></span> &middot;
     
     <span class="suave">Descripción:</span>
-    <span class="suave"><?= $row->descripcion ?></span> |
+    <span class="suave"><?= $row->descripcion ?></span>
 </p>
 
 <?php
@@ -18,8 +18,8 @@
     
     //Atributos de los elementos del menú
         $arr_menus['explorar'] = array(
-            'icono' => '<i class="fa fa-caret-left"></i>',
-            'texto' => 'Kits',
+            'icono' => '<i class="fa fa-arrow-left"></i>',
+            'texto' => '',
             'link' => "kits/explorar/",
             'atributos' => 'title="Explorar kits"'
         );
@@ -74,5 +74,4 @@
         $data_menu['seccion'] = $seccion;
     
     //Cargue vista
-        $this->load->view('comunes/menu_v', $data_menu);
-        $this->load->view($vista_b);
+        $this->load->view('comunes/bs4/menu_v', $data_menu);

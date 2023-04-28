@@ -83,7 +83,7 @@
             </thead>
 
             <tbody>
-                <tr v-for="(element, key) in list">
+                <tr v-for="(element, key) in list" v-if="displayUser(element)">
                     <td>
                         <input type="checkbox" v-bind:id="`check_` + element.id" v-model="selected" v-bind:value="element.id">
                     </td>
@@ -195,6 +195,21 @@
                 var percent_login = 100 * (parseInt(qty_login) / this.max_login)
                 percent_login = parseInt(percent_login)
                 return percent_login
+            },
+            displayUser: function(user){
+                var displayUser = false
+                var institutionalRoles = [3,4,5,6]
+                console.log(user.qty_login, this.app_rid)
+                if ( institutionalRoles.includes(this.app_rid) ) {
+                    if ( user.qty_login > 0 ) displayUser = true
+                    if ( user.nombre != '*' ) displayUser = true
+                    if ( user.apellidos != '*' ) displayUser = true
+                    if ( user.pago == 1 ) displayUser = true
+                    if ( user.estado == 1 ) displayUser = true
+                } else {
+                    displayUser = true
+                }
+                return displayUser
             },
         }
     });

@@ -48,7 +48,9 @@
                         active: false,
                         icon: 'fa fa-suitcase',
                         cf: 'kits/explorar',
-                        sections: []
+                        sections: ['kits/explorar','kits/nuevo','kits/flipbooks','kits/cuestionarios','kits/instituciones',
+                            'kits/importar_elementos', 'kits/editar'
+                        ]
                     },
                     {
                         text: 'Programas',

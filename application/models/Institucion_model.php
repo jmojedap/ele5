@@ -17,7 +17,6 @@ class Institucion_model extends CI_Model{
         $basico['row'] = $row;
         $basico['titulo_pagina'] = $row->nombre_institucion;
         $basico['head_title'] = $row->nombre_institucion;
-        //$basico['titulo_pagina'] = $institucion_id;
         $basico['vista_a'] = 'instituciones/institucion_v';
         
         return $basico;
@@ -30,11 +29,13 @@ class Institucion_model extends CI_Model{
     function basic($institucion_id)
     {   
         $row = $this->Institucion_model->datos_institucion($institucion_id);
-        
-        $basic['row'] = $row;
-        $basic['head_title'] = $row->nombre_institucion;
-        $basic['nav_2'] = 'instituciones/institucion_bs4_v';
-        $basic['view_a'] = 'instituciones/institucion_v';
+        $basic = array();
+        if ( ! is_null($row) ) {
+            $basic['row'] = $row;
+            $basic['head_title'] = $row->nombre_institucion;
+            $basic['nav_2'] = 'instituciones/institucion_bs4_v';
+            $basic['view_a'] = 'instituciones/institucion_v';
+        }
         
         return $basic;
     }
@@ -323,14 +324,17 @@ class Institucion_model extends CI_Model{
     
 //---------------------------------------------------------------------------------------------------
 
-    
+    /**
+     * Datos básicos de una institución
+     * 2023-02-08
+     *  */    
     function datos_institucion($institucion_id)
     {
-        
         //Devuelve un objeto de registro con los datos del institucion
         
         $this->db->where('id', $institucion_id);
         $query = $this->db->get('institucion');
+        $datos_institucion = null;
         
         if( $query->num_rows() > 0 ){
             $row = $query->row();

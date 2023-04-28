@@ -23,7 +23,7 @@
                                 <?= $this->App_model->etiqueta_area($row_cuestionario->area_id) ?>
                             </div>
                             <div class="col col-sm-2">
-                                <?= anchor("kits/agregar_cuestionario/{$row->id}/{$row_cuestionario->id}/?{$busqueda_str}", '<i class="fa fa-plus"></i>', 'class="btn btn-default btn-sm pull-right" title="Agregar el cuestionario al kit"') ?>
+                                <?= anchor("kits/agregar_cuestionario/{$row->id}/{$row_cuestionario->id}/?{$busqueda_str}", '<i class="fa fa-plus"></i>', 'class="btn btn-light btn-sm pull-right" title="Agregar el cuestionario al kit"') ?>
                             </div>
                         </div>
 
@@ -33,7 +33,7 @@
         <?php } ?>
     </div>
     <div class="col col-md-8">
-        <table class="table table-default bg-blanco">
+        <table class="table table-default bg-white">
             <thead>
                 <th width="40px">No.</th>
                 <th width="40px">ID</th>

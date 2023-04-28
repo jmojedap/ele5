@@ -32,7 +32,7 @@ class Kits extends CI_Controller{
         
         //Paginación
             $this->load->library('pagination');
-            $config = $this->App_model->config_paginacion(2);
+            $config = $this->App_model->config_paginacion(4);
             $config['base_url'] = base_url("kits/explorar/?{$busqueda_str}");
             $config['total_rows'] = $resultados_total->num_rows();
             $this->pagination->initialize($config);
@@ -48,11 +48,11 @@ class Kits extends CI_Controller{
             $data['resultados'] = $resultados;
         
         //Solicitar vista
-            $data['titulo_pagina'] = 'Kits';
-            $data['subtitulo_pagina'] = $config['total_rows'];
-            $data['vista_a'] = 'kits/explorar_v';
-            $data['vista_menu'] = 'kits/explorar_menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_title'] = 'Kits';
+            $data['head_subtitle'] = $config['total_rows'];
+            $data['view_a'] = 'kits/explorar/explorar_v';
+            $data['nav_2'] = 'kits/explorar_menu_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -84,12 +84,12 @@ class Kits extends CI_Controller{
 
                 $this->load->view('app/descargar_phpexcel_v', $data);
             } else {
-                $data['titulo_pagina'] = 'Plataforma Enlace';
+                $data['head_title'] = 'Plataforma Enlace';
                 $data['mensaje'] = "El número de registros es de {$resultados_total->num_rows()}. El máximo permitido es de " . MAX_REG_EXPORT . " registros. Puede filtrar los datos por algún criterio para poder exportarlos.";
                 $data['link_volver'] = "kits/explorar/?{$busqueda_str}";
-                $data['vista_a'] = 'app/mensaje_v';
+                $data['view_a'] = 'app/mensaje_v';
                 
-                $this->load->view(PTL_ADMIN, $data);
+                $this->load->view(TPL_ADMIN_NEW, $data);
             }
             
     }
@@ -122,14 +122,14 @@ class Kits extends CI_Controller{
             //$data['head_includes'] = $head_includes;
         
         //Array data espefícicas
-            $data['titulo_pagina'] = 'Kits';
-            $data['subtitulo_pagina'] = 'Nuevo';
-            $data['vista_menu'] = 'kits/explorar_menu_v';
-            $data['vista_a'] = 'app/gc_v';
+            $data['head_title'] = 'Kits';
+            $data['head_subtitle'] = 'Nuevo';
+            $data['nav_2'] = 'kits/explorar_menu_v';
+            $data['view_a'] = 'app/gc_v';
         
         $output = array_merge($data,(array)$output);
         
-        $this->load->view(PTL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN_NEW, $output);
     }
     
     function editar()
@@ -146,9 +146,9 @@ class Kits extends CI_Controller{
             $data['head_includes'] = $head_includes;
             
         //Solicitar vista
-            $data['vista_b'] = 'app/gc_v';
+            $data['view_a'] = 'comunes/bs4/gc_v';
             $output = array_merge($data,(array)$output);
-            $this->load->view(PTL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN_NEW, $output);
     }
     
 //GESTIÓN DE FLIPBOOKS
@@ -176,9 +176,9 @@ class Kits extends CI_Controller{
             $data['destino_form'] = "kits/flipbooks/{$kit_id}";
             
         //Solicitar vista
-            $data['subtitulo_pagina'] = $data['flipbooks']->num_rows() . ' Contenidos';
-            $data['vista_b'] = 'kits/flipbooks_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = $data['flipbooks']->num_rows() . ' Contenidos';
+            $data['view_a'] = 'kits/flipbooks_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function agregar_flipbook($kit_id, $flipbook_id)
@@ -221,20 +221,20 @@ class Kits extends CI_Controller{
             $data = $this->Kit_model->basico($kit_id);
             
         //Búsqueda
-            $this->load->model('Busqueda_model');
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda['condicion'] = "id NOT IN (SELECT elemento_id FROM kit_elemento WHERE kit_id = {$kit_id} AND tipo_elemento_id = 2)";
-            $data['resultados'] = $this->Cuestionario_model->buscar($busqueda, 100, 0); //Se limita a 100 resultados
+            $this->load->model('Search_model');
+            $filters = $this->Search_model->filters();
+            $filters['condition'] = "cuestionario.id NOT IN (SELECT elemento_id FROM kit_elemento WHERE kit_id = {$kit_id} AND tipo_elemento_id = 2)";
+            $data['resultados'] = $this->Cuestionario_model->search($filters, 100, 0); //Se limita a 100 resultados
             
         //Cargando $data
             $data['cuestionarios'] = $this->Kit_model->cuestionarios($kit_id);
-            $data['busqueda'] = $busqueda;
-            $data['busqueda_str'] = $this->Busqueda_model->busqueda_str();
+            $data['busqueda'] = $filters;
+            $data['busqueda_str'] = $this->Search_model->str_filters();
             
         //Solicitar vista
-            $data['subtitulo_pagina'] = $data['cuestionarios']->num_rows() . ' cuestionarios';
-            $data['vista_b'] = 'kits/cuestionarios_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['head_subtitle'] = $data['cuestionarios']->num_rows() . ' cuestionarios';
+            $data['view_a'] = 'kits/cuestionarios_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function agregar_cuestionario($kit_id, $cuestionario_id)
@@ -275,24 +275,33 @@ class Kits extends CI_Controller{
         //Cargando datos básicos
             $data = $this->Kit_model->basico($kit_id);
             
-        //Búsqueda
-            $this->load->model('Busqueda_model');
-            $this->load->model('Institucion_model');
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $data['resultados'] = $this->Institucion_model->buscar($busqueda, 50, 0); //Se limita a 25 resultados
-            
         //Cargando $data
             $data['instituciones'] = $this->Kit_model->instituciones($kit_id);
-            $data['busqueda'] = $busqueda;
-            $data['busqueda_str'] = $this->Busqueda_model->busqueda_str();
-            $data['subseccion'] = 'listado';
             
         //Solicitar vista
-            $data['vista_b'] = 'kits/instituciones_v';
-            $data['subtitulo_pagina'] = $data['instituciones']->num_rows() . ' instituciones';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['view_a'] = 'kits/instituciones/instituciones_v';
+            $data['head_subtitle'] = $data['instituciones']->num_rows() . ' instituciones';
+            $this->load->view(TPL_ADMIN_NEW, $data);
+    }
+
+    /**
+     * JSON
+     * Listado de instituciones asignadas a un kit
+     * 2023-03-02
+     */
+    function get_instituciones($kit_id)
+    {
+        $instituciones = $this->Kit_model->instituciones($kit_id);;
+        $data['instituciones'] = $instituciones->result();
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
+    /**
+     * AJAX JSON
+     * Agrega a una institución a un kit y le asigna cuestionarios y flipboks
+     */
     function agregar_institucion($kit_id, $institucion_id)
     {
         //Guardar registro
@@ -311,21 +320,24 @@ class Kits extends CI_Controller{
             $this->load->model('Busqueda_model');
             $busqueda_str = $this->Busqueda_model->busqueda_str();
 
-            $destino = "kits/instituciones/{$kit_id}/{$institucion_id}/?{$busqueda_str}";
-            redirect($destino);
+            $data['status'] = 1;
+
+            //Salida JSON
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
-    function quitar_institucion($kit_id, $row_id)
+    /**
+     * AJAX
+     * Eliminar asignaciones del kit a la institución y luego eliminar institución del kit
+     * 2023-03-02
+     */
+    function quitar_institucion($kit_id, $asignacion_id)
     {
         //Eliminar registro
-            $this->Kit_model->quitar_institucion($row_id);
+            $data['qty_deleted'] = $this->Kit_model->quitar_institucion($asignacion_id);
         
-        //Redireccionando
-            $this->load->model('Busqueda_model');
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
-
-            $destino = "kits/instituciones/{$kit_id}/?{$busqueda_str}";
-            redirect($destino);
+            //Salida JSON
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**
@@ -336,25 +348,28 @@ class Kits extends CI_Controller{
      * Si $depuracion == 1, se eliminan las asignaciones a los usuarios de elementos
      * que ya no están en el kit.
      * 
-     * @param type $kit_id
-     * @param type $asignacion_id
-     * @param type $depurar
+     * @param int $kit_id
+     * @param int $asignacion_id
+     * @param int $depurar
      */
     function asignar($kit_id, $asignacion_id, $depurar = FALSE)
     {
         set_time_limit(360);    //360 segundos, 6 minutos para ejecutar la asignación
-        //$this->output->enable_profiler(TRUE);
         
-        $this->Kit_model->asignar_flipbooks($asignacion_id);
-        $this->Kit_model->asignar_cuestionarios($asignacion_id);
+        $data['qty_flipbooks_asignados'] = $this->Kit_model->asignar_flipbooks($asignacion_id);
+        $data['qty_cuestionarios_asignados'] = $this->Kit_model->asignar_cuestionarios($asignacion_id);
         $this->Kit_model->actualizar_asignacion($asignacion_id);
         
         //Si está activada la opción, se eliminan las asignaciones de elementos inexistentes en el kit.
-        if ( $depurar ) { $this->Kit_model->depurar($asignacion_id); }
+        if ( $depurar ) { 
+            $data_depuracion = $this->Kit_model->depurar($asignacion_id);
+            $data = array_merge($data,$data_depuracion);
+        }
+
+        $data['status'] = 1;
         
-        //Redireccionar
-            $destino = "kits/instituciones/{$kit_id}";
-            redirect($destino);
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
 //CARGUE MASIVO DE ELEMENTOS
@@ -367,8 +382,8 @@ class Kits extends CI_Controller{
         //Solicitar vista
             $data['destino_form'] = "kits/importar_elementos_e/{$kit_id}";
             //$data['ayuda_id'] = 158;
-            $data['vista_b'] = 'kits/importar_elementos_v';
-            $this->load->view(PTL_ADMIN, $data);   
+            $data['view_a'] = 'kits/importar_elementos_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);   
     }
     
     function importar_elementos_e($kit_id)
@@ -396,9 +411,8 @@ class Kits extends CI_Controller{
             $data['destino_volver'] = "kits/instituciones/{$kit_id}";
         
         //Cargar vista
-            $data['vista_b'] = 'comunes/resultado_importacion_v';
-            $data['subtitulo_pagina'] = 'Resultado cargue';
-            $this->load->view(PTL_ADMIN, $data);
-    }
-    
+            $data['view_a'] = 'comunes/resultado_importacion_v';
+            $data['head_subtitle'] = 'Resultado cargue';
+            $this->load->view(TPL_ADMIN_NEW, $data);
+    }    
 }

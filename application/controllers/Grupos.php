@@ -1218,7 +1218,7 @@ class Grupos extends CI_Controller{
                 $grupo_destino_id = substr($this->input->post('process'), -6, 6);
                 $row_grupo = $this->Db_model->row_id('grupo', $grupo_destino_id);
                 $this->Usuario_model->set_grupo($usuario_id, $grupo_destino_id);
-                $data['process'] = "Mover al grupo {$row_grupo->nivel}-{$row_grupo->grupo}" ;
+                $data['process'] = "Mover al grupo {$row_grupo->nombre_grupo} ({$row_grupo->id})" ;
             } elseif ( $process_id == 8 ) {
                 $data['process'] = 'Retirar (Sin eliminar)';
                 $this->Grupo_model->eliminar_ug($grupo_id, $row_estudiante->usuario_id);
