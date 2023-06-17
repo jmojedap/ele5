@@ -70,7 +70,7 @@
                         text: 'Temas',
                         active: false,
                         icon: 'fa fa-bars',
-                        cf: 'temas/explorar',
+                        cf: 'temas/explore',
                         sections: []
                     },
                     {

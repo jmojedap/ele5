@@ -40,7 +40,7 @@
             <ul class="sub_nav"><!-- SUBMENU -->
                 <li><a href="<?= base_url() ?>kits/explorar" class="<?= $clase_sm['kits'] ?>"><i class="fa fa-suitcase"></i><span>kits</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url() ?>programas/explorar" class="<?= $clase_sm['programas'] ?>"><i class="fa fa-sitemap"></i><span>programas</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url()?>temas/explorar" class="<?= $clase_sm['temas'] ?>"><i class="fa fa-bars"></i><span>temas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url()?>temas/explore" class="<?= $clase_sm['temas'] ?>"><i class="fa fa-bars"></i><span>temas</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url()?>flipbooks/explorar" class="<?= $clase_sm['flipbooks'] ?>"><i class="fa fa-book"></i><span>contenidos</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url()?>quices/explorar" class="<?= $clase_sm['quices'] ?>"><i class="fa fa-question"></i><span>quices</span></a></li>
                 <li><a href="<?= base_url()?>paginas/explorar" class="<?= $clase_sm['paginas'] ?>"><i class="fa fa-files-o"></i><span>páginas</span></a></li> <!-- subitem -->

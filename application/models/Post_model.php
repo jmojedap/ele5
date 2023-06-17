@@ -192,7 +192,7 @@ class Post_Model extends CI_Model{
         $data = array('status' => 0);
 
         //Guardar
-            $arr_row = $this->Db_model->arr_row($post_id);
+            $arr_row = $this->arr_row();
             $saved_id = $this->Db_model->save('post', "id = {$post_id}", $arr_row);
 
         //Actualizar resultado
@@ -211,6 +211,7 @@ class Post_Model extends CI_Model{
         $type_folder = 'posts/';
         if ( $row->tipo_id == 20 ) $type_folder = 'posts/types/ayuda/';
         if ( $row->tipo_id == 30 ) $type_folder = 'posts/types/bitacora/';
+        if ( $row->tipo_id == 126 ) $type_folder = 'posts/types/126_texto_tema/';
 
         return $type_folder;
     }

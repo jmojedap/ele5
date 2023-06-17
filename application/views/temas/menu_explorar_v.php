@@ -17,7 +17,7 @@
         $arr_menus['explorar'] = array(
             'icono' => '<i class="fa fa-list-alt"></i>',
             'texto' => 'Explorar',
-            'link' => "temas/explorar/",
+            'link' => "temas/explore/",
             'atributos' => 'title="Explorar temas"'
         );
             

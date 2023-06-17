@@ -13,7 +13,8 @@
     <?php $this->load->view('head_includes/bootstrap4') ?>
 
     <!-- Font Awesome CSS -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous"> -->
+    <script src="https://kit.fontawesome.com/f45fca298e.js" crossorigin="anonymous"></script>
     
     <!-- Custom CSS -->
     <link href="<?= $template_folder ?>css/style.css" rel="stylesheet">
@@ -29,6 +30,7 @@
     <link href="<?= URL_RESOURCES ?>css/style_pml.css" rel="stylesheet">
     <link href="<?= URL_RESOURCES ?>css/monster/add_v02.css" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="<?= URL_RESOURCES ?>css/ele_20200910.css">
+    <script src="<?= URL_RESOURCES ?>js/monster/routing.js"></script>
 
     <!-- Moment.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js" integrity="sha256-H9jAz//QLkDOy/nzE9G4aYijQtkLt9FvGmdUTwBk6gs=" crossorigin="anonymous"></script>
@@ -45,7 +47,16 @@
     <script src="<?= URL_RESOURCES . 'js/pcrn_en.js' ?>"></script>
     <script>
         const url_app = '<?= URL_API ?>'; const url_api = '<?= URL_API ?>';
+        const URL_APP = '<?= URL_APP ?>';
     </script>
+
+    <!-- Usuario con sesión iniciada -->
+    <?php if ( $this->session->userdata('logged') ) : ?>
+        <script>
+            const APP_RID = <?= $this->session->userdata('role') ?>;
+            const APP_UID = <?= $this->session->userdata('user_id') ?>;
+        </script>
+    <?php endif; ?>
 
     <!-- Google Analytics -->
     <?php $this->load->view('head_includes/google_analytics'); ?>

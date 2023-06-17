@@ -120,7 +120,7 @@
                 seleccionados : seleccionados.substring(1)
             },
             success: function(){
-                window.location = base_url + 'temas/explorar/?' + busqueda_str;
+                window.location = base_url + 'temas/explore/?' + busqueda_str;
             }
         });
     }

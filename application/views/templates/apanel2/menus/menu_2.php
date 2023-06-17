@@ -79,7 +79,7 @@
         $opciones_menus['programas/editar_temas'] = array('recursos', 'programas', 'programas');
         $opciones_menus['programas/copiar'] = array('recursos', 'programas', 'programas');
 
-        $opciones_menus['temas/explorar'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['temas/explore'] = array('recursos', 'temas', 'temas');
         $opciones_menus['temas/editar'] = array('recursos', 'temas', 'temas');
         $opciones_menus['temas/nuevo'] = array('recursos', 'temas', 'temas');
         $opciones_menus['temas/importar'] = array('recursos', 'temas', 'temas');
@@ -249,7 +249,7 @@
 
             <ul class="sub_nav"><!-- SUBMENU -->
                 <li><a href="<?= base_url() ?>programas/explorar" class="<?= $clase_sm['programas'] ?>"><i class="fa fa-sitemap"></i><span>programas</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url()?>temas/explorar" class="<?= $clase_sm['temas'] ?>"><i class="fa fa-bars"></i><span>temas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url()?>temas/explore" class="<?= $clase_sm['temas'] ?>"><i class="fa fa-bars"></i><span>temas</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url()?>flipbooks/explorar" class="<?= $clase_sm['flipbooks'] ?>"><i class="fa fa-book"></i><span>contenidos</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url()?>quices/explorar" class="<?= $clase_sm['quices'] ?>"><i class="fa fa-question"></i><span>quices</span></a></li>
                 <li><a href="<?= base_url()?>recursos/archivos" class="<?= $clase_sm['archivos'] ?>"><i class="fa fa-folder-o"></i><span>archivos</span></a></li> <!-- subitem -->
