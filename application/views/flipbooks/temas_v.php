@@ -24,7 +24,7 @@
                 <tr>
                     <td class="warning"><?= $row_tema->id ?></td>
                     <td><?= $row_tema->cod_tema ?></td>
-                    <td><?= anchor("temas/archivos/$row_tema->id", $row_tema->nombre_tema) ?></td>
+                    <td><?= anchor("admin/temas/archivos/$row_tema->id", $row_tema->nombre_tema) ?></td>
                     <td><span class="etiqueta nivel w1"><?= $row_tema->nivel ?></span></td>
                     <td>
                         <?= $this->App_model->etiqueta_area($row_tema->area_id) ?>
@@ -32,7 +32,7 @@
                     <td><?php echo $arr_tipos['0' . $row_tema->tipo_id] ?></td>
 
                     <?php if ( $this->session->userdata('rol_id') == 1 ) : ?>                
-                        <td><?= anchor("temas/archivos/{$row_tema->id}", '<i class="fa fa-file-o"></i>', 'class="a4" title="Archivos del tema"') ?></td>
+                        <td><?= anchor("admin/temas/archivos/{$row_tema->id}", '<i class="fa fa-file-o"></i>', 'class="a4" title="Archivos del tema"') ?></td>
                     <?php endif ?>
                 </tr>
 

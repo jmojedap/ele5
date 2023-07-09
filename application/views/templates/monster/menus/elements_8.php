@@ -71,7 +71,7 @@
                     text: 'Lecturas',
                     active: false,
                     icon: 'fa fa-quote-left',
-                    cf: 'datos/enunciados',
+                    cf: 'enunciados/explorar',
                     sections: []
                 },
                 {

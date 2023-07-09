@@ -84,7 +84,7 @@
             ?>
             <tr>
                 <td><?= anchor($row_link->url, img($att_icono), 'target="_blank" title=""') ?></td>
-                <td><?= anchor("temas/archivos/{$row_link->tema_id}", $row_link->nombre_tema, 'class="" title=""') ?></td>
+                <td><?= anchor("admin/temas/archivos/{$row_link->tema_id}", $row_link->nombre_tema, 'class="" title=""') ?></td>
                 <td><?= $row_link->nivel ?></td>
                 <td><?= $this->App_model->nombre_usuario($row_link->usuario_id, 2) ?></td>
                 <td><?= $this->Pcrn->tiempo_hace($row_link->editado) ?></td>

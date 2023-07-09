@@ -168,7 +168,7 @@
                                         v-for="tema in data.relacionados[1]"
                                         v-show='num_pagina == tema.num_pagina'
                                         >
-                                        <a v-bind:href="'<?php echo base_url('temas/leer/') ?>' + tema.relacionado_id" target="_blank">
+                                        <a v-bind:href="'<?php echo base_url('admin/temas/leer/') ?>' + tema.relacionado_id" target="_blank">
                                             {{ tema.nombre_tema_relacionado }}
                                         </a>
                                     </li>
@@ -179,7 +179,7 @@
                                         v-for="tema in data.relacionados[2]"
                                         v-show='num_pagina == tema.num_pagina'
                                         >
-                                        <a v-bind:href="'<?php echo base_url('temas/leer/') ?>' + tema.relacionado_id" target="_blank">
+                                        <a v-bind:href="'<?php echo base_url('admin/temas/leer/') ?>' + tema.relacionado_id" target="_blank">
                                             {{ tema.nombre_tema_relacionado }}
                                         </a>
                                     </li>
@@ -190,7 +190,7 @@
                                         v-for="tema in data.relacionados[3]"
                                         v-show='num_pagina == tema.num_pagina'
                                         >
-                                        <a v-bind:href="'<?php echo base_url('temas/leer/') ?>' + tema.relacionado_id" target="_blank">
+                                        <a v-bind:href="'<?php echo base_url('admin/temas/leer/') ?>' + tema.relacionado_id" target="_blank">
                                             {{ tema.nombre_tema_relacionado }}
                                         </a>
                                     </li>

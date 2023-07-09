@@ -4,7 +4,7 @@
 
 <?php if ( ! is_null($row_post) ){ ?>
     <?php if ( $this->session->userdata('usuario_id') == $row_noticia->creador_id ) : ?>                
-        <div class="pull-right">
+        <div class="float-right">
             <div class="a4 eliminar_noticia" data-evento_id="<?= $row_noticia->id ?>">
                 <i class="fa fa-times"></i>
             </div>

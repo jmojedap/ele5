@@ -6,7 +6,7 @@
         <span class="suave"> | </span>
         
         <span class="suave">Tema:</span>
-        <span class="resaltar"><?= anchor("temas/quices/{$row->tema_id}", $row_tema->nombre_tema, 'class="" title=""') ?></span>
+        <span class="resaltar"><?= anchor("admin/temas/quices/{$row->tema_id}", $row_tema->nombre_tema, 'class="" title=""') ?></span>
         <span class="suave"> | </span>
 
         <span class="suave">Código:</span>

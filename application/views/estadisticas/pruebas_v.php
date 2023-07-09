@@ -117,7 +117,7 @@
         <h3>Contenidos Acad&eacute;micos</h3>
             <ul class="toggle">
             <li class="icn_cuestionarios"><a href="http://localhost/ele2/cuestionarios/explorar">cuestionarios</a></li>
-            <li class="icn_preguntas"><a href="http://localhost/ele2/datos/enunciados">enunciados</a></li>
+            <li class="icn_preguntas"><a href="http://localhost/ele2/enunciados/explorar">enunciados</a></li>
             <li class="icn_preguntas"><a href="http://localhost/ele2/datos/preguntas">preguntas</a></li>
             </ul>
 

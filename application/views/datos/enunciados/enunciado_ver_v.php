@@ -4,23 +4,19 @@
     );
 ?>
 
-<div class="row">
-    <div class="col col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <?= $row->nombre_post ?>
-            </div>
-            <div class="panel-body">
-                <?= $row->contenido ?>
-            </div>
+<div class="center_box_750">
+    <div class="card card-default">
+        <div class="card-header">
+            <?= $row->nombre_post ?>
+        </div>
+        <div class="card-body">
+            <?= $row->contenido ?>
         </div>
     </div>
-    <div class="col col-sm-6">
-        <?php if ( strlen($row->texto_2) > 0 ) { ?>
-            <div class="thumbnail">
+    <?php if ( strlen($row->texto_2) > 0 ) { ?>
+        <div class="thumbnail">
 
-                    <?= img($att_img) ?>
-            </div>
-        <?php } ?>
-    </div>
+                <?= img($att_img) ?>
+        </div>
+    <?php } ?>
 </div>

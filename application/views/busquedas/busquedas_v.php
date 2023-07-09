@@ -36,7 +36,7 @@
         
         <?php if ( $this->session->userdata('rol_id') <= 2  ):?>
             <?= anchor("programas/explorar/?{$busqueda_str}", '<i class="fa fa-sitemap"></i> Programas', $class_menu['programas']) ?>
-            <?= anchor("temas/explore/?{$busqueda_str}", '<i class="fa fa-bars"></i> Temas', $class_menu['temas']) ?>
+            <?= anchor("admin/temas/explore/?{$busqueda_str}", '<i class="fa fa-bars"></i> Temas', $class_menu['temas']) ?>
             <?= anchor("cuestionarios/explorar/?{$busqueda_str}", 'Cuestionarios', $class_menu['cuestionarios']) ?>
             <?= anchor("preguntas/explorar/?{$busqueda_str}", 'Preguntas', $class_menu['preguntas']) ?>
         <?php endif ?>

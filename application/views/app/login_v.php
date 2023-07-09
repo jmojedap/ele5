@@ -48,7 +48,7 @@ var loginApp = new Vue({
         handleSubmit: function(){
             this.loading = true
             var formValues = new FormData(document.getElementById('loginForm'))
-            axios.post(url_api + 'app/validar_login/', formValues)
+            axios.post(URL_FRONT + 'app/validar_login/', formValues)
             .then(response => {
                 if ( response.data.status == 1 ) {
                     window.location = url_app + 'app/index/?dpw=' + response.data.tiene_dpw;

@@ -208,7 +208,7 @@
                                                     $row_tema_rel = $this->Pcrn->registro_id('tema', $row_relacionado->relacionado_id);
                                                 ?>
                                                 <li class="recurso hidden pagina_<?= $row_relacionado->num_pagina ?>">
-                                                    <a tabindex="0" href="<?= base_url("temas/leer/{$row_relacionado->relacionado_id}") ?>" target="_blank">
+                                                    <a tabindex="0" href="<?= base_url("admin/temas/leer/{$row_relacionado->relacionado_id}") ?>" target="_blank">
                                                         <?= $row_tema_rel->nombre_tema ?>
                                                     </a>
                                                 </li>
@@ -224,7 +224,7 @@
                                                     $row_tema_rel = $this->Pcrn->registro_id('tema', $row_relacionado->relacionado_id);
                                                 ?>
                                                 <li class="recurso hidden pagina_<?= $row_relacionado->num_pagina ?>">
-                                                    <a tabindex="0" href="<?= base_url("temas/leer/{$row_relacionado->relacionado_id}") ?>" target="_blank">
+                                                    <a tabindex="0" href="<?= base_url("admin/temas/leer/{$row_relacionado->relacionado_id}") ?>" target="_blank">
                                                         <?= $row_tema_rel->nombre_tema ?>
                                                     </a>
                                                 </li>
@@ -240,7 +240,7 @@
                                                     $row_tema_rel = $this->Pcrn->registro_id('tema', $row_relacionado->relacionado_id);
                                                 ?>
                                                 <li class="recurso hidden pagina_<?= $row_relacionado->num_pagina ?>">
-                                                    <a tabindex="0" href="<?= base_url("temas/leer/{$row_relacionado->relacionado_id}") ?>" target="_blank">
+                                                    <a tabindex="0" href="<?= base_url("admin/temas/leer/{$row_relacionado->relacionado_id}") ?>" target="_blank">
                                                         <?= $row_tema_rel->nombre_tema ?>
                                                     </a>
                                                 </li>

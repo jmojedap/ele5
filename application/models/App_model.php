@@ -250,6 +250,20 @@ class App_model extends CI_Model {
         return $arr_item_interno;
     }
 
+// Específicas de la aplicación
+//-----------------------------------------------------------------------------
+
+    /**
+     * Array con los valores de posts.type_id, que tiene un formato especial
+     * para menú, edición, y lectura en el administrador
+     * 2022-08-20
+     */
+    function posts_special_types()
+    {
+        $special_types = [126];
+        return $special_types;
+    }
+
 //---------------------------------------------------------------------------------------------------------
 //GESTIÓN DE NOMBRES
 

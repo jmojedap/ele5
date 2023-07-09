@@ -36,7 +36,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <a class="btn btn-primary w3 <?php echo $cl_open ?>" v-bind:href="`<?php echo base_url('temas/links/') ?>` + element.tema_id">Abrir</a>
+                <a class="btn btn-primary w3 <?php echo $cl_open ?>" v-bind:href="`<?php echo base_url('admin/temas/links/') ?>` + element.tema_id">Abrir</a>
                 <button type="button" class="btn btn-secondary w3" data-dismiss="modal">Cerrar</button>
             </div>
         </div>

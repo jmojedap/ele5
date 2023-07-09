@@ -56,7 +56,7 @@
 
             <ul class="sub_nav"><!-- SUBMENU -->
                 <li><a href="<?= base_url() ?>programas/explorar" class="<?= $clase_sm['programas'] ?>"><i class="fa fa-sitemap"></i><span>programas</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url()?>temas/explore" class="<?= $clase_sm['temas'] ?>"><i class="fa fa-bars"></i><span>temas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url()?>admin/temas/explore" class="<?= $clase_sm['temas'] ?>"><i class="fa fa-bars"></i><span>temas</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url()?>datos/flipbooks" class="<?= $clase_sm['flipbooks'] ?>"><i class="fa fa-book"></i><span>flipbooks</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url()?>datos/recursos" class="<?= $clase_sm['links'] ?>"><i class="fa fa-desktop"></i><span>recursos y links</span></a></li> <!-- subitem -->
             </ul>
@@ -71,7 +71,7 @@
 
             <ul class="sub_nav"><!-- SUBMENU -->
                 <li><a href="<?= base_url() ?>cuestionarios/explorar" class="<?= $clase_sm['cuestionarios'] ?>"><i class="fa fa-book"></i><span>cuestionarios</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url()?>datos/enunciados" class="<?= $clase_sm['enunciados'] ?>"><i class="fa fa-quote-left"></i><span>enunciados</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url()?>enunciados/explorar" class="<?= $clase_sm['enunciados'] ?>"><i class="fa fa-quote-left"></i><span>enunciados</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url()?>datos/preguntas" class="<?= $clase_sm['preguntas'] ?>"><i class="fa fa-question"></i><span>preguntas</span></a></li> <!-- subitem -->
             </ul>
 

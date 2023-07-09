@@ -62,7 +62,7 @@
                     <td><?php echo $row_pregunta->texto_pregunta ?></td>
                     <td class="hidden-xs hidden-sm">
                         <?php if ( $this->session->userdata('srol') == 'interno' ) { ?>
-                            <?php echo anchor("temas/leer/{$row_pregunta->tema_id}", $nombre_tema, 'class="" title=""') ?>
+                            <?php echo anchor("admin/temas/leer/{$row_pregunta->tema_id}", $nombre_tema, 'class="" title=""') ?>
                         <?php } else { ?>
                             <?php echo $nombre_tema ?>
                         <?php } ?>

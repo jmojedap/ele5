@@ -60,8 +60,8 @@ class Datos_model extends CI_Model{
         
         $basico['enunciado_id'] = $enunciado_id;
         $basico['row'] = $row;
-        $basico['titulo_pagina'] = $row->nombre_post;
-        $basico['vista_a'] = 'datos/enunciados/enunciado_v';
+        $basico['head_title'] = 'Enunciado: ' .  substr(strip_tags($row->nombre_post),0,25) . '...';
+        $basico['view_a'] = 'datos/enunciados/enunciado_v';
         
         return $basico;
     }
@@ -156,7 +156,7 @@ class Datos_model extends CI_Model{
             $crud->required_fields('nombre_post', 'contenido');
 
         //Preparación de campos
-            $crud->set_field_upload('texto_2', RUTA_UPLOADS . 'enunciados');
+            $crud->set_field_upload('texto_2', PATH_UPLOADS . 'enunciados');
 
         //Valores por defecto
             $crud->field_type('tipo_id', 'hidden', 4401);   //Post tipo enunciado

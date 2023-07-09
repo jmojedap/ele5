@@ -3,8 +3,8 @@
 //Biblioteca
     $opciones_menus['usuarios/biblioteca'] = array('biblioteca', '', '');
     $opciones_menus['usuarios/calendario'] = array('biblioteca', '', '');
-    $opciones_menus['posts/ap_explorar'] = array('biblioteca', '', '');
-    $opciones_menus['posts/ap_leer'] = array('biblioteca', '', '');
+    $opciones_menus['contenidos_ap/explorar'] = array('biblioteca', '', '');
+    $opciones_menus['contenidos_ap/leer'] = array('biblioteca', '', '');
 
     //Mis desempeños
     $opciones_menus['usuarios/actividad'] = array('mis_desempenos', '', '');

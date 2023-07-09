@@ -426,7 +426,7 @@ class Preguntas extends CI_Controller{
             $referente_nombre = $data['row']->nombre_cuestionario;
         } elseif ( $cargar_en == 'tema' ) {
             $this->load->model('Tema_model');
-            $data = $this->Tema_model->basico($referente_id);
+            $data = $this->Tema_model->basic($referente_id);
             $tipo_mostrar = 'tema';
             $referente_nombre = $data['row']->nombre_tema;
         }

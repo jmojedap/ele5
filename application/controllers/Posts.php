@@ -71,7 +71,7 @@ class Posts extends CI_Controller{
         
         foreach ( $selected as $row_id ) 
         {
-            $data['qty_deleted'] += $this->Post_model->eliminar($row_id);
+            $data['qty_deleted'] += $this->Post_model->delete($row_id);
         }
 
         //Establecer resultado
@@ -149,7 +149,7 @@ class Posts extends CI_Controller{
         unset($data['nav_2']);
         $data['view_a'] = $this->Post_model->type_folder($data['row']) . 'read_v';
 
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -287,7 +287,7 @@ class Posts extends CI_Controller{
             $data['nav_2'] = 'posts/menu_v';
             $data['view_a'] = $this->Post_model->vista_editar($data['row']);
         
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -357,7 +357,7 @@ class Posts extends CI_Controller{
             $data['view_description'] = 'posts/post_v';
             $data['nav_2'] = 'posts/menu_v';
             $data['view_a'] = $this->Post_model->vista_leer($data['row']);
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
 //LISTAS - TIPO 22
@@ -530,7 +530,7 @@ class Posts extends CI_Controller{
             $data['head_subtitle'] = 'Nuevo';
             $data['view_a'] = 'posts/contenidos_ap/formulario_v';
             $data['menu_view'] = 'posts/contenidos_ap/explorar/menu_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -576,7 +576,7 @@ class Posts extends CI_Controller{
             $data['nav_2'] = 'posts/contenidos_ap/contenido_ap_v';
             $data['view_a'] = 'posts/contenidos_ap/editar_v';
         
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function ap_leer($post_id)
@@ -594,7 +594,7 @@ class Posts extends CI_Controller{
         //Solicitar vista
             $data['nav_2'] = 'posts/contenidos_ap/contenido_ap_v';
             $data['view_a'] = 'posts/contenidos_ap/leer_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -630,7 +630,7 @@ class Posts extends CI_Controller{
             $data['view_a'] = 'comunes/bs4/importar_v';
             $data['nav_2'] = 'posts/contenidos_ap/explorar/menu_v';
         
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -663,7 +663,7 @@ class Posts extends CI_Controller{
             $data['head_subtitle'] = 'Asignar con archivo Excel';
             $data['view_a'] = 'comunes/resultado_importacion_v';
             $data['nav_2'] = 'posts/contenidos_ap/explorar/menu_v';
-            $this->load->view(TPL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -685,7 +685,7 @@ class Posts extends CI_Controller{
         $data['view_a'] = 'posts/contenidos_ap/instituciones_v';
         //$data['vista_menu'] = 'usuarios/explorar_menu_v';
 
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**

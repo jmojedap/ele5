@@ -48,7 +48,7 @@ var tema_id = 0;
     {
         $.ajax({        
             type: 'POST',
-            url: base_url + 'temas/asignar_quiz',
+            url: base_url + 'admin/temas/asignar_quiz',
             data: {
                 quiz_id : quiz_id,
                 tema_id : tema_id
@@ -90,7 +90,7 @@ var tema_id = 0;
                     <?= $row_tema->id ?>
                 </td>
                 <td class="<?= $clases_col['nombre_tema'] ?>">
-                    <?= anchor("temas/quices/{$row_tema->id}", $row_tema->nombre_tema) ?>
+                    <?= anchor("admin/temas/quices/{$row_tema->id}", $row_tema->nombre_tema) ?>
                 </td>
                 <td class="<?= $clases_col['botones'] ?>">
                     <?= anchor("quices/quitar_tema/{$row->id}/{$row_tema->id}", '<i class="fa fa-times"></i>', 'class="a4"') ?>

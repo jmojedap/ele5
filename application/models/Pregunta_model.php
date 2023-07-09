@@ -591,7 +591,7 @@ class Pregunta_model extends CI_Model{
             $crud->field_type('respuesta_correcta', 'dropdown', $opciones_rta);
 
         //Preparación de campos
-            $crud->set_field_upload('archivo_imagen', RUTA_UPLOADS . 'preguntas');
+            $crud->set_field_upload('archivo_imagen', PATH_UPLOADS . 'preguntas');
 
         //Reglas de validación
             $crud->required_fields('texto_pregunta', 'respuesta_correcta', 'area_id');

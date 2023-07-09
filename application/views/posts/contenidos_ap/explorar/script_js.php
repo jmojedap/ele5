@@ -77,10 +77,10 @@
     //Actualizar la tabla explorar al cambiar de página
     function tabla_explorar()
     {
-        $.ajax({        
-            type: 'POST',
-            url: base_url + '/' + controlador + '/ap_tabla_explorar/' + num_pagina_ir + '/?' + busqueda_str,
-            data: $("#formulario_busqueda").serialize(),
+        $.ajax({        
+            type: 'POST',
+            url: base_url + '/' + controlador + '/tabla_explorar/' + num_pagina_ir + '/?' + busqueda_str,
+            data: $("#formulario_busqueda").serialize(),
             success: function(respuesta){
                 $('#tabla_resultados').html(respuesta.html);
                 seleccionados_todos = respuesta.seleccionados_todos;
@@ -88,7 +88,7 @@
                 seleccionados = '';
                 $('#campo-num_pagina').val(parseInt(num_pagina) + parseInt(1));
             }
-        });
+        });
     }
 
     //Elimina los registros seleccionados
@@ -96,26 +96,27 @@
     {
      $.ajax({
         type: 'POST',
-        url: base_url + '/' + controlador + '/delete_selected',
-        data: {
-                selected : seleccionados.substring(1)
-            },
-            success: function(data){
-                ocultar_eliminados(data['qty_deleted']);
-            }
+        url: base_url + 'posts/delete_selected',
+        data:{
+            selected : seleccionados.substring(1)
+        },
+        success: function(data){
+            ocultar_eliminados(data['qty_deleted']);
+        }
      });
     }
     
     //Al eliminar registros, ocultar de la tabla las filas eliminadas
-    function ocultar_eliminados(eliminados)
+    function ocultar_eliminados(qty_deleted)
     {
-        var cant_eliminados = 0;
+        var qty_deleted = 0;
+        eliminados = seleccionados.substring(1).split('-')
         for (var i in eliminados) 
         {
             $('#fila_' + eliminados[i]).hide();
             console.log(eliminados[i]);
             if ( eliminados[i] > 1 ) { cant_eliminados++; }
         }
-        toastr['info'](cant_eliminados + ' posts eliminados');
+        toastr['info'](qty_deleted + ' contenidos eliminados');
     }
 </script>

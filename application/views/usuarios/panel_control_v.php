@@ -18,7 +18,7 @@
         
         <h4>Contenidos académicos</h4>
             <?= anchor('datos/cuestionarios', 'Cuestionarios') ?><br/>
-            <?= anchor('datos/enunciados', 'Enunciados') ?><br/>
+            <?= anchor('enunciados/explorar', 'Enunciados') ?><br/>
             <?= anchor('datos/preguntas', 'Preguntas') ?><br/>
             <?= anchor('cuestionarios/agregar_pregunta', 'Adicionar preguntas por búsqueda') ?><br/>
             <?= anchor('datos/recursos', 'Biblioteca de recursos') ?><br/>

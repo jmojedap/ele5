@@ -51,7 +51,7 @@
                         text: 'Temas',
                         active: false,
                         icon: 'fa fa-bars',
-                        cf: 'temas/explore',
+                        cf: 'admin/temas/explore',
                         sections: []
                     },
                     {
@@ -90,7 +90,7 @@
                         text: 'Lecturas',
                         active: false,
                         icon: 'fa fa-quote-left',
-                        cf: 'datos/enunciados',
+                        cf: 'enunciados/explorar',
                         sections: []
                     },
                     {

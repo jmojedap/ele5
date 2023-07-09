@@ -46,8 +46,8 @@
     <link type="text/css" rel="stylesheet" href="<?= URL_RESOURCES . 'css/style_pml.css' ?>">
     <script src="<?= URL_RESOURCES . 'js/pcrn_en.js' ?>"></script>
     <script>
-        const url_app = '<?= URL_API ?>'; const url_api = '<?= URL_API ?>';
-        const URL_APP = '<?= URL_APP ?>';
+        const url_app = '<?= URL_APP ?>'; const url_api = '<?= URL_APP ?>';
+        const URL_APP = '<?= URL_ADMIN ?>'; const URL_FRONT= '<?= URL_FRONT ?>'; const URL_API= '<?= URL_API ?>';
     </script>
 
     <!-- Usuario con sesión iniciada -->

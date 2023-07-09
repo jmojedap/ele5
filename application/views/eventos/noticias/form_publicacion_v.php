@@ -25,14 +25,14 @@
     $att_entero_1 = array(
         'id'     => 'entero_1',
         'name'   => 'entero_1',
-        'class'  => 'hidden',
+        'class'  => 'd-none',
         'value'  => $config_form['entero_1']
     );
     
     $att_grupo_id = array(
         'id'     => 'grupo_id',
         'name'   => 'grupo_id',
-        'class'  => 'hidden',
+        'class'  => 'd-none',
         'value'  => $config_form['grupo_id']
     );
 
@@ -70,7 +70,7 @@
         $('#agregar_link').click(function()
         {
             $(this).toggleClass('btn-warning');
-            $(this).toggleClass('btn-default');
+            $(this).toggleClass('btn-light');
             $('#grupo_texto_1').toggle('fast');
             $('#texto_1').focus();
         });
@@ -93,17 +93,17 @@
 
         <div class="text-right">
             
-            <div class="btn btn-default" id="agregar_link">
+            <div class="btn btn-light" id="agregar_link">
                 <i class="fa fa-link"></i>
                 Agregar Link
             </div>
             
             <!-- Split button -->
             <div class="btn-group">
-                <button type="button" class="btn btn-default w4" id="texto_alcance">
+                <button type="button" class="btn btn-light w4" id="texto_alcance">
                     <?= $config_form['texto_alcance'] ?>
                 </button>
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="caret"></span>
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>

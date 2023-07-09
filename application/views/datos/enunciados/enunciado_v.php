@@ -1,6 +1,6 @@
 <p>
-    <span class="suave">Creado</span>
-    <span class="resaltar"><?= $this->Pcrn->fecha_formato($row->creado, 'Y-M-d') ?></span>
+    <span class="text-muted">Creado</span>
+    <span class="text-primary"><?= $this->Pcrn->fecha_formato($row->creado, 'Y-M-d') ?></span>
 </p>
 
 <?php
@@ -11,36 +11,34 @@
     
     //Atributos de los elementos del menú
         $arr_menus['enunciados'] = array(
-            'icono' => '<i class="fa fa-list-alt"></i>',
+            'icono' => '<i class="fa fa-arrow-left"></i>',
             'texto' => 'Explorar',
-            'link' => "datos/enunciados/",
+            'link' => "enunciados/explorar/",
             'atributos' => 'title="Explorar enunciados"'
         );
             
-        $arr_menus['enunciados_ver'] = array(
+        $arr_menus['ver'] = array(
             'icono' => '<i class="fa fa-laptop"></i>',
             'texto' => 'Ver',
-            'link' => "datos/enunciados_ver/{$row->id}",
+            'link' => "enunciados/ver/{$row->id}",
             'atributos' => 'title="Ver enunciados"'
         );
         
-        $arr_menus['enunciados_editar'] = array(
+        $arr_menus['editar'] = array(
             'icono' => '<i class="fa fa-pencil"></i>',
             'texto' => 'Editar',
-            'link' => "datos/enunciados_editar/edit/{$row->id}",
+            'link' => "enunciados/editar/edit/{$row->id}",
             'atributos' => 'title="Editar enunciados"'
         );
         
-        
-        
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('enunciados', 'enunciados_ver', 'enunciados_editar');
-        $elementos_rol[1] = array('enunciados', 'enunciados_ver', 'enunciados_editar');
-        $elementos_rol[2] = array('enunciados', 'enunciados_ver', 'enunciados_editar');
-        $elementos_rol[3] = array('enunciados', 'enunciados_ver', 'enunciados_editar');
-        $elementos_rol[4] = array('enunciados', 'enunciados_ver', 'enunciados_editar');
-        $elementos_rol[5] = array('enunciados', 'enunciados_ver', 'enunciados_editar');
-        $elementos_rol[8] = array('enunciados', 'enunciados_ver', 'enunciados_editar');
+        $elementos_rol[0] = array('enunciados', 'ver', 'editar');
+        $elementos_rol[1] = array('enunciados', 'ver', 'editar');
+        $elementos_rol[2] = array('enunciados', 'ver', 'editar');
+        $elementos_rol[3] = array('enunciados', 'ver', 'editar');
+        $elementos_rol[4] = array('enunciados', 'ver', 'editar');
+        $elementos_rol[5] = array('enunciados', 'ver', 'editar');
+        $elementos_rol[8] = array('enunciados', 'ver', 'editar');
         
     //Definiendo menú mostrar, según el rol del visitante
         $elementos = $elementos_rol[$this->session->userdata('rol_id')];
@@ -52,5 +50,4 @@
         $data_menu['seccion'] = $seccion;
     
     //Cargue vista
-        $this->load->view('comunes/menu_v', $data_menu);
-        $this->load->view($vista_b);
+        $this->load->view('comunes/bs4/menu_v', $data_menu);

@@ -8,7 +8,7 @@
     
     
     if ( $row->tema_id ){
-        $link_tema = anchor("temas/paginas/{$row->tema_id}", $link_tema);
+        $link_tema = anchor("admin/temas/paginas/{$row->tema_id}", $link_tema);
     }
     
 ?>

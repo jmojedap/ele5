@@ -40,22 +40,13 @@
                 ]
             },
             {
-                text: 'Recursos',
+                text: 'Libros',
                 active: false,
                 style: '',
                 icon: 'fa fa-book',
                 cf: '',
                 submenu: true,
                 subelements: [
-                    {
-                        text: 'Kits',
-                        active: false,
-                        icon: 'fa fa-suitcase',
-                        cf: 'kits/explorar',
-                        sections: ['kits/explorar','kits/nuevo','kits/flipbooks','kits/cuestionarios','kits/instituciones',
-                            'kits/importar_elementos', 'kits/editar'
-                        ]
-                    },
                     {
                         text: 'Programas',
                         active: false,
@@ -71,17 +62,44 @@
                         sections: []
                     },
                     {
+                        text: 'Páginas',
+                        active: false,
+                        icon: 'far fa-file',
+                        cf: 'paginas/explorar',
+                        sections: []
+                    },
+                ],
+                sections: []
+            },
+            {
+                text: 'Recursos',
+                active: false,
+                style: '',
+                icon: 'fa-solid fa-image',
+                cf: '',
+                submenu: true,
+                subelements: [
+                    {
+                        text: 'Kits',
+                        active: false,
+                        icon: 'fa fa-suitcase',
+                        cf: 'kits/explorar',
+                        sections: ['kits/explorar','kits/nuevo','kits/flipbooks','kits/cuestionarios','kits/instituciones',
+                            'kits/importar_elementos', 'kits/editar'
+                        ]
+                    },
+                    {
                         text: 'Temas',
                         active: false,
                         icon: 'fa fa-bars',
-                        cf: 'temas/explore',
+                        cf: 'admin/temas/explore',
                         sections: []
                     },
                     {
                         text: 'Contenidos AP',
                         active: false,
                         icon: 'fa fa-book',
-                        cf: 'posts/ap_explorar',
+                        cf: 'contenidos_ap/explorar',
                         sections: []
                     },
                     {
@@ -89,13 +107,6 @@
                         active: false,
                         icon: 'fa fa-question',
                         cf: 'quices/explorar',
-                        sections: []
-                    },
-                    {
-                        text: 'Páginas',
-                        active: false,
-                        icon: 'far fa-file',
-                        cf: 'paginas/explorar',
                         sections: []
                     },
                     {
@@ -116,7 +127,7 @@
                         text: 'Posts',
                         active: false,
                         icon: 'fa fa-newspaper',
-                        cf: 'posts/explorar',
+                        cf: 'admin/posts/explore',
                         sections: ['posts/explorar', 'posts/editar', 'posts/nuevo', 'posts/leer']
                     },
                 ],
@@ -141,7 +152,7 @@
                         text: 'Lecturas',
                         active: false,
                         icon: 'fa fa-quote-left',
-                        cf: 'datos/enunciados',
+                        cf: 'enunciados/explorar',
                         sections: []
                     },
                     {

@@ -98,10 +98,10 @@
     $opciones_menus['datos/cuestionarios'] = array('cuestionarios', 'cuestionarios', 'cuestionarios');
     $opciones_menus['datos/mis_cuestionarios'] = array('cuestionarios', 'mis_cuestionarios', 'mis cuestionarios');
 
-    $opciones_menus['datos/enunciados'] = array('cuestionarios', 'enunciados', 'lecturas');
-    $opciones_menus['datos/enunciados_nuevo'] = array('cuestionarios', 'enunciados', 'lecturas');
-    $opciones_menus['datos/enunciados_ver'] = array('cuestionarios', 'enunciados', 'lecturas');
-    $opciones_menus['datos/enunciados_editar'] = array('cuestionarios', 'enunciados', 'lecturas');
+    $opciones_menus['enunciados/explorar'] = array('cuestionarios', 'enunciados', 'lecturas');
+    $opciones_menus['enunciados/nuevo'] = array('cuestionarios', 'enunciados', 'lecturas');
+    $opciones_menus['enunciados/ver'] = array('cuestionarios', 'enunciados', 'lecturas');
+    $opciones_menus['enunciados/editar'] = array('cuestionarios', 'enunciados', 'lecturas');
 
     $opciones_menus['preguntas/explorar'] = array('cuestionarios', 'preguntas', 'preguntas');
     $opciones_menus['preguntas/detalle'] = array('cuestionarios', 'preguntas', 'preguntas');
@@ -181,7 +181,7 @@
                         <span>cuestionarios</span>
                     </a>
                 </li>
-                <li><a href="<?= base_url('datos/enunciados')?>" class="<?= $clase_sm['enunciados'] ?>"><i class="fa fa-quote-left"></i><span>lecturas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url('enunciados/explorar')?>" class="<?= $clase_sm['enunciados'] ?>"><i class="fa fa-quote-left"></i><span>lecturas</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url('preguntas/explorar/?tp=01')?>" class="<?= $clase_sm['preguntas'] ?>"><i class="fa fa-question"></i><span>preguntas</span></a></li> <!-- subitem -->
             </ul>
 

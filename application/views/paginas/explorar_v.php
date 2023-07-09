@@ -192,7 +192,7 @@
                         $att_mini['src'] = "{$carpeta_uploads}pf_mini/{$row_resultado->archivo_imagen}";
                         
                         $texto_tema = 'Sin tema asignado';
-                        if ( ! is_null($row_resultado->tema_id) ) { $texto_tema = anchor("temas/paginas/{$row_resultado->tema_id}", $row_resultado->nombre_tema, 'class="" title=""'); }
+                        if ( ! is_null($row_resultado->tema_id) ) { $texto_tema = anchor("admin/temas/paginas/{$row_resultado->tema_id}", $row_resultado->nombre_tema, 'class="" title=""'); }
 
                 ?>
                 <tr>

@@ -12,7 +12,7 @@
                 <?= $row_tema->tema_id ?>
             </td>
             <td class="<?= $clases_col['nombre_tema'] ?>">
-                <?= anchor("temas/preguntas/{$row_tema->tema_id}", $row_tema->nombre_tema, 'class="" title=""') ?>
+                <?= anchor("admin/temas/preguntas/{$row_tema->tema_id}", $row_tema->nombre_tema, 'class="" title=""') ?>
             </td>
             <td>
                 <span class="etiqueta nivel w1"><?= $row_tema->nivel ?></span>

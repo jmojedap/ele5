@@ -1,7 +1,7 @@
 <?php
 class Tema_Model extends CI_Model{
     
-    function basico($tema_id)
+    function basic($tema_id)
     {
         
         //preguntas
@@ -17,7 +17,7 @@ class Tema_Model extends CI_Model{
             $this->db->where('tema_id', $tema_id);
             $pf = $this->db->get('pagina_flipbook');
         
-        $row_tema = $this->Pcrn->registro_id('tema', $tema_id);
+        $row_tema = $this->Db_model->row_id('tema', $tema_id);
         
         //Datos adicionales
         $row_tema->cant_preguntas = $preguntas->num_rows();
@@ -30,9 +30,9 @@ class Tema_Model extends CI_Model{
         
         $basico['tema_id'] = $tema_id;
         $basico['row'] = $row_tema;
-        $basico['head_title'] = $row_tema->nombre_tema;
-        $basico['view_description'] = 'temas/tema_v';
-        $basico['nav_2'] = 'temas/menu_v';
+        $basico['head_title'] = 'Tema: ' . $row_tema->nombre_tema;
+        $basico['view_description'] = 'admin/temas/tema_v';
+        $basico['nav_2'] = 'admin/temas/menus/row_v';
         
         return $basico;
     }
@@ -51,13 +51,13 @@ class Tema_Model extends CI_Model{
         //Elemento de exploración
             $data['controller'] = 'temas';                       //Nombre del controlador
             $data['cf'] = 'temas/explore/';                      //Nombre del controlador
-            $data['views_folder'] = 'temas/explore/';      //Carpeta donde están las vistas de exploración
+            $data['views_folder'] = 'admin/temas/explore/';      //Carpeta donde están las vistas de exploración
             $data['numPage'] = $num_page;                       //Número de la página
             
         //Vistas
             $data['head_title'] = 'Temas';
             $data['view_a'] = $data['views_folder'] . 'explore_v';
-            $data['nav_2'] = $data['views_folder'] . 'menu_v';
+            $data['nav_2'] = 'admin/temas/menus/explore_v';
         
         return $data;
     }
@@ -235,7 +235,7 @@ class Tema_Model extends CI_Model{
     function filtro_rol()
     {
         $usuario_id = $this->session->userdata('usuario_id');
-        $row_usuario = $this->Pcrn->registro_id('usuario', $usuario_id);
+        $row_usuario = $this->Db_model->row_id('usuario', $usuario_id);
 
         $condicion = 'id = 0';  //Valor por defecto, ningún usuario, se obtendrían cero temas.
         
@@ -529,6 +529,20 @@ class Tema_Model extends CI_Model{
     
 // DATOS
 //---------------------------------------------------------------------------------------------------------
+
+    /**
+     * Query con programas en los que está incluido el tema
+     * 2023-07-02
+     */
+    function programas($tema_id)
+    {
+        //programas
+        $this->db->join('programa', 'programa_tema.programa_id = programa.id');
+        $this->db->where('tema_id', $tema_id);
+        $programas = $this->db->get('programa_tema');
+
+        return $programas;
+    }
     
     function paginas($tema_id)
     {
@@ -1102,7 +1116,7 @@ class Tema_Model extends CI_Model{
     function cambiar_pos_pag($tema_id, $pf_id, $pos_final)
     {
         //Fila de la página que se va a mover
-            $row_pagina = $this->Pcrn->registro_id('pagina_flipbook', $pf_id);
+            $row_pagina = $this->Db_model->row_id('pagina_flipbook', $pf_id);
             
         //Condición que selecciona el conjunto de registros a modificar
             $condicion_1 = "tema_id = {$tema_id} AND en_tema = 1";    
@@ -1156,10 +1170,11 @@ class Tema_Model extends CI_Model{
     function cambiar_pos_pregunta($tema_id, $pregunta_id, $pos_final)
     {
         //Definición de variables
+            $affectedRows = 0;
             $sql = '';
         
         //Fila de la pregunta que se va a mover
-            $row_pregunta = $this->Pcrn->registro_id('pregunta', $pregunta_id);
+            $row_pregunta = $this->Db_model->row_id('pregunta', $pregunta_id);
             
         //Condición que selecciona el conjunto de registros a modificar
             $condicion_1 = "tema_id = {$tema_id}";
@@ -1189,14 +1204,17 @@ class Tema_Model extends CI_Model{
                 $sql .= " AND {$condicion_2}";
 
                 $this->db->query($sql);
+                $affectedRows = $this->db->affected_rows();
         
             //Cambiar la posición a la pregunta específica
-                $registro['orden'] = $pos_final;
+                $aRow['orden'] = $pos_final;
                 $this->db->where('id', $pregunta_id);
-                $this->db->update('pregunta', $registro);
+                $this->db->update('pregunta', $aRow);
+
+                $affectedRows += $this->db->affected_rows();
         }
         
-        return $sql;
+        return $affectedRows;
         
     }
     
@@ -1222,17 +1240,25 @@ class Tema_Model extends CI_Model{
         }
     }
     
+    /**
+     * Quita el tema de una pregunta. pregunta.tema_id
+     * 2023-07-02
+     */
     function quitar_pregunta($tema_id, $pregunta_id)
     {
         //Editar registro
-            $registro['tema_id'] = NULL;
-            $registro['orden'] = 0;
+            $aRow['tema_id'] = NULL;
+            $aRow['orden'] = 0;
             
             $this->db->where('id', $pregunta_id);
-            $this->db->update('pregunta', $registro);
+            $this->db->update('pregunta', $aRow);
+
+        $qty_deleted = $this->db->affected_rows();
             
         //Reenumerar el tema
-            $this->numerar_preguntas($tema_id);
+        $this->numerar_preguntas($tema_id);
+
+        return $qty_deleted;
     }
     
     function actualizar_paginas_total($temas)
@@ -1453,7 +1479,7 @@ class Tema_Model extends CI_Model{
 
     /**
      * Asignar pregunta abierta
-     * 2019-09-03
+     * 2023-07-02
      */
     function save_pa($tema_id, $pa_id)
     {
@@ -1461,15 +1487,21 @@ class Tema_Model extends CI_Model{
             $data = array('status' => 0, 'message' => 'La pregunta no fue guardada');
 
         //Construir registro
-            $arr_row['tipo_id'] = 121;  //Pregunta abierta
-            $arr_row['referente_1_id'] = $tema_id;  //Tema asociado
-            $arr_row['referente_2_id'] = $this->input->post('referente_2_id');
-            $arr_row['contenido'] = $this->input->post('contenido');
+            $aRow['tipo_id'] = 121;  //Pregunta abierta
+            $aRow['referente_1_id'] = $tema_id;  //Tema asociado
+            $aRow['referente_2_id'] = $this->input->post('referente_2_id');
+            $aRow['contenido'] = $this->input->post('contenido');
+
+            if ( $pa_id > 0 ) $aRow['id'] = $pa_id;
+            $aRow['editor_id'] = $this->session->userdata('user_id');
+            $aRow['editado'] = date('Y-m-d H:i:s');
+            $aRow['usuario_id'] = $this->session->userdata('user_id');
+            $aRow['creado'] = date('Y-m-d H:i:s');
 
         //Guardar
             $this->load->model('Post_model');
-            $condition = "referente_1_id = {$tema_id} AND id = {$pa_id}";
-            $saved_id = $this->Post_model->guardar_post($condition, $arr_row);
+            $data = $this->Post_model->save($aRow);
+            $saved_id = $data['saved_id'];
         
             if ( $saved_id > 0 )
             {
@@ -1505,9 +1537,9 @@ class Tema_Model extends CI_Model{
     /**
      * Importar masivamente preguntas abiertas a temas
      * tabla post, tipo_id = 121
-     * 2019-09-06
+     * 2023-07-02
      * 
-     * @param type $array_hoja    Array con los datos de preguntas
+     * @param array $array_hoja    Datos de preguntas
      */
     function importar_pa($array_hoja)
     {
@@ -1515,8 +1547,13 @@ class Tema_Model extends CI_Model{
         $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
         
         //Predeterminados registro nuevo
-        $arr_row['tipo_id'] = 121;
-        $arr_row['referente_2_id'] = 1; //Pública, agregada por ELE
+        $aRow['tipo_id'] = 121;
+        $aRow['referente_2_id'] = 1; //Pública, agregada por ELE
+
+        $aRow['editor_id'] = $this->session->userdata('user_id');
+        $aRow['editado'] = date('Y-m-d H:i:s');
+        $aRow['usuario_id'] = $this->session->userdata('user_id');
+        $aRow['creado'] = date('Y-m-d H:i:s');
 
         $this->load->model('Post_model');
         
@@ -1526,18 +1563,18 @@ class Tema_Model extends CI_Model{
                 $tema_id = $this->Pcrn->campo('tema', "cod_tema = '{$array_fila[0]}'", 'id');
             
             //Complementar registro
-                $arr_row['referente_1_id'] = $tema_id;
-                $arr_row['contenido'] = $array_fila[1];
+                $aRow['referente_1_id'] = $tema_id;
+                $aRow['contenido'] = $array_fila[1];
                 
             //Validar
                 $condiciones = 0;
                 if ( ! is_null($tema_id) ) { $condiciones++; }                  //Tiene tema identificado
-                if ( strlen($arr_row['contenido']) > 0 ) { $condiciones++; }    //Tiene contenido texto escrito
+                if ( strlen($aRow['contenido']) > 0 ) { $condiciones++; }    //Tiene contenido texto escrito
                 
             //Si cumple las condiciones
             if ( $condiciones == 2 )
             {   
-                $this->Post_model->guardar_post('id = 0', $arr_row);    //Condición imposible, siempre agrega
+                $this->Post_model->save($aRow);    //Condición imposible, siempre agrega
             } else {
                 $no_importados[] = $fila;
             }
@@ -1620,7 +1657,7 @@ class Tema_Model extends CI_Model{
      */
     function ledin($ledin_id)
     {
-        $ledin = $this->Pcrn->registro_id('post', $ledin_id);
+        $ledin = $this->Db_model->row_id('post', $ledin_id);
         return $ledin;
     }
 
@@ -1665,8 +1702,9 @@ class Tema_Model extends CI_Model{
         //Si no hay error
             if ( $error_text == '' )
             {
-                $arr_row = $this->arr_ledin_importado($tema_id, $row_data);
-                $post_id = $this->Post_model->guardar_post('id = 0', $arr_row);    //Condición imposible, siempre agrega
+                $aRow = $this->arr_ledin_importado($tema_id, $row_data);
+                $postData = $this->Post_model->save($aRow);    //Condición imposible, siempre agrega
+                $post_id = $postData['saved_id'];
 
                 $data = array('status' => 1, 'text' => '', 'imported_id' => $post_id, 'arr_row' => $arr_row);
             } else {
@@ -1678,20 +1716,25 @@ class Tema_Model extends CI_Model{
 
     /**
      * Realiza la importación de lectura ledin de cada fila en el archivo excel
-     * 2021-02-27
+     * 2023-07-02
      */
     function arr_ledin_importado($tema_id, $row_data)
     {
         //Construir registro
-            $arr_row['nombre_post'] = $row_data[1];
-            $arr_row['tipo_id'] = 125;
-            $arr_row['contenido_json'] = $this->ledin_json($row_data);
-            $arr_row['contenido'] = $this->ledin_lectura($row_data[0]);
-            $arr_row['texto_1'] = $row_data[0] . '.txt';   //Nombre archivo de texto lectura
-            $arr_row['texto_2'] = $row_data[2];            //Nombre archivo imagen asociada
-            $arr_row['referente_1_id'] = $tema_id;
+            $aRow['nombre_post'] = $row_data[1];
+            $aRow['tipo_id'] = 125;
+            $aRow['contenido_json'] = $this->ledin_json($row_data);
+            $aRow['contenido'] = $this->ledin_lectura($row_data[0]);
+            $aRow['texto_1'] = $row_data[0] . '.txt';   //Nombre archivo de texto lectura
+            $aRow['texto_2'] = $row_data[2];            //Nombre archivo imagen asociada
+            $aRow['referente_1_id'] = $tema_id;
 
-        return $arr_row;
+            $aRow['editor_id'] = $this->session->userdata('user_id');
+            $aRow['editado'] = date('Y-m-d H:i:s');
+            $aRow['usuario_id'] = $this->session->userdata('user_id');
+            $aRow['creado'] = date('Y-m-d H:i:s');
+
+        return $aRow;
     }
 
     /**

@@ -17,28 +17,28 @@
         $arr_menus['ap_explorar'] = array(
             'icono' => '<i class="fa fa-arrow-left"></i>',
             'texto' => 'Explorar',
-            'link' => "posts/ap_explorar/{$explorar_add}",
+            'link' => "contenidos_ap/explorar/{$explorar_add}",
             'atributos' => ''
         );
         
         $arr_menus['ap_editar'] = array(
             'icono' => '<i class="fa fa-pencil-alt"></i>',
             'texto' => 'Editar',
-            'link' => "posts/ap_editar/{$row->id}",
+            'link' => "contenidos_ap/editar/{$row->id}",
             'atributos' => ''
         );
         
         $arr_menus['ap_leer'] = array(
             'icono' => '<i class="fa fa-laptop"></i>',
             'texto' => 'Abrir',
-            'link' => "posts/ap_leer/{$row->id}",
+            'link' => "contenidos_ap/leer/{$row->id}",
             'atributos' => ''
         );
         
         $arr_menus['ap_instituciones'] = array(
             'icono' => '<i class="fa fa-university"></i>',
             'texto' => 'Instituciones',
-            'link' => "posts/ap_instituciones/{$row->id}",
+            'link' => "contenidos_ap/instituciones/{$row->id}",
             'atributos' => 'title="Instituciones asignadas"'
         );
         
