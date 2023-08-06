@@ -8,7 +8,7 @@ class Post_model extends CI_Model{
         $data['row'] = $row;
         $data['type_folder'] = $this->type_folder($row->tipo_id);
         $data['head_title'] = strip_tags($data['row']->nombre_post);
-        $data['view_a'] = $this->views_folder . 'post_v';
+        $data['view_a'] = 'admin/posts/post_v';
         $data['nav_2'] = $data['type_folder'] . 'menu_v';
 
         return $data;
@@ -180,6 +180,8 @@ class Post_model extends CI_Model{
             $condition = 'id > 0';
         } elseif ( $role == 3 ) {
             $condition = 'tipo_id IN (311,312)';
+        } elseif ( $role == 9 ) {
+            $condition = 'tipo_id IN (126)';
         }
         
         return $condition;
@@ -259,7 +261,7 @@ class Post_model extends CI_Model{
         $type_folder = 'admin/posts/';
 
         if ( in_array($tipo_id, $special_types) ) { 
-            $type_folder = "{$this->views_folder}/types/{$tipo_id}/";
+            $type_folder = "admin/posts/types/{$tipo_id}/";
         }
 
         return $type_folder;
@@ -304,7 +306,7 @@ class Post_model extends CI_Model{
         $deleteable = 0;    //Valor por defecto
 
         //Es Administrador
-        if ( in_array($this->session->userdata('role'), [1,2,3]) ) {
+        if ( in_array($this->session->userdata('role'), [0,1,2]) ) {
             $deleteable = 1;
         }
 

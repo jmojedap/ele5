@@ -272,31 +272,46 @@ public $url_controller = URL_ADMIN . 'temas/';
             $data['view_a'] = $this->views_folder . 'preguntas_v';
             $this->load->view(TPL_ADMIN_NEW, $data);
     }
-    
-    function paginas($tema_id)
+
+    function agregar_pregunta($tema_id, $orden, $proceso = '')
     {
         
-        //Cargando datos básicos
-            $this->load->model('Pagina_model');
-            $data = $this->Tema_model->basic($tema_id);
+        //Cargando datos básicos (_basico)
+            $data = $this->Tema_model->basic($tema_id, $orden);
+
+        //Ejecutar búsqueda
+            $this->load->model('Search_model');
+            $filters = $this->Search_model->filters();
+            $this->load->model('Pregunta_model');
+            $resultados = $this->Pregunta_model->search($filters, 100, 0);
             
-        //paginas
-            $this->db->where('tema_id', $tema_id);
-            $this->db->where('pagina_origen_id IS NULL');
-            $this->db->order_by('orden', 'ASC');
-            $paginas = $this->db->get('pagina_flipbook');
+        //Grocery crud para agregar nueva pregunta
+            $this->session->set_userdata('tema_id', $tema_id);
+            $this->session->set_userdata('orden', $orden);
+            $this->load->model('Pregunta_model');
+            $registro_tema['nivel'] = $data['row']->nivel;
+            $registro_tema['area_id'] = $data['row']->area_id;
+            $gc_output = $this->Pregunta_model->crud_add_tema($tema_id, $registro_tema, $orden);
             
-        //Cargando $data
-            $data['paginas'] = $paginas;
+        //Establecer vista
+            $data['view_a'] = $this->views_folder . 'agregar_pregunta_v';
+            if ( $proceso == 'add' ){ $data['view_a'] = $this->views_folder . 'agregar_pregunta_add_v'; }
             
-            
+        //Variables
+            $data['filters'] = $filters;
+            $data['proceso'] = $proceso;
+            $data['orden'] = $orden;
+            $data['orden_mostrar'] = $orden + 1;
+            $data['preguntas'] = $resultados;
+        
         //Solicitar vista
-            $data['head_subtitle'] = 'Páginas';
-            $data['view_a'] = $this->views_folder . 'paginas_v';
-            $this->load->view(TPL_ADMIN_NEW, $data);
+            $data['head_subtitle'] = 'Agregar pregunta';
+            $output = array_merge($data,(array)$gc_output);
+            $this->load->view(TPL_ADMIN_NEW, $output);
+        
     }
 
-// GESTIÓN DE ARCHIVOS ASOCIADOS A TEMAS
+// ARCHIVOS ASOCIADOS A TEMAS
 //-----------------------------------------------------------------------------
     
     function archivos($tema_id)
@@ -650,8 +665,7 @@ public $url_controller = URL_ADMIN . 'temas/';
     /**
      * Formulario para la creación de una copia de un tema
      * 
-     * 
-     * @param type $tema_id 
+     * @param int $tema_id 
      */
     function copiar($tema_id)
     {
@@ -707,12 +721,41 @@ public $url_controller = URL_ADMIN . 'temas/';
             }
             
     }
+
+// PÁGINAS FLIPBOOK DE UN TEMA
+//-----------------------------------------------------------------------------
+
+    /**
+     * HTML VIEW, Listado de páginas asociadas a un tema
+     * 2023-07-09
+     */
+    function paginas($tema_id)
+    {
+        
+        //Cargando datos básicos
+            $this->load->model('Pagina_model');
+            $data = $this->Tema_model->basic($tema_id);
+            
+        //paginas
+            $this->db->where('tema_id', $tema_id);
+            $this->db->where('pagina_origen_id IS NULL');
+            $this->db->order_by('orden', 'ASC');
+            $paginas = $this->db->get('pagina_flipbook');
+            
+        //Cargando $data
+            $data['paginas'] = $paginas;
+            
+        //Solicitar vista
+            $data['head_subtitle'] = 'Páginas';
+            $data['view_a'] = $this->views_folder . 'paginas_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
+    }
     
     /**
      * Quitar una página flipbook de un tema
      * 
-     * @param type $tema_id
-     * @param type $pagina_id
+     * @param int $tema_id
+     * @param int $pagina_id
      */
     function quitar_pf($tema_id, $pagina_id)
     {
@@ -733,12 +776,12 @@ public $url_controller = URL_ADMIN . 'temas/';
     
     /**
      * Cambia el valor del campo pagina_flipbook.orden
-     * 
      * Se modifica también la posición de la página contigua, + o - 1
+     * 2023-07-09
      * 
-     * @param type $tema_id
-     * @param type $pf_id
-     * @param type $subir 
+     * @param int $tema_id
+     * @param int $pf_id
+     * @param int $pos_final 
      */
     function mover_pagina($tema_id, $pf_id, $pos_final)
     {
@@ -748,44 +791,6 @@ public $url_controller = URL_ADMIN . 'temas/';
         $data['url'] = base_url() . "temas/paginas/$tema_id";
         $data['msg_redirect'] = '';
         $this->load->view('app/redirect_v', $data);
-        
-    }
-    
-    function agregar_pregunta($tema_id, $orden, $proceso = '')
-    {
-        
-        //Cargando datos básicos (_basico)
-            $data = $this->Tema_model->basic($tema_id, $orden);
-
-        //Ejecutar búsqueda
-            $this->load->model('Search_model');
-            $filters = $this->Search_model->filters();
-            $this->load->model('Pregunta_model');
-            $resultados = $this->Pregunta_model->search($filters, 100, 0);
-            
-        //Grocery crud para agregar nueva pregunta
-            $this->session->set_userdata('tema_id', $tema_id);
-            $this->session->set_userdata('orden', $orden);
-            $this->load->model('Pregunta_model');
-            $registro_tema['nivel'] = $data['row']->nivel;
-            $registro_tema['area_id'] = $data['row']->area_id;
-            $gc_output = $this->Pregunta_model->crud_add_tema($tema_id, $registro_tema, $orden);
-            
-        //Establecer vista
-            $data['view_a'] = $this->views_folder . 'agregar_pregunta_v';
-            if ( $proceso == 'add' ){ $data['view_a'] = $this->views_folder . 'agregar_pregunta_add_v'; }
-            
-        //Variables
-            $data['filters'] = $filters;
-            $data['proceso'] = $proceso;
-            $data['orden'] = $orden;
-            $data['orden_mostrar'] = $orden + 1;
-            $data['preguntas'] = $resultados;
-        
-        //Solicitar vista
-            $data['head_subtitle'] = 'Agregar pregunta';
-            $output = array_merge($data,(array)$gc_output);
-            $this->load->view(TPL_ADMIN_NEW, $output);
         
     }
     
@@ -809,145 +814,6 @@ public $url_controller = URL_ADMIN . 'temas/';
             }
             
         echo $cant_paginas;
-    }
-
-// RECURSOS DE TEMAS
-//---------------------------------------------------------------------------------------------------
- 
-    function recursos_archivos()
-    {
-        $this->load->library('grocery_CRUD');
-        
-        $crud = new grocery_CRUD();
-        $crud->set_table('recurso');
-        $crud->set_subject('archivo');
-        //$crud->unset_export();
-        $crud->unset_print();
-        $crud->unset_read();
-        $crud->columns('nombre_archivo', 'tema_id', 'tipo_archivo_id', 'editado');
-
-        //Títulos de campo
-            $crud->display_as('tema_id', 'cod_tema');
-            $crud->display_as('tipo_archivo_id', 'Tipo archivo');
-        
-        //Filtro
-            $crud->where('tipo_recurso_id', 1); //Archivos
-
-        //Relaciones
-            $crud->set_relation('tipo_archivo_id', 'item', 'item', 'categoria_id = 20');
-            $crud->set_relation('tema_id', 'tema', 'cod_tema');
-
-        //Reglas de validación
-            $crud->set_rules('nombre_archivo', 'Nombre archivo', 'required');
-
-        //Valores por defecto
-            $crud->field_type('usuario_id', 'hidden', $this->session->userdata('usuario_id'));
-            $crud->field_type('editado', 'hidden', date('Y-m-d H:i:s'));
-
-        $gc_output = $crud->render();
-
-        //Solicitar vista
-            $data['head_title'] = 'Recursos';
-            $data['head_subtitle'] = 'Archivos';
-            $data['nav_2'] = $this->views_folder . 'menus/explore_v';
-            $data['view_a'] = $this->views_folder . 'recursos_v';
-
-        $output = array_merge($data,(array)$gc_output);
-        $this->load->view(TPL_ADMIN_NEW, $output);
-    }
-    
-    function recursos_links()
-    {
-        $this->load->library('grocery_CRUD');
-        
-        $crud = new grocery_CRUD();
-        $crud->set_table('recurso');
-        $crud->set_subject('link');
-        $crud->unset_print();
-        $crud->unset_read();
-        $crud->columns('url', 'tema_id', 'editado');
-
-        //Títulos de campo
-            $crud->display_as('tema_id', 'cod_tema');
-        
-        //Filtro
-            $crud->where('tipo_recurso_id', 2); //Links
-
-        //Relaciones
-            $crud->set_relation('tipo_archivo_id', 'item', 'item', 'categoria_id = 20');
-            $crud->set_relation('tema_id', 'tema', 'cod_tema');
-
-        //Reglas de validación
-            $crud->set_rules('nombre_archivo', 'Nombre archivo', 'required');
-
-        //Valores por defecto
-            $crud->field_type('usuario_id', 'hidden', $this->session->userdata('usuario_id'));
-            $crud->field_type('editado', 'hidden', date('Y-m-d H:i:s'));
-
-        $output = $crud->render();
-
-        //Head includes específicos para la página
-            $head_includes[] = 'grocery_crud';
-        
-            $data['head_includes'] = $head_includes;
-
-        //Solicitar vista
-            $data['head_title'] = 'Recursos';
-            $data['head_subtitle'] = 'Archivos';
-            $data['nav_2'] = $this->views_folder . 'menus/explore_v';
-            $data['view_a'] = $this->views_folder . 'recursos_v';
-
-        $output = array_merge($data,(array)$output);
-        $this->load->view(TPL_ADMIN_NEW, $output);
-    }
-    
-    function recursos_quices()
-    {
-
-        $this->load->library('grocery_CRUD');
-        
-        $crud = new grocery_CRUD();
-        $crud->set_table('recurso');
-        $crud->set_subject('quiz');
-        //$crud->unset_export();
-        $crud->unset_print();
-        $crud->unset_read();
-        $crud->columns('referente_id', 'tipo_quiz', 'tema_id', 'editado');
-                        
-        //Títulos de campo
-            $crud->display_as('tema_id', 'cod_tema');
-            $crud->display_as('referente_id', 'Nombre quiz');
-        
-        //Filtro
-            $crud->where('tipo_recurso_id', 3); //Quices
-
-        //Relaciones
-            $crud->set_relation('tipo_archivo_id', 'item', 'item', 'categoria_id = 20');
-            $crud->set_relation('tema_id', 'tema', 'cod_tema');
-            $crud->set_relation('referente_id', 'quiz', 'nombre_quiz');
-
-        //Reglas de validación
-            $crud->set_rules('nombre_archivo', 'Nombre archivo', 'required');
-
-        //Valores por defecto
-            $crud->field_type('usuario_id', 'hidden', $this->session->userdata('usuario_id'));
-            $crud->field_type('editado', 'hidden', date('Y-m-d H:i:s'));
-
-        $output = $crud->render();
-
-        //Head includes específicos para la página
-            $head_includes[] = 'grocery_crud';
-        
-            $data['head_includes'] = $head_includes;
-
-        //Solicitar vista
-        $data['head_title'] = 'Recursos';
-        $data['head_subtitle'] = 'Archivos';
-        $data['view_a'] = $this->views_folder . 'recursos_v';
-        $data['nav_2'] = $this->views_folder . 'menus/explore_v';
-
-        $output = array_merge($data,(array)$output);
-        $this->load->view(TPL_ADMIN_NEW, $output);
     }
 
 // UNIDADES TEMÁTICAS
@@ -1367,8 +1233,23 @@ public $url_controller = URL_ADMIN . 'temas/';
         //$this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
-// TEMAS EN TEXTO, CONTENIDOS DE TEMAS EDITABLES
+// TEMAS EN TEXTO, CONTENIDOS DE TEMAS EDITABLES POST TIPO 126
 //-----------------------------------------------------------------------------
+
+    /**
+     * HTML VIEW
+     * Listado de artículos de un tema
+     * 2023-07-09
+     */
+    function articulos($tema_id)
+    {
+        $data = $this->Tema_model->basic($tema_id);
+
+        $data['arrStatus'] = $this->Item_model->arr_options('categoria_id = 42');
+        $data['articulos'] = $this->Tema_model->articulos($tema_id);
+        $data['view_a'] = $this->views_folder . 'articulos/articulos_v';
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
+    }
 
     function articulo($tema_id, $post_id)
     {

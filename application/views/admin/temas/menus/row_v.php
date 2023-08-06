@@ -6,14 +6,14 @@ var sections = [
         id: 'temas_explore',
         text: '< Temas',
         cf: 'temas/explore/',
-        roles: [0,1,2],
+        roles: [0,1,2,9],
         anchor: true,
     },
     {
         id: 'temas_info',
         text: 'Información',
         cf: 'temas/info/' + nav2RowId,
-        roles: [0,1,2],
+        roles: [0,1,2,9],
         anchor: true
     },
     {
@@ -21,6 +21,13 @@ var sections = [
         text: 'Páginas',
         cf: 'temas/paginas/' + nav2RowId,
         roles: [0,1,2],
+        anchor: true
+    },
+    {
+        id: 'temas_articulos',
+        text: 'Artículos',
+        cf: 'temas/articulos/' + nav2RowId,
+        roles: [0,1,2,9],
         anchor: true
     },
     {

@@ -2,30 +2,30 @@
 var sectionId = '<?= $this->uri->segment(2) . '_' . $this->uri->segment(3); ?>'
 var element_id = '<?= $row->id ?>';
 var sections = [
+    {
+        id: 'posts_explore',
+        text: '< Posts',
+        cf: 'admin/posts/explore/',
+        roles: [0,1,9],
+        anchor: true
+    },
     {    
         text: 'Información',
         id: 'posts_info',
-        cf: 'posts/info/' + element_id,
-        roles: [1,2,3]
+        cf: 'admin/posts/info/' + element_id,
+        roles: [0,1,2]
     },
     {
         text: 'Detalles',
         id: 'posts_details',
-        cf: 'posts/details/' + element_id,
-        roles: [1,2]
-    },
-    {
-        text: 'Asistencia',
-        id: 'cuidado_session_students',
-        cf: 'cuidado/session_students/' + element_id,
-        roles: [1,2,3],
-        anchor: true,
+        cf: 'admin/posts/details/' + element_id,
+        roles: [0,1,9]
     },
     {
         text: 'Editar',
         id: 'posts_edit',
-        cf: 'posts/edit/' + element_id,
-        roles: [1,2,3],
+        cf: 'admin/posts/edit/' + element_id,
+        roles: [0,1,3,9],
         anchor: true
     },
 ]

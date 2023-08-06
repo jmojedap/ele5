@@ -110,7 +110,7 @@
                         sections: []
                     },
                     {
-                        text: 'Archivos',
+                        text: 'Archivos temas',
                         active: false,
                         icon: 'far fa-folder',
                         cf: 'recursos/archivos',

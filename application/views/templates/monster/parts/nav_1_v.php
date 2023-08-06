@@ -1,5 +1,4 @@
 <?php $this->load->view('templates/monster/menus/elements_' . $this->session->userdata('role')) ?>
-<?php //$this->load->view('templates/monster/menus/elements_6'); ?>
 
 <!-- ============================================================== -->
 <!-- Left Sidebar - style you can find in sidebar.scss  -->

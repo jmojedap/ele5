@@ -116,7 +116,7 @@
 
         <div class="flipbooks_strip" style="width: <?= $att_cap['ancho'] ?>px;">
             <div class="flipbook_container">
-                <a href="<?= base_url("posts/ap_explorar/?f1=1") ?>" title="Estrategias pedagógicas">
+                <a href="<?= base_url("contenidos_ap/explorar/?f1=1") ?>" title="Estrategias pedagógicas">
                     <img width="100" src="<?php echo URL_IMG . 'flipbook_resources/estrategias-pedagogicas.jpg' ?>" onError="this.src='<?= $img_cap_general ?>'">
                 </a>
             </div>

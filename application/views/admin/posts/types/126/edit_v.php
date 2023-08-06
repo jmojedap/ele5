@@ -1,134 +1,152 @@
-<?php
-    $arrLocalidad = $this->Item_model->arr_options('category_id = 121');
-    $arrManzana = $this->App_model->arr_options_post("type_id = 311");
+<?php $this->load->view('assets/summernote') ?>
 
-    //Opciones modalidades de escuela    
-    $arrModalidad = file_get_contents(PATH_CONTENT . "json/options/cuidado_modalidades.json");
-?>
+<script>
+$(document).ready(function() {
+    $('#field-contenido').summernote({
+        lang: 'es-ES',
+        height: 1200,
+        callbacks: {
+            onImageUpload: function(files) {
+            // upload image to server and create imgNode...
+                uploadImage(files[0], function(imageUrl) {
+                    // Una vez que tienes la URL de la imagen cargada, la insertas en el editor Summernote
+                    $('#field-contenido').summernote('insertImage', imageUrl);
+                });
+            }
+        },
+        toolbar: [
+            ['misc', ['undo', 'redo']],
+            ['font', ['bold', 'underline', 'italic']],
+            ['font', ['underline','superscript','subscript']],
+            ['font', ['clear']],
+            ['para', ['style', 'ul', 'ol', 'paragraph', 'color']],
+            ['insert', ['picture','video','link','table','hr']],
+            ['misc', ['fullscreen', 'help']],
+        ],
+    });
+});
+
+function uploadImage(file, callback) {
+    let formData = new FormData();
+    formData.append('file_field', file);
+
+    axios.post(URL_API + 'files/upload/', formData, {headers: {'Content-Type': 'multipart/form-data'}})
+    .then(response => {
+        console.log(response.data.row.url);
+        if ( response.data.status == 1  ) {
+            callback(response.data.row.url)
+        }
+    })
+    .catch(function (error) { console.log(error) })
+}
+</script>
 
 <div id="editPost">
-    <div class="card center_box_750">
-        <div class="card-body">
-            <form accept-charset="utf-8" method="POST" id="postForm" @submit.prevent="handleSubmit">
-                <fieldset v-bind:disabled="loading">
-                    <input type="hidden" name="id" value="<?= $row->id ?>">
-                    <input type="hidden" name="related_1" v-model="fields.related_1">
-
-                    <div class="mb-3 row">
-                        <label for="post_name" class="col-md-4 col-form-label text-right">Nombre</label>
-                        <div class="col-md-8">
-                            <input
-                                name="post_name" type="text" class="form-control"
-                                required
-                                title="Nombre" placeholder="Nombre"
-                                v-model="fields.post_name"
+    <form accept-charset="utf-8" method="POST" id="postForm" @submit.prevent="handleSubmit">
+        <fieldset v-bind:disabled="loading">
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <button class="btn btn-primary w120p" type="submit">Guardar</button>
+                </div>
+                <div class="col-md-8">
+                    <div>
+                        <a class="btn btn-light w120p" href="<?= URL_APP . "posts/leer_articulo_tema/{$row->id}" ?>" target="_blank"
+                            title="Guarde antes de ir a la vista previa"
                             >
-                        </div>
+                            Vista previa
+                        </a>
+                        <a class="btn btn-light w120p" href="<?= URL_ADMIN . "temas/articulos/{$row->referente_1_id}" ?>">Tema</a>
                     </div>
+                </div>
+            </div>
+            <input type="hidden" name="id" value="<?= $row->id ?>">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="status">Estado publicación</label>
+                        <select name="status" v-model="fields.status" class="form-select form-control" required>
+                            <option v-for="optionStatus in arrStatus" v-bind:value="optionStatus.cod">{{ optionStatus.name }}</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombre_post">Título</label>
+                        <input name="nombre_post" type="text" class="form-control" required title="Nombre"
+                            placeholder="Nombre" v-model="fields.nombre_post">
+                    </div>
+                    <div class="mb-3">
+                        <label for="subtitle">Subtítulo</label>
+                        <input name="subtitle" type="text" class="form-control" title="Subtítulo" v-model="fields.subtitle">
+                    </div>
+                    <div class="mb-3">
+                        <label for="resumen" class="">Resumen</label>
+                        <textarea
+                            name="resumen" class="form-control" rows="5" required
+                            title="Resumen" placeholder="Resumen"
+                            v-model="fields.resumen"
+                        ></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="slug">Slug</label>
+                        <input
+                            name="slug" type="text" class="form-control" required pattern="[a-zA-Z0-9\-_]+"
+                            title="Solo letras, números y guíones, sin espacios"
+                            v-model="fields.slug"
+                        >
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="mw750p">
 
-                    <div class="mb-3 row">
-                        <label for="related_2" class="col-md-4 col-form-label text-right">Manzana de cuidado</label>
-                        <div class="col-md-8">
-                            <select name="related_2" v-model="fields.related_2" class="form-control" required v-on:change="setLocalidad">
-                                <option v-for="optionManzana in arrManzana" v-bind:value="optionManzana.str_cod">{{ optionManzana.name }}</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <div class="mb-3 row">
-                        <label for="text_1" class="col-md-4 col-form-label text-right">Modalidad sesión</label>
-                        <div class="col-md-8">
-                            <select name="text_1" v-model="fields.text_1" class="form-control" required>
-                                <option v-for="optionModalidad in arrModalidad" v-bind:value="optionModalidad.name">{{ optionModalidad.name }}</option>
-                            </select>
+                        <div class="mb-3">
+                            <textarea name="contenido" id="field-contenido"><?= $row->contenido ?></textarea>
                         </div>
-                    </div>
 
-                    <div class="mb-3 row">
-                        <label for="integer_1" class="col-md-4 col-form-label text-right">Módulo | Núm. sesión</label>
-                        <div class="col-md-4">
-                            <input
-                                name="integer_1" type="number" class="form-control" min="1"
-                                title="Módulo | Núm. sesión"
-                                v-model="fields.integer_1"
-                            >
-                        </div>
-                        <div class="col-md-4">
-                            <input
-                                name="integer_2" type="number" class="form-control" min="1"
-                                v-model="fields.integer_2"
-                            >
+                        <div class="mb-3 row">
+                            <div class="col-md-8 offset-md-4">
+                                
+                            </div>
                         </div>
                     </div>
-
-                    <div class="mb-3 row">
-                        <label for="date_1" class="col-md-4 col-form-label text-right">Fecha y hora</label>
-                        <div class="col-md-8">
-                            <input
-                                name="date_1" type="datetime-local" class="form-control"
-                                required
-                                v-model="fields.date_1"
-                            >
-                        </div>
-                    </div>
-
-                    <div class="mb-3 row">
-                        <label for="excerpt" class="col-md-4 col-form-label text-right">Observaciones</label>
-                        <div class="col-md-8">
-                            <textarea
-                                name="excerpt" class="form-control"
-                                v-model="fields.excerpt"
-                            ></textarea>
-                        </div>
-                    </div>
-
-                    
-                    <div class="mb-3 row">
-                        <div class="col-md-8 offset-md-4">
-                            <button class="btn btn-primary w120p" type="submit">Guardar</button>
-                        </div>
-                    </div>
-                <fieldset>
-            </form>
-        </div>
-    </div>
+                </div>
+            </div>
+        <fieldset>
+    </form>
 </div>
 
 <script>
 // Variables
 //-----------------------------------------------------------------------------
-var row = <?= json_encode($row) ?>;
-row.related_1 = '0<?= $row->related_1 ?>';
-row.related_2 = '0<?= $row->related_2 ?>';
+const form = document.getElementById('postForm');
 
 // VueApp
 //-----------------------------------------------------------------------------
 var editPost = new Vue({
     el: '#editPost',
     data: {
-        fields: row,
+        fields: <?= json_encode($row) ?>,
         loading: false,
-        arrLocalidad: <?= json_encode($arrLocalidad) ?>,
-        arrManzana: <?= json_encode($arrManzana) ?>,
-        arrModalidad: <?= $arrModalidad ?>,
+        arrStatus: <?= json_encode($arrStatus) ?>,
+        previewDisabled: false,
     },
     methods: {
-        handleSubmit: function(){
+        handleSubmit: function() {
             this.loading = true
-            var form_data = new FormData(document.getElementById('postForm'))
-            axios.post(URL_API + 'posts/save/', form_data)
+            var formData = new FormData(document.getElementById('postForm'))
+            axios.post(URL_API + 'posts/save/', formData)
             .then(response => {
-                if ( response.data.saved_id > 0 ) {
+                if (response.data.saved_id > 0) {
                     toastr['success']('Guardado')
+                    this.enablePreview()
                 }
                 this.loading = false
-            })
-            .catch( function(error) {console.log(error)} )
+            }).catch(function(error) { console.log(error)})
         },
-        setLocalidad: function(){
-            console.log('Consultando localidad')
-            var item = this.arrManzana.find(row => row.str_cod == this.fields.related_2)
-            if ( item != undefined ) this.fields.related_1 = '0' + item['related_1']
+        goToPreview: function(){            
+            window.location = URL_APP + 'posts/read/' + this.fields.id + '/' + this.fields.slug + '/?preview=1'
+        },
+        enablePreview: function(){
+            this.previewDisabled = false
         },
     }
 })

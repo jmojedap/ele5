@@ -91,6 +91,9 @@ class App_model extends CI_Model {
         } elseif ($this->session->userdata('rol_id') == 8) {
             //Comercial
             $menu_current = $this->menu_comercial($controlador, $funcion);
+        } elseif ($this->session->userdata('rol_id') == 9) {
+            //Digitador
+            $menu_current = $this->menu_digitador($controlador, $funcion);
         } else {
             $menu_current = $this->menu_general($controlador, $funcion);
         }
@@ -289,6 +292,35 @@ class App_model extends CI_Model {
         }
 
         return $nombre_usuario;
+    }
+
+    /**
+     * Devuelve el nombre de un user ($user_id) en un format específico ($format)
+     * 2023-07-09
+     */
+    function name_user($user_id, $format = 'd')
+    {
+        $name_user = 'ND';
+        $row = $this->Db_model->row_id('usuario', $user_id);
+
+        if ( ! is_null($row) ) 
+        {
+            $name_user = $row->username;
+
+            if ($format == 'u') {
+                $name_user = $row->username;
+            } elseif ($format == 'FL') {
+                $name_user = "{$row->nombre} {$row->apellidos}";
+            } elseif ($format == 'LF') {
+                $name_user = "{$row->apellidos} {$row->nombre}";
+            } elseif ($format == 'FLU') {
+                $name_user = "{$row->nombre} {$row->apellidos} | {$row->username}";
+            } elseif ($format == 'd') {
+                $name_user = "{$row->nombre} {$row->apellidos}";
+            }
+        }
+
+        return $name_user;
     }
 
     /**

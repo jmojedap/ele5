@@ -73,7 +73,7 @@
     var message_alert_delete = "<?php echo $this->l('alert_delete'); ?>";
 
 </script>
-<div class="container gc-container" style="width: 100%; padding-top: 10px;">
+<div class="container_no gc-container" style="width: 100%; padding-top: 10px;">
     <div class="success-message hidden"><?php if ($success_message !== null) { ?>
         <?php echo $success_message; ?> &nbsp; &nbsp;
         <?php }?>
@@ -98,12 +98,12 @@
                 <div class="header-tools">
                     <?php if (!$unset_add) { ?>
                         <div class="floatL t5">
-                            <a class="btn btn-secondary" href="<?php echo $add_url ?>"><i class="fa fa-plus"></i> &nbsp; <?php echo $this->l('list_add'); ?> <?php echo $subject ?></a>
+                            <a class="btn btn-light" href="<?php echo $add_url ?>"><i class="fa fa-plus"></i> &nbsp; <?php echo $this->l('list_add'); ?> <?php echo $subject ?></a>
                         </div>
                     <?php } ?>
                     <div class="floatR">
                         <?php if (!$unset_export) { ?>
-                            <a class="btn btn-secondary t5 gc-export" data-url="<?php echo $export_url; ?>">
+                            <a class="btn btn-light t5 gc-export" data-url="<?php echo $export_url; ?>">
                                 <i class="fa fa-cloud-download floatL t3"></i>
                                 <span class="hidden-xs floatL l5">
                                     <?php echo $this->l('list_export'); ?>
@@ -112,7 +112,7 @@
                             </a>
                         <?php } ?>
                         <?php if (!$unset_print) { ?>
-                            <a class="btn btn-secondary t5 gc-print" data-url="<?php echo $print_url; ?>">
+                            <a class="btn btn-light t5 gc-print" data-url="<?php echo $print_url; ?>">
                                 <i class="fa fa-print floatL t3"></i>
                                 <span class="hidden-xs floatL l5">
                                     <?php echo $this->l('list_print'); ?>
@@ -156,7 +156,7 @@
                                     </a>
                                 </div>
                                 <div class="floatR l5">
-                                    <a href="javascript:void(0);" class="btn btn-secondary gc-refresh">
+                                    <a href="javascript:void(0);" class="btn btn-light gc-refresh">
                                         <i class="fa fa-sync-alt"></i>
                                     </a>
                                 </div>
@@ -238,7 +238,7 @@
 
                         <!-- Start of: Settings button -->
                         <div class="btn-group float-right t20 l10 settings-button-container">
-                            <button type="button" class="btn btn-secondary dropdown-toggle settings-button" data-toggle="dropdown">
+                            <button type="button" class="btn btn-light dropdown-toggle settings-button" data-toggle="dropdown">
                                 <i class="fa fa-cog r5"></i>
                                 <span class="caret"></span>
                             </button>
@@ -286,7 +286,7 @@
                         <p><?php echo $this->l('alert_delete'); ?></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo $this->l('form_cancel'); ?></button>
+                        <button type="button" class="btn btn-light" data-dismiss="modal"><?php echo $this->l('form_cancel'); ?></button>
                         <button type="button" class="btn btn-danger delete-confirmation-button"><?php echo $this->l('list_delete'); ?></button>
                     </div>
                 </div>
@@ -306,7 +306,7 @@
                         <p><?php echo $this->l('alert_delete'); ?></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">
                             <?php echo $this->l('form_cancel'); ?>
                         </button>
                         <button type="button" class="btn btn-danger delete-multiple-confirmation-button"

@@ -1,56 +1,42 @@
-<?php
-    $creator = $this->Db_model->row_id('users', $row->creator_id);
-    $manzana = $this->Db_model->row_id('posts', $row->related_2);
-?>
-
-<div class="center_box_750">
-<table class="table bg-white">
+<div class="row">
+    <div class="col-md-4">
+        <table class="table bg-white">
             <tbody>
                 <tr>
-                    <td class="td-title">ID</td>
+                    <td></td>
+                    <td><a href="<?= URL_ADMIN . "posts/open/{$row->id}" ?>" class="btn btn-sm btn-light w120p" target="_blank">Abrir</a></td>
+                </tr>
+                <tr>
+                    <td>ID</td>
+                    <td><?= $row->id ?></td>
+                </tr>
+                <tr>
+                    <td>Tipo</td>
+                    <td><?= $row->tipo_id ?> &middot; <?= $this->Item_model->name(33, $row->tipo_id) ?> </td>
+                </tr>
+                <tr>
+                    <td>Nombre post</td>
+                    <td><?= $row->nombre_post ?></td>
+                </tr>
+                <tr>
+                    <td>Tema</td>
                     <td>
-                        <span class="lead text-primary"><?= $row->id ?></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="td-title">Tipo</td>
-                    <td>Sesión Escuela Hombres al Cuidado</td>
-                </tr>
-                <tr>
-                    <td class="td-title">Nombre</td>
-                    <td><?= $row->post_name ?></td>
-                </tr>
-                <tr>
-                    <td class="td-title">Módulo y Sesión</td>
-                    <td>M<?= $row->integer_1 ?>:S<?= $row->integer_2 ?></td>
-                </tr>
-                <tr>
-                    <td class="td-title">Fecha</td>
-                    <td>
-                        <?= $this->pml->date_format($row->date_1, 'Y-m-d H:i'); ?>
-                        &middot; <span class="text-muted"><?= $this->pml->ago($row->date_1); ?></span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="td-title">Manzana</td>
-                    <td>
-                        <a href="<?= URL_ADMIN . "posts/info/{$manzana->id}" ?>">
-                            <?= $manzana->post_name ?>
+                        <a href="<?= URL_ADMIN . "temas/articulos/{$row->referente_1_id}" ?>">
+                            <?= $this->Db_model->field('tema', "id = {$row->referente_1_id}", 'nombre_tema'); ?>
                         </a>
                     </td>
                 </tr>
                 <tr>
-                    <td class="td-title">Dirección</td>
-                    <td><?= $manzana->text_1 ?></td>
+                    <td>Status</td>
+                    <td><?= $row->status ?></td>
                 </tr>
                 <tr>
-                    <td class="td-title">Localidad</td>
-                    <td><?= $this->Item_model->name(121,$row->related_1); ?></td>
+                    <td>slug</td>
+                    <td><?= $row->slug ?></td>
                 </tr>
                 <tr>
-                    <td class="td-title">Observaciones</td>
-                    <td><?= $row->excerpt ?></td>
+                    <td>ID imagen principal</td>
+                    <td><?= $row->imagen_id ?></td>
                 </tr>
             </tbody>
         </table>
@@ -58,37 +44,47 @@
         <table class="table bg-white">
             <tbody>
                 <tr>
-                    <td class="td-title">Creada por</td>
-                    <td>
-                        <?= $row->updater_id ?> &middot;
-                        <a href="<?= URL_ADMIN . "users/profile/{$row->creator_id}" ?>">
-                            <?= $this->App_model->name_user($row->creator_id); ?>
-                        </a>
-                    </td>
+                    <td>Publicado</td>
+                    <td><?= $row->publicado ?></td>
                 </tr>
                 <tr>
-                    <td class="td-title">Creada en</td>
-                    <td>
-                        <?= $row->created_at ?> <br>
-                        <?= $this->pml->ago($row->created_at); ?>
-                    </td>
+                    <td>editado por</td>
+                    <td><?= $row->editor_id ?> &middot; <?= $this->App_model->nombre_usuario($row->editor_id, 'u') ?></td>
                 </tr>
                 <tr>
-                    <td class="td-title">Actualizada por</td>
-                    <td>
-                        <?= $row->updater_id ?> &middot;
-                        <a href="<?= URL_ADMIN . "users/profile/{$row->updater_id}" ?>">
-                            <?= $this->App_model->name_user($row->updater_id); ?>
-                        </a>
-                    </td>
+                    <td>editado</td>
+                    <td><?= $row->editado ?> &middot; <?= $this->pml->ago($row->editado) ?></td>
                 </tr>
                 <tr>
-                    <td class="td-title">Actualizada en</td>
-                    <td>
-                        <?= $row->updated_at ?> <br>
-                        <?= $this->pml->ago($row->updated_at); ?>
-                    </td>
+                    <td>Creador</td>
+                    <td><?= $row->usuario_id ?> &middot; <?= $this->App_model->nombre_usuario($row->usuario_id, 'u') ?></td>
+                </tr>
+                <tr>
+                    <td>Creado</td>
+                    <td><?= $row->creado ?> &middot; <?= $this->pml->ago($row->creado) ?></td>
                 </tr>
             </tbody>
         </table>
+    </div>
+    <div class="col-md-8">
+        <div class="card mw750p">
+            <div class="card-body">
+                <h2 class="text-center text-primary"><?= $row->nombre_post ?></h2>
+                <div>
+                    <h4 class="text-muted">Resumen</h4>
+                    <?= $row->resumen ?>
+                </div>
+                <hr>
+                <div>
+                    <h4 class="text-muted">Contenido</h4>
+                    <?= $row->contenido ?>
+                </div>
+                <hr>
+                <div>
+                    <h4 class="text-muted">Palabras clave:</h4>
+                    <?= $row->keywords ?>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

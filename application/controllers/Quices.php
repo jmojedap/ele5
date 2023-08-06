@@ -48,7 +48,7 @@ class Quices extends CI_Controller{
             $data['arr_tipo'] = $this->Item_model->arr_interno('categoria_id = 9');
             
         //Cargar vista
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -116,7 +116,7 @@ class Quices extends CI_Controller{
         $data = $this->Quiz_model->basico($quiz_id);
         
         $data['view_a'] = "quices/detalle_v";
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
 
 // CRUD
@@ -129,7 +129,7 @@ class Quices extends CI_Controller{
         $data['options_tipo_quiz_id'] = $this->Item_model->options('categoria_id = 9', 'Todos los tipos');
         
         $data['view_a'] = 'quices/editar_v';
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
     function save()
@@ -156,7 +156,7 @@ class Quices extends CI_Controller{
         $data['temas'] = $this->Quiz_model->temas($quiz_id);
         $data['view_a'] = "quices/temas_v";
 
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -279,7 +279,7 @@ class Quices extends CI_Controller{
 
         $data['head_subtitle'] = 'Quiz';
         
-        $this->load->view(TPL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function elementos($quiz_id)
@@ -294,7 +294,7 @@ class Quices extends CI_Controller{
             
         //Información
             $output = array_merge($data,(array)$output);
-            $this->load->view(TPL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN_NEW, $output);
         
     }
     

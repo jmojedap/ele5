@@ -106,7 +106,7 @@
                         sections: []
                     },
                     {
-                        text: 'Archivos',
+                        text: 'Archivos temas',
                         active: false,
                         icon: 'far fa-folder',
                         cf: 'recursos/archivos',
@@ -122,9 +122,16 @@
                     {
                         text: 'Posts',
                         active: false,
-                        icon: 'fa fa-newspaper',
+                        icon: 'fa fa-file-text',
                         cf: 'admin/posts/explore',
                         sections: ['posts/explorar', 'posts/editar', 'posts/nuevo', 'posts/leer']
+                    },
+                    {
+                        text: 'Archivos',
+                        active: false,
+                        icon: 'fa-solid fa-image',
+                        cf: 'admin/files/explore',
+                        sections: ['files/explore', 'files/edit', 'files/add', 'files/info', 'files/cropping', 'files/change']
                     },
                 ],
                 sections: []

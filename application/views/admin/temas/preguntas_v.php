@@ -31,10 +31,10 @@
                 <div class="card-body">
                     <p v-html="pregunta.texto_pregunta"></p>
                     <p v-html="pregunta.enunciado_2"></p>
-                    <div v-show="pregunta.archivo_imagen.length > 0" class="text-center my-2 d-none">
+                    <div v-show="pregunta.archivo_imagen" class="text-center my-2">
                         <img
                             v-bind:src="`<?= URL_UPLOADS ?>preguntas/` + pregunta.archivo_imagen"
-                            class="rounded"
+                            class="rounded w100pc"
                             alt="Imagen de la pregunta"
                             onerror="this.src='<?= URL_IMG ?>app/img_pregunta_nd.png'"
                         >

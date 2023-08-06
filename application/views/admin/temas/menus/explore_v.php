@@ -5,7 +5,7 @@
             text: 'Explorar',
             id: 'temas_explore',
             cf: 'temas/explore',
-            roles: [0,1,2]
+            roles: [0,1,2,9]
         },
         {
             text: 'Crear',

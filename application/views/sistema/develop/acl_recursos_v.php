@@ -1,13 +1,18 @@
-<?php $this->load->view('assets/grocery_crud') ?>
+<?php $this->load->view('assets/grocery_crud'); ?>
 
-<?php
-    $controladores = $this->db->get_where('item', 'categoria_id = 32 AND item_grupo = 1');
-    
-    //Titulo filtro
-        $titulo_filtro = 'Todos';
-        if ( ! is_null( $controlador ) ) { $titulo_filtro = $controlador; }
+<script>
+    $(document).ready(function(){
+        //Ajustes para tema bootstrap de grocery crud
+            $('textarea').addClass('form-control');
         
-?>
+        //Ajuste chosen downdrop
+            $('.chzn-container').css('width', '300px');
+            $('.chzn-drop').css('width', '300px');
+            $('.chzn-drop').css('width', '300px');
+            $('.chzn-search input').css('width', '280px');
+        
+    });
+</script>
 
 <script>
     $(document).ready(function(){
@@ -32,27 +37,4 @@
     }
 </script>
 
-<div class="btn-group my-2" role="group" aria-label="...">
-    <div class="w4 btn btn-info">
-        <?= $titulo_filtro ?>
-    </div>
-    
-    <div class="btn-group" role="group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-            Controlador
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-            <li>
-                <?= anchor("develop/acl_recursos", 'Todos', 'role="menuitem"') ?>
-            </li>
-            <?php foreach ($controladores->result() as $row_controlador) : ?>
-                <li role="presentation">
-                    <?= anchor("develop/acl_recursos/{$row_controlador->slug}", $row_controlador->item, 'role="menuitem"') ?>
-                </li>
-            <?php endforeach ?>
-        </ul>
-    </div>
-</div>
-
-<?= $output; ?>
+<?php echo $output; ?>

@@ -32,7 +32,7 @@ class App extends CI_Controller{
             $destinos_rol[6] = 'flipbooks/inicio';
             $destinos_rol[7] = 'app/inicio';
             $destinos_rol[8] = 'app/inicio';
-            $destinos_rol[9] = 'app/inicio';
+            $destinos_rol[9] = 'admin/temas/explore';
             
             $destino = $destinos_rol[$row_usuario->rol_id];
             

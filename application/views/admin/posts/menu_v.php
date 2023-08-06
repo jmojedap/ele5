@@ -3,6 +3,13 @@ var sectionId = '<?= $this->uri->segment(2) . '_' . $this->uri->segment(3) ?>'
 var nav2RowId = '<?= $row->id ?>'
 var sections = [
     {
+        id: 'posts_explore',
+        text: '< Posts',
+        cf: 'posts/explore/',
+        roles: [0,1],
+        anchor: true
+    },
+    {
         id: 'posts_info',
         text: 'Información',
         cf: 'posts/info/' + nav2RowId,

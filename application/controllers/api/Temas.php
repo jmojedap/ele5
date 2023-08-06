@@ -113,4 +113,19 @@ public $url_controller = URL_API . 'temas/';
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
+
+// ARTÍCULOS HTML POST TIPO 126
+//-----------------------------------------------------------------------------
+
+    /**
+     * AJAX JSON
+     * Listado de artículos asociados a un tema
+     * 2023-07-09
+     */
+    function get_articulos($tema_id)
+    {
+        $articulos = $this->Tema_model->articulos($tema_id);
+        $data['list'] = $articulos->result();
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
 }

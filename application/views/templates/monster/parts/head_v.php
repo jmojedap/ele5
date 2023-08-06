@@ -46,6 +46,12 @@
     <link type="text/css" rel="stylesheet" href="<?= URL_RESOURCES . 'css/style_pml.css' ?>">
     <script src="<?= URL_RESOURCES . 'js/pcrn_en.js' ?>"></script>
     <script>
+        <?php if ( $this->uri->segment(1) == 'admin' ) : ?>
+        var app_cf = '<?= $this->uri->segment(2) . '/' . $this->uri->segment(3); ?>';
+        <?php else: ?>
+        var app_cf = '<?= $this->uri->segment(1) . '/' . $this->uri->segment(2); ?>';
+        <?php endif; ?>
+
         const url_app = '<?= URL_APP ?>'; const url_api = '<?= URL_APP ?>';
         const URL_APP = '<?= URL_ADMIN ?>'; const URL_FRONT= '<?= URL_FRONT ?>'; const URL_API= '<?= URL_API ?>';
     </script>

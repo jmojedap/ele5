@@ -1074,7 +1074,7 @@ class Tema_Model extends CI_Model{
     }
     
     
-// GESTIÓN DE PÁGINAS DE TEMAS
+// PÁGINAS DE TEMAS
 //-----------------------------------------------------------------------------
     
     
@@ -1388,7 +1388,7 @@ class Tema_Model extends CI_Model{
         return $data;
     }
 
-// GESTIÓN DE ARCHIVOS
+// ARCHIVOS
 //-----------------------------------------------------------------------------
 
     /**
@@ -1487,6 +1487,8 @@ class Tema_Model extends CI_Model{
             $data = array('status' => 0, 'message' => 'La pregunta no fue guardada');
 
         //Construir registro
+            $this->load->helper('string');
+            $aRow['nombre_post'] = 'Pregunta abierta ' . random_string('alnum', 8);  //Pregunta abierta
             $aRow['tipo_id'] = 121;  //Pregunta abierta
             $aRow['referente_1_id'] = $tema_id;  //Tema asociado
             $aRow['referente_2_id'] = $this->input->post('referente_2_id');
@@ -1827,5 +1829,26 @@ class Tema_Model extends CI_Model{
         $ledin = str_replace('<br>', '<br><br>', $ledin);   //Doble salto de renglón
 
         return $ledin;
+    }
+
+// ARTÍCULOS DE TEMAS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Artículos de temas
+     * 2023-07-10
+     * 
+     * @param int $tema_id
+     * @return object $articulos query ci
+     */
+    function articulos($tema_id, $status='')
+    {
+        $this->db->select('id, nombre_post, status, resumen, contenido, slug, 1 AS show');
+        $this->db->where('tipo_id', 126);   //Post tipo artículo de tema
+        if ( strlen($status) > 0 ) { $this->db->where('status', $status); }
+        $this->db->where('referente_1_id', $tema_id);
+        $articulos = $this->db->get('post');
+    
+        return $articulos;
     }
 }

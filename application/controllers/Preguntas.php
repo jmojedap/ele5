@@ -115,7 +115,7 @@ class Preguntas extends CI_Controller{
      * AJAX
      * Eliminar un grupo de instituciones seleccionados
      */
-    function eliminar_seleccionados()
+    function delete_selected()
     {
         $this->load->model('Tema_model');
         

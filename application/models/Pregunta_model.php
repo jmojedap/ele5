@@ -637,7 +637,7 @@ class Pregunta_model extends CI_Model{
             if ( $registro['area_id'] > 0 ) { $crud->field_type('area_id', 'hidden', $registro['area_id']); }
             
         //Redirigir después de crear la pregunta
-            $destino = "temas/preguntas/{$tema_id}";
+            $destino = "admin/temas/preguntas/{$tema_id}";
             $crud->set_lang_string('insert_success_message',
                                     'Su pregunta ha sido creada<br/>Por favor espere mientras se redirige al tema.
                                     <script type="text/javascript">

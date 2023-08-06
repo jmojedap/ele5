@@ -23,13 +23,13 @@ class Datos extends CI_Controller {
             $gc_output = $this->Develop_model->crud_sis_opcion();
         
         //Array data espefícicas
-            $data['titulo_pagina'] = 'Opciones del sistema';
-            $data['vista_a'] = 'comunes/gc_v';
-            $data['vista_menu'] = 'datos/parametros_menu_v';
+            $data['head_title'] = 'Opciones del sistema';
+            $data['view_a'] = 'common/bs4/gc_fluid_v';
+            $data['nav_2'] = 'datos/parametros_menu_bs4_v';
         
         $output = array_merge($data,(array)$gc_output);
         
-        $this->load->view(PTL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN_NEW, $output);
     }
     
 //AYUDA
@@ -181,13 +181,13 @@ class Datos extends CI_Controller {
         $gc_output = $this->Datos_model->crud_areas();
 
         //Solicitar vista
-            $data['titulo_pagina'] = 'Parámetros';
-            $data['subtitulo_pagina'] = 'Áreas';
-            $data['vista_menu'] = 'datos/parametros_menu_v';
-            $data['vista_a'] = 'comunes/gc_v';
+            $data['head_title'] = 'Parámetros';
+            $data['head_subtitle'] = 'Áreas';
+            $data['view_a'] = 'common/bs4/gc_fluid_v';
+            $data['nav_2'] = 'datos/parametros_menu_bs4_v';
 
         $output = array_merge($data,(array)$gc_output);
-        $this->load->view(PTL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN_NEW, $output);
     }
 
     function competencias()
@@ -195,14 +195,14 @@ class Datos extends CI_Controller {
         $gc_output = $this->Datos_model->crud_competencias();
 
         //Variables
-            $data['titulo_pagina'] = 'Parámetros';
-            $data['subtitulo_pagina'] = 'Competencias';
-            $data['vista_a'] = 'comunes/gc_v';
-            $data['vista_menu'] = 'datos/parametros_menu_v';
+            $data['head_title'] = 'Parámetros';
+            $data['head_subtitle'] = 'Competencias';
+            $data['view_a'] = 'common/bs4/gc_fluid_v';
+            $data['nav_2'] = 'datos/parametros_menu_bs4_v';
 
         //Solicitar vista
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN_NEW, $output);
     }
 
     function componentes()
@@ -210,13 +210,13 @@ class Datos extends CI_Controller {
         $gc_output = $this->Datos_model->crud_componentes();
 
         //Solicitar vista
-            $data['titulo_pagina'] = 'Parámetros';
-            $data['subtitulo_pagina'] = 'Componentes';
-            $data['vista_menu'] = 'datos/parametros_menu_v';
-            $data['vista_a'] = 'comunes/gc_v';
+            $data['titulo_head_titlepagina'] = 'Parámetros';
+            $data['head_subtitle'] = 'Componentes';
+            $data['view_a'] = 'common/bs4/gc_fluid_v';
+            $data['nav_2'] = 'datos/parametros_menu_bs4_v';
 
         $output = array_merge($data,(array)$gc_output);
-        $this->load->view(PTL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN_NEW, $output);
 
     }
     
@@ -225,13 +225,13 @@ class Datos extends CI_Controller {
         $gc_output = $this->Datos_model->crud_tipos_recurso();
 
         //Solicitar vista
-            $data['titulo_pagina'] = 'Parámetros';
-            $data['subtitulo_pagina'] = 'Tipos recurso';
-            $data['vista_menu'] = 'datos/parametros_menu_v';
-            $data['vista_a'] = 'comunes/gc_v';
+            $data['head_title'] = 'Parámetros';
+            $data['head_subtitle'] = 'Tipos recurso';
+            $data['view_a'] = 'common/bs4/gc_fluid_v';
+            $data['nav_2'] = 'datos/parametros_menu_bs4_v';
 
         $output = array_merge($data,(array)$gc_output);
-        $this->load->view(PTL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN_NEW, $output);
 
     }
     

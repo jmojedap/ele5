@@ -5,7 +5,7 @@
             text: 'Explorar',
             id: 'posts_explore',
             cf: 'posts/explore',
-            roles: [0,1,2,]
+            roles: [0,1,2,9]
         },
         {
             text: 'Importar',

@@ -185,8 +185,7 @@ class Develop extends CI_Controller {
         $data['head_title'] = 'ACL';
         $data['head_subtitle'] = 'Listado de permisos de accesos';
         $data['view_a'] = 'sistema/develop/acl_recursos_v';
-        $data['nav_2'] = 'datos/parametros_menu_v';
-        
+        $data['nav_2'] = 'datos/parametros_menu_bs4_v';
 
         $output = array_merge($data,(array)$gc_output);
         $this->load->view(TPL_ADMIN_NEW, $output);
