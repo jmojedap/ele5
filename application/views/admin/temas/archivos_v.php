@@ -44,10 +44,12 @@
                 <!-- LISTADO DE LINKS -->
                 <tr v-for="(archivo, key) in archivos" v-bind:class="{'table-success': key == archivo_key}">
                     <td>
-                        {{ archivo.nombre_archivo }}
+                        <a v-bind:href="`<?= URL_UPLOADS ?>` + typeName(archivo.tipo_archivo_id, 'slug') + `/` + archivo.nombre_archivo" target="_blank">
+                            {{ archivo.nombre_archivo }}
+                        </a>
                     </td>
                     <td>
-                        {{ archivo.tipo_archivo_id | type_name }}
+                        {{ typeName(archivo.tipo_archivo_id) }}
                     </td>
                     <td>
                         {{ archivo.disponible | yn_name }}
@@ -102,7 +104,8 @@ new Vue({
             disponible: ''
         },
         archivo_key: -1,
-        archivo_id: 0
+        archivo_id: 0,
+        arrTypes: <?= json_encode($arr_types) ?>,
     },
     methods: {
         get_list: function() {
@@ -153,7 +156,13 @@ new Vue({
                 .catch(function(error) {
                     console.log(error);
                 });
-        }
+        },
+        typeName: function(value = '', field = 'name'){
+            var typeName = ''
+            var item = this.arrTypes.find(row => row.id == value)
+            if ( item != undefined ) typeName = item[field]
+            return typeName
+        },
     }
 });
 </script>

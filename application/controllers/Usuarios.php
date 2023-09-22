@@ -1008,10 +1008,7 @@ class Usuarios extends CI_Controller{
      */
     function biblioteca()
     {
-        if ($this->input->get('profiler'))
-        {
-            $this->output->enable_profiler(TRUE);
-        }
+        //$this->output->enable_profiler(TRUE);
         
         //Flipbooks
             $data['funcion_flipbook'] = 'abrir';
@@ -1019,9 +1016,6 @@ class Usuarios extends CI_Controller{
 
         //Cuestionarios
             $data['cuestionarios'] = $this->session->userdata('arr_cuestionarios');
-            
-        //Contenidos Acompañamiento Pedagógico
-            //$data['contenidos_ap'] = $this->Usuario_model->contenidos_ap();
             
         $view_a = 'usuarios/biblioteca_bs4_v';
         if ( $this->session->userdata('rol_id') != 6 )

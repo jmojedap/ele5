@@ -147,7 +147,7 @@ class Posts extends CI_Controller{
         //Datos básicos
         $data = $this->Post_model->basic($post_id);
         unset($data['nav_2']);
-        $data['view_a'] = $this->Post_model->type_folder($data['row']) . 'read_v';
+        $data['view_a'] = $this->Post_model->type_folder($data['row']->tipo_id) . 'read_v';
 
         $this->App_model->view(TPL_ADMIN_NEW, $data);
     }

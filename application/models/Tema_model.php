@@ -324,8 +324,7 @@ class Tema_Model extends CI_Model{
             }
         
         //Especificaciones de consulta
-            $this->db->select('id, CONCAT((id), " | ", (nombre_tema)) AS name');
-            //$this->db->where($filtro_rol); //Filtro según el rol de usuario que se tenga
+            $this->db->select('id, CONCAT((id), " | ", (cod_tema) , " | ",(nombre_tema)) AS name');
             $this->db->order_by('nombre_tema', 'ASC');
             
         //Otros filtros

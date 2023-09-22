@@ -300,6 +300,8 @@ class Flipbooks extends CI_Controller{
                 1 => 'flipbooks/crear_cuestionario_v',
                 3 => 'flipbooks/crear_cuestionario_ut_v',
                 4 => 'flipbooks/crear_cuestionario_v',
+                5 => 'flipbooks/crear_cuestionario_v',
+                6 => 'flipbooks/crear_cuestionario_v',
             );
         
         //Solicitar vista
@@ -643,6 +645,7 @@ class Flipbooks extends CI_Controller{
      */
     function inicio()
     {
+        $this->output->enable_profiler(TRUE);
         $data['arr_flipbooks'] = $this->session->userdata('arr_flipbooks');
         $data['arr_cuestionarios'] = $this->session->userdata('arr_cuestionarios');
         $data['arr_grupos'] = $this->session->userdata('arr_grupos');
@@ -678,6 +681,7 @@ class Flipbooks extends CI_Controller{
         if ( $row->tipo_flipbook_id == 3 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         if ( $row->tipo_flipbook_id == 4 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         if ( $row->tipo_flipbook_id == 5 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
+        if ( $row->tipo_flipbook_id == 6 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         
         //Selección de navegador
         //Redirigir
@@ -918,6 +922,7 @@ class Flipbooks extends CI_Controller{
      */
     function leer_v5($flipbook_id, $num_pagina = NULL)
     {
+        //$this->output->enable_profiler(TRUE);
         //Datos básicos
             $data = $this->Flipbook_model->basico($flipbook_id);
             
@@ -928,11 +933,13 @@ class Flipbooks extends CI_Controller{
             $data['carpeta_iconos'] = URL_IMG . 'flipbook/';
             $data['colores'] = $this->App_model->arr_color_area();
             $data['elementos_fb'] = $this->Flipbook_model->elementos_fb($data['row']);
+            $data['es_profesor'] = ( in_array($this->session->userdata('role'),[0,1,2,3,4,5]) ) ? TRUE : FALSE ;
 
         //Seleccionar vista
             $main_view = 'flipbooks/leer_cd/leer_v';
             if ( $data['row']->tipo_flipbook_id == 3 ) { $main_view = 'flipbooks/leer_ut/leer_v';}
             if ( $data['row']->tipo_flipbook_id == 5 ) { $main_view = 'flipbooks/leer_lectura/leer_v';}
+            if ( $data['row']->tipo_flipbook_id == 6 ) { $main_view = 'flipbooks/lectura/6_articulos/leer_v';}
             
         //Cargar vista
         $this->load->view($main_view, $data);

@@ -180,8 +180,7 @@ class Posts extends CI_Controller{
 //-----------------------------------------------------------------------------
 
     /**
-     * Formulario para la edición de los datos de un user. Los datos que se
-     * editan dependen de la $section elegida.
+     * Formulario para la edición de los datos de un post.
      */
     function edit($post_id)
     {

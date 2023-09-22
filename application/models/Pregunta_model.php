@@ -6,10 +6,10 @@ class Pregunta_model extends CI_Model{
      * que serán utilizadas por varias funciones del controlador,
      * son variables básicas sobre un pregunta
      *
-     * @param type $pregunta_id
-     * @return string
+     * @param int $pregunta_id
+     * @return array $basico
      */
-    function basico($pregunta_id)
+    function basic($pregunta_id)
     {
         $row = $this->Pcrn->registro_id('pregunta', $pregunta_id);
 

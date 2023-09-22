@@ -1617,10 +1617,6 @@ class Usuario_model extends CI_Model{
     
     function flipbooks($row_usuario, $tipos = NULL)
     {
-        //$row_usuario = $this->Pcrn->registro_id('usuario', $usuario_id);
-        //$rol_id = $this->session->userdata('rol_id');   //Modificado 2018-08-17
-        //$rol_id = $this->Pcrn->campo_id('usuario', $usuario_id, 'rol_id');  //Modificado 2018-08-17
-        
         if ( $row_usuario->rol_id == 6 ) 
         {
             $flipbooks = $this->flipbooks_estudiante($row_usuario);
@@ -1639,18 +1635,12 @@ class Usuario_model extends CI_Model{
      * Devuelve query, con los flipbooks que un estudiante tiene asignado
      * Se filtran los flipbooks según el nivel escolar del estudiante
      * 
-     * @param type $row_usuario
-     * @return boolean 
+     * @param object $row_usuario
+     * @return object $query
      */
     function flipbooks_estudiante($row_usuario)
     {
-        //$folder_mini = base_url() . RUTA_UPLOADS . 'paginas_flipbook_mini/';
-        //$campos_adicionales = "CONCAT('{$folder_mini}', (archivo_imagen)) AS url_mini, flipbook.area_id, flipbook.nivel";
-        //$campos_adicionales = "flipbook.area_id, flipbook.nivel";
-        
         //Identificar Nivel
-            //$row_usuario = $this->Pcrn->registro('usuario', "id = {$usuario_id}");
-            //$grupo_id = $this->Pcrn->campo('usuario', "id = {$row_usuario->id}", 'grupo_id');
             $grupo_id = $row_usuario->grupo_id;
             $nivel = 0; //Valor por defecto
             if ( ! is_null($grupo_id) )

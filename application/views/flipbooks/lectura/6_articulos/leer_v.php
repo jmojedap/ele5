@@ -1,0 +1,18 @@
+<?php
+    //Evitar errores de definición de variables e índices de arrays, 2013-12-07
+        ini_set('display_errors', 1);
+        ini_set('error_reporting', E_ERROR);
+?>
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <?php $this->load->view('flipbooks/lectura/6_articulos/head_v') ?>
+        <?php $this->load->view('flipbooks/lectura/6_articulos/style_v') ?>
+    </head>
+
+    <body class="">
+        <?php $this->load->view('flipbooks/lectura/6_articulos/body_v') ?>
+
+        
+    </body>
+</html>

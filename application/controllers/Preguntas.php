@@ -151,7 +151,7 @@ class Preguntas extends CI_Controller{
     function editar($pregunta_id)
     {
         //Datos básicos
-            $data = $this->Pregunta_model->basico($pregunta_id);
+            $data = $this->Pregunta_model->basic($pregunta_id);
 
         //Variables
             $data['options_enunciado'] = $this->App_model->opciones_post('tipo_id = 4401');
@@ -343,7 +343,7 @@ class Preguntas extends CI_Controller{
 
     function detalle($pregunta_id)
     {
-        $data = $this->Pregunta_model->basico($pregunta_id);
+        $data = $this->Pregunta_model->basic($pregunta_id);
         $row = $data['row'];
         
         //Enunciado
@@ -369,7 +369,7 @@ class Preguntas extends CI_Controller{
      */
     function cuestionarios($pregunta_id)
     {
-        $data = $this->Pregunta_model->basico($pregunta_id);
+        $data = $this->Pregunta_model->basic($pregunta_id);
             
         //Array $data
             $data['cuestionarios'] = $this->Pregunta_model->cuestionarios($pregunta_id);
@@ -391,7 +391,7 @@ class Preguntas extends CI_Controller{
         
         //$this->output->enable_profiler(TRUE);
         $this->load->model('Cuestionario_model');
-        $data = $this->Pregunta_model->basico($pregunta_id);
+        $data = $this->Pregunta_model->basic($pregunta_id);
         
             $head_includes[] = 'highcharts';
             $data['head_includes'] = $head_includes;
@@ -421,7 +421,7 @@ class Preguntas extends CI_Controller{
         
         if ( $cargar_en == 'cuestionario' ){
             $this->load->model('Cuestionario_model');
-            $data = $this->Cuestionario_model->basico($referente_id);
+            $data = $this->Cuestionario_model->basic($referente_id);
             $tipo_mostrar = 'cuestionario';
             $referente_nombre = $data['row']->nombre_cuestionario;
         } elseif ( $cargar_en == 'tema' ) {
@@ -547,7 +547,7 @@ class Preguntas extends CI_Controller{
     function version($pregunta_id, $modo = 'lectura')
     {
         //Datos básicos
-            $data = $this->Pregunta_model->basico($pregunta_id);
+            $data = $this->Pregunta_model->basic($pregunta_id);
 
         //Datos pregunta versión
             $data['row_version'] = $this->Pcrn->registro_id('pregunta', $data['row']->version_id);
@@ -577,7 +577,7 @@ class Preguntas extends CI_Controller{
      */
     function historial($pregunta_id)
     {
-        $data = $this->Pregunta_model->basico($pregunta_id);
+        $data = $this->Pregunta_model->basic($pregunta_id);
 
         $data['eventos'] = $this->Pregunta_model->version_log($pregunta_id);
         $data['arr_tipos'] = $this->Item_model->arr_item(13);

@@ -1,5 +1,5 @@
 <?php
-    $es_profesor = ( $this->session->userdata('rol_id') < 6 ) ? TRUE : FALSE ;
+    //$es_profesor = ( $this->session->userdata('rol_id') < 6 ) ? TRUE : FALSE ;
 ?>
 
 <body style="background: <?php echo $colores[$row->area_id] ?>; ">

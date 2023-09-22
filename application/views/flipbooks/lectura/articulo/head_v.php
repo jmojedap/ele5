@@ -23,7 +23,6 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
     <script>const {createApp} = Vue;</script>
-    
 
     <?php $this->load->view('assets/toastr') ?>
 

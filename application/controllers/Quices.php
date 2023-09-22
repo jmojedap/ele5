@@ -147,7 +147,8 @@ class Quices extends CI_Controller{
     
     /**
      * Listado de temas relacionados con un quiz
-     * @param type $quiz_id
+     * 2023-08-18
+     * @param int $quiz_id
      */
     function temas($quiz_id)
     {

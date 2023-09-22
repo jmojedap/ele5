@@ -789,7 +789,6 @@ class Instituciones extends CI_Controller
             $data['cuestionarios'] = $resultados;
         
         //Solicitar vista
-            //$data['seccion'] = 'explorar';
             $data['head_subtitle'] = "({$config['total_rows']})";
             $data['view_a'] = 'instituciones/cuestionarios/cuestionarios_v';
             $data['nav_3'] = 'instituciones/cuestionarios/submenu_v';

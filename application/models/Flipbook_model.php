@@ -151,33 +151,33 @@ class Flipbook_model extends CI_Model {
 
     /**
      * Devuelve objeto registro con los datos básicos de un flipbook
-     * 
-     * @param type $flipbook_id
-     * @return type 
+     * 2023-09-16
+     * @param int $flipbook_id
+     * @return array 
      */
-    function datos_flipbook($flipbook_id) {
-
-        //Devuelve un objeto de registro con los datos del flipbook
-
-        $this->db->where('id', $flipbook_id);
-        $query = $this->db->get('flipbook', 1);
-
+    function datos_flipbook($flipbook_id)
+    {
         $datos_flipbook = FALSE;
+        //Devuelve un objeto de registro con los datos del flipbook
+        $row = $this->Db_model->row_id('flipbook', $flipbook_id);
+        $row->cantidad_unidades = 1;
 
-        if ($query->num_rows() > 0)
+        if ( !is_null($row) )
         {
-            $row = $query->row();
-
             //Calculando el número de páginas
             $this->db->select('id');
             $query = $this->db->get_where('flipbook_contenido', "flipbook_id = {$flipbook_id}");
             $row->num_paginas = $query->num_rows();
 
+            //Calculando la cantidad de unidades
+            $query = $this->db->query("SELECT MAX(unidad) AS max_unidad FROM `flipbook_contenido` WHERE flipbook_id = {$flipbook_id}");
+            if ( $query->num_rows() > 0 ) {
+                $row->cantidad_unidades = $query->row()->max_unidad;
+            }
+
             //
             $datos_flipbook = $row;
         }
-
-        //Calculando
 
         return $datos_flipbook;
     }
@@ -433,7 +433,7 @@ class Flipbook_model extends CI_Model {
      * String con la ruta y nombre del archivo JSON con el contenido del flipboook
      * utilizado para crear la vista de lectura.
      * 
-     * @param type $flipbook_id
+     * @param int $flipbook_id
      * @return string
      */
     function ruta_json($flipbook_id) 
@@ -444,21 +444,31 @@ class Flipbook_model extends CI_Model {
         return $ruta_archivo;
     }
 
+    /**
+     * Crear archivo JSON con todos los datos y contenidos asociados
+     * 2023-09-16
+     */
     function crear_json($flipbook_id) 
     {
         //El archivo JSON del flipbook no existe, se crea.
         //Datos básicos
         $data = $this->basico($flipbook_id);
+        $rowFlipbook = $data['row'];
         $ruta_archivo = $this->ruta_json($flipbook_id);
 
         //Variables 
         $data['paginas'] = $this->paginas($flipbook_id)->result();
+        $data['articulos'] = $this->articulos($flipbook_id)->result();
         $data['indice'] = $this->indice($flipbook_id);
-        $data['archivos'] = $this->archivos($flipbook_id)->result();
-        $data['audios'] = $this->archivos($flipbook_id, 621)->result();
-        $data['animaciones'] = $this->archivos($flipbook_id, 619)->result();
+        $data['archivos'] = $this->archivos($rowFlipbook)->result();
+        $data['audios'] = $this->archivos($rowFlipbook, 621)->result();
+        $data['animaciones'] = $this->archivos($rowFlipbook, 619)->result();
         $data['planes_aula'] = $this->planes_aula($flipbook_id)->result();
-        $data['quices'] = $this->quices($flipbook_id)->result();
+        if ( $rowFlipbook->tipo_flipbook_id < 5 ) {
+            $data['quices'] = $this->quices($flipbook_id)->result();
+        } else {
+            $data['quices'] = $this->quices_tema($flipbook_id)->result();
+        }
         $data['links'] = $this->links($flipbook_id)->result();
         $data['lecturas'] = $this->lecturas($flipbook_id)->result();
         $data['preguntas_abiertas'] = $this->preguntas_abiertas($flipbook_id)->result();
@@ -472,7 +482,7 @@ class Flipbook_model extends CI_Model {
 
     function paginas($flipbook_id)
     {
-        $this->db->select('pagina_id, num_pagina, tema_id, archivo_imagen, nombre_tema, titulo_tema');
+        $this->db->select('pagina_id, num_pagina, pagina_flipbook.tema_id, archivo_imagen, nombre_tema, titulo_tema');
         $this->db->select('archivo_imagen');
         $this->db->join('pagina_flipbook', 'flipbook_contenido.pagina_id = pagina_flipbook.id');
         $this->db->join('tema', 'pagina_flipbook.tema_id = tema.id', 'LEFT');
@@ -481,6 +491,38 @@ class Flipbook_model extends CI_Model {
         $paginas = $this->db->get('flipbook_contenido');
 
         return $paginas;
+    }
+
+    /**
+     * Query con artículos HTML (post 126) asociados a un flipbook mediante la
+     * tabla flipbook_contenido
+     * 2023-08-21
+     */
+    function articulos($flipbook_id)
+    {
+        $this->db->select('post.id AS articulo_id, unidad, num_pagina, flipbook_contenido.tema_id,
+            post.nombre_post AS titulo, tema.id AS tema_id, nombre_tema, titulo_tema');
+        $this->db->join('post', 'flipbook_contenido.pagina_id = post.id');
+        $this->db->join('tema', 'flipbook_contenido.tema_id = tema.id');
+        $this->db->where('flipbook_id', $flipbook_id);
+        $this->db->order_by('num_pagina', 'ASC');
+        $articulos = $this->db->get('flipbook_contenido');
+
+        return $articulos;
+    }
+
+    /**
+     * Artículo HTML de un tema
+     * 2023-08-21
+     */
+    function articulo($articulo_id)
+    {
+        $this->db->select('id, nombre_post AS titulo, subtitle, resumen, contenido, resumen,
+            integer_1 AS nivel, referente_1_id AS tema_id, referente_2_id AS area_id');
+        $this->db->where('id', $articulo_id);
+        $articulos = $this->db->get('post');
+
+        return $articulos->row();
     }
 
     function indice($flipbook_id)
@@ -508,20 +550,20 @@ class Flipbook_model extends CI_Model {
 
     /**
      * Query con archivos asociados a un flipbook, filtratos por tipo
-     * @param type $flipbook_id
-     * @param type $tipo_archivo_id (Agregado 2018-10-09)
-     * @return type
+     * @param object $flipbook row del flipbook
+     * @param int $tipo_archivo_id (Agregado 2018-10-09)
+     * @return object
      */
-    function archivos($flipbook_id, $tipo_archivo_id = NULL)
+    function archivos($flipbook, $tipo_archivo_id = NULL)
     {
-        $this->db->select('recurso.id AS archivo_id, nombre_archivo, slug AS tipo_archivo, CONCAT( (slug), (".png")) AS icono, CONCAT( (slug), ("/"),(nombre_archivo)) AS ubicacion, num_pagina');
-        $this->db->join('pagina_flipbook', 'recurso.tema_id = pagina_flipbook.tema_id');
-        $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
+        $this->db->select('recurso.id AS archivo_id, nombre_archivo, slug AS tipo_archivo,
+            CONCAT( (slug), (".png")) AS icono, CONCAT( (slug), ("/"),(nombre_archivo)) AS ubicacion,
+            num_pagina, recurso.tema_id');
+        $this->db->join('flipbook_contenido', 'recurso.tema_id = flipbook_contenido.tema_id');
         $this->db->join('item', 'recurso.tipo_archivo_id = item.id');
         $this->db->order_by('tipo_archivo_id', 'ASC');
-        $this->db->where('flipbook_id', $flipbook_id);
-        $this->db->where('tipo_recurso_id', 1);
-        //$this->db->where('tipo_archivo_id NOT IN (638,639,854)');   //Ver item.id, categoria_id = 20
+        $this->db->where('flipbook_id', $flipbook->id);
+        $this->db->where('tipo_recurso_id', 1); //Archivo
 
         if (!is_null($tipo_archivo_id)) {
             $this->db->where('tipo_archivo_id', $tipo_archivo_id);
@@ -560,10 +602,10 @@ class Flipbook_model extends CI_Model {
     function preguntas_abiertas($flipbook_id)
     {
         $this->db->select('post.id, post.contenido AS text_pregunta, post.referente_1_id AS tema_id');
-        $this->db->join('pagina_flipbook', 'post.referente_1_id = pagina_flipbook.tema_id');
-        $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
+        $this->db->join('flipbook_contenido', 'post.referente_1_id = flipbook_contenido.tema_id');
+        //$this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
         $this->db->where('flipbook_id', $flipbook_id);
-        $this->db->where('tipo_id', 121);
+        $this->db->where('post.tipo_id', 121);
         $this->db->group_by('post.id, post.contenido, post.referente_1_id');
         $preguntas_abiertas = $this->db->get('post');
 
@@ -635,6 +677,10 @@ class Flipbook_model extends CI_Model {
         return $arr_quices;
     }
 
+    /**
+     * Quices asociados a los temas de un flipbook
+     * 2023-09-18
+     */
     function quices($flipbook_id)
     {
         $this->db->select('recurso.referente_id AS quiz_id, num_pagina, recurso.tema_id');
@@ -643,6 +689,21 @@ class Flipbook_model extends CI_Model {
         $this->db->where('flipbook_id', $flipbook_id);
         $this->db->where('tipo_recurso_id', 3);
         $this->db->order_by('num_pagina', 'ASC');
+        $quices = $this->db->get('recurso');
+
+        return $quices;
+    }
+
+    /**
+     * Quices asociados a los temas de un flipbook pero identificados por tema, no por página
+     * 2023-09-18
+     */
+    function quices_tema($flipbook_id)
+    {
+        $this->db->select('recurso.referente_id AS quiz_id, recurso.tema_id');
+        $this->db->join('flipbook_contenido', 'recurso.tema_id = flipbook_contenido.tema_id');
+        $this->db->where('flipbook_id', $flipbook_id);
+        $this->db->where('tipo_recurso_id', 3);
         $quices = $this->db->get('recurso');
 
         return $quices;
@@ -840,7 +901,7 @@ class Flipbook_model extends CI_Model {
             'archivo_imagen' => ''
         );
 
-        $this->db->select('pagina_flipbook.id, tema_id, archivo_imagen');
+        $this->db->select('pagina_flipbook.id, pagina_flipbook.tema_id, archivo_imagen');
         $this->db->where('flipbook_id', $flipbook_id);
         $this->db->where('num_pagina', $num_pagina);
         $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
@@ -855,16 +916,16 @@ class Flipbook_model extends CI_Model {
 
     /**
      * Temas que están incluidos en las páginas que componen un flipbook.
-     * @param type $flipbook_id
-     * @return type
+     * 2023-09-05
+     * @param int $flipbook_id
+     * @return object $temas
      */
-    function temas($flipbook_id) {
-        //$this->db->select('tema.*, tema.id as tema_id');
+    function temas($flipbook_id)
+    {
         $this->db->select('tema.*, tema.id as tema_id, MIN(num_pagina) AS min_num_pagina');
-        $this->db->join('pagina_flipbook', 'tema.id = pagina_flipbook.tema_id');
-        $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
+        $this->db->join('flipbook_contenido', 'tema.id = flipbook_contenido.tema_id');
         $this->db->where('flipbook_id', $flipbook_id);
-        $this->db->where('tema_id IS NOT NULL');
+        $this->db->where('flipbook_contenido.tema_id IS NOT NULL');
         $this->db->group_by('tema_id');
         $this->db->order_by('flipbook_contenido.num_pagina', 'ASC');
         $temas = $this->db->get('tema');
@@ -1208,7 +1269,8 @@ class Flipbook_model extends CI_Model {
             $usuario_id = $this->session->userdata('usuario_id');
         }
 
-        $this->db->select('pagina_flipbook_detalle.id, flipbook_contenido.pagina_id, anotacion, num_pagina, pagina_flipbook_detalle.editado, integer_1 AS calificacion, nombre_tema, tema_id');
+        $this->db->select('pagina_flipbook_detalle.id, flipbook_contenido.pagina_id, anotacion, num_pagina,
+            pagina_flipbook_detalle.editado, integer_1 AS calificacion, nombre_tema, pagina_flipbook.tema_id');
         $this->db->where('tipo_detalle_id', 3);
         $this->db->join('pagina_flipbook', 'pagina_flipbook_detalle.pagina_id = pagina_flipbook.id');
         $this->db->join('flipbook_contenido', 'pagina_flipbook_detalle.pagina_id = flipbook_contenido.pagina_id');
@@ -1216,6 +1278,28 @@ class Flipbook_model extends CI_Model {
         $this->db->where('flipbook_contenido.flipbook_id', $flipbook_id);
         $this->db->where('pagina_flipbook_detalle.usuario_id', $usuario_id);
         $this->db->order_by('num_pagina', 'ASC');
+        $anotaciones = $this->db->get('pagina_flipbook_detalle');
+
+        return $anotaciones;
+    }
+
+    /**
+     * Listado de anotaciones realizadas por un estudiante en un flipbook
+     * 2023-09-21
+     */
+    function anotaciones_estudiante_tema($flipbook_id, $usuario_id = NULL) 
+    {
+        if (is_null($usuario_id)) {
+            $usuario_id = $this->session->userdata('usuario_id');
+        }
+
+        $this->db->select('pagina_flipbook_detalle.id, anotacion, pagina_flipbook_detalle.tema_id, 
+            pagina_flipbook_detalle.pagina_id AS articulo_id, integer_1 AS calificacion, nombre_tema');
+        $this->db->where('tipo_detalle_id', 3);
+        $this->db->join('flipbook_contenido', 'pagina_flipbook_detalle.tema_id = flipbook_contenido.tema_id');
+        $this->db->join('tema', 'pagina_flipbook_detalle.tema_id = tema.id', 'left');
+        $this->db->where('flipbook_contenido.flipbook_id', $flipbook_id);
+        $this->db->where('pagina_flipbook_detalle.usuario_id', $usuario_id);
         $anotaciones = $this->db->get('pagina_flipbook_detalle');
 
         return $anotaciones;

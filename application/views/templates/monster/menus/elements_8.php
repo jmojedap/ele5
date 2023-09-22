@@ -32,7 +32,7 @@
                     text: 'Programas',
                     active: false,
                     icon: 'fa fa-sitemap',
-                    cf: 'programas/explorar',
+                    cf: 'admin/programas/explore',
                     sections: []
                 },
                 {

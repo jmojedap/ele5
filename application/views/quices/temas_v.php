@@ -35,7 +35,7 @@ var tema_id = 0;
 
         $('#campo-tema').typeahead({
             ajax: {
-                url: '<?= base_url() ?>app/arr_elementos_ajax/tema',
+                url: '<?= base_url('app/arr_elementos_ajax/tema') ?>',
                 method: 'post',
                 triggerLength: 2
             },
@@ -46,17 +46,17 @@ var tema_id = 0;
     //Ajax
     function agregar_tema()
     {
-        $.ajax({        
-            type: 'POST',
-            url: base_url + 'admin/temas/asignar_quiz',
-            data: {
+        $.ajax({        
+            type: 'POST',
+            url: base_url + 'admin/temas/asignar_quiz',
+            data: {
                 quiz_id : quiz_id,
                 tema_id : tema_id
             },
             success: function(rta){
                 window.location = base_url + 'quices/temas/' + quiz_id;
             }
-        });
+        });
     }
     
     
@@ -64,18 +64,18 @@ var tema_id = 0;
 
 <?php $this->load->view('comunes/resultado_proceso_v'); ?>
 
-<table class="table table-default bg-blanco">
+<table class="table bg-white">
     <thead>
         <th class="<?= $clases_col['tema_id'] ?>">ID</th>
+        <th class="<?= $clases_col['cod_tema'] ?>">Código</th>
         <th class="<?= $clases_col['nombre_tema'] ?>">Tema</th>
         <th class="<?= $clases_col['botones'] ?>" width="35px"></th>
     </thead>
 
     <tbody>
         <tr class="info">
-            <td class="<?= $clases_col['tema_id'] ?>" width="10px">
-                
-            </td>
+            <td class="<?= $clases_col['tema_id'] ?>" width="10px"></td>
+            <td width="120px"></td>
             <td class="<?= $clases_col['nombre_tema'] ?>">
                 <?= form_input($att_tema) ?>
             </td>
@@ -88,6 +88,9 @@ var tema_id = 0;
             <tr>
                 <td class="<?= $clases_col['tema_id'] ?> warning">
                     <?= $row_tema->id ?>
+                </td>
+                <td class="<?= $clases_col['cod_tema'] ?>">
+                    <?= $row_tema->cod_tema ?>
                 </td>
                 <td class="<?= $clases_col['nombre_tema'] ?>">
                     <?= anchor("admin/temas/quices/{$row_tema->id}", $row_tema->nombre_tema) ?>

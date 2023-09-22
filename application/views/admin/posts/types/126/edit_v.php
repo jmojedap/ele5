@@ -21,7 +21,7 @@ $(document).ready(function() {
             ['font', ['clear']],
             ['para', ['style', 'ul', 'ol', 'paragraph', 'color']],
             ['insert', ['picture','video','link','table','hr']],
-            ['misc', ['fullscreen', 'help']],
+            ['misc', ['fullscreen', 'help','codeview']],
         ],
     });
 });

@@ -115,7 +115,7 @@ class Datos extends CI_Controller {
         $this->load->model('Post_model');
         $this->load->model('Search_model');
         $filters = $this->Search_model->filters();
-        $filters['tp'] = 20;
+        $filters['type'] = 20;
         $filters['f1'] = $this->session->userdata('role');    //Filtrar por rol de usuario
 
         $data = $this->Post_model->get($filters, $num_page);

@@ -324,7 +324,7 @@ public $url_controller = URL_ADMIN . 'temas/';
             $data['options_type'] = $this->Item_model->opciones_id('categoria_id = 20', 'Elija el tipo de archivo');
             $data['options_yn'] = $this->Item_model->opciones('categoria_id = 55 AND id_interno < 2');
 
-            $data['arr_types'] = $this->Item_model->arr_item(20, 'id');
+            $data['arr_types'] = $this->Item_model->arr_options('categoria_id = 20');
             $data['arr_yn'] = $this->Item_model->arr_item(55, 'id_interno_num');
             
         //Solicitar vista
@@ -520,7 +520,8 @@ public $url_controller = URL_ADMIN . 'temas/';
             $data['head_title'] = 'Temas';
             $data['head_subtitle'] = 'Resultado cargue';
             $data['view_a'] = 'comunes/resultado_importacion_v';
-            $data['nav_2'] = 'admin/temas/menu_explorar_v';
+            $data['nav_2'] = $this->views_folder  . 'menus/explore_v';
+            $data['nav_3'] = $this->views_folder  . 'menus/importar_v';
             $data['ayuda_id'] = 104;
             $this->load->view(TPL_ADMIN_NEW, $data);
     }

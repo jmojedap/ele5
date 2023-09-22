@@ -13,7 +13,7 @@ var sections = [
         text: 'Información',
         id: 'posts_info',
         cf: 'admin/posts/info/' + element_id,
-        roles: [0,1,2]
+        roles: [0,1,2,9]
     },
     {
         text: 'Detalles',
