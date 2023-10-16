@@ -52,19 +52,20 @@ var app_explore = new Vue({
         str_filters: '<?= $str_filters ?>',
         search_num_rows: <?= $search_num_rows ?>,
         showing_filters: false,
-        group_id: 0
+        group_id: 0,
+        loading: false,
     },
     methods: {
         get_list: function(){
             this.num_page = 1;
-            axios.post(app_url + this.controller + '/links_get/' + this.num_page, $('#search_form').serialize())
+            axios.post(url_app + this.controller + '/links_get/' + this.num_page, $('#search_form').serialize())
             .then(response => {
                 this.list = response.data.list
                 this.max_page = response.data.max_page
                 this.search_num_rows = response.data.search_num_rows
                 this.str_filters = response.data.str_filters
                 $('#head_subtitle').html(response.data.search_num_rows);
-                history.pushState(null, null, app_url + this.cf + this.num_page + '/?' + response.data.str_filters);
+                history.pushState(null, null, url_app + this.cf + this.num_page + '/?' + response.data.str_filters);
                 this.all_selected = false;
                 this.selected = [];
             })
@@ -82,11 +83,11 @@ var app_explore = new Vue({
         },
         sum_page: function(sum){
             this.num_page = Pcrn.limit_between(+this.num_page + +sum, 1, this.max_page);
-            axios.post(app_url + this.controller + '/links_get/' + this.num_page, $('#search_form').serialize())
+            axios.post(url_app + this.controller + '/links_get/' + this.num_page, $('#search_form').serialize())
             .then(response => {
                 this.list = response.data.list;
                 this.max_page = response.data.max_page;
-                history.pushState(null, null, app_url + this.cf + this.num_page +'/?' + response.data.str_filters);
+                history.pushState(null, null, url_app + this.cf + this.num_page +'/?' + response.data.str_filters);
                 this.all_selected = false;
                 this.selected = [];
             })
@@ -98,7 +99,7 @@ var app_explore = new Vue({
             var params = new FormData();
             params.append('selected', this.selected);
             
-            axios.post(app_url + this.controller + '/delete_selected', params)
+            axios.post(url_app + this.controller + '/delete_selected', params)
             .then(response => {
                 this.hide_deleted();
                 this.selected = [];
@@ -131,7 +132,7 @@ var app_explore = new Vue({
         //Especiales
         //Programación de link a grupo en calendario 
         send_schedule_form: function(){
-            axios.post(app_url + 'recursos/links_programar/', $('#schedule_form').serialize())
+            axios.post(url_app + 'recursos/links_programar/', $('#schedule_form').serialize())
             .then(response => {
                 console.log(response.data);
                 if ( response.data.saved_id > 0) {

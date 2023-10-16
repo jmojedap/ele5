@@ -1,0 +1,6 @@
+/* Tipos de documentos incrustados */
+/*-----------------------------------------------------------------------------*/
+.embed-documento {background-color:#4285f4;}
+.embed-presentacion {background-color: #f4b400;}
+.embed-hoja-calculo {background-color: #0f9d58;}
+.embed-video {background-color: #fe0303;}

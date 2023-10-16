@@ -645,7 +645,7 @@ class Flipbooks extends CI_Controller{
      */
     function inicio()
     {
-        $this->output->enable_profiler(TRUE);
+        //$this->output->enable_profiler(TRUE);
         $data['arr_flipbooks'] = $this->session->userdata('arr_flipbooks');
         $data['arr_cuestionarios'] = $this->session->userdata('arr_cuestionarios');
         $data['arr_grupos'] = $this->session->userdata('arr_grupos');

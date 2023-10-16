@@ -237,10 +237,13 @@ class Quices extends CI_Controller{
         $data['view_a'] = "quices/resolver/resolver_{$tipo_quiz_id}_v";
 
         $view_ptl = 'quices/resolver/resolver_v';
-        if ( $tipo_quiz_id > 100 )
+        if ( $tipo_quiz_id >= 100 && $tipo_quiz_id < 200 )
         {
             $data['view_a'] = "quices/resolver_v2/resolver_{$tipo_quiz_id}_f{$formato}_v";
             $view_ptl = 'templates/monster/quiz_v';
+        } else if ( $tipo_quiz_id >= 200 ) {
+            $data['view_a'] = "quices/resolver_v3/{$tipo_quiz_id}/resolver_v";
+            $view_ptl = 'templates/evidencias3/main';
         }
 
         $this->load->view($view_ptl, $data);
@@ -273,22 +276,24 @@ class Quices extends CI_Controller{
         $data['view_a'] = "quices/construir/construir_{$tipo_quiz_id}_v";
 
         //Nuevos tipos
-        if ( $tipo_quiz_id > 100 )
+        if ( $tipo_quiz_id > 100 && $tipo_quiz_id < 199 )
         {
             $data['view_a'] = "quices/construir_v2/{$tipo_quiz_id}/construir_v";
+        } else if ( $tipo_quiz_id >= 200 )
+        {
+            $data['view_a'] = "quices/construir_v3/{$tipo_quiz_id}/construir_v";
         }
 
-        $data['head_subtitle'] = 'Quiz';
+        $data['head_subtitle'] = 'Construir';
         
         $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function elementos($quiz_id)
-    {
-        
+    {   
         //Cargando datos básicos
             $data = $this->Quiz_model->basico($quiz_id);
-            $data['view_a'] = 'comunes/gc_v';
+            $data['view_a'] = 'common/bs4/gc_fluid_v';
             
         //Head includes específicos para la página
             $output = $this->Quiz_model->crud_elemento($quiz_id);

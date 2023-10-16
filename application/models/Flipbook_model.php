@@ -466,10 +466,11 @@ class Flipbook_model extends CI_Model {
         $data['planes_aula'] = $this->planes_aula($flipbook_id)->result();
         if ( $rowFlipbook->tipo_flipbook_id < 5 ) {
             $data['quices'] = $this->quices($flipbook_id)->result();
+            $data['links'] = $this->links($flipbook_id)->result();
         } else {
             $data['quices'] = $this->quices_tema($flipbook_id)->result();
+            $data['links'] = $this->links_tema($flipbook_id)->result();
         }
-        $data['links'] = $this->links($flipbook_id)->result();
         $data['lecturas'] = $this->lecturas($flipbook_id)->result();
         $data['preguntas_abiertas'] = $this->preguntas_abiertas($flipbook_id)->result();
         $data['relacionados'] = $this->n_arr_relacionados($flipbook_id);
@@ -587,6 +588,21 @@ class Flipbook_model extends CI_Model {
         $this->db->select('recurso.id, titulo, url, num_pagina');
         $this->db->join('pagina_flipbook', 'recurso.tema_id = pagina_flipbook.tema_id');
         $this->db->join('flipbook_contenido', 'pagina_flipbook.id = flipbook_contenido.pagina_id');
+        $this->db->where('flipbook_id', $flipbook_id);
+        $this->db->where('tipo_recurso_id', 2);
+        $links = $this->db->get('recurso');
+
+        return $links;
+    }
+
+    /**
+     * Se incluye el campo titulo en la tabla, para ser mostrado en los flipbooks de tipo
+     * 2023-09-12
+     */
+    function links_tema($flipbook_id)
+    {
+        $this->db->select('recurso.id, titulo, url, recurso.tema_id');
+        $this->db->join('flipbook_contenido', 'recurso.tema_id = flipbook_contenido.tema_id');
         $this->db->where('flipbook_id', $flipbook_id);
         $this->db->where('tipo_recurso_id', 2);
         $links = $this->db->get('recurso');

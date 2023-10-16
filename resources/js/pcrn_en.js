@@ -1,7 +1,7 @@
 /**
  * FUNCIONES GENERALES PARA EL USO EN EL LENGUAJE JAVASCRIPT
- * DESARROLLADAS POR Mauricio Ojeda-Pepinosa
- * 2014-08-14
+ * DESARROLLADAS POR Pacarina Media Lab (Pcrn)
+ * 2021-10-05
  * 
  */
 
@@ -46,4 +46,34 @@ var Pcrn = new function()
 
         return $limited_value;
     };
+
+    /**
+     * Redondea un número con cierto número de decimales
+     * 
+     * @param {number} num 
+     * @param {number} decimals 
+     */
+    this.round = function round(num, decimals = 2) {
+        var sign = (num >= 0 ? 1 : -1);
+        num = num * sign;
+        if (decimals === 0) //con 0 decimals
+            return sign * Math.round(num);
+        // round(x * 10 ^ decimals)
+        num = num.toString().split('e');
+        num = Math.round(+(num[0] + 'e' + (num[1] ? (+num[1] + decimals) : decimals)));
+        // x * 10 ^ (-decimals)
+        num = num.toString().split('e');
+        return sign * (num[0] + 'e' + (num[1] ? (+num[1] - decimals) : -decimals));
+    }
+
+    /**
+     * Redondea un número con cierto número de decimales
+     * 
+     * @param {number} num 
+     * @param {number} total
+     */
+    this.intPercent = function intPercent(num, total = 100) {
+        var intPercent = this.round(100 * num / total, 0)
+        return intPercent
+    }
 };

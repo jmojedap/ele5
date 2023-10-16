@@ -3,7 +3,7 @@ var flipbookApp = createApp({
     data(){
         return{
             flipbook: <?= json_encode($row) ?>,
-            loading: false,
+            loading: true,
             numPage: 1,
             currentArticulo:{
                 id:0,
@@ -14,8 +14,10 @@ var flipbookApp = createApp({
                 tema_id:0,
             },
             unidades:[],
-            bookData:{},
-            anotaciones: {},
+            bookData:{
+                links:[]
+            },
+            anotaciones: [],
             anotacion: {anotacion: '', calificacion: 0},
             grupoId: <?= $this->session->userdata('grupo_id') ?>,
             preguntaAbiertaId: 0,
@@ -42,10 +44,12 @@ var flipbookApp = createApp({
             this.getAnotaciones()
         },
         getArticulo(articuloId){
+            this.loading = true
             axios.get(URL_API + 'flipbooks/get_articulo/' + articuloId)
             .then(response => {
                 this.currentArticulo = response.data.articulo
                 this.setAnotacion()
+                this.loading = false
             })
             .catch(function(error) { console.log(error) })
         },
@@ -137,6 +141,13 @@ var flipbookApp = createApp({
             })
             .catch( function(error) {console.log(error)} )
         },
+    },
+    computed: {
+        filteredLinks(){
+            var filteredLinks = this.bookData.links.filter(item => item.tema_id == this.currentArticulo.tema_id)
+            console.log(filteredLinks)
+            return filteredLinks
+        }
     },
     mounted(){
         this.getFlipbookData()

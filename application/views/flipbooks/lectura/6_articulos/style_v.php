@@ -5,29 +5,29 @@
 
     body {
         background: rgb(190,231,253);
-        background: linear-gradient(180deg, rgba(190,231,253,1) 0%, rgba(144,213,249,1) 100%);
+        background: linear-gradient(90deg, rgba(190,231,253,1) 0%, rgba(144,213,249,1) 100%);
         font-family: 'Rubik', sans-serif;
         padding-bottom: 60px;
     }
 
     .footer{
         color: white;
-        background-color: #bee7fd;
+        background-color: #d5effd;
         width: 100%;
         border-top: 1px solid #CCC;
         padding: 0.5em;
     }
 
     .footer .btn-light {
-        color: #157cc1;
-        border-color: #bee7fd;
-        background-color: #bee7fd;
+        color: #2b4193;
+        border-color: #d5effd;
+        background-color: #d5effd;
     }
 
     .footer .btn-light:hover {
-        color: white;
-        border-color: #fd9e00;
-        background-color: #fd9e00;
+        color: #333;
+        border-color: #ffba02;
+        background-color: #ffba02;
     }
 
     .accordion-item{
@@ -39,8 +39,8 @@
 
     .contenido-layout {
         display: grid;
-        grid-template-columns: 1fr 4fr 1fr;
-        height: 100vh;
+        grid-template-columns: 1fr 5fr;
+        height: calc(100vh - 60px);
     }
 
     .column-left {
@@ -48,21 +48,17 @@
         align-items: center;
         justify-content: center;
         background-color: #FCFCFC;
-    }
-
-    .column-center {
-        grid-column: 2;
-        /*overflow-y: scroll;*/
+        
     }
 
     .column-right {
-        grid-column: 3;
-        
+        grid-column: 2;
+        overflow-y: scroll;
     }
 
     .articulo-container {
         margin: 0 auto;
-        margin-bottom: 2em;
+        margin-bottom: 1em;
         max-width: 770px;
         padding-top: 1em;
     }
@@ -99,7 +95,7 @@
         color: #555;
         font-weight: bold;
         font-size: 1.7em;
-        color: #dd900c;
+        color: #c53c99;
     }
 
     .articulo-tema .epigrafe{
