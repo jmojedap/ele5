@@ -237,6 +237,7 @@ class Eventos extends CI_Controller{
     function crear_publicacion()
     {
         //Crear publicación en tabla post
+            $aRow['nombre_post'] = 'publicacion-muro';   //Publicación, ver item categoria_id = 33, tipos de post
             $aRow['tipo_id'] = 3;   //Publicación, ver item categoria_id = 33, tipos de post
             $aRow['contenido'] = strip_tags($this->input->post('contenido'));
             $aRow['texto_1'] = strip_tags($this->input->post('texto_1'));

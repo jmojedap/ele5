@@ -1,38 +1,26 @@
-<?php
-    $arrElementos = [];
-    foreach ($elementos->result() as $elemento) {
-        $elemento->respuesta = '';
-        $elemento->respondido = 0;
-        $elemento->comprobado = 0;
-        $elemento->resultado = 0;
-        $arrElementos[] = $elemento;
-    }
-?>
-
 <script>
-// Variables
-//-----------------------------------------------------------------------------
-var elementosInicial = <?= json_encode($arrElementos) ?>;
-
 // VueApp
 //-----------------------------------------------------------------------------
 var resolverQuiz = createApp({
     data(){
         return{
+            quiz: {},
             step: 'inicio',
             status: 'leyendo',
             loading: false,
-            elementos: elementosInicial,
-            currentElemento: {
-                detalle:'',
-                respuesta:''
+            quices: [],
+            currentQuiz: {
+                id: 0,
+                opciones:'',
+                respuesta:'',
+                texto_respuesta: ''
             },
             currentKey: 0,
             opcionSeleccionada: '',
             resultadoTotal: 0,
             porcentajeTotal: 0,
             porcentajeAncho: 0,
-            tiempoRespuesta: 10000,
+            milisegundosCaracter: 2,
         }
     },
     methods: {
@@ -41,89 +29,105 @@ var resolverQuiz = createApp({
             this.status = 'leyendo'
             this.porcentajeAncho = 0
             this.currentKey = key
-            this.currentElemento = this.elementos[key]
+            this.currentQuiz = this.quices[key]
+            var milisegundosLectura = this.milisegundosCaracter * this.currentQuiz.texto_enunciado.length
+            console.log(milisegundosLectura, this.currentQuiz.texto_enunciado.length)
             setTimeout(() => {
                 this.status = 'respondiendo'
-            }, this.tiempoRespuesta);
-            this.actualizarProgressBar()
+            }, milisegundosLectura);
+            console.log(this.progressBarStyle)
+            this.actualizarProgressBar(milisegundosLectura)
+
         },
-        actualizarProgressBar() {
-            var paso = (100 / this.tiempoRespuesta) * 100;
-            if (this.porcentajeAncho < 120 ) {
-                this.porcentajeAncho += paso;
-                setTimeout(this.actualizarProgressBar, 100);
-            }
+        actualizarProgressBar(milisegundosLectura) {
+            const progressBar = document.getElementById('time-progress-bar');
+            // Animar la barra de progreso de 0% a 100% en 2000 milisegundos
+            progressBar.style.transition = 'width ' + milisegundosLectura + 'ms linear';
+            progressBar.style.width = '100%';
+
+            // Después de milisegundos, volver a 0% en 50 milisegundos
+            setTimeout(function() {
+                progressBar.style.transition = 'width 0.05s linear';
+                progressBar.style.width = '0%';
+            }, milisegundosLectura);
+        },
+        reiniciarProgressBar: function(){
+            const progressBar = document.getElementById('time-progress-bar');
+            progressBar.style.transition = 'width 0.05s linear';
+            progressBar.style.width = '0%';
         },
         seleccionarOpcion: function(opcionSeleccionada){
-            this.elementos[this.currentKey].respuesta = opcionSeleccionada
-            this.elementos[this.currentKey].respondido = 1
+            this.quices[this.currentKey].respuesta = opcionSeleccionada
+            this.quices[this.currentKey].respondido = 1
         },
         comprobarRespuesta: function(){
-            this.elementos[this.currentKey].resultado = 0
-            if ( this.elementos[this.currentKey].clave == this.elementos[this.currentKey].respuesta ) {
-                this.elementos[this.currentKey].resultado = 1
+            this.quices[this.currentKey].resultado = 0
+            if ( this.quices[this.currentKey].clave == this.quices[this.currentKey].respuesta ) {
+                this.quices[this.currentKey].resultado = 1
                 toastr['success']('¡Correcto!')
             } else {
                 toastr['error']('Incorrecto')
             }
-            this.elementos[this.currentKey].comprobado = 1
+            this.quices[this.currentKey].comprobado = 1
             this.calcularResultado()
         },
         calcularResultado: function(){
-            this.resultadoTotal = this.elementos.reduce((acumulador, elemento) => acumulador + elemento.resultado, 0);
-            this.porcentajeTotal = Pcrn.intPercent(this.resultadoTotal, this.elementos.length)
+            this.resultadoTotal = this.quices.reduce((acumulador, elemento) => acumulador + elemento.resultado, 0);
+            this.porcentajeTotal = Pcrn.intPercent(this.resultadoTotal, this.quices.length)
         },
         handleSubmit: function(){
-            this.loading = true
-            var formValues = new FormData(document.getElementById('quizForm'))
-            axios.post(URL_API + 'quices/guardar_resultado/', formValues)
-            .then(response => {
-                this.step = 'finalizado'
-                if ( response.data.saved_id > 0 ) {
-                    toastr['success']('Guardado')
-                } else {
-                    toastr['warning']('Ocurrió un error. No se guardó el resultado.')
-                }
-                this.loading = false
-            })
-            .catch( function(error) {console.log(error)} )
+            this.step = 'finalizado'
         },
         reiniciar: function(){
-            this.elementos = <?= json_encode($arrElementos) ?>;
+
             this.step = 'inicio'
             this.resultadoTotal = 0
             this.porcentajeTotal = 0
-            this.setCurrent(0)
+            this.getQuices()
+            this.reiniciarProgressBar()
         },
         optionClass: function(opcion){
             var optionClass = 'btn-light'
-            if ( this.currentElemento.respondido == 1 ) {
-                if ( opcion == this.currentElemento.respuesta ) {
+            if ( this.currentQuiz.respondido == 1 ) {
+                if ( opcion == this.currentQuiz.respuesta ) {
                     optionClass = 'btn-primary'
                 }
             }
-            if ( this.currentElemento.comprobado == 1 ) {
-                if ( opcion == this.currentElemento.respuesta ) {
-                    if ( this.currentElemento.resultado == 0 ) optionClass = 'btn-danger'
-                    if ( this.currentElemento.resultado == 1 ) optionClass = 'btn-success'
+            if ( this.currentQuiz.comprobado == 1 ) {
+                if ( opcion == this.currentQuiz.respuesta ) {
+                    if ( this.currentQuiz.resultado == 0 ) optionClass = 'btn-danger'
+                    if ( this.currentQuiz.resultado == 1 ) optionClass = 'btn-success'
                 }
             }
             return optionClass
+        },
+        getQuices: function(){
+            this.loading = true
+            var formValues = new FormData()
+            formValues.append('num_rows', 5)
+            formValues.append('tp', 202)
+            axios.post(URL_API + 'quices/get_random_quices/', formValues)
+            .then(response => {
+                this.loading = false
+                this.quices = response.data.quices
+                //this.setCurrent(0)
+            })
+            .catch( function(error) {console.log(error)} )
         },
 
     },
     computed: {
         opciones: function(){
-            return this.currentElemento.detalle.split(',')
+            return this.currentQuiz.opciones.split(',')
         },
         respuestasCompletas: function(){
-            var cantidadResponidos = this.elementos.reduce((acumulador, elemento) => acumulador + elemento.respondido, 0);
-            if ( cantidadResponidos == this.elementos.length ) return true
+            var cantidadResponidos = this.quices.reduce((acumulador, elemento) => acumulador + elemento.respondido, 0);
+            if ( cantidadResponidos == this.quices.length ) return true
             return false
         },
     },
     mounted(){
-        //this.setCurrent(0)
+        this.getQuices()
     }
 }).mount('#resolverQuiz')
 </script>

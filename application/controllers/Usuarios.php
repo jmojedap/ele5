@@ -1008,7 +1008,9 @@ class Usuarios extends CI_Controller{
      */
     function biblioteca()
     {
-        //$this->output->enable_profiler(TRUE);
+        if ( $this->input->get('profiler') == 1 ) {
+            $this->output->enable_profiler(TRUE);
+        }
         
         //Flipbooks
             $data['funcion_flipbook'] = 'abrir';

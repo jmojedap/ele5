@@ -74,8 +74,8 @@ public $url_controller = URL_ADMIN . 'temas/';
                 $data['sheet_name'] = $element_name;
 
             //Objeto para generar archivo excel
-                $this->load->library('Excel');
-                $file_data['obj_writer'] = $this->excel->file_query($data);
+                $this->load->library('Excel_new');
+                $file_data['obj_writer'] = $this->excel_new->file_query($data);
 
             //Nombre de archivo
                 $file_data['file_name'] = date('Ymd_His') . '_' . $data['sheet_name'];
@@ -1033,7 +1033,7 @@ public $url_controller = URL_ADMIN . 'temas/';
 
     /**
      * Ejecuta la eliminación masiva de preguntas abiertas asociadas a los temas en archivo excel.
-     * 2021-03-30
+     * 2024-02-20
      */
     function eliminar_preguntas_abiertas_e()
     {
@@ -1051,7 +1051,7 @@ public $url_controller = URL_ADMIN . 'temas/';
             $data['message'] = $imported_data['message'];
             $data['arr_sheet'] = $imported_data['arr_sheet'];
             $data['sheet_name'] = $this->input->post('sheet_name');
-            $data['back_destination'] = "temas/eliminar_preguntas_abiertas/";
+            $data['back_destination'] = "admin/temas/eliminar_preguntas_abiertas/";
         
         //Cargar vista
             $data['head_title'] = 'Temas';
@@ -1093,6 +1093,13 @@ public $url_controller = URL_ADMIN . 'temas/';
     {
         $data['ledin_id'] = $ledin_id;
         $data['ledin'] = $this->Tema_model->ledin($ledin_id);
+        $data['arr_lapses'] = array(
+            1 => '2000',
+            2 => '950',
+            3 => '515',
+            4 => '280',
+            5 => '130'
+        );
         
         if ( $json )
         {
@@ -1101,10 +1108,10 @@ public $url_controller = URL_ADMIN . 'temas/';
             $this->output->set_content_type('application/json')->set_output(json_encode($data_json));
         } else {
             
-            $data['view_a'] = $this->views_folder . 'ledins/ledin_v';
+            $data['view_a'] = $this->views_folder . 'ledins/lectura_dinamica/lectura_dinamica_v';
             $data['head_title'] = $data['ledin']->nombre_post;
             $data['subtitle_head'] = 'Lecturas dinámicas';
-            $this->load->view(TPL_ADMIN_NEW, $data);
+            $this->load->view('templates/easypml/empty', $data);
         }
     }
 

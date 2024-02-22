@@ -75,7 +75,7 @@
                 text: 'Recursos',
                 active: false,
                 style: '',
-                icon: 'fa-solid fa-image',
+                icon: 'fas fa-image',
                 cf: '',
                 submenu: true,
                 subelements: [

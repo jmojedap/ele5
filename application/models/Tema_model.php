@@ -1707,7 +1707,7 @@ class Tema_Model extends CI_Model{
                 $postData = $this->Post_model->save($aRow);    //Condición imposible, siempre agrega
                 $post_id = $postData['saved_id'];
 
-                $data = array('status' => 1, 'text' => '', 'imported_id' => $post_id, 'arr_row' => $arr_row);
+                $data = array('status' => 1, 'text' => '', 'imported_id' => $post_id, 'arr_row' => $aRow);
             } else {
                 $data = array('status' => 0, 'text' => $error_text, 'imported_id' => 0);
             }

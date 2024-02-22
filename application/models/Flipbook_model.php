@@ -182,6 +182,78 @@ class Flipbook_model extends CI_Model {
         return $datos_flipbook;
     }
 
+    /**
+     * Guardar un registro en la tabla flipbook
+     * 2024-02-22
+     */
+    function save($aRow = null)
+    {
+        //Verificar si hay array con registro
+        if ( is_null($aRow) ) $aRow = $this->aRow();
+
+        //Verificar si tiene id definido, insertar o actualizar
+        if ( ! isset($aRow['id']) ) 
+        {
+            //No existe, insertar
+            $this->db->insert('flipbook', $aRow);
+            $flipbook_id = $this->db->insert_id();
+        } else {
+            //Ya existe, editar
+            $flipbook_id = $aRow['id'];
+            unset($aRow['id']);
+
+            $this->db->where('id', $flipbook_id)->update('flipbook', $aRow);
+        }
+
+        $data['saved_id'] = $flipbook_id;
+        return $data;
+    }
+
+    /**
+     * Array from HTTP:POST, adding edition data
+     * 2024-02-22
+     */
+    function aRow($data_from_post = TRUE)
+    {
+        $aRow = array();
+
+        if ( $data_from_post ) { $aRow = $this->input->post(); }
+        
+        $aRow['editor_id'] = $this->session->userdata('user_id');
+        $aRow['editado'] = date('Y-m-d H:i:s');
+        $aRow['usuario_id'] = $this->session->userdata('user_id');
+        $aRow['creado'] = date('Y-m-d H:i:s');
+        
+        if ( isset($aRow['id']) )
+        {
+            unset($aRow['usuario_id']);
+            unset($aRow['creado']);
+        }
+
+        return $aRow;
+    }
+
+    /**
+     * Array con flipbooks, especificando id y nombre. Filtrados por condición
+     * 2024-02-22
+     * 
+     * @param string $condition
+     * @return array $options
+     */
+    function arr_options($condition)
+    {
+        $select = 'id, nombre_flipbook AS name, anio_generacion';
+
+        $query = $this->db->select($select)
+            ->where($condition)
+            ->order_by('nombre_flipbook', 'ASC')
+            ->get('flipbook');
+        
+        $options = $query->result_array();
+        
+        return $options;
+    }
+
     function editable() {
         return TRUE;
     }
@@ -905,10 +977,11 @@ class Flipbook_model extends CI_Model {
     /**
      * Devuleve el registro de una página a partir del flipbook_id y el número de página
      * Formato array
+     * 2023-11-02
      * 
-     * @param type $flipbook_id
-     * @param type $num_pagina
-     * @return type
+     * @param int $flipbook_id
+     * @param int $num_pagina
+     * @return array $datos_pagina
      */
     function pagina_num($flipbook_id, $num_pagina) {
         $datos_pagina = array(
@@ -1302,6 +1375,9 @@ class Flipbook_model extends CI_Model {
     /**
      * Listado de anotaciones realizadas por un estudiante en un flipbook
      * 2023-09-21
+     * @param int $flipbook_id
+     * @param int $usuario_id
+     * @return object $anotaciones (query db codeigniter)
      */
     function anotaciones_estudiante_tema($flipbook_id, $usuario_id = NULL) 
     {
@@ -1325,9 +1401,9 @@ class Flipbook_model extends CI_Model {
      * Devuelve las anotaciones de los estudiantes en un flipbook
      * Los estudiantes son los que pertenecen a los grupos que un profesor tiene asignado.
      * 
-     * @param type $flipbook_id
-     * @param type $usuario_id
-     * @return type
+     * @param int $flipbook_id
+     * @param int $usuario_id
+     * @return object $anotaciones (query db codeigniter)
      */
     function anotaciones_profesor($flipbook_id, $tema_id = 0, $usuario_id = NULL) {
 
@@ -1392,9 +1468,43 @@ class Flipbook_model extends CI_Model {
             $this->db->join('usuario', 'pagina_flipbook_detalle.usuario_id = usuario.id');
             $this->db->where('flipbook_contenido.flipbook_id', $flipbook_id);
             $this->db->where('usuario_grupo.grupo_id', $grupo_id);
-            if ($tema_id > 0) $this->db->where('tema_id', $tema_id);    //Filtro por tema
+            if ($tema_id > 0) $this->db->where('pagina_flipbook_detalle.tema_id', $tema_id);    //Filtro por tema
             $this->db->order_by('pagina_flipbook_detalle.editado', 'DESC');
             $this->db->group_by($group_by);
+
+        $anotaciones = $this->db->get('pagina_flipbook_detalle');
+
+        return $anotaciones;
+    }
+
+    /**
+     * Devuelve las anotaciones de los estudiantes deun grupo en un flipbook y tema determinado
+     * Las anotaciones están en la tabla pagina_flipbook_detalle, tipo 3
+     * 2023-10-02
+     */
+    function anotaciones_grupo_tema($flipbook_id, $grupo_id = NULL, $tema_id = 0)
+    {
+        //String Select
+            $select = 'pagina_flipbook_detalle.id, ';
+            $select .= "CONCAT((usuario.nombre), ' ', (usuario.apellidos)) as nombre_estudiante, ";
+            $select .= "pagina_flipbook_detalle.usuario_id, ";
+            $select .= "pagina_flipbook_detalle.tema_id, tema.nombre_tema, anotacion, ";
+            $select .= 'pagina_flipbook_detalle.integer_1 AS calificacion, ';
+            $select .= 'CEIL(pagina_flipbook_detalle.integer_1/20) AS estrellas, ';
+            $select .= 'pagina_flipbook_detalle.editado, ';
+            $select .= 'flipbook_id';
+
+        //Construyendo consulta
+            $this->db->select($select);
+            $this->db->where('tipo_detalle_id', 3); //Anotación en página de flipbook
+            $this->db->join('tema', 'pagina_flipbook_detalle.tema_id = tema.id');   //Para obtener info del tema
+            $this->db->join('usuario', 'pagina_flipbook_detalle.usuario_id = usuario.id');  //Para info del usuario
+            $this->db->join('flipbook_contenido', 'tema.id = flipbook_contenido.tema_id');  //Para filtrar por flipbook
+            $this->db->where('flipbook_contenido.flipbook_id', $flipbook_id);
+            $this->db->where('usuario.grupo_id', $grupo_id);
+            if ($tema_id > 0) $this->db->where('pagina_flipbook_detalle.tema_id', $tema_id);    //Filtro por tema
+            $this->db->order_by('pagina_flipbook_detalle.editado', 'DESC');
+            $this->db->group_by('id');
 
         $anotaciones = $this->db->get('pagina_flipbook_detalle');
 

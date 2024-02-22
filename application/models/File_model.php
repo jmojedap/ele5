@@ -266,7 +266,7 @@ class File_model extends CI_Model{
 
     /**
      * Crea el registro del file en la tabla file
-     * 2022-09-07
+     * 2024-02-15
      */
     function insert($upload_data)
     {
@@ -290,8 +290,8 @@ class File_model extends CI_Model{
             $arr_row['created_at'] = date('Y-m-d H:i:s');
             $arr_row['creator_id'] = $upload_data['user_id'];
 
-            //Campos adicionales
-            if ( ! is_null($this->input->post('album_id')) ) { $arr_row['description'] = $this->input->post('description'); }
+            //Campos adicionales (deactivada 2024-02-15)
+            //if ( ! is_null($this->input->post('album_id')) ) { $arr_row['description'] = $this->input->post('description'); }
 
         //Obtener dimensiones
             if ( $arr_row['is_image'] ) {

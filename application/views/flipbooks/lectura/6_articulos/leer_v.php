@@ -7,12 +7,9 @@
 <html lang="es">
     <head>
         <?php $this->load->view('flipbooks/lectura/6_articulos/head_v') ?>
-        <?php $this->load->view('flipbooks/lectura/6_articulos/style_v') ?>
+        <link href="<?= URL_RESOURCES ?>css/contenidos_articulos_v01.css" rel="stylesheet">
     </head>
-
-    <body class="">
+    <body>
         <?php $this->load->view('flipbooks/lectura/6_articulos/body_v') ?>
-
-        
     </body>
 </html>

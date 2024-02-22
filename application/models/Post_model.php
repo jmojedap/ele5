@@ -66,6 +66,7 @@ class Post_model extends CI_Model{
     {
         $arr_select['general'] = 'id, nombre_post, resumen, tipo_id, url_thumbnail, url_image, slug, publicado, status';
         $arr_select['export'] = '*';
+        $arr_select['lectura_dinamica'] = 'id, nombre_post';
 
         return $arr_select[$format];
     }
@@ -291,6 +292,27 @@ class Post_model extends CI_Model{
         return $arr_row;
     }
 
+    /**
+     * Array con posts, especificando código y nombre. Filtrados por condición
+     * 2024-02-22
+     * 
+     * @param string $condition
+     * @return array $options
+     */
+    function arr_options($condition)
+    {
+        $select = 'id, nombre_post AS name';
+
+        $query = $this->db->select($select)
+            ->where($condition)
+            ->order_by('nombre_post', 'ASC')
+            ->get('post');
+        
+        $options = $query->result_array();
+        
+        return $options;
+    }
+
 // ELIMINACIÓN DE UN POST
 //-----------------------------------------------------------------------------
     
@@ -376,7 +398,7 @@ class Post_model extends CI_Model{
         $this->db->select('files.id, files.title, url, url_thumbnail, files.integer_1 AS main, position');
         $this->db->where('is_image', 1);
         $this->db->where('table_id', '2000');      //Tabla post
-        $this->db->where('referente_1_id', $post_id);   //Relacionado con el post
+        $this->db->where('related_1', $post_id);   //Relacionado con el post
         $this->db->order_by('position', 'ASC');
         $images = $this->db->get('files');
 

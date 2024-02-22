@@ -1,10 +1,16 @@
 <script>
+let articuloId = <?= $articulo_id?>;
+
+// VueApp
+//-----------------------------------------------------------------------------
 var flipbookApp = createApp({
     data(){
         return{
+            section: 'pagina',
             flipbook: <?= json_encode($row) ?>,
             loading: true,
             numPage: 1,
+            articuloId: articuloId,
             currentArticulo:{
                 id:0,
                 titulo:'',
@@ -15,6 +21,7 @@ var flipbookApp = createApp({
             },
             unidades:[],
             bookData:{
+                articulos:[],
                 links:[]
             },
             anotaciones: [],
@@ -36,20 +43,23 @@ var flipbookApp = createApp({
             .catch(function (error) { console.log(error) })
         },
         getFirstArticulo: function(){
-            var articuloId = 0
-            if (this.bookData.articulos.length > 0) {
-                articuloId = this.bookData.articulos[0].articulo_id
+            //var articuloId = 0
+            if (this.bookData.articulos.length > 0 && this.articuloId == 0) {
+                this.articuloId = this.bookData.articulos[0].articulo_id
             }
-            this.getArticulo(articuloId)
+            this.getArticulo(this.articuloId, 0)
             this.getAnotaciones()
         },
-        getArticulo(articuloId){
+        getArticulo(articuloId, keyArticulo){
             this.loading = true
-            axios.get(URL_API + 'flipbooks/get_articulo/' + articuloId)
+            this.articuloId = articuloId
+            axios.get(URL_API + 'flipbooks/get_articulo/' + this.articuloId)
             .then(response => {
                 this.currentArticulo = response.data.articulo
                 this.setAnotacion()
+                this.numPage = keyArticulo + 1
                 this.loading = false
+                history.pushState(null, null, URL_FRONT + 'flipbooks/leer_v6/' + this.flipbook.id + '/' + this.articuloId)
             })
             .catch(function(error) { console.log(error) })
         },
@@ -141,16 +151,40 @@ var flipbookApp = createApp({
             })
             .catch( function(error) {console.log(error)} )
         },
+        starClass: function(calificacion, num){
+            var starClass = 'far';
+            if ( calificacion > 20 * (num - 1) ) starClass = 'fa';
+            return starClass;
+        },
+        //Si el artículo acual está en una unidad específica
+        articuloEnUnidad: function(unidad, type){
+            var articuloEnUnidad = this.bookData.articulos.filter(
+                articulo =>
+                articulo.articulo_id == this.articuloId &&
+                unidad.id == articulo.unidad
+            )
+            if ( articuloEnUnidad.length > 0 ) return true
+            return false
+        },
     },
     computed: {
         filteredLinks(){
             var filteredLinks = this.bookData.links.filter(item => item.tema_id == this.currentArticulo.tema_id)
             console.log(filteredLinks)
             return filteredLinks
+        },
+        cantidadPreguntasAbiertasTema(){
+            var preguntasAbiertasTema = this.preguntasAbiertasAsignadas.filter(item => item.tema_id == this.currentArticulo.tema_id)
+            return preguntasAbiertasTema.length
+        },
+        cantidadAnotacionesTema(){
+            var anotacionesTema = this.anotaciones.filter(item => item.tema_id == this.currentArticulo.tema_id)
+            return anotacionesTema.length
         }
     },
     mounted(){
         this.getFlipbookData()
+        this.cargarPreguntasAbiertasAsignadas()
     }
 }).mount('#flipbookApp')
 </script>

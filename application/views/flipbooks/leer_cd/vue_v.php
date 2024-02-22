@@ -113,6 +113,7 @@
                 var params = new FormData();
                 params.append('num_pagina', this.num_pagina);
                 params.append('anotacion', this.anotacion.anotacion);
+                params.append('tema_id', this.pagina.tema_id);
                 
                 axios.post(this.app_url + 'flipbooks/guardar_anotacion/' + this.flipbook_id, params)
                 .then(response => {
@@ -145,9 +146,7 @@
                 .then(response => {
                     this.pa_asignadas = response.data.pa_asignadas;
                 })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                .catch(function (error) { console.log(error)})
             },
             seleccionar_pregunta: function(pregunta_id){
                 this.pregunta_id = pregunta_id;

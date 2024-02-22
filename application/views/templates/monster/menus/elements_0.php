@@ -71,7 +71,7 @@
                 text: 'Recursos',
                 active: false,
                 style: '',
-                icon: 'fa-solid fa-image',
+                icon: 'fas fa-image',
                 cf: '',
                 submenu: true,
                 subelements: [
@@ -122,14 +122,14 @@
                     {
                         text: 'Posts',
                         active: false,
-                        icon: 'fa fa-file-text',
+                        icon: 'fas fa-file-alt',
                         cf: 'admin/posts/explore',
                         sections: ['posts/explorar', 'posts/editar', 'posts/nuevo', 'posts/leer']
                     },
                     {
                         text: 'Archivos',
                         active: false,
-                        icon: 'fa-solid fa-image',
+                        icon: 'fas fa-image',
                         cf: 'admin/files/explore',
                         sections: ['files/explore', 'files/edit', 'files/add', 'files/info', 'files/cropping', 'files/change']
                     },

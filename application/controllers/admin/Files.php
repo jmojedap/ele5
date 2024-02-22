@@ -34,10 +34,7 @@ class Files extends CI_Controller{
             $data = $this->File_model->explore_data($filters, $num_page, 10);
         
         //Opciones de filtros de búsqueda
-            //$data['options_type'] = $this->Item_model->options('category_id = 33', 'Todos');
-            
-        //Arrays con valores para contenido en lista
-            //$data['arr_types'] = $this->Item_model->arr_cod('category_id = 33');
+            $data['arrFileCollections'] = $this->Item_model->arr_options('categoria_id = 36');
             
         //Cargar vista
             $this->App_model->view(TPL_ADMIN_NEW, $data);
@@ -154,7 +151,7 @@ class Files extends CI_Controller{
     function add()
     {
         $data['head_title'] = 'Archivos';
-        $data['view_a'] = $this->views_folder . 'add_v';
+        $data['view_a'] = $this->views_folder . 'add_collection_v';
         $data['nav_2'] = $this->views_folder . 'explore/menu_v';
         $data['head_subtitle'] = 'Cargar';
         $this->App_model->view(TPL_ADMIN_NEW, $data);

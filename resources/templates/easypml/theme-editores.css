@@ -6,15 +6,15 @@
 
 
 :root{
-    --color-main-app: #68ad22;
-    --color-dark: #488214;
+    --color-main-app: #7ac42a;
+    --color-dark: #5a921e;
     --color-bg: #f2f7f8;
-    --color-secondary: #452a3c;
+    --color-secondary: #9c27b0;
 
-    --color-nav-bg: #FFF;
-    --color-nav-font: #C53C99;
-    --color-nav-active: #EEE2EA;
-    --color-nav-font-active: #A3327F;
+    --color-nav-bg: #7ac42a;
+    --color-nav-font: #FFF;
+    --color-nav-active: #298e2a;
+    --color-nav-font-active: #FFF;
 
     --font-main: 'Rubik', sans-serif;
 

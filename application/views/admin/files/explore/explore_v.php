@@ -11,7 +11,7 @@
                         v-on:click="toggleFilters"
                         v-bind:class="{'btn-secondary': showFilters, 'btn-light': !showFilters }"
                         >
-                        <i class="fa-solid fa-sliders"></i>
+                        <i class="fas fa-chevron-down"></i>
                     </button>
                 </div>
             </div>

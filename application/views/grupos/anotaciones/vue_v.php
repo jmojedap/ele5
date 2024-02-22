@@ -14,6 +14,7 @@ var anotaciones_app = new Vue({
         this.get_list();
     },
     data: {
+        loading: true,
         grupo_id: <?= $row->id ?>,
         flipbook_id: '<?= $flipbook_id ?>',
         user_flipbooks: <?= json_encode($user_flipbooks) ?>,
@@ -29,13 +30,12 @@ var anotaciones_app = new Vue({
             console.log('actualizando');
             axios.get(url_api + 'flipbooks/get_anotaciones_grupo/' + this.flipbook_id + '/' + this.grupo_id + '/' + this.tema_id)
             .then(response => {
+                this.loading = false
                 history.pushState(null, null, url_api + 'grupos/anotaciones/' + this.grupo_id + '/' + this.flipbook_id + '/' + this.tema_id);
                 this.anotaciones = response.data.list;
                 this.avg_calificacion = response.data.avg_calificacion;
             })
-            .catch(function (error) {
-                console.log(error);
-            });
+            .catch(function (error) { console.log(error) })
         },
         update_flipbook: function(){
             axios.get(url_api + 'flipbooks/get_temas/' + this.flipbook_id)

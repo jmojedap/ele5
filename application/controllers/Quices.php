@@ -72,7 +72,6 @@ class Quices extends CI_Controller{
      */
     function exportar()
     {
-        
         //Cargando
             $this->load->model('Busqueda_model');
             $this->load->model('Pcrn_excel');
@@ -92,7 +91,6 @@ class Quices extends CI_Controller{
         $data['nombre_archivo'] = date('Ymd_His'). '_quices'; //save our workbook as this file name
         
         $this->load->view('comunes/descargar_phpexcel_v', $data);
-            
     }
     
     function reciente()
@@ -122,13 +120,24 @@ class Quices extends CI_Controller{
 // CRUD
 //-----------------------------------------------------------------------------
 
+    /**
+     * Formulario de edición de los quices
+     * 2023-11-23
+     */
     function editar($quiz_id)
     {
         $data = $this->Quiz_model->basico($quiz_id);
 
         $data['options_tipo_quiz_id'] = $this->Item_model->options('categoria_id = 9', 'Todos los tipos');
+
+        $view_a = 'quices/editar_v';
+        if ( $data['row']->tipo_quiz_id == 202  ) {
+            $view_a = 'quices/editar/editar_202_v';
+        } else if ( $data['row']->tipo_quiz_id == 203 ) {
+            $view_a = 'quices/editar/editar_203_v';
+        }
         
-        $data['view_a'] = 'quices/editar_v';
+        $data['view_a'] = $view_a;
         $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
@@ -184,7 +193,7 @@ class Quices extends CI_Controller{
      * REDIRECT
      * 2017-05-09, para evitar error en links
      * 
-     * @param type $quiz_id
+     * @param int $quiz_id
      */
     function ver($quiz_id)
     {
@@ -195,7 +204,7 @@ class Quices extends CI_Controller{
      * Inicia el proceso de respuesta de un quiz, por parte de un usuario,
      * Crea los registros para guardar la información del proceso de respuesta
      * 
-     * @param type $quiz_id
+     * @param int $quiz_id
      */
     function iniciar($quiz_id = NULL)
     {
@@ -220,6 +229,10 @@ class Quices extends CI_Controller{
         
     }
     
+    /**
+     * Vista para ejecutar y responder el quiz
+     * 2023-11-20
+     */
     function resolver($quiz_id)
     {   
         //Registrar en evento
@@ -247,6 +260,17 @@ class Quices extends CI_Controller{
         }
 
         $this->load->view($view_ptl, $data);
+    }
+
+    /**
+     * Vista para resolver quices de práctica lectora
+     * 2023-12-06
+     */
+    function practica_lectora($tipo = 202)
+    {
+        $data['head_title'] = 'Práctica lectora';
+        $data['view_a'] = "quices/resolver_v3/{$tipo}/resolver_v";
+        $this->load->view('templates/evidencias3/main', $data);
     }
     
     function eliminar($quiz_id, $tema_id = NULL)

@@ -1,25 +1,24 @@
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Signika+Negative:wght@400;700&display=swap');
 
     body {
-        background-color: #04bdbf;
+        background: rgb(190,231,253);
+        background: linear-gradient(90deg, rgba(190,231,253,1) 0%, rgba(144,213,249,1) 100%);
         padding-top: 1em;
         padding-bottom: 2em;
     }
-
     
-
     .articulo-container {
         margin: 0px auto;
         max-width: 770px;
     }
 
     .articulo-tema{
-        font-family: 'Roboto Slab', serif;
+        font-family: 'Signika Negative', serif;
         padding: 3em 4em;
-        background-color: white;
+        background-color: #FFFFFC;
         border-radius: 0.3em;
-        font-size: 16px;
+        font-size: 18px;
         color: #222;
         -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.20);
         -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.20);
@@ -36,16 +35,17 @@
 
     .articulo-tema h1.articulo-titulo{
         font-weight: bold;
-        font-family: 'Roboto Slab', serif;
+        font-family: 'Signika Negative', serif;
         /*color: #444;*/
         color: #2b4193;
     }
 
     .articulo-tema .subtitulo{
+        text-align: left;
         color: #555;
         font-weight: bold;
         font-size: 1.7em;
-        color: #dd900c;
+        color: #c53c99;
     }
 
     .articulo-tema .epigrafe{
@@ -55,7 +55,7 @@
     }
 
     .articulo-tema h2,h3,h4,h5{
-        font-family: 'Roboto Slab', serif;
+        font-family: 'Signika Negative', serif;
     }
 
     .articulo-tema h2 {
@@ -97,20 +97,11 @@
                 <a href="<?= URL_ADMIN . "temas/articulos/{$row->referente_1_id}" ?>" class="btn btn-light btn-sm w100p" title="Ir al tema al que pertenece el artículo">Tema</a>
             </div>
         <?php endif; ?>
-        <div class="d-flex mb-2 gx-2">
-            <button class="btn btn-light">
-                <i class="fa fa-chevron-right"></i>
-            </button>
-            <input type="range" class="form-range px-2" min="1" max="50" v-model="numPage">
-            <button class="btn btn-light">
-                <i class="fa fa-chevron-right"></i>
-            </button>
-        </div>
         <div class="articulo-tema">
             <p class="text-center text-muted">{{ numPage }}</p>
-            <h1 class="articulo-titulo"><i class="fa fa-chevron-right"></i> {{ articulo.nombre_post }}</h1>
+            <h1 class="articulo-titulo"> {{ articulo.nombre_post }}</h1>
             <p class="subtitulo">{{ articulo.subtitle }}</p>
-            <p class="epigrafe">{{ articulo.resumen }}</p>
+            <p class="epigrafe" v-show="articulo.resumen.length > 1">{{ articulo.resumen }}</p>
             <div class="contenido" v-html="articulo.contenido"></div>
         </div>
     </div>    

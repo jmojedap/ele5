@@ -15,6 +15,13 @@
                     cf: 'admin/temas/explore',
                     sections: []
                 },
+                {
+                        text: 'Evidencias',
+                        active: false,
+                        icon: 'fa fa-question',
+                        cf: 'quices/explorar',
+                        sections: []
+                    },
             ],
             sections: []
         },

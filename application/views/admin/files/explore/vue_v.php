@@ -23,6 +23,7 @@ var appExplore = new Vue({
         showFilters: false,
         loading: false,
         activeFilters: false,
+        arrFileCollections: <?= json_encode($arrFileCollections) ?>,
     },
     methods: {
         getList: function(e, numPage = 1){
@@ -89,6 +90,12 @@ var appExplore = new Vue({
         },
         calculateShowFilters: function(){
             if ( this.strFilters.length > 0 ) this.showFilters = true
+        },
+        fileCollectionName: function(value = '', field = 'name'){
+            var fileCollectionName = ''
+            var item = this.arrFileCollections.find(row => row.cod == value)
+            if ( item != undefined ) fileCollectionName = item[field]
+            return fileCollectionName
         },
     }
 })

@@ -262,6 +262,7 @@ class Quiz_Model extends CI_Model{
             112 => 180,   //L2
             113 => 180,   //M2
             202 => 180,   //PL3
+            203 => 0,   //PL2
         );
         
         return $posts[$tipo_id];
@@ -902,5 +903,42 @@ class Quiz_Model extends CI_Model{
         $elements = $this->db->get('quiz_elemento');
 
         return $elements;
+    }
+
+// Versiones V3
+//-----------------------------------------------------------------------------
+
+    /**
+     * Array con quices aleatorios 3G filtrados con ciertos criterios
+     * 2023-11-22
+     * @param array $filters | Array con filtros o especificaciones para
+     * seleccionar quices.
+     * @return $arrQuices array con quices 3G, aleatorios
+     * 
+     */
+    function get_random_quices($filters)
+    {
+        //$this->db->select('campos');
+        if ( strlen($filters['tp']) > 0 ) $this->db->where('tipo_quiz_id', $filters['tp']);
+        $this->db->order_by('id', 'RANDOM');
+        $quices = $this->db->get('quiz');
+
+        $arrQuices = [];
+        $num_rows = ( isset($filters['num_rows']) ) ? $filters['num_rows'] : 5 ;
+        $i = 0;
+        foreach ($quices->result() as $quiz) {
+            $quiz->respuesta = '';
+            $quiz->respondido = 0;
+            $quiz->comprobado = 0;
+            $quiz->resultado = 0;
+            $arrQuices[] = $quiz;
+
+            $i++;
+            if ( $i >= $num_rows ) break;
+        }
+
+
+
+        return $arrQuices;
     }
 }

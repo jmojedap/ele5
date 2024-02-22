@@ -37,6 +37,19 @@ class Flipbooks extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output($data_str);
     }
 
+// CRUD
+//-----------------------------------------------------------------------------
+
+    /**
+     * Guardar datos registro en la tabla flipbook
+     * 2024-02-22
+     */
+    function save()
+    {
+        $data = $this->Flipbook_model->save();
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
 // Artículos de temas
 //-----------------------------------------------------------------------------
 

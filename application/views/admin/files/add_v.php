@@ -33,9 +33,7 @@
                     //Limpiar formulario
                     $('#field-file').val(''); 
                 })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                .catch(function (error) { console.log(error) })
             },
             handleFileUpload(){
                 this.file = this.$refs.file_field.files[0];

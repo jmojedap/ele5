@@ -23,8 +23,7 @@ class Quices extends CI_Controller{
      * tabla: item.categoria_id = 16
      */
     function guardar_resultado()
-    {
-        
+    {   
         $usuarioAsignacionId = $this->Quiz_model->guardar_resultado();
         
         $this->load->model('Evento_model');
@@ -64,6 +63,24 @@ class Quices extends CI_Controller{
         $elementos = $this->Quiz_model->elementos($quiz_id);
         $data['list'] = $elementos->result();
 
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+// DEVOLVER RESULTADOS
+//-----------------------------------------------------------------------------
+
+    /**
+     * AJAX JSON
+     * Devuelve un listado aleatorio de quices para cargar dinámicamente en una
+     * vista y resolverlos.
+     * 2023-11-28
+     */
+    function get_random_quices()
+    {
+        $this->load->model('Search_model');
+        $filters = $this->Search_model->filters();
+        $quices = $this->Quiz_model->get_random_quices($filters);
+        $data['quices'] = $quices;
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 }

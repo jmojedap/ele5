@@ -9,6 +9,13 @@
             v-model="filters.u"
             >
         </div>
+        <div>
+            <label for="fe3">Colección</label>
+            <select name="fe3" v-model="filters.fe3" class="form-select form-control">
+                <option value="">[ Todos ]</option>
+                <option v-for="optionFileCollection in arrFileCollections" v-bind:value="optionFileCollection.cod">{{ optionFileCollection.name }}</option>
+            </select>
+        </div>
         
         <!-- Botón ejecutar y limpiar filtros -->
         <div>

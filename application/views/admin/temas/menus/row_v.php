@@ -41,7 +41,7 @@ var sections = [
         id: 'temas_quices',
         text: 'Evidencias',
         cf: 'temas/quices/' + nav2RowId,
-        roles: [0,1,2],
+        roles: [0,1,2,9],
         anchor: true
     },
     {

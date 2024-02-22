@@ -110,7 +110,7 @@
 
 
 <div id="ledin">
-    <div>
+    <div class="center_box_750">
         <?php if ( ! is_null($ledin) ) { ?>
             <?php
                 $elementos = json_decode($ledin->contenido_json);

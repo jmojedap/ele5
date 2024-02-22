@@ -441,14 +441,14 @@ class Programa_Model extends CI_Model{
     
     /**
      * Páginas flipbook asociadas al programa a través del tema_id
+     * 2023-12-29
      * 
      * @param int $programa_id
      * @return object $paginas
      */
     function paginas($programa_id)
     {
-        
-        $this->db->select('pagina_flipbook.id');
+        $this->db->select('pagina_flipbook.id, pagina_flipbook.tema_id');
         $this->db->where('programa_id', $programa_id);
         $this->db->where('pagina_origen_id IS NULL');   //Sólo páginas originales
         $this->db->join('programa_tema', 'programa_tema.tema_id = pagina_flipbook.tema_id');
@@ -910,18 +910,18 @@ class Programa_Model extends CI_Model{
 
     /**
      * Asignación masiva de temas a programas con archivo excel
-     * 2023-08-07
+     * 2023-10-23
      */
     function asignar_temas_multi($arr_sheet)
     {
-        $data = array('qty_imported' => 0, 'results' => []);
+        $data = ['qty_imported' => 0, 'results' => []];
         
         foreach ( $arr_sheet as $key => $row_data )
         {
             //Contruir registro
                 $aRow['programa_id'] = $this->Pcrn->existe('programa', "id = '{$row_data[0]}'");
                 $aRow['tema_id'] = $this->Pcrn->existe('tema', "cod_tema = '{$row_data[1]}'");
-                $aRow['orden'] = 0;  //El orden se calcula al guardar (enumeración)
+                $aRow['orden'] = $row_data[3];  //El orden se recalcula al guardar (enumeración)
                 $aRow['unidad'] = intval($row_data[2]);
 
             //Validar

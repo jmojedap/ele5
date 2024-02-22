@@ -83,7 +83,7 @@
         $arr_menus['editar'] = array(
             'icono' => '<i class="fa fa-pencil-alt"></i>',
             'texto' => 'Editar',
-            'link' => "flipbooks/editar/edit/{$row->id}",
+            'link' => "flipbooks/editar/{$row->id}",
             'atributos' => '',
         );
         

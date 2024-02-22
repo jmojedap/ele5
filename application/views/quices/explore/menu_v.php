@@ -27,6 +27,7 @@
     sections_rol.edtr = ['explorar'];
     sections_rol.comr = ['explorar'];
     sections_rol.digt = ['explorar'];
+    sections_rol.dig2 = ['explorar'];
     
     //Recorrer el sections del rol actual y cargarlos en el menú
     for ( key_section in sections_rol[app_r]) 

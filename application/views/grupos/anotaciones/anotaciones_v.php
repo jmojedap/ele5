@@ -6,6 +6,11 @@
 
 <div id="anotaciones_app">
     <div class="container">
+        <div class="text-center" v-show="loading">
+            <div class="spinner-border text-secondary" role="status">
+            <span class="sr-only">Loading...</span>
+            </div>
+        </div>
         <div class="mb-2">
             <a v-bind:href="link_export" class="btn btn-success w100p">
                 <i class="fa fa-file-excel"></i>

@@ -94,8 +94,7 @@ class Posts extends CI_Controller{
         //$row_meta = $this->Db_model->row_id('users_meta', $meta_id); //Registro de asignación
         $destination = "admin/posts/read/{$post_id}";
 
-        if ( $row->type_id == 110 ) $destination = "app/contenidos/leer/{$row->id}/{$row->slug}";
-        if ( $row->type_id == 26 ) $destination = "app/contenidos/leer/{$row->id}/{$row->slug}";
+        if ( $row->tipo_id == 127 ) $destination = "enfoque_lector/panel/{$row->id}/{$row->slug}";
         
         redirect($destination);
     }

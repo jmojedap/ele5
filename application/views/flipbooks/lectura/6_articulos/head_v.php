@@ -30,6 +30,7 @@
 
     <!-- PML Tools -->
     <link type="text/css" rel="stylesheet" href="<?= URL_RESOURCES . 'css/style_pml.css' ?>">
+    <link type="text/css" rel="stylesheet" href="<?= URL_RESOURCES . 'css/ele_20200910.css' ?>">
     <script src="<?= URL_RESOURCES . 'js/pcrn_en.js' ?>"></script>
     <script>
         <?php if ( $this->uri->segment(1) == 'admin' ) : ?>
