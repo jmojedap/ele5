@@ -15,7 +15,8 @@
 		"phpoffice/phpspreadsheet": "^1.18",
 		"mpdf/mpdf": "^8.0.13",
 		"smalot/pdfparser": "*",
-		"endroid/qr-code": "^2.5"
+		"endroid/qr-code": "^2.5",
+		"erusev/parsedown": "^1.7"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

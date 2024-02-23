@@ -69,7 +69,7 @@ var procesos_app = new Vue({
             this.loading = true
             this.reiniciar_resultado()
             this.resultado.mensaje = 'Ejecutando'
-            var url_proceso = url_app + this.curr_proceso.link_proceso
+            var url_proceso = '<?= base_url() ?>' + this.curr_proceso.link_proceso
             console.log(url_proceso)
             axios.get(url_proceso)
             .then(response => {

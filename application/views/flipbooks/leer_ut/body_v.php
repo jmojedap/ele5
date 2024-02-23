@@ -105,7 +105,7 @@
                             title="Link complementario sobre este tema"
                             target="_blank"
                             v-for="link in data.links"
-                            v-bind:href="`<?= base_url('temas/open_link/') ?>` + pagina.tema_id + `/` + link.id + `/` + area_id + `/` + nivel + `/?url_link=` + link.url + `&flipbook_id=` + flipbook_id"
+                            v-bind:href="`<?= base_url('admin/temas/open_link/') ?>` + pagina.tema_id + `/` + link.id + `/` + area_id + `/` + nivel + `/?url_link=` + link.url + `&flipbook_id=` + flipbook_id"
                             v-show='num_pagina == link.num_pagina'
                             >
                             <img src="<?= URL_IMG ?>flipbook/link_v5.png" alt="Imagen acceso a evidencia de aprendizaje">
@@ -165,7 +165,7 @@
                                         class="dropdown-item"
                                         v-for="tema in data.relacionados[1]"
                                         v-show='num_pagina == tema.num_pagina'
-                                        v-bind:href="'<?php echo base_url('temas/leer/') ?>' + tema.relacionado_id"
+                                        v-bind:href="'<?php echo base_url('admin/temas/leer/') ?>' + tema.relacionado_id"
                                         target="_blank">
                                         {{ tema.nombre_tema_relacionado }}
                                     </a>
@@ -176,7 +176,7 @@
                                         class="dropdown-item"
                                         v-for="tema in data.relacionados[2]"
                                         v-show='num_pagina == tema.num_pagina'
-                                        v-bind:href="'<?php echo base_url('temas/leer/') ?>' + tema.relacionado_id"
+                                        v-bind:href="'<?php echo base_url('admin/temas/leer/') ?>' + tema.relacionado_id"
                                         target="_blank">
                                         {{ tema.nombre_tema_relacionado }}
                                     </a>
@@ -187,7 +187,7 @@
                                         class="dropdown-item"
                                         v-for="tema in data.relacionados[3]"
                                         v-show='num_pagina == tema.num_pagina'
-                                        v-bind:href="'<?php echo base_url('temas/leer/') ?>' + tema.relacionado_id"
+                                        v-bind:href="'<?php echo base_url('admin/temas/leer/') ?>' + tema.relacionado_id"
                                         target="_blank">
                                         {{ tema.nombre_tema_relacionado }}
                                     </a>

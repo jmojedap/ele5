@@ -177,7 +177,7 @@
                 <?php
                     //Variables
                         $nombre_elemento = "{$row_resultado->nombre_tema}";
-                        $link_elemento = anchor("temas/links/$row_resultado->tema_id", $nombre_elemento);
+                        $link_elemento = anchor("admin/temas/links/$row_resultado->tema_id", $nombre_elemento);
 
                     //Checkbox
                         $att_check['data-id'] = $row_resultado->id;
@@ -223,7 +223,7 @@
                     </td>
 
                     <td class="<?= $clases_col['botones'] ?>">
-                        <?= anchor("temas/links/{$row_resultado->tema_id}/edit/{$row_resultado->id}", '<i class="fa fa-pencil"></i>', 'class="a4" title=""') ?>
+                        <?= anchor("admin/temas/links/{$row_resultado->tema_id}/edit/{$row_resultado->id}", '<i class="fa fa-pencil"></i>', 'class="a4" title=""') ?>
                     </td>
                 </tr>
 

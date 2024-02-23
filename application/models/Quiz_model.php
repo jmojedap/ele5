@@ -259,8 +259,10 @@ class Quiz_Model extends CI_Model{
             10 => 129,  //J
             12 => 132,  //L
             13 => 180,   //M
-            112 => 180,   //M2
+            112 => 180,   //L2
             113 => 180,   //M2
+            202 => 180,   //PL3
+            203 => 0,   //PL2
         );
         
         return $posts[$tipo_id];
@@ -545,7 +547,7 @@ class Quiz_Model extends CI_Model{
     
     /**
      * Actualiza el campo quiz.clave, según los elementos que tenga un quiz
-     * @param type $quiz_id
+     * @param int $quiz_id
      */
     function actualizar_clave($quiz_id)
     {
@@ -613,6 +615,37 @@ class Quiz_Model extends CI_Model{
     function guardar_resultado()
     {
         //Valor por defecto
+        $usuarioAsignacionId = 0;
+        
+        //Si es una página existente
+        if ( $this->input->post('quiz_id') > 0 )
+        {
+            //Construir el registro que se va a insertar
+            $aRow = array(
+                'usuario_id' => $this->input->post('usuario_id'),
+                'referente_id' => $this->input->post('quiz_id'),
+                'estado_int' => $this->input->post('resultado'),
+                'tipo_asignacion_id' => 3,  
+                'editado' => date('Y-m-d H:i:s'),
+                'editado_usuario_id' => $this->input->post('usuario_id')
+            );
+
+            $condicion = "usuario_id = {$aRow['usuario_id']} AND referente_id = {$aRow['referente_id']} AND tipo_asignacion_id = {$aRow['tipo_asignacion_id']}";
+
+            $usuarioAsignacionId = $this->Db_model->save('usuario_asignacion', $condicion, $aRow);
+        }
+
+        //Respuesta
+        return $usuarioAsignacionId;
+    }
+
+    /**
+     * El tipo detalle 'Quiz' corresponde al tipo_asignacion_id = 3,
+     * tabla: item.categoria_id = 16
+     */
+    function guardar_resultado_anterior()
+    {
+        //Valor por defecto
         $ua_id = 0;
         
         //Si es una página existente
@@ -661,6 +694,7 @@ class Quiz_Model extends CI_Model{
     {   
         $arr_detalle = json_decode($row->detalle);
         
+        $elemento['id'] = $row->id;
         $elemento['id_alfanumerico'] = $row->id_alfanumerico;
         $elemento['orden'] = $row->orden;
         $elemento['texto'] = $row->texto;
@@ -869,5 +903,42 @@ class Quiz_Model extends CI_Model{
         $elements = $this->db->get('quiz_elemento');
 
         return $elements;
+    }
+
+// Versiones V3
+//-----------------------------------------------------------------------------
+
+    /**
+     * Array con quices aleatorios 3G filtrados con ciertos criterios
+     * 2023-11-22
+     * @param array $filters | Array con filtros o especificaciones para
+     * seleccionar quices.
+     * @return $arrQuices array con quices 3G, aleatorios
+     * 
+     */
+    function get_random_quices($filters)
+    {
+        //$this->db->select('campos');
+        if ( strlen($filters['tp']) > 0 ) $this->db->where('tipo_quiz_id', $filters['tp']);
+        $this->db->order_by('id', 'RANDOM');
+        $quices = $this->db->get('quiz');
+
+        $arrQuices = [];
+        $num_rows = ( isset($filters['num_rows']) ) ? $filters['num_rows'] : 5 ;
+        $i = 0;
+        foreach ($quices->result() as $quiz) {
+            $quiz->respuesta = '';
+            $quiz->respondido = 0;
+            $quiz->comprobado = 0;
+            $quiz->resultado = 0;
+            $arrQuices[] = $quiz;
+
+            $i++;
+            if ( $i >= $num_rows ) break;
+        }
+
+
+
+        return $arrQuices;
     }
 }

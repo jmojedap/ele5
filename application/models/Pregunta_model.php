@@ -6,10 +6,10 @@ class Pregunta_model extends CI_Model{
      * que serán utilizadas por varias funciones del controlador,
      * son variables básicas sobre un pregunta
      *
-     * @param type $pregunta_id
-     * @return string
+     * @param int $pregunta_id
+     * @return array $basico
      */
-    function basico($pregunta_id)
+    function basic($pregunta_id)
     {
         $row = $this->Pcrn->registro_id('pregunta', $pregunta_id);
 
@@ -591,7 +591,7 @@ class Pregunta_model extends CI_Model{
             $crud->field_type('respuesta_correcta', 'dropdown', $opciones_rta);
 
         //Preparación de campos
-            $crud->set_field_upload('archivo_imagen', RUTA_UPLOADS . 'preguntas');
+            $crud->set_field_upload('archivo_imagen', PATH_UPLOADS . 'preguntas');
 
         //Reglas de validación
             $crud->required_fields('texto_pregunta', 'respuesta_correcta', 'area_id');
@@ -637,7 +637,7 @@ class Pregunta_model extends CI_Model{
             if ( $registro['area_id'] > 0 ) { $crud->field_type('area_id', 'hidden', $registro['area_id']); }
             
         //Redirigir después de crear la pregunta
-            $destino = "temas/preguntas/{$tema_id}";
+            $destino = "admin/temas/preguntas/{$tema_id}";
             $crud->set_lang_string('insert_success_message',
                                     'Su pregunta ha sido creada<br/>Por favor espere mientras se redirige al tema.
                                     <script type="text/javascript">

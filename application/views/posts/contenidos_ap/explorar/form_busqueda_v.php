@@ -7,7 +7,7 @@
         }
 ?>
 
-<form action="<?= base_url("app/buscar/{$controlador}/ap_explorar") ?>">
+<form action="<?= base_url("app/buscar/{$controlador}/explorar") ?>">
     <?= form_hidden('f1', $filters['f1']) ?>
     <div class="form-group row">
         <div class="col-sm-4">

@@ -1,7 +1,7 @@
 <?php
 class Tema_Model extends CI_Model{
     
-    function basico($tema_id)
+    function basic($tema_id)
     {
         
         //preguntas
@@ -17,7 +17,7 @@ class Tema_Model extends CI_Model{
             $this->db->where('tema_id', $tema_id);
             $pf = $this->db->get('pagina_flipbook');
         
-        $row_tema = $this->Pcrn->registro_id('tema', $tema_id);
+        $row_tema = $this->Db_model->row_id('tema', $tema_id);
         
         //Datos adicionales
         $row_tema->cant_preguntas = $preguntas->num_rows();
@@ -30,127 +30,201 @@ class Tema_Model extends CI_Model{
         
         $basico['tema_id'] = $tema_id;
         $basico['row'] = $row_tema;
-        $basico['head_title'] = $row_tema->nombre_tema;
-        $basico['view_description'] = 'temas/tema_v';
-        $basico['nav_2'] = 'temas/menu_v';
+        $basico['head_title'] = 'Tema: ' . $row_tema->nombre_tema;
+        $basico['view_description'] = 'admin/temas/tema_v';
+        $basico['nav_2'] = 'admin/temas/menus/row_v';
         
         return $basico;
     }
 
-// Exploraración
+// EXPLORE FUNCTIONS - temas/explore
 //-----------------------------------------------------------------------------
     
     /**
      * Array con los datos para la vista de exploración
-     * 2019-08-05
-     * 
-     * @return string
      */
-    function data_explorar($num_pagina)
+    function explore_data($filters, $num_page, $per_page = 10)
     {
         //Data inicial, de la tabla
-            $data = $this->data_tabla_explorar($num_pagina);
+            $data = $this->get($filters, $num_page, $per_page);
         
         //Elemento de exploración
-            $data['carpeta_vistas'] = 'temas/explorar/';         //Carpeta donde están las vistas de exploración
-            $data['head_title'] = 'Temas';
-            $data['el_plural'] = 'temas';
-            $data['el_singular'] = 'tema';
-                
-        //Otros
-            $data['arr_filtros'] = array('a', 'n', 'tp');
+            $data['controller'] = 'temas';                       //Nombre del controlador
+            $data['cf'] = 'temas/explore/';                      //Nombre del controlador
+            $data['views_folder'] = 'admin/temas/explore/';      //Carpeta donde están las vistas de exploración
+            $data['numPage'] = $num_page;                       //Número de la página
             
         //Vistas
-            $data['head_subtitle'] = $data['cant_resultados'];
-            $data['view_a'] = $data['carpeta_vistas'] . 'explorar_v';
-            $data['nav_2'] = $data['carpeta_vistas'] . 'menu_v';
+            $data['head_title'] = 'Temas';
+            $data['view_a'] = $data['views_folder'] . 'explore_v';
+            $data['nav_2'] = 'admin/temas/menus/explore_v';
         
         return $data;
+    }
+
+    function get($filters, $num_page, $per_page = 10)
+    {
+        //Load
+            $this->load->model('Search_model');
+
+        //Búsqueda y Resultados
+            $data['filters'] = $filters;
+            $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
+            $elements = $this->search($filters, $per_page, $offset);    //Resultados para página
+        
+        //Cargar datos
+            $data['list'] = $elements->result();
+            $data['strFilters'] = $this->Search_model->str_filters($filters, TRUE);
+            $data['qtyResults'] = $this->qty_results($filters);
+            $data['maxPage'] = ceil($this->pml->if_zero($data['qtyResults'],1) / $per_page);   //Cantidad de páginas
+
+        return $data;
+    }
+
+    /**
+     * Segmento Select SQL, con diferentes formatos, consulta de temas
+     * 2022-08-23
+     */
+    function select($format = 'general')
+    {
+        $arr_select['general'] = '*';
+        $arr_select['export'] = '*';
+
+        return $arr_select[$format];
     }
     
     /**
-     * Array con los datos para la tabla de la vista de exploración
-     * 
-     * @param type $num_pagina
-     * @return string
+     * Query con resultados de temas filtrados, por página y offset
+     * 2020-07-15
      */
-    function data_tabla_explorar($num_pagina)
+    function search($filters, $per_page = NULL, $offset = NULL)
     {
-        //Elemento de exploración
-            $data['controlador'] = 'temas';         //Nombre del controlador
-            $data['cf'] = 'temas/explorar/';        //CF Controlador Función
+        //Segmento SELECT
+            $select_format = 'general';
+            if ( $filters['sf'] != '' ) { $select_format = $filters['sf']; }
+            $this->db->select($this->select($select_format));
         
-        //Paginación
-            $data['num_pagina'] = $num_pagina;                  //Número de la página de datos que se está consultado
-            $data['per_page'] = 15;                             //Cantidad de registros por página
-            $offset = ($num_pagina - 1) * $data['per_page'];    //Número de la página de datos que se está consultado
-        
-        //Búsqueda y Resultados
-            $this->load->model('Busqueda_model');
-            $data['busqueda'] = $this->Busqueda_model->busqueda_array();
-            $data['busqueda_str'] = $this->Busqueda_model->busqueda_str();
-            $data['resultados'] = $this->buscar($data['busqueda'], $data['per_page'], $offset);    //Resultados para página
-            
-        //Otros
-            $data['cant_resultados'] = $this->cant_resultados($data['busqueda']);
-            $data['max_pagina'] = ceil($this->Pcrn->si_cero($data['cant_resultados'],1) / $data['per_page']);   //Cantidad de páginas
-            $data['seleccionados_todos'] = '-'. $this->Pcrn->query_to_str($data['resultados'], 'id');           //Para selección masiva de todos los elementos de la página
-            
-        return $data;
-    }
-
-
-    function buscar($busqueda, $per_page = NULL, $offset = NULL)
-    {
-        
-        $filtro_rol = $this->filtro_rol();
-
-        //Construir búsqueda
-        //Crear array con términos de búsqueda
-            if ( strlen($busqueda['q']) > 2 )
+        //Orden
+            if ( $filters['o'] != '' )
             {
-                $palabras = $this->Busqueda_model->palabras($busqueda['q']);
-
-                foreach ($palabras as $palabra_busqueda)
-                {
-                    $concat_campos = $this->Busqueda_model->concat_campos(array('cod_tema', 'nombre_tema', 'titulo_tema'));
-                    $this->db->like("CONCAT({$concat_campos})", $palabra_busqueda);
-                }
+                $order_type = $this->pml->if_strlen($filters['ot'], 'ASC');
+                $this->db->order_by($filters['o'], $order_type);
+            } else {
+                $this->db->order_by('editado', 'DESC');
             }
-        
-        //Especificaciones de consulta
-            $this->db->where($filtro_rol); //Filtro según el rol de usuario que se tenga
-            $this->db->order_by('editado', 'DESC');
             
-        //Otros filtros
-            if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
-            if ( $busqueda['n'] != '' ) { $this->db->where('nivel', $busqueda['n']); }      //Nivel
-            if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_id', $busqueda['tp']); }  //Tipo tema
+        //Filtros
+            $search_condition = $this->search_condition($filters);
+            if ( $search_condition ) { $this->db->where($search_condition);}
             
         //Obtener resultados
-        if ( is_null($per_page) ){
-            $query = $this->db->get('tema'); //Resultados totales
-        } else {
             $query = $this->db->get('tema', $per_page, $offset); //Resultados por página
-        }
         
         return $query;
         
     }
 
     /**
+     * String con condición WHERE SQL para filtrar post
+     * 2022-05-02
+     */
+    function search_condition($filters)
+    {
+        $condition = NULL;
+
+        $condition .= $this->role_filter() . ' AND ';
+
+        //q words condition
+        $search_fields = ['cod_tema', 'nombre_tema', 'titulo_tema', 'descripcion'];
+        $words_condition = $this->Search_model->words_condition($filters['q'], $search_fields);
+        if ( $words_condition )
+        {
+            $condition .= $words_condition . ' AND ';
+        }
+        
+        //Otros filtros
+        if ( $filters['tp'] != '' ) { $condition .= "tipo_id = {$filters['tp']} AND "; }
+        if ( $filters['n'] != '' ) { $condition .= "nivel = ({$filters['n']}) AND "; }
+        if ( $filters['a'] != '' ) { $condition .= "area_id = {$filters['a']} AND "; }
+        
+        //Quitar cadena final de ' AND '
+        if ( strlen($condition) > 0 ) { $condition = substr($condition, 0, -5);}
+        
+        return $condition;
+    }
+    
+    /**
      * Devuelve la cantidad de registros encontrados en la tabla con los filtros
      * establecidos en la búsqueda
-     * 
-     * @param type $busqueda
-     * @return type
      */
-    function cant_resultados($busqueda)
+    function qty_results($filters)
     {
-        $resultados = $this->buscar($busqueda); //Para calcular el total de resultados
-        return $resultados->num_rows();
+        $this->db->select('id');
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+        $query = $this->db->get('tema'); //Para calcular el total de resultados
+
+        return $query->num_rows();
     }
 
+    /**
+     * Query para exportar
+     * 2022-08-17
+     */
+    function query_export($filters)
+    {
+        //Select
+        $select = $this->select('export');
+        if ( $filters['sf'] != '' ) { $select = $this->select($filters['sf']); }
+        $this->db->select($select);
+
+        //Condición Where
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+
+        //Get
+        $query = $this->db->get('tema', 10000);  //Hasta 10.000 registros
+
+        return $query;
+    }
+    
+    /**
+     * Devuelve segmento SQL
+     */
+    function role_filter()
+    {
+        $role = $this->session->userdata('role');
+        $condition = 'id > 0';  //Valor por defecto, ningún post, se obtendrían cero temas.
+        
+        if ( $role <= 2 ) 
+        {   //Desarrollador, todos los post
+            $condition = 'id > 0';
+        } elseif ( $role == 3 ) {
+            $condition = 'type_id IN (311,312)';
+        }
+        
+        return $condition;
+    }
+    
+    /**
+     * Array con options para ordenar el listado de post en la vista de
+     * exploración
+     */
+    function order_options()
+    {
+        $order_options = array(
+            '' => '[ Ordenar por ]',
+            'id' => 'ID Post',
+            'post_name' => 'Nombre'
+        );
+        
+        return $order_options;
+    }
+
+// Exploraración
+//-----------------------------------------------------------------------------
+    
+    
     /**
      * Condición tipo WHERE SQL, para filtrar el resultado de las búsquedas
      * según el rol de usuario de sesión.
@@ -161,7 +235,7 @@ class Tema_Model extends CI_Model{
     function filtro_rol()
     {
         $usuario_id = $this->session->userdata('usuario_id');
-        $row_usuario = $this->Pcrn->registro_id('usuario', $usuario_id);
+        $row_usuario = $this->Db_model->row_id('usuario', $usuario_id);
 
         $condicion = 'id = 0';  //Valor por defecto, ningún usuario, se obtendrían cero temas.
         
@@ -201,25 +275,37 @@ class Tema_Model extends CI_Model{
 // GENERAL
 //-----------------------------------------------------------------------------
     
-    function eliminar($tema_id)
+    /**
+     * Eliminar un tema y registros de tablas asociadas
+     * 2023-06-16
+     */
+    function delete($tema_id)
     {
+        $qty_deleted = 0;
+
         //Tabla tema
             $this->db->where('id', $tema_id);
             $this->db->delete('tema');
-            
-        //Tablas relacionadas
-            $tablas = array('recurso', 'programa_tema', 'pagina_flipbook');
-            
-            foreach( $tablas as $tabla )
-            {
-                $this->db->where('tema_id', $tema_id);
-                $this->db->delete($tabla);
-            }
-            
-        //Tabla meta
-            $this->db->where('tabla_id', 4540); //Tabla tema
-            $this->db->where('elemento_id', $tema_id);
-            $this->db->delete('meta');
+
+        $qty_deleted = $this->db->affected_rows();  //De la última consulta, tabla principal
+
+        if ( $qty_deleted > 0 ) {
+            //Tablas relacionadas
+                $tablas = array('recurso', 'programa_tema', 'pagina_flipbook');
+                
+                foreach( $tablas as $tabla )
+                {
+                    $this->db->where('tema_id', $tema_id);
+                    $this->db->delete($tabla);
+                }
+                
+            //Tabla meta
+                $this->db->where('tabla_id', 4540); //Tabla tema
+                $this->db->where('elemento_id', $tema_id);
+                $this->db->delete('meta');
+        }
+        
+        return $qty_deleted;
     }
     
     function autocompletar($busqueda, $limit = 15)
@@ -238,8 +324,7 @@ class Tema_Model extends CI_Model{
             }
         
         //Especificaciones de consulta
-            $this->db->select('id, CONCAT((id), " | ", (nombre_tema)) AS name');
-            //$this->db->where($filtro_rol); //Filtro según el rol de usuario que se tenga
+            $this->db->select('id, CONCAT((id), " | ", (cod_tema) , " | ",(nombre_tema)) AS name');
             $this->db->order_by('nombre_tema', 'ASC');
             
         //Otros filtros
@@ -443,6 +528,20 @@ class Tema_Model extends CI_Model{
     
 // DATOS
 //---------------------------------------------------------------------------------------------------------
+
+    /**
+     * Query con programas en los que está incluido el tema
+     * 2023-07-02
+     */
+    function programas($tema_id)
+    {
+        //programas
+        $this->db->join('programa', 'programa_tema.programa_id = programa.id');
+        $this->db->where('tema_id', $tema_id);
+        $programas = $this->db->get('programa_tema');
+
+        return $programas;
+    }
     
     function paginas($tema_id)
     {
@@ -974,7 +1073,7 @@ class Tema_Model extends CI_Model{
     }
     
     
-// GESTIÓN DE PÁGINAS DE TEMAS
+// PÁGINAS DE TEMAS
 //-----------------------------------------------------------------------------
     
     
@@ -1016,7 +1115,7 @@ class Tema_Model extends CI_Model{
     function cambiar_pos_pag($tema_id, $pf_id, $pos_final)
     {
         //Fila de la página que se va a mover
-            $row_pagina = $this->Pcrn->registro_id('pagina_flipbook', $pf_id);
+            $row_pagina = $this->Db_model->row_id('pagina_flipbook', $pf_id);
             
         //Condición que selecciona el conjunto de registros a modificar
             $condicion_1 = "tema_id = {$tema_id} AND en_tema = 1";    
@@ -1070,10 +1169,11 @@ class Tema_Model extends CI_Model{
     function cambiar_pos_pregunta($tema_id, $pregunta_id, $pos_final)
     {
         //Definición de variables
+            $affectedRows = 0;
             $sql = '';
         
         //Fila de la pregunta que se va a mover
-            $row_pregunta = $this->Pcrn->registro_id('pregunta', $pregunta_id);
+            $row_pregunta = $this->Db_model->row_id('pregunta', $pregunta_id);
             
         //Condición que selecciona el conjunto de registros a modificar
             $condicion_1 = "tema_id = {$tema_id}";
@@ -1103,14 +1203,17 @@ class Tema_Model extends CI_Model{
                 $sql .= " AND {$condicion_2}";
 
                 $this->db->query($sql);
+                $affectedRows = $this->db->affected_rows();
         
             //Cambiar la posición a la pregunta específica
-                $registro['orden'] = $pos_final;
+                $aRow['orden'] = $pos_final;
                 $this->db->where('id', $pregunta_id);
-                $this->db->update('pregunta', $registro);
+                $this->db->update('pregunta', $aRow);
+
+                $affectedRows += $this->db->affected_rows();
         }
         
-        return $sql;
+        return $affectedRows;
         
     }
     
@@ -1136,17 +1239,25 @@ class Tema_Model extends CI_Model{
         }
     }
     
+    /**
+     * Quita el tema de una pregunta. pregunta.tema_id
+     * 2023-07-02
+     */
     function quitar_pregunta($tema_id, $pregunta_id)
     {
         //Editar registro
-            $registro['tema_id'] = NULL;
-            $registro['orden'] = 0;
+            $aRow['tema_id'] = NULL;
+            $aRow['orden'] = 0;
             
             $this->db->where('id', $pregunta_id);
-            $this->db->update('pregunta', $registro);
+            $this->db->update('pregunta', $aRow);
+
+        $qty_deleted = $this->db->affected_rows();
             
         //Reenumerar el tema
-            $this->numerar_preguntas($tema_id);
+        $this->numerar_preguntas($tema_id);
+
+        return $qty_deleted;
     }
     
     function actualizar_paginas_total($temas)
@@ -1276,7 +1387,7 @@ class Tema_Model extends CI_Model{
         return $data;
     }
 
-// GESTIÓN DE ARCHIVOS
+// ARCHIVOS
 //-----------------------------------------------------------------------------
 
     /**
@@ -1367,7 +1478,7 @@ class Tema_Model extends CI_Model{
 
     /**
      * Asignar pregunta abierta
-     * 2019-09-03
+     * 2023-07-02
      */
     function save_pa($tema_id, $pa_id)
     {
@@ -1375,15 +1486,23 @@ class Tema_Model extends CI_Model{
             $data = array('status' => 0, 'message' => 'La pregunta no fue guardada');
 
         //Construir registro
-            $arr_row['tipo_id'] = 121;  //Pregunta abierta
-            $arr_row['referente_1_id'] = $tema_id;  //Tema asociado
-            $arr_row['referente_2_id'] = $this->input->post('referente_2_id');
-            $arr_row['contenido'] = $this->input->post('contenido');
+            $this->load->helper('string');
+            $aRow['nombre_post'] = 'Pregunta abierta ' . random_string('alnum', 8);  //Pregunta abierta
+            $aRow['tipo_id'] = 121;  //Pregunta abierta
+            $aRow['referente_1_id'] = $tema_id;  //Tema asociado
+            $aRow['referente_2_id'] = $this->input->post('referente_2_id');
+            $aRow['contenido'] = $this->input->post('contenido');
+
+            if ( $pa_id > 0 ) $aRow['id'] = $pa_id;
+            $aRow['editor_id'] = $this->session->userdata('user_id');
+            $aRow['editado'] = date('Y-m-d H:i:s');
+            $aRow['usuario_id'] = $this->session->userdata('user_id');
+            $aRow['creado'] = date('Y-m-d H:i:s');
 
         //Guardar
             $this->load->model('Post_model');
-            $condition = "referente_1_id = {$tema_id} AND id = {$pa_id}";
-            $saved_id = $this->Post_model->guardar_post($condition, $arr_row);
+            $data = $this->Post_model->save($aRow);
+            $saved_id = $data['saved_id'];
         
             if ( $saved_id > 0 )
             {
@@ -1419,9 +1538,9 @@ class Tema_Model extends CI_Model{
     /**
      * Importar masivamente preguntas abiertas a temas
      * tabla post, tipo_id = 121
-     * 2019-09-06
+     * 2023-07-02
      * 
-     * @param type $array_hoja    Array con los datos de preguntas
+     * @param array $array_hoja    Datos de preguntas
      */
     function importar_pa($array_hoja)
     {
@@ -1429,8 +1548,13 @@ class Tema_Model extends CI_Model{
         $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
         
         //Predeterminados registro nuevo
-        $arr_row['tipo_id'] = 121;
-        $arr_row['referente_2_id'] = 1; //Pública, agregada por ELE
+        $aRow['tipo_id'] = 121;
+        $aRow['referente_2_id'] = 1; //Pública, agregada por ELE
+
+        $aRow['editor_id'] = $this->session->userdata('user_id');
+        $aRow['editado'] = date('Y-m-d H:i:s');
+        $aRow['usuario_id'] = $this->session->userdata('user_id');
+        $aRow['creado'] = date('Y-m-d H:i:s');
 
         $this->load->model('Post_model');
         
@@ -1440,18 +1564,18 @@ class Tema_Model extends CI_Model{
                 $tema_id = $this->Pcrn->campo('tema', "cod_tema = '{$array_fila[0]}'", 'id');
             
             //Complementar registro
-                $arr_row['referente_1_id'] = $tema_id;
-                $arr_row['contenido'] = $array_fila[1];
+                $aRow['referente_1_id'] = $tema_id;
+                $aRow['contenido'] = $array_fila[1];
                 
             //Validar
                 $condiciones = 0;
                 if ( ! is_null($tema_id) ) { $condiciones++; }                  //Tiene tema identificado
-                if ( strlen($arr_row['contenido']) > 0 ) { $condiciones++; }    //Tiene contenido texto escrito
+                if ( strlen($aRow['contenido']) > 0 ) { $condiciones++; }    //Tiene contenido texto escrito
                 
             //Si cumple las condiciones
             if ( $condiciones == 2 )
             {   
-                $this->Post_model->guardar_post('id = 0', $arr_row);    //Condición imposible, siempre agrega
+                $this->Post_model->save($aRow);    //Condición imposible, siempre agrega
             } else {
                 $no_importados[] = $fila;
             }
@@ -1534,7 +1658,7 @@ class Tema_Model extends CI_Model{
      */
     function ledin($ledin_id)
     {
-        $ledin = $this->Pcrn->registro_id('post', $ledin_id);
+        $ledin = $this->Db_model->row_id('post', $ledin_id);
         return $ledin;
     }
 
@@ -1579,10 +1703,11 @@ class Tema_Model extends CI_Model{
         //Si no hay error
             if ( $error_text == '' )
             {
-                $arr_row = $this->arr_ledin_importado($tema_id, $row_data);
-                $post_id = $this->Post_model->guardar_post('id = 0', $arr_row);    //Condición imposible, siempre agrega
+                $aRow = $this->arr_ledin_importado($tema_id, $row_data);
+                $postData = $this->Post_model->save($aRow);    //Condición imposible, siempre agrega
+                $post_id = $postData['saved_id'];
 
-                $data = array('status' => 1, 'text' => '', 'imported_id' => $post_id, 'arr_row' => $arr_row);
+                $data = array('status' => 1, 'text' => '', 'imported_id' => $post_id, 'arr_row' => $aRow);
             } else {
                 $data = array('status' => 0, 'text' => $error_text, 'imported_id' => 0);
             }
@@ -1592,20 +1717,25 @@ class Tema_Model extends CI_Model{
 
     /**
      * Realiza la importación de lectura ledin de cada fila en el archivo excel
-     * 2021-02-27
+     * 2023-07-02
      */
     function arr_ledin_importado($tema_id, $row_data)
     {
         //Construir registro
-            $arr_row['nombre_post'] = $row_data[1];
-            $arr_row['tipo_id'] = 125;
-            $arr_row['contenido_json'] = $this->ledin_json($row_data);
-            $arr_row['contenido'] = $this->ledin_lectura($row_data[0]);
-            $arr_row['texto_1'] = $row_data[0] . '.txt';   //Nombre archivo de texto lectura
-            $arr_row['texto_2'] = $row_data[2];            //Nombre archivo imagen asociada
-            $arr_row['referente_1_id'] = $tema_id;
+            $aRow['nombre_post'] = $row_data[1];
+            $aRow['tipo_id'] = 125;
+            $aRow['contenido_json'] = $this->ledin_json($row_data);
+            $aRow['contenido'] = $this->ledin_lectura($row_data[0]);
+            $aRow['texto_1'] = $row_data[0] . '.txt';   //Nombre archivo de texto lectura
+            $aRow['texto_2'] = $row_data[2];            //Nombre archivo imagen asociada
+            $aRow['referente_1_id'] = $tema_id;
 
-        return $arr_row;
+            $aRow['editor_id'] = $this->session->userdata('user_id');
+            $aRow['editado'] = date('Y-m-d H:i:s');
+            $aRow['usuario_id'] = $this->session->userdata('user_id');
+            $aRow['creado'] = date('Y-m-d H:i:s');
+
+        return $aRow;
     }
 
     /**
@@ -1698,5 +1828,26 @@ class Tema_Model extends CI_Model{
         $ledin = str_replace('<br>', '<br><br>', $ledin);   //Doble salto de renglón
 
         return $ledin;
+    }
+
+// ARTÍCULOS DE TEMAS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Artículos de temas
+     * 2023-07-10
+     * 
+     * @param int $tema_id
+     * @return object $articulos query ci
+     */
+    function articulos($tema_id, $status='')
+    {
+        $this->db->select('id, nombre_post, status, resumen, contenido, slug, 1 AS show');
+        $this->db->where('tipo_id', 126);   //Post tipo artículo de tema
+        if ( strlen($status) > 0 ) { $this->db->where('status', $status); }
+        $this->db->where('referente_1_id', $tema_id);
+        $articulos = $this->db->get('post');
+    
+        return $articulos;
     }
 }

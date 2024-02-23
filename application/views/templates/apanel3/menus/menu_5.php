@@ -2,8 +2,8 @@
 
     //Biblioteca
         $opciones_menus['usuarios/biblioteca'] = array('biblioteca', '', '');
-        $opciones_menus['posts/ap_explorar'] = array('biblioteca', '', '');
-        $opciones_menus['posts/ap_leer'] = array('biblioteca', '', '');
+        $opciones_menus['contenidos_ap/explorar'] = array('biblioteca', '', '');
+        $opciones_menus['contenidos_ap/leer'] = array('biblioteca', '', '');
 
     //Grupos
         $opciones_menus['instituciones/grupos'] = array('grupos', '', '');

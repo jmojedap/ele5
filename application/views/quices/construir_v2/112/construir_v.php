@@ -75,7 +75,7 @@
 
                             <p v-html="element.texto"></p>
                         </td>
-                        <td width="90px">
+                        <td width="100px">
                             <button class="a4 editar_elemento" type="button" title="Editar elemento" v-on:click="set_current(ek)">
                                 <i class="fa fa-pencil-alt"></i>
                             </button>

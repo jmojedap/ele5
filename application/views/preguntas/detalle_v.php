@@ -22,7 +22,7 @@
         $nombre_enunciado = 'No';
         if ( strlen($row_pregunta->enunciado_id) > 0 ) 
         {
-            $nombre_enunciado = anchor("datos/enunciados_ver/{$row_pregunta->enunciado_id}", $this->App_model->nombre_enunciado($row_pregunta->enunciado_id));
+            $nombre_enunciado = anchor("enunciados/ver/{$row_pregunta->enunciado_id}", $this->App_model->nombre_enunciado($row_pregunta->enunciado_id));
         }
 ?>
 
@@ -131,7 +131,7 @@
                     <dt>Lectura complementaria</dt>
                     <dd>
                         <?php if ( $row_pregunta->enunciado_id > 0 ) { ?>
-                            <a href="<?php echo base_url("datos/enunciados_ver/{$row->enunciado_id}") ?>" target="_blank">
+                            <a href="<?php echo base_url("enunciados/ver/{$row->enunciado_id}") ?>" target="_blank">
                                 <?php echo $this->App_model->nombre_enunciado($row_pregunta->enunciado_id) ?>
                             </a>
                         <?php } else { ?>

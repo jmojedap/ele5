@@ -77,20 +77,17 @@
     
     //Guardar resultado al resolver el quiz
     function guardar_resultado(){
-        
-        $.ajax({        
-            type: 'POST',
-            url: '<?= base_url() ?>quices/guardar_resultado',
-            data: {
+        $.ajax({        
+            type: 'POST',
+            url: '<?= base_url() ?>quices/guardar_resultado',
+            data: {
                 usuario_id : usuario_id,
                 quiz_id : quiz_id,
                 resultado : resultado
             }
-        });
+        });
 
     }
-    
-    
 </script>
 
 <p id="respuesta_quiz"></p>
@@ -105,12 +102,11 @@
 
 <?php foreach ($elementos->result() as $row_elemento) : ?>
     <?php
-        $opcion_vacia[''] = '[ Seleccione ]';
+        $opcion_vacia[''] = '-';
         $opciones_elemento = json_decode($row_elemento->detalle);
         $opciones = array_merge($opcion_vacia, $opciones_elemento);
         $dropdown = form_dropdown($key_elemento, $opciones, '', 'id="' . $key_elemento . '" class="casilla_quiz"');
     ?>
-    
     <p>
         <i class="fa fa-caret-right resaltar"></i>
         <?= str_replace('#casilla', $dropdown, $row_elemento->texto) ?>

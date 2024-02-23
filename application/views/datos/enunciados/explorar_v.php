@@ -26,26 +26,30 @@
 
 <?php $this->load->view('datos/enunciados/explorar_menu_v') ?>
 
-<div class="sep2" style="overflow: hidden;">
+<div class="mb-2" style="">
     <?= form_open($destino_form, $att_form) ?>
-        <div class="casilla w5">
-            <?= form_input($att_q) ?>
+    <div class="d-flex justify-content-between">
+        <div class="w320p">
+            <div class="input-group">
+                <?= form_input($att_q) ?>
+                <div class="input-group-append">
+                    <?= form_submit($att_submit) ?>
+                </div>
+            </div>
         </div>
-        <div class="casilla">
-            <?= form_submit($att_submit) ?>
-        </div>
-        <div class="casilla pull-right">
+        <div class="">
             <?= $this->pagination->create_links(); ?>
         </div>
+    </div>
     <?= form_close() ?>
 </div>
 
-<table class="table table-default bg-blanco">
+<table class="table bg-white">
     <thead>
         <th width="30px">ID</th>
         <th>Título</th>
         <th>Creado por</th>
-        <th width="70px"></th>
+        <th width="120px"></th>
     </thead>
 
     <tbody>
@@ -53,7 +57,7 @@
             <tr style="border-bottom: 1px solid #f1f1f1;">
                 <td class="warning"><?= $row_resultado->id ?></td>
                 <td>
-                    <b><?= anchor("datos/enunciados_ver/{$row_resultado->id}", $row_resultado->nombre_post, 'class="" title=""') ?></b>
+                    <b><?= anchor("enunciados/ver/{$row_resultado->id}", strip_tags($row_resultado->nombre_post), 'class="" title=""') ?></b>
                 </td>
                 
                 <td>
@@ -62,8 +66,8 @@
                 
                 <td>
                     <?php if ( $this->session->userdata('rol_id') <= 2 ) : ?>                
-                        <?= anchor("datos/enunciados_editar/edit/{$row_resultado->id}", '<i class="fa fa-pencil"></i>', 'class="a4" title=""') ?>
-                        <?= $this->Pcrn->anchor_confirm("datos/enunciados_eliminar/{$row_resultado->id}", '<i class="fa fa-times"></i>', 'class="a4" title=""') ?>
+                        <?= anchor("enunciados/editar/edit/{$row_resultado->id}", '<i class="fa fa-pencil"></i>', 'class="a4" title=""') ?>
+                        <?= $this->Pcrn->anchor_confirm("enunciados/eliminar/{$row_resultado->id}", '<i class="fa fa-times"></i>', 'class="a4" title=""') ?>
                     <?php endif ?>
                 </td>
             </tr>

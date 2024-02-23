@@ -21,6 +21,7 @@ application/config_s/
 #pml
 /content/
 /resources/assets
+/resources/migrations
 /htaccess/
 /system/
 /system_315/

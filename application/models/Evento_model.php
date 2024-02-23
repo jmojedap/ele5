@@ -718,8 +718,8 @@ class Evento_Model extends CI_Model{
      * guardar_fin_quiz
      * se refiere a la finalización de respuesta de un quiz por parte de un estudiante
      * 
-     * @param type $ua_id
-     * @return type
+     * @param int $ua_id (usuario_asignacion.id)
+     * @return int $evento_id
      */
     function guardar_fin_quiz($ua_id)
     {
@@ -728,7 +728,7 @@ class Evento_Model extends CI_Model{
         
         $condicion = "tipo_id = 13 AND referente_id = {$ua_id} AND usuario_id = {$this->session->userdata('user_id')}";
         $cant_intentos = $this->Pcrn->campo('evento', $condicion, 'entero_1');
-        //$row_evento = $this->Pcrn->registro('evento', $condicion);
+        $row_evento = $this->Pcrn->registro('evento', $condicion);
         
         if ( ! is_null($cant_intentos) )
         {
@@ -736,8 +736,8 @@ class Evento_Model extends CI_Model{
             $arr_row['referente_id'] = $ua_id;     //usuario_asignacion.id
             $arr_row['fecha_fin'] = date('Y-m-d');
             $arr_row['hora_fin'] = date('H:i:s');
-            $arr_row['estado'] = $row_ua->estado_int;           //Correcto o incorrecto
-            $arr_row['entero_1'] = $cant_intentos + 1;   //Cantidad de intentos
+            $arr_row['estado'] = $row_ua->estado_int;   //Correcto o incorrecto
+            $arr_row['entero_1'] = $cant_intentos + 1;  //Cantidad de intentos
             
             $condicion_add = "usuario_id = {$this->session->userdata('user_id')}";
 

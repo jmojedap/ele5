@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Signika+Negative:wght@400;700&display=swap');
+
 #ledin {
     background-color: #fffEFA;
     padding: 1.5em;
@@ -5,8 +7,8 @@
 
 .ledin_contenido {
     text-align: justify;
-    font-family: 'Merriweather', serif;
-    font-size: 1.05em;
+    font-family: 'Signika Negative', serif;
+    font-size: 1.2em;
     color: #333;
 }
 

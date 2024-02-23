@@ -1,7 +1,7 @@
 <?php $this->load->view('assets/chosen_jquery'); ?>
 
 <?php
-    $opciones_flipbooks = $this->App_model->opciones_flipbook("tipo_flipbook_id IN (0,3)  AND nivel = {$row->nivel}", 2);
+    $opciones_flipbooks = $this->App_model->opciones_flipbook("tipo_flipbook_id IN (0,3,6) AND nivel = {$row->nivel}", 2);
 ?>
 
 <script>
@@ -65,7 +65,7 @@
                 </div>
             </div>
             
-            <table class="table table-default bg-blanco" cellspacing="0">
+            <table class="table table-default bg-white" cellspacing="0">
                 <thead>
                     <tr>
                         <th width="10px"><input type="checkbox" id="check_todos"></th>

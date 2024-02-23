@@ -1,5 +1,5 @@
 <h2>tabla: quiz</h2>
-<table class="table table-hover bg-blanco">
+<table class="table table-hover bg-white">
     <thead>
         <th>id</th>
         <th>nombre_quiz</th>
@@ -32,7 +32,7 @@
 
 <h2>tabla: quiz_detalle (<?php echo $quiz_elementos->num_rows() ?>)</h2>
 
-<table class="table table-bordered bg-blanco">
+<table class="table table-bordered bg-white">
     <thead>
         <th>id</th>
         <th>quiz_id</th>

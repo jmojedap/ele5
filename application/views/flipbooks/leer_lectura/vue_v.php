@@ -195,7 +195,7 @@
                 this.pregunta_personalizada = ! this.pregunta_personalizada;  
             },
             cargar_lectura: function(){  
-                axios.get(this.app_url + 'temas/lectura_dinamica_tema/' + this.pagina.tema_id)
+                axios.get(this.app_url + 'admin/temas/lectura_dinamica_tema/' + this.pagina.tema_id)
                 .then(response => {
                     console.log(response.data.message)
                     $('#lectura_modal_contenido').html(response.data.html);

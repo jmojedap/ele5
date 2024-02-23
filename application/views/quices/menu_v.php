@@ -13,42 +13,42 @@ $seccion = $this->uri->segment(2);
     );
     
     $arr_menus['temas'] = array(
-        'icono' => '<i class="fa fa-bars"></i>',
+        'icono' => '',
         'texto' => 'Temas',
         'link' => "quices/temas/{$row->id}",
         'atributos' => 'title="Temas asociados a la evidencia"'
     );
         
     $arr_menus['construir'] = array(
-        'icono' => '<i class="fa fa-wrench"></i>',
+        'icono' => '',
         'texto' => 'Construir',
         'link' => "quices/construir/{$row->id}",
         'atributos' => 'title="Explorar evidencias"'
     );
     
     $arr_menus['resolver'] = array(
-        'icono' => '<i class="fas fa-external-link-alt"></i>',
+        'icono' => '',
         'texto' => 'Vista previa',
         'link' => "quices/resolver/{$row->id}",
         'atributos' => 'title="Vista previa de la Evidencia" target="_blank"'
     );
         
     $arr_menus['elementos'] = array(
-        'icono' => '<i class="fa fa-list"></i>',
+        'icono' => '',
         'texto' => 'Elementos',
         'link' => "quices/elementos/{$row->id}",
         'atributos' => 'title="Elementos de la evidencia"'
     );
         
     $arr_menus['detalle'] = array(
-        'icono' => '<i class="fa fa-book"></i>',
+        'icono' => '',
         'texto' => 'Detalle',
         'link' => "quices/detalle/{$row->id}",
         'atributos' => 'title="Detalle de los elementos de la evidencia"'
     );
         
     $arr_menus['editar'] = array(
-        'icono' => '<i class="fa fa-pencil-alt"></i>',
+        'icono' => '',
         'texto' => 'Editar',
         'link' => "quices/editar/{$row->id}",
         'atributos' => 'title="Editar evidencia"'
@@ -58,6 +58,7 @@ $seccion = $this->uri->segment(2);
     $elementos_rol[0] = array('explorar', 'temas', 'construir', 'editar', 'resolver', 'elementos', 'detalle');
     $elementos_rol[1] = array('explorar', 'temas', 'construir', 'editar', 'resolver');
     $elementos_rol[2] = array('explorar', 'temas', 'construir', 'editar', 'resolver');
+    $elementos_rol[9] = array('explorar', 'temas', 'construir', 'editar', 'resolver');
     
 //Definiendo menú mostrar, según el rol del visitante
     $elementos = $elementos_rol[$this->session->userdata('rol_id')];

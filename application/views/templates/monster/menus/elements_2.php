@@ -37,7 +37,7 @@
                         text: 'Programas',
                         active: false,
                         icon: 'fa fa-sitemap',
-                        cf: 'programas/explorar',
+                        cf: 'admin/programas/explore',
                         sections: []
                     },
                     {
@@ -51,7 +51,7 @@
                         text: 'Temas',
                         active: false,
                         icon: 'fa fa-bars',
-                        cf: 'temas/explorar',
+                        cf: 'admin/temas/explore',
                         sections: []
                     },
                     {
@@ -62,7 +62,7 @@
                         sections: []
                     },
                     {
-                        text: 'Archivos',
+                        text: 'Archivos temas',
                         active: false,
                         icon: 'far fa-folder',
                         cf: 'recursos/archivos',
@@ -90,7 +90,7 @@
                         text: 'Lecturas',
                         active: false,
                         icon: 'fa fa-quote-left',
-                        cf: 'datos/enunciados',
+                        cf: 'enunciados/explorar',
                         sections: []
                     },
                     {

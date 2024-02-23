@@ -232,21 +232,25 @@ class Eventos extends CI_Controller{
     /**
      * Recibe los datos del formulario de eventos/noticias
      * Crea registro en la tabla post y lo referencia en la tabla evento
+     * 2023-07-02
      */
     function crear_publicacion()
     {
-        //Cargue
-            $this->load->model('Post_model');
-        
         //Crear publicación en tabla post
-            $reg_post['tipo_id'] = 3;   //Publicación, ver item categoria_id = 33, tipos de post
-            $reg_post['contenido'] = strip_tags($this->input->post('contenido'));
-            $reg_post['texto_1'] = strip_tags($this->input->post('texto_1'));
+            $aRow['nombre_post'] = 'publicacion-muro';   //Publicación, ver item categoria_id = 33, tipos de post
+            $aRow['tipo_id'] = 3;   //Publicación, ver item categoria_id = 33, tipos de post
+            $aRow['contenido'] = strip_tags($this->input->post('contenido'));
+            $aRow['texto_1'] = strip_tags($this->input->post('texto_1'));
+            $aRow['editor_id'] = $this->session->userdata('user_id');
+            $aRow['editado'] = date('Y-m-d H:i:s');
+            $aRow['usuario_id'] = $this->session->userdata('user_id');
+            $aRow['creado'] = date('Y-m-d H:i:s');
 
-            $post_id = $this->Post_model->guardar_post('id = 0', $reg_post);    //Condición imposible, se crea nuevo
+            $this->load->model('Post_model');
+            $data = $this->Post_model->save($aRow);    //Condición imposible, se crea nuevo
             
         //Registrar publicación creada en la tabla evento
-            $this->Evento_model->guardar_ev_publicacion($post_id);
+            $this->Evento_model->guardar_ev_publicacion($data['saved_id']);
             
         redirect('eventos/noticias');
     }

@@ -3,35 +3,35 @@
         $seccion = $this->uri->segment(2);
 
         $clases[$seccion] = 'active';
-        if ( $seccion == 'ap_importar_asignaciones_e' ) { $clases['ap_importar_asignaciones'] = 'active'; }
+        if ( $seccion == 'importar_asignaciones_e' ) { $clases['importar_asignaciones'] = 'active'; }
 
     
     //Atributos de los elementos del menú
-        $arr_menus['ap_explorar'] = array(
+        $arr_menus['explorar'] = array(
             'icono' => '<i class="fa fa-list-alt"></i>',
             'texto' => 'Explorar',
-            'link' => "posts/ap_explorar/",
+            'link' => "contenidos_ap/explorar/",
             'atributos' => ''
         );
         
-        $arr_menus['ap_importar_asignaciones'] = array(
+        $arr_menus['importar_asignaciones'] = array(
             'icono' => '<i class="fa fa-upload"></i>',
             'texto' => 'Importar',
-            'link' => "posts/ap_importar_asignaciones/",
+            'link' => "contenidos_ap/importar_asignaciones/",
             'atributos' => 'title="Importar asignaciones de contenidos de acompañamiento pedagógico"'
         );
         
-        $arr_menus['ap_nuevo'] = array(
+        $arr_menus['nuevo'] = array(
             'icono' => '<i class="fa fa-plus"></i>',
             'texto' => 'Nuevo',
-            'link' => "posts/ap_nuevo/",
+            'link' => "contenidos_ap/nuevo/",
             'atributos' => ''
         );
 
     //Elementos de menú para cada rol
-        $elementos_rol[0] = array('ap_explorar', 'ap_importar_asignaciones', 'ap_nuevo');
-        $elementos_rol[1] = array('ap_explorar', 'ap_importar_asignaciones', 'ap_nuevo');
-        $elementos_rol[2] = array('ap_explorar', 'ap_nuevo');
+        $elementos_rol[0] = array('explorar', 'importar_asignaciones', 'nuevo');
+        $elementos_rol[1] = array('explorar', 'importar_asignaciones', 'nuevo');
+        $elementos_rol[2] = array('explorar', 'nuevo');
         
     //Definiendo menú mostrar
         $elementos = $elementos_rol[$this->session->userdata('rol_id')];

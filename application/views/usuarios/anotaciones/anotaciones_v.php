@@ -10,6 +10,9 @@
             <div class="col-md-6 col-sm-12">
                 <?= form_dropdown('flipbook_id', $opciones_flipbook, $flipbook_id, 'class="form-control" v-model="flipbook_id" v-on:change="get_list"') ?>
             </div>
+            <div class="col-md-6 col-sm-12">
+                <a v-bind:href="`<?= URL_APP . "flipbooks/abrir/" ?>` + flipbook_id">Abrir contenido</a>
+            </div>
         </div>
         <div class="table-responsive">
             <table class="table bg-white">

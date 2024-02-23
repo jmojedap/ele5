@@ -19,21 +19,21 @@
         $arr_menus['ap_tutoriales'] = array(
             'icono' => '',
             'texto' => 'Tutoriales',
-            'link' => "posts/ap_explorar/?f1=1",
+            'link' => "contenidos_ap/explorar/?f1=1",
             'atributos' => ''
         );
         
         $arr_menus['ap_atlas'] = array(
             'icono' => '',
             'texto' => 'Atlas',
-            'link' => "posts/ap_explorar/?f1=2",
+            'link' => "contenidos_ap/explorar/?f1=2",
             'atributos' => 'title="Importar asignaciones de contenidos de acompañamiento pedagógico"'
         );
         
         $arr_menus['ap_lectura_critica'] = array(
             'icono' => '',
             'texto' => 'Recursos',
-            'link' => "posts/ap_explorar/?f1=3",
+            'link' => "contenidos_ap/explorar/?f1=3",
             'atributos' => ''
         );
 

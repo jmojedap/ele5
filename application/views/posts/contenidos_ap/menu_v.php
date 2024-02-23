@@ -11,7 +11,7 @@
         $arr_menus['explorar'] = array(
             'icono' => '<i class="fa fa-list-alt"></i>',
             'texto' => 'Explorar',
-            'link' => "posts/ap_explorar/",
+            'link' => "contenidos_ap/explorar/",
             'atributos' => ''
         );
         

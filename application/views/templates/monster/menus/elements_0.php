@@ -36,10 +36,42 @@
                 sections: ['instituciones/explorar', 'instituciones/nuevo','instituciones/info']
             },
             {
-                text: 'Recursos',
+                text: 'Libros',
                 active: false,
                 style: '',
                 icon: 'fa fa-book',
+                cf: '',
+                submenu: true,
+                subelements: [
+                    {
+                        text: 'Programas',
+                        active: false,
+                        icon: 'fa fa-sitemap',
+                        cf: 'admin/programas/explore',
+                        sections: []
+                    },
+                    {
+                        text: 'Contenidos',
+                        active: false,
+                        icon: 'fa fa-book',
+                        cf: 'flipbooks/explorar',
+                        sections: []
+                    },
+                    {
+                        text: 'Páginas',
+                        active: false,
+                        icon: 'far fa-file',
+                        cf: 'paginas/explorar',
+                        sections: []
+                    },
+                ],
+                sections: []
+            },
+            {
+                text: 'Recursos',
+                active: false,
+                style: '',
+                icon: 'fas fa-image',
                 cf: '',
                 submenu: true,
                 subelements: [
@@ -53,31 +85,17 @@
                         ]
                     },
                     {
-                        text: 'Programas',
-                        active: false,
-                        icon: 'fa fa-sitemap',
-                        cf: 'programas/explorar',
-                        sections: []
-                    },
-                    {
-                        text: 'Contenidos',
-                        active: false,
-                        icon: 'fa fa-book',
-                        cf: 'flipbooks/explorar',
-                        sections: []
-                    },
-                    {
                         text: 'Temas',
                         active: false,
                         icon: 'fa fa-bars',
-                        cf: 'temas/explorar',
+                        cf: 'admin/temas/explore',
                         sections: []
                     },
                     {
                         text: 'Contenidos AP',
                         active: false,
                         icon: 'fa fa-book',
-                        cf: 'posts/ap_explorar',
+                        cf: 'contenidos_ap/explorar',
                         sections: []
                     },
                     {
@@ -88,14 +106,7 @@
                         sections: []
                     },
                     {
-                        text: 'Páginas',
-                        active: false,
-                        icon: 'far fa-file',
-                        cf: 'paginas/explorar',
-                        sections: []
-                    },
-                    {
-                        text: 'Archivos',
+                        text: 'Archivos temas',
                         active: false,
                         icon: 'far fa-folder',
                         cf: 'recursos/archivos',
@@ -111,9 +122,16 @@
                     {
                         text: 'Posts',
                         active: false,
-                        icon: 'fa fa-newspaper',
-                        cf: 'posts/explorar',
+                        icon: 'fas fa-file-alt',
+                        cf: 'admin/posts/explore',
                         sections: ['posts/explorar', 'posts/editar', 'posts/nuevo', 'posts/leer']
+                    },
+                    {
+                        text: 'Archivos',
+                        active: false,
+                        icon: 'fas fa-image',
+                        cf: 'admin/files/explore',
+                        sections: ['files/explore', 'files/edit', 'files/add', 'files/info', 'files/cropping', 'files/change']
                     },
                 ],
                 sections: []
@@ -137,7 +155,7 @@
                         text: 'Lecturas',
                         active: false,
                         icon: 'fa fa-quote-left',
-                        cf: 'datos/enunciados',
+                        cf: 'enunciados/explorar',
                         sections: []
                     },
                     {

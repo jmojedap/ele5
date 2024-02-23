@@ -218,6 +218,20 @@
                                 <p style="font-size: 1.1em;"><?php echo $row_pregunta->enunciado_2 ?></p>
                             </div>
 
+                            <!-- Mostrar imagen si la pregunta tiene respuestas en imagen -->
+                            <?php if ( ! is_null($row_pregunta->archivo_imagen) ) : ?>
+                                <div class="text-center mb-2">
+                                    <div class="img-thumbnail">
+                                        <img
+                                            width="100%" style="max-width: 800px"
+                                            onerror="this.src='<?php echo URL_IMG ?>app/img_pregunta_nd.png'"
+                                            alt="Imagen pregunta"
+                                            src="<?= URL_UPLOADS . 'preguntas/' . $row_pregunta->archivo_imagen ?>"
+                                            >
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
                             <div class="mb-3">
 
                                 <?php foreach ($opciones_numeros as $opcion_numero) : ?>
@@ -247,15 +261,7 @@
                                 
                             </div>
                             
-                            <!-- Mostrar imagen si la pregunta tiene respuestas en imagen -->
-                            <?php if ( strlen($row_pregunta->archivo_imagen) > 0 ):?>
-                                <div class="mb-3 text-center">
-                                    <div class="thumbnail">
-                                        <?php echo img($att_img) ?>
-                                    </div>
-                                </div>
-                            <?php endif ?>
-
+                        
                         </div>
 
 

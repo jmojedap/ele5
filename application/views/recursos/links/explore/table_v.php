@@ -31,7 +31,7 @@
                 </td>
 
                 <td>
-                    <a v-bind:href="`<?php echo base_url("temas/links/") ?>` + element.tema_id">
+                    <a v-bind:href="`<?php echo base_url("admin/temas/links/") ?>` + element.tema_id">
                         {{ element.nombre_tema }}
                     </a>
                 </td>

@@ -138,7 +138,7 @@
                     <tr>
                         <td><?= $row_tema->id ?></td>
                         <td><?= $row_tema->cod_tema ?></td>
-                        <td><?= anchor("temas/archivos/$row_tema->id", $row_tema->nombre_tema) ?></td>
+                        <td><?= anchor("admin/temas/archivos/$row_tema->id", $row_tema->nombre_tema) ?></td>
                         
                         <td class="<?= $clase_fila ?>" id="fila_<?= $row_tema->id ?>">
                             <input

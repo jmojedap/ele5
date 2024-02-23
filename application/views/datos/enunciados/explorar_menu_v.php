@@ -5,28 +5,28 @@
         $clases[$seccion] = 'active';
     
     //Atributos de los elementos del menú
-        $arr_menus['enunciados'] = array(
-            'icono' => '<i class="fa fa-list-alt"></i>',
+        $arr_menus['explorar'] = array(
+            'icono' => '<i class="fa fa-search"></i>',
             'texto' => 'Explorar',
-            'link' => "datos/enunciados/",
+            'link' => "enunciados/explorar",
             'atributos' => 'title="Explorar enunciados"'
         );
         
-        $arr_menus['enunciados_nuevo'] = array(
+        $arr_menus['nuevo'] = array(
             'icono' => '<i class="fa fa-plus"></i>',
             'texto' => 'Nuevo',
-            'link' => "datos/enunciados_nuevo/add/",
+            'link' => "enunciados/nuevo/add/",
             'atributos' => 'title="Agregar un nuevo enunciado"'
         );
         
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('enunciados', 'enunciados_nuevo');
-        $elementos_rol[1] = array('enunciados', 'enunciados_nuevo');
-        $elementos_rol[2] = array('enunciados', 'enunciados_nuevo');
-        $elementos_rol[3] = array('enunciados', 'enunciados_nuevo');
-        $elementos_rol[4] = array('enunciados', 'enunciados_nuevo');
-        $elementos_rol[5] = array('enunciados', 'enunciados_nuevo');
-        $elementos_rol[8] = array('enunciados', 'enunciados_nuevo');
+        $elementos_rol[0] = array('explorar', 'nuevo');
+        $elementos_rol[1] = array('explorar', 'nuevo');
+        $elementos_rol[2] = array('explorar', 'nuevo');
+        $elementos_rol[3] = array('explorar', 'nuevo');
+        $elementos_rol[4] = array('explorar', 'nuevo');
+        $elementos_rol[5] = array('explorar', 'nuevo');
+        $elementos_rol[8] = array('explorar', 'nuevo');
         
     //Definiendo menú mostrar, según el rol del visitante
         $elementos = $elementos_rol[$this->session->userdata('rol_id')];
@@ -38,4 +38,4 @@
         $data_menu['seccion'] = $seccion;
     
     //Cargue vista
-        $this->load->view('comunes/menu_v', $data_menu);
+        $this->load->view('comunes/bs4/menu_v', $data_menu);

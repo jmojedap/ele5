@@ -63,18 +63,21 @@
 </div>
 
 <script>
-    Vue.filter('ago', function (date) {
-        if (!date) return ''
-        return moment(date, "YYYY-MM-DD HH:mm:ss").fromNow();
-    });
-    new Vue({
-        el: '#inicio_app',
-        data: {
-            flipbooks: <?= json_encode($flipbooks) ?>,
-            areas: <?= json_encode($areas); ?>
-        },
-        methods: {
-            
-        }
-    });
+// Filters
+//-----------------------------------------------------------------------------
+Vue.filter('ago', function (date) {
+    if (!date) return ''
+    return moment(date, "YYYY-MM-DD HH:mm:ss").fromNow();
+});
+
+// VueApp
+//-----------------------------------------------------------------------------
+new Vue({
+    el: '#inicio_app',
+    data: {
+        flipbooks: <?= json_encode($flipbooks) ?>,
+        areas: <?= json_encode($areas); ?>
+    },
+    methods: {}
+});
 </script>

@@ -60,11 +60,10 @@ class Programas extends CI_Controller{
         //Solicitar vista
             $data['titulo_pagina'] = 'Programas';
             $data['subtitulo_pagina'] = $data['cant_resultados'];
-            $data['vista_a'] = 'programas/explorar_v';
-            $data['vista_menu'] = 'programas/explorar_menu_v';
+            $data['view_a'] = 'programas/explorar_v';
+            $data['nav_2'] = 'programas/explorar_menu_v';
             $data['ayuda_id'] = 91;
-            $this->load->view(PTL_ADMIN, $data);
-        
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -99,9 +98,9 @@ class Programas extends CI_Controller{
                 $data['titulo_pagina'] = 'Plataforma Enlace';
                 $data['mensaje'] = "El número de registros es de {$resultados_total->num_rows()}. El máximo permitido es de " . MAX_REG_EXPORT . " registros. Puede filtrar los datos por algún criterio para poder exportarlos.";
                 $data['link_volver'] = "programas/explorar/?{$busqueda_str}";
-                $data['vista_a'] = 'app/mensaje_v';
+                $data['view_a'] = 'app/mensaje_v';
                 
-                $this->load->view(PTL_ADMIN, $data);
+                $this->load->view(TPL_ADMIN, $data);
             }
             
     }
@@ -127,11 +126,11 @@ class Programas extends CI_Controller{
     {
         //Cargando datos básicos
             $tema_id = $this->uri->segment(4);
-            $data = $this->Programa_model->basico($tema_id);
+            $data = $this->Programa_model->basic($tema_id);
             $row = $data['row'];
             
         //Render del grocery crud
-            $output = $this->Programa_model->crud_basico($tema_id);
+            $output = $this->Programa_model->crud_basic($tema_id);
         
         //Head includes específicos para la página
             $head_includes[] = 'grocery_crud';
@@ -139,16 +138,16 @@ class Programas extends CI_Controller{
             
         //Solicitar vista
             $data['vista_b'] = 'comunes/gc_v';
-            $data['vista_menu'] = 'programas/editar_submenu_v';
+            $data['nav_2'] = 'programas/editar_submenu_v';
             $output = array_merge($data,(array)$output);
-            $this->load->view(PTL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN, $output);
     }
     
     function editar_temas()
     {
         //Cargando datos básicos
             $tema_id = $this->uri->segment(4);
-            $data = $this->Programa_model->basico($tema_id);
+            $data = $this->Programa_model->basic($tema_id);
             $row = $data['row'];
             
         //Valores previos de filtro
@@ -182,14 +181,14 @@ class Programas extends CI_Controller{
             $data['vista_b'] = 'programas/editar_temas_v';
             $data['ayuda_id'] = 91;
             $output = array_merge($data,(array)$output_gc);
-            $this->load->view(PTL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN, $output);
     }
     
     function nuevo()
     {
         
         //Render del grocery crud
-            $output = $this->Programa_model->crud_basico();
+            $output = $this->Programa_model->crud_basic();
         
         //Head includes específicos para la página
             $head_includes[] = 'grocery_crud';
@@ -198,12 +197,12 @@ class Programas extends CI_Controller{
         //Array data espefícicas
             $data['titulo_pagina'] = 'Programas';
             $data['subtitulo_pagina'] = 'Nuevo';
-            $data['vista_a'] = 'comunes/gc_v';
-            $data['vista_menu'] = 'programas/explorar_menu_v';
+            $data['view_a'] = 'comunes/gc_v';
+            $data['nav_2'] = 'programas/explorar_menu_v';
         
         $output = array_merge($data,(array)$output);
         
-        $this->load->view(PTL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN, $output);
     }
     
     function eliminar($programa_id)
@@ -243,10 +242,10 @@ class Programas extends CI_Controller{
         //Variables generales
             $data['titulo_pagina'] = 'Programas';
             $data['subtitulo_pagina'] = 'Importar programas';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'programas/explorar_menu_v';
+            $data['view_a'] = 'comunes/importar_v';
+            $data['nav_2'] = 'programas/explorar_menu_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -279,9 +278,9 @@ class Programas extends CI_Controller{
         //Cargar vista
             $data['titulo_pagina'] = 'Programas';
             $data['subtitulo_pagina'] = 'Resultado cargue';
-            $data['vista_a'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'programas/explorar_menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['view_a'] = 'comunes/resultado_importacion_v';
+            $data['nav_2'] = 'programas/explorar_menu_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     
@@ -290,7 +289,7 @@ class Programas extends CI_Controller{
         
         //Cargando datos básicos
             $tema_id = $this->Pcrn->si_nulo($tema_id, $this->Programa_model->tema_id());
-            $data = $this->Programa_model->basico($tema_id);
+            $data = $this->Programa_model->basic($tema_id);
             
         //Información
             $row = $data['row'];
@@ -309,14 +308,14 @@ class Programas extends CI_Controller{
         //Solicitar vista
             $data['titulo_pagina'] .= ' - Información';
             //$data['vista_b'] = 'programas/info_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
         
     }
     
     function temas($programa_id)
     {
         //Cargando datos básicos
-            $data = $this->Programa_model->basico($programa_id);
+            $data = $this->Programa_model->basic($programa_id);
             
         //Cargando el tema_model
             $this->load->model('Tema_model');
@@ -335,7 +334,7 @@ class Programas extends CI_Controller{
         //Solicitar vista
             $data['subseccion'] = 'listado';
             $data['vista_b'] = 'programas/temas_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
 //CARGUE MASIVO DE TEMAS MULTIPLE PROGRAMA
@@ -369,10 +368,10 @@ class Programas extends CI_Controller{
         //Variables generales
             $data['titulo_pagina'] = 'Programas';
             $data['subtitulo_pagina'] = 'Asignación de temas multiprograma';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'programas/explorar_menu_v';
+            $data['view_a'] = 'comunes/importar_v';
+            $data['nav_2'] = 'programas/explorar_menu_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     function asignar_temas_multi_e()
@@ -401,9 +400,9 @@ class Programas extends CI_Controller{
         //Cargar vista
             $data['titulo_pagina'] = 'Programas';
             $data['subtitulo_pagina'] = 'Resultado asignación';
-            $data['vista_a'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'programas/explorar_menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['view_a'] = 'comunes/resultado_importacion_v';
+            $data['nav_2'] = 'programas/explorar_menu_v';
+            $this->load->view(TPL_ADMIN, $data);
         
     }
     
@@ -416,14 +415,14 @@ class Programas extends CI_Controller{
     function copiar($programa_id)
     {
         //Cargando datos básicos (_basico)
-            $data = $this->Programa_model->basico($programa_id);
+            $data = $this->Programa_model->basic($programa_id);
             $data['destino_form'] = 'programas/copiar_e';
         
         //Variables data
         
         //Solicitar vista
             $data['vista_b'] = 'programas/copiar_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -480,7 +479,7 @@ class Programas extends CI_Controller{
         $this->load->model('Flipbook_model');
         
         //Cargando datos básicos
-            $data = $this->Programa_model->basico($programa_id);
+            $data = $this->Programa_model->basic($programa_id);
             
         //Filtros de flipbooks opciones
             $filtros['area_id'] = $data['row']->area_id;
@@ -507,7 +506,7 @@ class Programas extends CI_Controller{
             $data['subtitulo_pagina'] = 'Nuevo contenido';
             
 
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -633,11 +632,11 @@ class Programas extends CI_Controller{
         //Variables generales
             $data['titulo_pagina'] = 'Programas';
             $data['subtitulo_pagina'] = 'Generar contenidos';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'programas/explorar_menu_v';
+            $data['view_a'] = 'comunes/importar_v';
+            $data['nav_2'] = 'programas/explorar_menu_v';
             $data['ayuda_id'] = 111;
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -669,9 +668,9 @@ class Programas extends CI_Controller{
         //Cargar vista
             $data['titulo_pagina'] = 'Programas';
             $data['subtitulo_pagina'] = 'Resultado generación';
-            $data['vista_a'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'programas/explorar_menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+            $data['view_a'] = 'comunes/resultado_importacion_v';
+            $data['nav_2'] = 'programas/explorar_menu_v';
+            $this->load->view(TPL_ADMIN, $data);
     }
 
 //GENERACIÓN DE CUESTIONARIOS
@@ -686,7 +685,7 @@ class Programas extends CI_Controller{
     function nuevo_cuestionario($programa_id)
     {
         //Cargando datos básicos
-            $data = $this->Programa_model->basico($programa_id);
+            $data = $this->Programa_model->basic($programa_id);
             
         //Cargando $data
             $data['preguntas'] = $this->Programa_model->preguntas($programa_id);
@@ -696,7 +695,7 @@ class Programas extends CI_Controller{
             $data['titulo_pagina'] .= ' - Nuevo cuestionario';
             $data['vista_b'] = 'programas/nuevo_cuestionario_v';
 
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -785,11 +784,11 @@ class Programas extends CI_Controller{
         //Variables generales
             $data['titulo_pagina'] = 'Programas';
             $data['subtitulo_pagina'] = 'Vaciar temas';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'programas/explorar_menu_v';
+            $data['view_a'] = 'comunes/importar_v';
+            $data['nav_2'] = 'programas/explorar_menu_v';
             $data['ayuda_id'] = 122;
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN, $data);
     }
     
     /**
@@ -821,10 +820,10 @@ class Programas extends CI_Controller{
         //Cargar vista
             $data['titulo_pagina'] = 'Programas';
             $data['subtitulo_pagina'] = 'Resultado vaciado';
-            $data['vista_a'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'programas/explorar_menu_v';
+            $data['view_a'] = 'comunes/resultado_importacion_v';
+            $data['nav_2'] = 'programas/explorar_menu_v';
             $data['ayuda_id'] = 122;
-            $this->load->view(PTL_ADMIN, $data);
+            $this->load->view(TPL_ADMIN, $data);
     }
     
 //PROCESOS

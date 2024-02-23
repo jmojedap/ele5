@@ -1,5 +1,5 @@
 <?php
-    $es_profesor = ( $this->session->userdata('rol_id') < 6 ) ? TRUE : FALSE ;
+    //$es_profesor = ( $this->session->userdata('rol_id') < 6 ) ? TRUE : FALSE ;
 ?>
 
 <body style="background: <?php echo $colores[$row->area_id] ?>; ">
@@ -139,7 +139,7 @@
                             title="Link complementario sobre este tema"
                             target="_blank"
                             v-for="link in data.links"
-                            v-bind:href="`<?= base_url('temas/open_link/') ?>` + pagina.tema_id + `/` + link.id + `/` + area_id + `/` + nivel + `/?url_link=` + link.url + `&flipbook_id=` + flipbook_id"
+                            v-bind:href="`<?= base_url('admin/temas/open_link/') ?>` + pagina.tema_id + `/` + link.id + `/` + area_id + `/` + nivel + `/?url_link=` + link.url + `&flipbook_id=` + flipbook_id"
                             v-show='num_pagina == link.num_pagina'
                             >
                             <span v-if="link.titulo">{{ link.titulo }}</span>

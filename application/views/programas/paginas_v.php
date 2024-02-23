@@ -43,9 +43,9 @@
                     <p>
                         <?= anchor("flipbooks/ver_pagina/{$row_pagina->id}", 'Detalle', 'class="a2"') ?>
                         <?= anchor("flipbooks/editar_pagina/edit/{$row_pagina->id}", 'Editar', 'class="a2" target="_blank"') ?>
-                        <?= $this->Pcrn->anchor_confirm("temas/quitar_pf/{$row->id}/{$row_pagina->id}", 'Quitar...', 'class="a2" title="Quitar página de este tema"', '¿Desea quitar esta página de este tema?') ?>
-                        <?= anchor("temas/mover_pagina/{$row->id}/{$row_pagina->id}/{$num_subir}", 'Subir', 'class="a2"') ?>
-                        <?= anchor("temas/mover_pagina/{$row->id}/{$row_pagina->id}/{$num_bajar}", 'Bajar', 'class="a2"') ?>
+                        <?= $this->Pcrn->anchor_confirm("admin/temas/quitar_pf/{$row->id}/{$row_pagina->id}", 'Quitar...', 'class="a2" title="Quitar página de este tema"', '¿Desea quitar esta página de este tema?') ?>
+                        <?= anchor("admin/temas/mover_pagina/{$row->id}/{$row_pagina->id}/{$num_subir}", 'Subir', 'class="a2"') ?>
+                        <?= anchor("admin/temas/mover_pagina/{$row->id}/{$row_pagina->id}/{$num_bajar}", 'Bajar', 'class="a2"') ?>
                     </p>
                 </div>
                 <div class="clear"></div>

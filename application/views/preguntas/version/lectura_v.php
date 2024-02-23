@@ -127,13 +127,13 @@
             <td>Lectura asociada</td>
             <td>
                 [ID <?php echo $row->enunciado_id ?>]
-                <a href="<?php echo base_url("datos/enunciados_ver/{$row->enunciado_id}") ?>" target="_blank">
+                <a href="<?php echo base_url("enunciados/ver/{$row->enunciado_id}") ?>" target="_blank">
                     <?php echo $this->Pcrn->campo_id('post', $row->enunciado_id, 'nombre_post'); ?>
                 </a>
             </td>
             <td>
                 [ID <?php echo $row_version->enunciado_id ?>]
-                <a href="<?php echo base_url("datos/enunciados_ver/{$row_version->enunciado_id}") ?>" target="_blank">
+                <a href="<?php echo base_url("enunciados/ver/{$row_version->enunciado_id}") ?>" target="_blank">
                     <?php echo $this->Pcrn->campo_id('post', $row_version->enunciado_id, 'nombre_post'); ?>
                 </a>
             </td>

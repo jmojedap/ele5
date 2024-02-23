@@ -23,118 +23,13 @@ class Datos extends CI_Controller {
             $gc_output = $this->Develop_model->crud_sis_opcion();
         
         //Array data espefícicas
-            $data['titulo_pagina'] = 'Opciones del sistema';
-            $data['vista_a'] = 'comunes/gc_v';
-            $data['vista_menu'] = 'datos/parametros_menu_v';
+            $data['head_title'] = 'Opciones del sistema';
+            $data['view_a'] = 'common/bs4/gc_fluid_v';
+            $data['nav_2'] = 'datos/parametros_menu_bs4_v';
         
         $output = array_merge($data,(array)$gc_output);
         
-        $this->load->view(PTL_ADMIN, $output);
-    }
-    
-//ENUNCIADOS
-//------------------------------------------------------------------------------------------
-    
-    /**
-     * Controla y redirecciona las búsquedas de exploración de enunciados
-     * evita el problema de reenvío del formulario al presionar el botón
-     * "atrás" del browser
-     * 
-     * @param type $controlador
-     */
-    function enunciados_redirect()
-    {
-        //$this->output->enable_profiler(TRUE);
-        $this->load->model('Busqueda_model');
-        $busqueda_str = $this->Busqueda_model->busqueda_str();
-        redirect("datos/enunciados/?{$busqueda_str}");
-    }
-
-    function enunciados()
-    {
-        //$this->output->enable_profiler(TRUE);
-        $this->load->model('Busqueda_model');
-        
-        //Datos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
-        
-        //Paginación
-            $resultados_total = $this->Datos_model->buscar_enunciados($busqueda); //Para calcular el total de resultados
-            $this->load->library('pagination');
-            $config = $this->App_model->config_paginacion(2);
-            $config['base_url'] = base_url("datos/enunciados/?{$busqueda_str}");
-            $config['total_rows'] = $resultados_total->num_rows();
-            $this->pagination->initialize($config);
-            
-        //Generar resultados para mostrar
-            $offset = $this->input->get('per_page');
-            $resultados = $this->Datos_model->buscar_enunciados($busqueda, $config['per_page'], $offset);
-        
-        //Variables para vista
-            $data['cant_resultados'] = $config['total_rows'];
-            $data['busqueda'] = $busqueda;
-            $data['resultados'] = $resultados;
-            $data['destino_form'] = "datos/enunciados_redirect/";
-        
-        //Solicitar vista
-            $data['titulo_pagina'] = 'Lecturas';
-            $data['subtitulo_pagina'] = $config['total_rows'];
-            $data['vista_a'] = 'datos/enunciados/explorar_v';
-            $this->load->view(PTL_ADMIN, $data);
-    }
-    
-    function enunciados_ver($enunciado_id)
-    {
-        $data = $this->Datos_model->enunciado_basico($enunciado_id);
-        
-        $data['vista_b'] = 'datos/enunciados/enunciado_ver_v';
-        $this->load->view(PTL_ADMIN, $data);
-        
-    }
-    
-    function enunciados_editar()
-    {
-        //Cargando datos básicos
-            $enunciado_id = $this->uri->segment(4);
-            $data['enunciado_id'] = $enunciado_id;
-            $data['row'] = $this->Pcrn->registro_id('post', $enunciado_id);
-            $data['titulo_pagina'] = 'Editar enunciado';
-            $data['vista_a'] = 'datos/enunciados/enunciado_v';
-            
-        //Render del grocery crud
-            $output = $this->Datos_model->crud_enunciados();
-
-        //Solicitar vista
-            $data['subtitulo_pagina'] = 'Editar';
-            $data['vista_b'] = 'comunes/gc_v';
-            $output = array_merge($data,(array)$output);
-            $this->load->view(PTL_ADMIN, $output);
-    }
-    
-    function enunciados_nuevo()
-    {
-            
-        //Render del grocery crud
-            $output = $this->Datos_model->crud_enunciados();
-
-        //Solicitar vista
-            $data['titulo_pagina'] = 'Enunciados';
-            $data['subtitulo_pagina'] = 'Nuevo';
-            $data['vista_a'] = 'comunes/gc_v';
-            $data['vista_menu'] = 'datos/enunciados/explorar_menu_v';
-            $output = array_merge($data,(array)$output);
-            $this->load->view(PTL_ADMIN, $output);
-    }
-    
-    function enunciados_eliminar($enunciado_id)
-    {
-        $this->Datos_model->enunciado_eliminar($enunciado_id);
-        
-        $this->load->model('Busqueda_model');
-        $busqueda_str = $this->Busqueda_model->busqueda_str();
-        
-        redirect("datos/enunciados/?{$busqueda_str}");
+        $this->load->view(TPL_ADMIN_NEW, $output);
     }
     
 //AYUDA
@@ -208,58 +103,23 @@ class Datos extends CI_Controller {
             //$data['nav_2'] = $data['views_folder'] . 'menu_v';
         
         //Cargar vista
-            $this->App_model->view(TPL_ADMIN, $data);
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
      * Listado de Artículos de ayuda, filtrados por búsqueda, JSON
+     * 2023-07-08
      */
     function ayudas_get($num_page = 1)
     {
         $this->load->model('Post_model');
         $this->load->model('Search_model');
         $filters = $this->Search_model->filters();
-        $filters['tp'] = 20;
+        $filters['type'] = 20;
         $filters['f1'] = $this->session->userdata('role');    //Filtrar por rol de usuario
 
         $data = $this->Post_model->get($filters, $num_page);
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
-    }
-    
-    function z_ayudas()
-    {
-        //$this->output->enable_profiler(TRUE);
-        $this->load->model('Busqueda_model');
-        
-        //Datos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
-            
-        //Especificaciones adicionales
-            $busqueda['condicion'] = "item_corto LIKE '%-{$this->session->userdata('rol_id')}-%'";
-            $busqueda['tp'] = 14;   //Ayuda
-        
-        //Paginación
-            $resultados_total = $this->Busqueda_model->items($busqueda); //Para calcular el total de resultados
-            $this->load->library('pagination');
-            $config = $this->App_model->config_paginacion(2);
-            $config['base_url'] = base_url() . "datos/ayudas/?{$busqueda_str}";
-            $config['total_rows'] = $resultados_total->num_rows();
-            $this->pagination->initialize($config);
-            
-        //Generar resultados para mostrar
-            $offset = $this->input->get('per_page');
-            $resultados = $this->Busqueda_model->items($busqueda, $config['per_page'], $offset);
-        
-        //Variables para vista
-            $data['cant_resultados'] = $config['total_rows'];
-            $data['busqueda'] = $busqueda;
-            $data['resultados'] = $resultados;
-        
-        //Solicitar vista
-            $data['titulo_pagina'] = 'Ayuda de la Plataforma Enlace';
-            $data['vista_a'] = 'datos/ayudas/ayudas_v';
-            $this->load->view(PTL_ADMIN, $data);
     }
     
     function ayudas_ver($ayuda_id)
@@ -268,7 +128,6 @@ class Datos extends CI_Controller {
         
         $data['vista_b'] = 'datos/ayudas/ayuda_ver_v';
         $this->load->view(PTL_ADMIN, $data);
-        
     }
     
     function ayudas_editar()
@@ -322,13 +181,13 @@ class Datos extends CI_Controller {
         $gc_output = $this->Datos_model->crud_areas();
 
         //Solicitar vista
-            $data['titulo_pagina'] = 'Parámetros';
-            $data['subtitulo_pagina'] = 'Áreas';
-            $data['vista_menu'] = 'datos/parametros_menu_v';
-            $data['vista_a'] = 'comunes/gc_v';
+            $data['head_title'] = 'Parámetros';
+            $data['head_subtitle'] = 'Áreas';
+            $data['view_a'] = 'common/bs4/gc_fluid_v';
+            $data['nav_2'] = 'datos/parametros_menu_bs4_v';
 
         $output = array_merge($data,(array)$gc_output);
-        $this->load->view(PTL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN_NEW, $output);
     }
 
     function competencias()
@@ -336,14 +195,14 @@ class Datos extends CI_Controller {
         $gc_output = $this->Datos_model->crud_competencias();
 
         //Variables
-            $data['titulo_pagina'] = 'Parámetros';
-            $data['subtitulo_pagina'] = 'Competencias';
-            $data['vista_a'] = 'comunes/gc_v';
-            $data['vista_menu'] = 'datos/parametros_menu_v';
+            $data['head_title'] = 'Parámetros';
+            $data['head_subtitle'] = 'Competencias';
+            $data['view_a'] = 'common/bs4/gc_fluid_v';
+            $data['nav_2'] = 'datos/parametros_menu_bs4_v';
 
         //Solicitar vista
             $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN, $output);
+            $this->load->view(TPL_ADMIN_NEW, $output);
     }
 
     function componentes()
@@ -351,13 +210,13 @@ class Datos extends CI_Controller {
         $gc_output = $this->Datos_model->crud_componentes();
 
         //Solicitar vista
-            $data['titulo_pagina'] = 'Parámetros';
-            $data['subtitulo_pagina'] = 'Componentes';
-            $data['vista_menu'] = 'datos/parametros_menu_v';
-            $data['vista_a'] = 'comunes/gc_v';
+            $data['titulo_head_titlepagina'] = 'Parámetros';
+            $data['head_subtitle'] = 'Componentes';
+            $data['view_a'] = 'common/bs4/gc_fluid_v';
+            $data['nav_2'] = 'datos/parametros_menu_bs4_v';
 
         $output = array_merge($data,(array)$gc_output);
-        $this->load->view(PTL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN_NEW, $output);
 
     }
     
@@ -366,13 +225,13 @@ class Datos extends CI_Controller {
         $gc_output = $this->Datos_model->crud_tipos_recurso();
 
         //Solicitar vista
-            $data['titulo_pagina'] = 'Parámetros';
-            $data['subtitulo_pagina'] = 'Tipos recurso';
-            $data['vista_menu'] = 'datos/parametros_menu_v';
-            $data['vista_a'] = 'comunes/gc_v';
+            $data['head_title'] = 'Parámetros';
+            $data['head_subtitle'] = 'Tipos recurso';
+            $data['view_a'] = 'common/bs4/gc_fluid_v';
+            $data['nav_2'] = 'datos/parametros_menu_bs4_v';
 
         $output = array_merge($data,(array)$gc_output);
-        $this->load->view(PTL_ADMIN, $output);
+        $this->load->view(TPL_ADMIN_NEW, $output);
 
     }
     

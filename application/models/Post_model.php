@@ -1,81 +1,94 @@
 <?php
-class Post_Model extends CI_Model{
-    
+class Post_model extends CI_Model{
+
     function basic($post_id)
     {
         $row = $this->Db_model->row_id('post', $post_id);
-        
+
         $data['row'] = $row;
-        $data['nombre_post'] = $this->pml->if_strlen($row->nombre_post, 'Post ' . $row->id);
-        $data['head_title'] = $data['nombre_post'];
-        $data['nav_2'] = 'posts/menu_v';
-        
+        $data['type_folder'] = $this->type_folder($row->tipo_id);
+        $data['head_title'] = strip_tags($data['row']->nombre_post);
+        $data['view_a'] = 'admin/posts/post_v';
+        $data['nav_2'] = $data['type_folder'] . 'menu_v';
+
         return $data;
     }
 
 // EXPLORE FUNCTIONS - posts/explore
 //-----------------------------------------------------------------------------
-
+    
     /**
      * Array con los datos para la vista de exploración
      */
-    function explore_data($filters, $num_page)
+    function explore_data($filters, $num_page, $per_page = 10)
     {
         //Data inicial, de la tabla
-            $data = $this->get($filters, $num_page);
+            $data = $this->get($filters, $num_page, $per_page);
         
         //Elemento de exploración
-            $data['controller'] = 'posts';                      //Nombre del controlador
-            $data['cf'] = 'posts/explorar/';                      //Nombre del controlador
-            $data['views_folder'] = 'posts/explore/';           //Carpeta donde están las vistas de exploración
+            $data['controller'] = 'posts';                       //Nombre del controlador
+            $data['cf'] = 'posts/explore/';                      //Nombre del controlador
+            $data['views_folder'] = 'admin/posts/explore/';      //Carpeta donde están las vistas de exploración
+            $data['numPage'] = $num_page;                       //Número de la página
             
         //Vistas
             $data['head_title'] = 'Posts';
             $data['view_a'] = $data['views_folder'] . 'explore_v';
-            $data['head_subtitle'] = $data['search_num_rows'];
             $data['nav_2'] = $data['views_folder'] . 'menu_v';
         
         return $data;
     }
 
-    /**
-     * Conjunto de variables de una búsqueda, incluido el listado de resultados
-     */
     function get($filters, $num_page, $per_page = 10)
     {
-        //Referencia
-            $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
+        //Load
+            $this->load->model('Search_model');
 
-        //Query resultados página
-            $query = $this->search($filters, $per_page, $offset);    //Resultados para página
-            //$list = $this->list($filters, $per_page, $offset);
+        //Búsqueda y Resultados
+            $data['filters'] = $filters;
+            $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
+            $elements = $this->search($filters, $per_page, $offset);    //Resultados para página
         
         //Cargar datos
-            $data['filters'] = $filters;
-            $data['list'] = $query->result();
-            $data['str_filters'] = $this->Search_model->str_filters($filters);      //String de filtros tipo GET
-            $data['search_num_rows'] = $this->search_num_rows($filters);            //Total resultados
-            $data['max_page'] = ceil($this->pml->if_zero($data['search_num_rows'],1) / $per_page);   //Cantidad de páginas
+            $data['list'] = $elements->result();
+            $data['strFilters'] = $this->Search_model->str_filters($filters, TRUE);
+            $data['qtyResults'] = $this->qty_results($filters);
+            $data['maxPage'] = ceil($this->pml->if_zero($data['qtyResults'],1) / $per_page);   //Cantidad de páginas
 
         return $data;
     }
 
     /**
-     * Query con resultados de pictures filtrados, por página y offset
+     * Segmento Select SQL, con diferentes formatos, consulta de posts
+     * 2022-08-23
+     */
+    function select($format = 'general')
+    {
+        $arr_select['general'] = 'id, nombre_post, resumen, tipo_id, url_thumbnail, url_image, slug, publicado, status';
+        $arr_select['export'] = '*';
+        $arr_select['lectura_dinamica'] = 'id, nombre_post';
+
+        return $arr_select[$format];
+    }
+    
+    /**
+     * Query con resultados de posts filtrados, por página y offset
      * 2020-07-15
      */
     function search($filters, $per_page = NULL, $offset = NULL)
     {
-        //Construir consulta
-            $this->db->select('*');
-            
+        //Segmento SELECT
+            $select_format = 'general';
+            if ( $filters['sf'] != '' ) { $select_format = $filters['sf']; }
+            $this->db->select($this->select($select_format));
+        
         //Orden
             if ( $filters['o'] != '' )
             {
                 $order_type = $this->pml->if_strlen($filters['ot'], 'ASC');
                 $this->db->order_by($filters['o'], $order_type);
             } else {
-                $this->db->order_by('post.editado', 'DESC');
+                $this->db->order_by('editado', 'DESC');
             }
             
         //Filtros
@@ -86,57 +99,45 @@ class Post_Model extends CI_Model{
             $query = $this->db->get('post', $per_page, $offset); //Resultados por página
         
         return $query;
+        
     }
-    
+
     /**
-     * String con condición WHERE SQL para filtrar file
+     * String con condición WHERE SQL para filtrar post
+     * 2022-05-02
      */
     function search_condition($filters)
     {
         $condition = NULL;
 
-        //$condition .= 'is_image = 1 AND ';   //Es imagen
-
-        //$condition .= $this->role_filter() . ' AND ';
+        $condition .= $this->role_filter() . ' AND ';
 
         //q words condition
-        $words_condition = $this->Search_model->words_condition($filters['q'], array('nombre_post', 'contenido', 'resumen'));
+        $words_condition = $this->Search_model->words_condition($filters['q'], array('nombre_post', 'contenido', 'resumen', 'keywords'));
         if ( $words_condition )
         {
             $condition .= $words_condition . ' AND ';
         }
         
-        //Filtros
-        if ( strlen($filters['tp']) > 0 ) $condition .= "tipo_id = {$filters['tp']} AND ";
-        if ( strlen($filters['f1']) > 0 ) $condition .= "texto_3 LIKE '%-{$filters['f1']}-%' AND ";
+        //Otros filtros
+        if ( $filters['type'] != '' ) { $condition .= "tipo_id = {$filters['type']} AND "; }
+        if ( $filters['status'] != '' ) { $condition .= "status = {$filters['status']} AND "; }
+        if ( $filters['cat_1'] != '' ) { $condition .= "cat_1 = {$filters['cat_1']} AND "; }
+        if ( $filters['cat_2'] != '' ) { $condition .= "cat_2 = {$filters['cat_2']} AND "; }
+        if ( $filters['u'] != '' ) { $condition .= "usuario_id = {$filters['u']} AND "; }
+        if ( $filters['condition'] != '' ) { $condition .= "{$filters['condition']} AND "; }
         
         //Quitar cadena final de ' AND '
         if ( strlen($condition) > 0 ) { $condition = substr($condition, 0, -5);}
         
         return $condition;
     }
-
-    /**
-     * Devuelve segmento SQL, con filtro según el rol
-     */
-    function role_filter()
-    {
-        $role = $this->session->userdata('role');
-        $condition = 'post.id > 0';  //Valor por defecto, ningún file, se obtendrían cero file.
-        
-        if ( $role <= 2 ) 
-        {   //Desarrollador, todos los file
-            $condition = 'post.id > 0';
-        }
-        
-        return $condition;
-    }
     
     /**
-     * Cantidad total registros encontrados en la tabla con los filtros
+     * Devuelve la cantidad de registros encontrados en la tabla con los filtros
      * establecidos en la búsqueda
      */
-    function search_num_rows($filters)
+    function qty_results($filters)
     {
         $this->db->select('id');
         $search_condition = $this->search_condition($filters);
@@ -145,9 +146,50 @@ class Post_Model extends CI_Model{
 
         return $query->num_rows();
     }
+
+    /**
+     * Query para exportar
+     * 2022-08-17
+     */
+    function query_export($filters)
+    {
+        //Select
+        $select = $this->select('export');
+        if ( $filters['sf'] != '' ) { $select = $this->select($filters['sf']); }
+        $this->db->select($select);
+
+        //Condición Where
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+
+        //Get
+        $query = $this->db->get('post', 10000);  //Hasta 10.000 registros
+
+        return $query;
+    }
     
     /**
-     * Array con options para ordenar el listado de file en la vista de
+     * Devuelve segmento SQL
+     */
+    function role_filter()
+    {
+        $role = $this->session->userdata('role');
+        $condition = 'id > 0';  //Valor por defecto, ningún post, se obtendrían cero posts.
+        
+        if ( $role <= 2 ) 
+        {   //Desarrollador, todos los post
+            $condition = 'id > 0';
+        } elseif ( $role == 3 ) {
+            $condition = 'tipo_id IN (311,312)';
+        } elseif ( $role == 9 ) {
+            $condition = 'tipo_id IN (126)';
+        }
+        
+        return $condition;
+    }
+    
+    /**
+     * Array con options para ordenar el listado de post en la vista de
      * exploración
      */
     function order_options()
@@ -155,7 +197,7 @@ class Post_Model extends CI_Model{
         $order_options = array(
             '' => '[ Ordenar por ]',
             'id' => 'ID Post',
-            'post_name' => 'Nombre'
+            'nombre_post' => 'Nombre'
         );
         
         return $order_options;
@@ -163,590 +205,485 @@ class Post_Model extends CI_Model{
 
 // CRUD
 //-----------------------------------------------------------------------------
-    
-    /**
-     * Insertar un registro en la tabla post.
-     * 2020-02-22
-     */
-    function insert($arr_row = NULL)
-    {
-        if ( is_null($arr_row) ) { $arr_row = $this->arr_row('insert'); }
 
-        $data = array('status' => 0);
-        
-        //Insert in table
+    /**
+     * Objeto registro de un post ID, con un formato específico
+     * 2021-01-04
+     */
+    function row($post_id, $format = 'general')
+    {
+        $row = NULL;    //Valor por defecto
+
+        $this->db->select($this->select($format));
+        $this->db->where('id', $post_id);
+        $query = $this->db->get('post', 1);
+
+        if ( $query->num_rows() > 0 ) $row = $query->row();
+
+        return $row;
+    }
+
+    /**
+     * Guardar un registro en la tabla posts
+     * 2022-07-27
+     */
+    function save($arr_row = null)
+    {
+        //Verificar si hay array con registro
+        if ( is_null($arr_row) ) $arr_row = $this->arr_row();
+
+        //Verificar si tiene id definido, insertar o actualizar
+        if ( ! isset($arr_row['id']) ) 
+        {
+            //No existe, insertar
+            $arr_row['slug'] = $this->Db_model->unique_slug($arr_row['nombre_post'],'post');
             $this->db->insert('post', $arr_row);
-            $data['saved_id'] = $this->db->insert_id();
+            $post_id = $this->db->insert_id();
+        } else {
+            //Ya existe, editar
+            $post_id = $arr_row['id'];
+            unset($arr_row['id']);
 
-        if ( $data['saved_id'] > 0 ) { $data['status'] = 1; }
-        
+            $this->db->where('id', $post_id)->update('post', $arr_row);
+        }
+
+        $data['saved_id'] = $post_id;
         return $data;
     }
 
     /**
-     * Actualiza un registro en la tabla post
-     * 2020-02-22
+     * Nombre de la vista con el formulario para la edición del post. 
+     * Puede cambiar dependiendo del tipo (tipo_id).
+     * 2021-06-09
      */
-    function update($post_id)
+    function type_folder($tipo_id)
     {
-        $data = array('status' => 0);
+        $special_types = $this->App_model->posts_special_types();
+        $type_folder = 'admin/posts/';
 
-        //Guardar
-            $arr_row = $this->Db_model->arr_row($post_id);
-            $saved_id = $this->Db_model->save('post', "id = {$post_id}", $arr_row);
-
-        //Actualizar resultado
-            if ( $saved_id > 0 ){ $data = array('status' => 1); }
-        
-        return $data;
-    }
-
-    /**
-     * Nombre de la vista con el formulario para la edición del post. Puede cambiar dependiendo
-     * del tipo (type_id).
-     * 2020-02-23
-     */
-    function type_folder($row)
-    {
-        $type_folder = 'posts/';
-        if ( $row->tipo_id == 20 ) $type_folder = 'posts/types/ayuda/';
-        if ( $row->tipo_id == 30 ) $type_folder = 'posts/types/bitacora/';
+        if ( in_array($tipo_id, $special_types) ) { 
+            $type_folder = "admin/posts/types/{$tipo_id}/";
+        }
 
         return $type_folder;
     }
 
-// VALIDATION
-//-----------------------------------------------------------------------------
-
-    function arr_row($process = 'update')
+    /**
+     * Array from HTTP:POST, adding edition data
+     * 2023-07-02
+     */
+    function arr_row($data_from_post = TRUE)
     {
-        $arr_row = $this->input->post();
+        $arr_row = array();
+
+        if ( $data_from_post ) { $arr_row = $this->input->post(); }
+        
         $arr_row['editor_id'] = $this->session->userdata('user_id');
+        $arr_row['editado'] = date('Y-m-d H:i:s');
+        $arr_row['usuario_id'] = $this->session->userdata('user_id');
+        $arr_row['creado'] = date('Y-m-d H:i:s');
         
-        if ( $process == 'insert' )
+        if ( isset($arr_row['id']) )
         {
-            $arr_row['slug'] = $this->Db_model->unique_slug($arr_row['nombre_post'], 'post');
-            $arr_row['usuario_id'] = $this->session->userdata('user_id');
+            unset($arr_row['usuario_id']);
+            unset($arr_row['creado']);
         }
-        
+
         return $arr_row;
     }
 
-// VISTA
-//-----------------------------------------------------------------------------
-    
     /**
-     * Nombre de la vista para la edición de un post, dependiendo del tipo:
-     * $row_post->tipo_id
+     * Array con posts, especificando código y nombre. Filtrados por condición
+     * 2024-02-22
      * 
-     * @param type $row_post
-     * @return string
+     * @param string $condition
+     * @return array $options
      */
-    function vista_editar($row_post)
+    function arr_options($condition)
     {
-        $vista_editar = 'posts/editar_v';
-        
-        $vistas = array(
-            22 => 'posts/listas/editar_v',
-            30 => 'posts/bitacora/edit_v',
-            4401 => 'posts/enunciados/editar_v',
-            4311 => 'posts/contenidos_ap/editar_v'
-        );
-        
-        if ( array_key_exists($row_post->tipo_id, $vistas) ) { $vista_editar = $vistas[$row_post->tipo_id]; }
-        
-        return $vista_editar;
-    }
-    
-    /**
-     * Nombre de la vista para la lectura de un post, dependiendo del tipo:
-     * $row_post->tipo_id
-     * 
-     * @param type $row_post
-     * @return string
-     */
-    function vista_leer($row_post)
-    {
-        //$vista_leer = 'posts/leer_v';
-        $vista_leer = 'posts/contenidos_ap/leer_v';
-        
-        $vistas = array(
-            30 => 'posts/bitacora/leer_v',
-            4401 => 'posts/contenidos_ap/leer_v',
-        );
-        
-        if ( array_key_exists($row_post->tipo_id, $vistas) ) { $vista_leer = $vistas[$row_post->tipo_id]; }
-        
-        return $vista_leer;
-    }
-    
-// CRUD
-//-----------------------------------------------------------------------------
-    
-    function crud_basico()
-    {
-        //Grocery crud
-        $this->load->library('grocery_CRUD');
-        
-        $crud = new grocery_CRUD();
-        $crud->set_table('post');
-        $crud->set_subject('post');
-        $crud->unset_export();
-        $crud->unset_print();
-        $crud->unset_back_to_list();
-        $crud->unset_delete();
-        
-        //Títulos
-            $crud->display_as('nombre_post', 'Título');
-            $crud->display_as('tipo_id', 'Tipo');
-            
-        //Campos
-            $crud->add_fields(
-                    'nombre_post',
-                    'tipo_id',
-                    'usuario_id',
-                    'editor_id',
-                    'creado',
-                    'editado'
-                );
-            
-        //Array opciones
-            $arr_tipos = $this->App_model->arr_item(33);
-            
-        //Relaciones
-            //$crud->set_relation('estado_post', 'item', 'item', 'categoria_id = 7', 'id_interno ASC');
-            
-        //Reglas
-            //$crud->required_fields('nombre', 'direccion', 'telefono', 'pais_id', 'email');
-            //$crud->set_rules('grosor', 'Grosor', 'is_natural');
-        
-        //Tipos de campo
-            $crud->field_type('tipo_id', 'dropdown', $arr_tipos);
-            $crud->field_type('usuario_id', 'hidden', $this->session->userdata('usuario_id'));
-            $crud->field_type('editor_id', 'hidden', $this->session->userdata('usuario_id'));
-            $crud->field_type('creado', 'hidden', date('Y-m-d H:i:s'));
-            $crud->field_type('editado', 'hidden', date('Y-m-d H:i:s'));
-                        
-        //Formato
-            
-            $crud->unset_texteditor('notas_admin');
-        
-        $output = $crud->render();
-        
-        return $output;
-    }
-    
-    function vista_a($row)
-    {
-        $vista_a = 'posts/post_v';
-        if ( $row->tipo_id == 22 ){ $vista_a = 'posts/listas/lista_v'; }
-        
-        return $vista_a;
-    }
-    
-    /**
-     * Inserta un registro en la tabla grupo. Toma datos de POST, actualiza los 
-     * campos del registo dependientes.
-     * 
-     * @param type $institucion_id
-     * @return type
-     */
-    function insertar() 
-    {
-        //Resultado del proceso, por defecto
-            $resultado = $this->Pcrn->res_inicial();
-        
-        //Cargar registro e insertarlo
-            $registro = $this->input->post();
-            $registro['editor_id'] = $this->session->userdata('usuario_id');
-            $registro['editado'] = date('Y-m-d H:i:s');
-            $registro['usuario_id'] = $this->session->userdata('usuario_id');
-            //$registro['creado'] = date('Y-m-d H:i:s');
+        $select = 'id, nombre_post AS name';
 
-            $this->db->insert('post', $registro);
-            $nuevo_id = $this->db->insert_id();
+        $query = $this->db->select($select)
+            ->where($condition)
+            ->order_by('nombre_post', 'ASC')
+            ->get('post');
         
-        //Si se creó el post, modificar array de resultado
-            if ( $nuevo_id > 0 )
-            {
-                //$this->act_dependientes($post_id);
-                
-                $resultado['ejecutado'] = 1;
-                $resultado['mensaje'] = 'El post fue creado correctamente.';
-                $resultado['clase'] = 'alert-success';
-                $resultado['icono'] = 'fa-check';
-                $resultado['nuevo_id'] = $nuevo_id;
-            }
-            
-        return $resultado;
+        $options = $query->result_array();
+        
+        return $options;
     }
-    
-    function guardar_post($condicion, $registro)
-    {
-        $post_id = $this->Pcrn->existe('post', $condicion);
-        
-        //Complementar datos
-        $registro['editor_id'] = $this->session->userdata('usuario_id');
-        $registro['editado'] = date('Y-m-d H:i:s');
-        
-        if ( $post_id == 0 ) 
-        {
-            //No existe, insertar
-            $registro['usuario_id'] = $this->session->userdata('usuario_id');
-            $registro['creado'] = date('Y-m-d H:i:s');
-            
-            $this->db->insert('post', $registro);
-            $post_id = $this->db->insert_id();
-        } else {
-            //Ya existe, editar
-            $this->db->where('id', $post_id);
-            $this->db->update('post', $registro);
-        }
-        
-        return $post_id;
-    }
-    
-    function editable($post_id)
-    {
-        $editable = 1;
-        return $editable;
-    }
-    
-    function metadatos($post_id, $dato_id = NULL)
-    {
-        $this->db->select('*');
-        $this->db->where('relacionado_id', $post_id);
-        $this->db->where('dato_id', $dato_id);
-        $this->db->order_by('dato_id', 'ASC');
-        $this->db->order_by('orden', 'ASC');
-        $query = $this->db->get('meta');
-        
-        return $query;
-    }
+
+// ELIMINACIÓN DE UN POST
+//-----------------------------------------------------------------------------
     
     /**
-     * Actualizar un registro en la tabla post
-     * 2019-07-02
+     * Verifica si el usuario en sesión tiene permiso para eliminar un registro
+     * tabla post
+     * 2020-08-18
      */
-    function actualizar($post_id, $registro = NULL)
+    function deleteable($row_id)
     {
-        if ( is_null($registro) ) { $registro = $this->input->post(); }
-        
-        $registro['editor_id'] = $this->session->userdata('usuario_id');
-        $registro['editado'] = date('Y-m-d H:i:s');
-        
-        $this->db->where('id', $post_id);
-        $this->db->update('post', $registro);
-        
-        $data['status'] = 1;
-        $data['message'] = 'Los datos fueron actualizados exitosamente';
-        
-        return $data;
-    }
-    
-    /**
-     * Determina si se tiene el permiso para eliminar o no un registro de la tabla post
-     */
-    function eliminable($post_id)
-    {
-        $eliminable = 0;
-        if ( $this->session->userdata('rol_id') <= 2 ) {
-            $eliminable = 1;
+        $row = $this->Db_model->row_id('post', $row_id);
+
+        $deleteable = 0;    //Valor por defecto
+
+        //Es Administrador
+        if ( in_array($this->session->userdata('role'), [0,1,2]) ) {
+            $deleteable = 1;
         }
-        return $eliminable;
+
+        //Es el creador
+        if ( $row->usuario_id = $this->session->userdata('user_id') ) {
+            $deleteable = 1;
+        }
+
+        return $deleteable;
     }
-    
-    function eliminar($post_id)
+
+    /**
+     * Eliminar un post de la base de datos, se eliminan registros de tablas
+     * relacionadas
+     * 2022-08-20
+     */
+    function delete($post_id)
     {
         $qty_deleted = 0;
 
-        if ( $this->eliminable($post_id) ) 
+        if ( $this->deleteable($post_id) ) 
         {
-            //Tablas relacionadas, post
-                $this->db->where('tabla_id', 2000); //Tabla post
-                $this->db->where('elemento_id', $post_id);
-                $this->db->delete('meta');
-                
-            //Tablas relacionadas, post, listas
-                $this->db->where('relacionado_id', $post_id);
-                $this->db->where('dato_id', 22);
-                $this->db->delete('meta');
+            //Tablas relacionadas
+                $this->db->where('padre_id', $post_id)->delete('post');
+                //$this->db->where('post_id', $post_id)->delete('post_meta');
             
             //Tabla principal
-                $this->db->where('id', $post_id);
-                $this->db->delete('post');
+                $this->db->where('id', $post_id)->delete('post');
 
-            $qty_deleted = $this->db->affected_rows();
+            $qty_deleted = $this->db->affected_rows();  //De la última consulta, tabla principal
+
+            //Eliminar archivos relacionados
+            //if ( $qty_deleted > 0 ) $this->delete_files($post_id);
         }
 
         return $qty_deleted;
     }
-    
-    function reordenar_lista($post_id, $arr_elementos)
-    {
-        //Actualizar orden en tabla meta
-            foreach ( $arr_elementos as $orden => $elemento_id)
-            {
-                $registro['orden'] = $orden;
 
-                $this->db->where('relacionado_id', $post_id);
-                $this->db->where('dato_id', 22);    //Elemento de lista
-                $this->db->where('elemento_id', $elemento_id);
-                $this->db->update('meta', $registro);
-            }
+    /**
+     * Eliminar los archivos relacionados con el post eliminado
+     * 2021-02-20
+     */
+    function delete_files($post_id)
+    {
+        //Identificar archivos
+        $this->db->select('id');
+        $this->db->where("table_id = 2000 AND referente_1_id = {$post_id}");
+        $files = $this->db->get('files');
         
-        //Actualizar edición, tabla post
-            $reg_post['editado'] = date('Y-m-d H:i:s');
-            $reg_post['editor_id'] = $this->session->userdata('usuario_id');
-            
-            $this->db->where('id', $post_id);
-            $this->db->update('post', $reg_post);
-        
-        
-        return count($arr_elementos);
+        //Eliminar archivos
+        $this->load->model('File_model');
+        $session_data = $this->session->userdata();
+        foreach ( $files->result() as $file ) {
+            $this->File_model->delete($file->id, $session_data);
+        }
     }
-    
-// CONTENIDOS AP (ACOMPAÑAMIENTO PEDAGÓGICO)
+
+// IMAGES
 //-----------------------------------------------------------------------------
-    
-    /**
-     * Búsqueda de contenidos de Acompañamiento Pedagógico
-     * 
-     * @param type $busqueda
-     * @param type $per_page
-     * @param type $offset
-     * @return type
-     */
-    function ap_buscar($busqueda, $per_page = NULL, $offset = NULL)
-    {
-        //Filtro por rol de usuarios
-            $filtro_usuarios = $this->ap_filtro_usuarios();
-        
-        //Construir búsqueda
-        //Crear array con términos de búsqueda
-            if ( strlen($busqueda['q']) > 2 )
-            {
-                
-                $campos_posts = array('nombre_post', 'contenido', 'resumen', 'editado', 'creado');
-                
-                $concat_campos = $this->Search_model->concat_fields($campos_posts);
-                $palabras = $this->Search_model->words($busqueda['q']);
 
-                foreach ($palabras as $palabra) {
-                    $this->db->like("CONCAT({$concat_campos})", $palabra);
-                }
-            }
-        
-        //Especificaciones de consulta
-            $this->db->select('post.*');
-            $this->db->order_by('editado', 'DESC');
-            $this->db->where('tipo_id = 4311'); //Acompañamiento pedagógico
-            $this->db->where($filtro_usuarios);
-            
-        //Otros filtros
-            if ( $busqueda['e'] != '' ) { $this->db->where('editado', $busqueda['e']); }                //Editado
-            if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_id', $busqueda['tp']); }              //Tipo de post
-            if ( $busqueda['f1'] != '' ) { $this->db->where('referente_1_id', $busqueda['f1']); }       //Filtro 1
-            if ( $busqueda['f2'] != '' ) { $this->db->where('referente_2_id', $busqueda['f2']); }       //Filtro 2
-            if ( $busqueda['f3'] != '' ) { $this->db->where('referente_3_id', $busqueda['f3']); }       //Filtro 3
-            if ( $busqueda['n'] != '' ) { 
-                $nivel_formato = strval(intval($busqueda['n']));
-                $this->db->where("texto_2 LIKE '%{$nivel_formato}%'");
-             }       //Niveles
-            if ( $busqueda['condicion'] != '' ) { $this->db->where($busqueda['condicion']); }           //Condición especial
-            
-        //Obtener resultados
-        if ( is_null($per_page) ){
-            $query = $this->db->get('post'); //Resultados totales
-        } else {
-            $query = $this->db->get('post', $per_page, $offset); //Resultados por página
-        }
-        
-        return $query;
-        
-    }
-    
-    function ap_filtro_usuarios()
+    /**
+     * Imágenes asociadas al post
+     * 2022-01-11
+     */
+    function images($post_id)
     {
-        $role = $this->session->userdata('role');
-        $condicion = 'id > 0';  //Valor por defecto
-        
-        /*if ( in_array($role, array(0,1,2)) )
+        $this->db->select('files.id, files.title, url, url_thumbnail, files.integer_1 AS main, position');
+        $this->db->where('is_image', 1);
+        $this->db->where('table_id', '2000');      //Tabla post
+        $this->db->where('related_1', $post_id);   //Relacionado con el post
+        $this->db->order_by('position', 'ASC');
+        $images = $this->db->get('files');
+
+        return $images;
+    }
+
+    /**
+     * Establecer una imagen asociada a un post como la imagen principal (tabla file)
+     * 2020-09-05
+     */
+    function set_main_image($post_id, $file_id)
+    {
+        $data = array('status' => 0);
+
+        $row_file = $this->Db_model->row_id('files', $file_id);
+        if ( ! is_null($row_file) )
         {
-            $condicion = 'id > 0';
-        } else {
-            $condicion_sub = 'dato_id = 400010';
-            $condicion_sub .= ' AND elemento_id = ' . $this->session->userdata('institucion_id');
-            $condicion_sub .= ' AND fecha_1 >= "' . date('Y-m-d H:i:s') . '"';
-            $condicion = "id IN (SELECT relacionado_id FROM meta WHERE {$condicion_sub})";
-        }*/
-        
-        return $condicion;
-    }
-    
-    /**
-     * Array con los datos para la vista de exploración de post acompañamiento
-     * pedagógico
-     * 
-     * @return string
-     */
-    function ap_data_explorar($num_pagina)
-    {
-        //Data inicial, de la tabla
-            $data = $this->ap_data_tabla_explorar($num_pagina);
-        
-        //Elemento de exploración
-            $data['controlador'] = 'posts';                      //Nombre del controlador
-            $data['carpeta_vistas'] = 'posts/contenidos_ap/explorar/';         //Carpeta donde están las vistas de exploración
-            $data['head_title'] = 'Contenidos AP';
-                
-        //Otros
-            $data['cant_resultados'] = $this->Post_model->search_num_rows($data['filters']);
-            $data['max_pagina'] = ceil($this->Pcrn->si_cero($data['cant_resultados'],1) / $data['per_page']) - 1;   //Cantidad de páginas, menos 1 por iniciar en cero
+            //Quitar otro principal
+            $this->db->query("UPDATE files SET integer_1 = 0 WHERE table_id = 2000 AND referente_1_id = {$post_id} AND integer_1 = 1");
 
-        //Vistas
-            $data['view_a'] = $data['carpeta_vistas'] . 'explorar_v';
-            //$data['head_subtitle'] = $data['cant_resultados'];
-            //$data['nav_2'] = $data['carpeta_vistas'] . 'menu_v';
+            //Poner nuevo principal
+            $this->db->query("UPDATE files SET integer_1 = 1 WHERE id = {$file_id} AND referente_1_id = {$post_id}");
+
+            //Actualizar registro en tabla post
+            $arr_row['imagen_id'] = $row_file->id;
+            $arr_row['url_image'] = $row_file->url;
+            $arr_row['url_thumbnail'] = $row_file->url_thumbnail;
+
+            $this->db->where('id', $post_id);
+            $this->db->update('post', $arr_row);
+
+            $data['status'] = 1;
+        }
+
+        return $data;
+    }
+
+// POST INFO
+//-----------------------------------------------------------------------------
+
+    /**
+     * Array con datos del autor o creador de un post
+     */
+    function author($row_post)
+    {
+        $author = array(
+            'id' => '', 'username' => 'ND', 'display_name' => 'ND', 'url_thumbnail' => '',
+        );
+
+        $user = $this->Db_model->row_id('users', $row_post->usuario_id);
+        if ( ! is_null($user) ) {
+            $author = array(
+                'id' => $user->id,
+                'username' => $user->username,
+                'display_name' => $user->display_name,
+                'url_thumbnail' => $user->url_thumbnail,
+            );              
+        }
+
+        return $author;
+        
+    }
+
+// IMPORTAR
+//-----------------------------------------------------------------------------}
+
+    /**
+     * Array con configuración de la vista de importación según el tipo de usuario
+     * que se va a importar.
+     * 2019-11-20
+     */
+    function import_config($type)
+    {
+        $data = array();
+
+        if ( $type == 'general' )
+        {
+            $data['help_note'] = 'Se importarán posts a la base de datos.';
+            $data['help_tips'] = array();
+            $data['template_file_name'] = 'f50_posts.xlsx';
+            $data['sheet_name'] = 'post';
+            $data['head_subtitle'] = 'Importar';
+            $data['destination_form'] = "posts/import_e/{$type}";
+        }
+
+        return $data;
+    }
+
+    /**
+     * Importa posts a la base de datos
+     * 2020-02-22
+     */
+    function import($arr_sheet)
+    {
+        $data = array('qty_imported' => 0, 'results' => array());
+        
+        foreach ( $arr_sheet as $key => $row_data )
+        {
+            $data_import = $this->import_post($row_data);
+            $data['qty_imported'] += $data_import['status'];
+            $data['results'][$key + 2] = $data_import;
+        }
         
         return $data;
     }
-    
+
     /**
-     * Array con los datos para la tabla de la vista de exploración
-     * 
-     * @param type $num_pagina
-     * @return string
+     * Realiza la importación de una fila del archivo excel. Valida los campos, crea registro
+     * en la tabla post, y agrega al grupo asignado.
+     * 2020-02-22
      */
-    function ap_data_tabla_explorar($num_pagina)
+    function import_post($row_data)
     {
-        //Elemento de exploración
-            $data['cf'] = 'posts/ap_explorar/';     //CF Controlador Función
-        
-        //Paginación
-            $data['num_pagina'] = $num_pagina;              //Número de la página de datos que se está consultado
-            $data['per_page'] = 20;                         //Cantidad de registros por página
-            $offset = ($num_pagina - 1) * $data['per_page'];      //Número de la página de datos que se está consultado
-        
-        //Búsqueda y Resultados
-            $this->load->model('Search_model');
-            $data['filters'] = $this->Search_model->filters();
-            $data['str_filters'] = $this->Search_model->str_filters();
-            
-            $data['resultados'] = $this->Post_model->ap_buscar($data['filters'], $data['per_page'], $offset);    //Resultados para página
-            
-        //Otros
-            $data['seleccionados_todos'] = '-'. $this->Pcrn->query_to_str($data['resultados'], 'id');               //Para selección masiva de todos los elementos de la página
-            
-        return $data;
-    }
-    
-    function ap_guardar_asignacion($registro)
-    {
-        //Resultado previo
-        $resultado['ejecutado'] = 0;
-        
-        //Completar registro
-        $registro['tabla_id'] = 4000;
-        $registro['dato_id'] = 400010;
-        
-        //Guardar
-        $this->load->model('Meta_model');
-        $meta_id = $this->Meta_model->guardar($registro);
-        
-        //Actualizar resultado
-        if ( $meta_id > 0 )    
-        {
-            $resultado['ejecutado'] = 1;
-        }
-        
-        return $resultado;
-    }
-    
-    /**
-     * Elimina la asignación de un post a una institución en la tabla meta
-     * dato_id = 400010
-     * 
-     * @param type $post_id
-     * @param type $meta_id
-     * @return int
-     */
-    function ap_eliminar_asignacion($post_id, $meta_id)
-    {
-        //Valor por defecto
-        $resultado['ejecutado'] = 0;
-        
-        //Eliminación
-        $this->db->where('dato_id', 400010);
-        $this->db->where('id', $meta_id);
-        $this->db->where('relacionado_id', $post_id);
-        $this->db->delete('meta');
-        
-        //Ejecutado
-        if ( $this->db->affected_rows() > 0  ) { $resultado['ejecutado'] = 1; }
-        
-        return $resultado;
-    }
-    
-    /**
-     * Asigna masivamente contenidos AP a Instituciones
-     * 
-     * @param type $array_hoja    Array con los datos de asignaciones
-     * @return type
-     */
-    function ap_importar_asignaciones($array_hoja)
-    {       
-        $this->load->model('Esp');
-        
-        $no_importados = array();
-        $fila = 2;  //Inicia en la fila 2 de la hoja de cálculo
-        
-        foreach ( $array_hoja as $array_fila )
-        {
-            //Datos referencia
-                $row_ap = $this->Pcrn->registro('post', "id = '{$array_fila[0]}'");
-                $row_institucion = $this->Pcrn->registro('institucion', "id = '{$array_fila[1]}'");
-                
-            //Validar
-                $condiciones = 0;
-                if ( ! is_null($row_ap) ) { $condiciones++; }               //Debe tener contenido AP identificado
-                if ( ! is_null($row_institucion) ) { $condiciones++; }      //Debe tener institución identificada
-                if ( strlen($array_fila[2]) > 0 ) { $condiciones++; }       //Debe tener fecha escrita
-                
-            //Si cumple las condiciones
-            if ( $condiciones == 3 )
+        //Validar
+            $error_text = '';
+                            
+            if ( strlen($row_data[0]) == 0 ) { $error_text = 'La casilla Nombre está vacía. '; }
+            if ( strlen($row_data[1]) == 0 ) { $error_text .= 'La casilla Cod Tipo está vacía. '; }
+            if ( strlen($row_data[2]) == 0 ) { $error_text .= 'La casilla Resumen está vacía. '; }
+            if ( strlen($row_data[14]) == 0 ) { $error_text .= 'La casilla Fecha Publicación está vacía. '; }
+
+        //Si no hay error
+            if ( $error_text == '' )
             {
-                $mktime = $this->Pcrn->fexcel_unix($array_fila[2]);
+                $arr_row['nombre_post'] = $row_data[0];
+                $arr_row['tipo_id'] = $row_data[1];
+                $arr_row['resumen'] = $row_data[2];
+                $arr_row['contenido'] = $row_data[3];
+                $arr_row['contenido_json'] = $row_data[4];
+                $arr_row['keywords'] = $row_data[5];
+                $arr_row['code'] = $row_data[6];
+                $arr_row['place_id'] = $this->pml->if_strlen($row_data[7], 0);
+                $arr_row['referente_1_id'] = $this->pml->if_strlen($row_data[8], 0);
+                $arr_row['referente_2_id'] = $this->pml->if_strlen($row_data[9], 0);
+                $arr_row['imagen_id'] = $this->pml->if_strlen($row_data[10], 0);
+                $arr_row['texto_1'] = $this->pml->if_strlen($row_data[11], '');
+                $arr_row['texto_2'] = $this->pml->if_strlen($row_data[12], '');
+                $arr_row['status'] = $this->pml->if_strlen($row_data[13], 2);
+                $arr_row['publicado'] = $this->pml->dexcel_dmysql($row_data[14]);
+                $arr_row['slug'] = $this->Db_model->unique_slug($row_data[0], 'post');
                 
-                $registro['elemento_id'] = $row_institucion->id;
-                $registro['relacionado_id'] = $row_ap->id;
-                $registro['fecha_1'] = date('Y-m-d', $mktime) . ' 23:59:59'; //Día completo
-                $this->ap_guardar_asignacion($registro);
+                $arr_row['usuario_id'] = $this->session->userdata('user_id');
+                $arr_row['editor_id'] = $this->session->userdata('user_id');
+
+                //Guardar en tabla user
+                $data_insert = $this->insert($arr_row);
+
+                $data = array('status' => 1, 'text' => '', 'imported_id' => $data_insert['saved_id']);
             } else {
-                $no_importados[] = $fila;
+                $data = array('status' => 0, 'text' => $error_text, 'imported_id' => 0);
             }
-            
-            $fila++;    //Para siguiente fila
-        }
-        
-        $res_importacion['no_importados'] = $no_importados;
-        
-        return $res_importacion;
-    }
-    
-    /**
-     * Query de Instituciones relacionadas con un POST
-     * @return type
-     */
-    function instituciones($post_id)
-    {
-        $this->db->select('meta.id AS meta_id, elemento_id AS institucion_id, nombre_institucion, fecha_1, meta.usuario_id');
-        $this->db->join('institucion', 'meta.elemento_id = institucion.id');
-        $this->db->where('relacionado_id', $post_id);
-        $this->db->order_by('elemento_id', 'ASC');
-        $query = $this->db->get('meta');
 
-        return $query;
+        return $data;
     }
-    
+
+// INTERACCIÓN DE USUARIOS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Proceso alternado, like or unlike un post, registro type 10 en la tabla users_meta
+     * 2020-12-22
+     */
+    function alt_like($post_id)
+    {
+        //Condición
+        $condition = "referente_1_id = {$post_id} AND tipo_id = 10 AND user_id = {$this->session->userdata('user_id')}";
+
+        $row_meta = $this->Db_model->row('users_meta', $condition);
+
+        $data = array('status' => 0);
+
+        if ( is_null($row_meta) )
+        {
+            //No existe: like
+            $arr_row['user_id'] = $this->session->userdata('user_id');
+            $arr_row['referente_1_id'] = $post_id;
+            $arr_row['tipo_id'] = 10; //Like de un post
+            $arr_row['editor_id'] = $this->session->userdata('user_id');
+            $arr_row['usuario_id'] = $this->session->userdata('user_id');
+
+            $this->db->insert('users_meta', $arr_row);
+            
+            $data['saved_id'] = $this->db->insert_id();
+            $data['status'] = 1;
+
+            //$this->db->query("UPDATE post SET ");
+        } else {
+            //Existe, eliminar (Unlike)
+            $this->db->where('id', $row_meta->id);
+            $this->db->delete('users_meta');
+            
+            $data['qty_deleted'] = $this->db->affected_rows();
+            $data['status'] = 2;
+        }
+
+        return $data;
+    }
+
+// Asignación a usuario
+//-----------------------------------------------------------------------------
+
+    /**
+     * Asignar un contenido de la tabla post a un usuario, lo agrega como metadato
+     * en la tabla users_meta, con el tipo 100012
+     * 2020-04-15
+     */
+    function add_to_user($post_id, $user_id)
+    {
+        //Construir registro
+        $arr_row['user_id'] = $user_id;     //Usuario ID, al que se asigna
+        $arr_row['tipo_id'] = 100012;       //Asignación de post
+        $arr_row['referente_1_id'] = $post_id;   //ID contenido
+        $arr_row['editor_id'] = 100001;    //Usuario que asigna
+        $arr_row['usuario_id'] = 100001;    //Usuario que asigna
+
+        //Establecer usuario que ejecuta
+        if ( $this->session->userdata('logged') ) {
+            $arr_row['editor_id'] = $this->session->userdata('user_id');
+            $arr_row['usuario_id'] = $this->session->userdata('user_id');
+        }
+
+        $condition = "tipo_id = {$arr_row['tipo_id']} AND user_id = {$arr_row['user_id']} AND referente_1_id = {$arr_row['referente_1_id']}";
+        $meta_id = $this->Db_model->save('users_meta', $condition, $arr_row);
+
+        //Establecer resultado
+        $data = array('status' => 0, 'saved_id' => '0');
+        if ( $meta_id > 0) { $data = array('status' => 1, 'saved_id' => $meta_id); }
+
+        return $data;
+    }
+
+    /**
+     * Quita la asignación de un post a un usuario
+     * 2020-04-30
+     */
+    function remove_to_user($post_id, $meta_id)
+    {
+        $data = array('status' => 0, 'qty_deleted' => 0);
+
+        $this->db->where('id', $meta_id);
+        $this->db->where('referente_1_id', $post_id);
+        $this->db->delete('users_meta');
+
+        $data['qty_deleted'] = $this->db->affected_rows();
+
+        if ( $data['qty_deleted'] > 0) { $data['status'] = 1; }
+
+        return $data;
+    }
+
+// Seguimiento
+//-----------------------------------------------------------------------------
+    /**
+     * Guardar evento de apertura de post
+     * 2020-04-26
+     */
+    function save_open_event($post_id)
+    {
+        $arr_row['tipo_id'] = 51;   //Apertura de post
+        $arr_row['start'] = date('Y-m-d H:i:s');
+        $arr_row['end'] = date('Y-m-d H:i:s');
+        $arr_row['created_at'] = date('Y-m-d H:i:s');
+        $arr_row['ip_address'] = $this->input->ip_address();
+        $arr_row['element_id'] = $post_id;
+
+        if( ! is_null($this->session->userdata('user_id')) )
+        {
+            $arr_row['user_id'] = $this->session->userdata('user_id');
+            $arr_row['usuario_id'] = $this->session->userdata('user_id');
+        }
+
+        $event_id = $this->Db_model->save('events', 'id = 0', $arr_row);
+
+        if ( $event_id > 0 ) $this->update_qty_read($post_id);
+
+        return $event_id;
+    }
+
+    function update_qty_read($post_id)
+    {
+        $arr_row['qty_read'] = $this->Db_model->num_rows('events', "tipo_id = 51 AND element_id = {$post_id}");
+
+        $this->db->where('id', $post_id);
+        $this->db->update('post', $arr_row);
+        
+        return $this->db->affected_rows();
+    }
 }

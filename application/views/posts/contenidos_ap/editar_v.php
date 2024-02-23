@@ -100,7 +100,7 @@
 //---------------------------------------------------------------------------------------------------
     var base_url = '<?= base_url() ?>';
     var post_id = '<?= $row->id ?>';
-    var controlador = 'posts';
+    var controlador = 'contenidos_ap';
     var seleccionados = '<?= $row->texto_2 ?>';
     var arr_seleccionados = [<?= $row->text_2 ?>];
     var seleccionados_todos = '<?= $seleccionados_todos ?>';
@@ -157,7 +157,7 @@
     {
      $.ajax({
        type: 'POST',
-           url: base_url + controlador + '/ap_crud/actualizar/' + post_id,
+           url: base_url + controlador + '/crud/actualizar/' + post_id,
             data: $('#formulario').serialize(),
             success: function(response){
                 if ( response.status == 1 )
@@ -253,12 +253,12 @@
                                 <button type="button" class="btn btn-default" style="width: 450px;">
                                     <?= $row_archivo->titulo_archivo ?><?= $row_archivo->ext ?>
                                 </button>
-                                <?php echo $this->Pcrn->anchor_confirm("posts/eliminar_imagen/{$row->id}/{$row_archivo->id}/ap_editar", '<i class="fa fa-trash"></i>', 'class="btn btn-warning" title="Eliminar archivo"', '¿Confirma la eliminación de este archivo?') ?>
+                                <?php echo $this->Pcrn->anchor_confirm("posts/eliminar_imagen/{$row->id}/{$row_archivo->id}/editar", '<i class="fa fa-trash"></i>', 'class="btn btn-warning" title="Eliminar archivo"', '¿Confirma la eliminación de este archivo?') ?>
                             </div>
                         </div>
                     </div>
                 <?php } else { ?>
-                    <?php echo form_open_multipart("posts/cargar_archivo/{$row->id}/ap_editar", $att_form) ?>
+                    <?php echo form_open_multipart("posts/cargar_archivo/{$row->id}/editar", $att_form) ?>
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label text-right" for="archivo">Archivo</label>
                             <div class="col-sm-6">

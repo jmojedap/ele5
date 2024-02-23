@@ -204,7 +204,7 @@
                     <span class="etiqueta w1 <?= $clase_disponible ?>"><?= $texto_disponible ?></span>
                 </td>
                 <td class="<?= $clases_col['tema'] ?>">
-                    <?= anchor("temas/archivos/{$row_resultado->tema_id}", $row_resultado->nombre_tema, 'class="" title=""') ?>
+                    <?= anchor("admin/temas/archivos/{$row_resultado->tema_id}", $row_resultado->nombre_tema, 'class="" title=""') ?>
                 </td>
                 <td class="<?= $clases_col['nivel_area'] ?>">
                     <span class="etiqueta nivel w1"><?= $row_resultado->nivel ?></span>
@@ -214,7 +214,7 @@
                 <td class="<?= $clases_col['editado'] ?>"><?= $this->Pcrn->tiempo_hace($row_resultado->editado) ?></td>
                 <?php if ( $this->session->userdata('rol_id') <= 2 ) : ?>                
                     <td class="<?= $clases_col['editar'] ?>">
-                        <?= anchor("temas/archivos/{$row_resultado->tema_id}/edit/{$row_resultado->recurso_id}", '<i class="fa fa-pencil-alt"></i>', 'class="a4"') ?>
+                        <?= anchor("admin/temas/archivos/{$row_resultado->tema_id}/edit/{$row_resultado->recurso_id}", '<i class="fa fa-pencil-alt"></i>', 'class="a4"') ?>
                     </td>
                 <?php endif ?>
             </tr>

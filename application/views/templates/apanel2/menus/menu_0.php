@@ -112,20 +112,20 @@
         $opciones_menus['programas/editar_temas'] = array('recursos', 'programas', 'programas');
         $opciones_menus['programas/copiar'] = array('recursos', 'programas', 'programas');
 
-        $opciones_menus['temas/explorar'] = array('recursos', 'temas', 'temas');
-        $opciones_menus['temas/editar'] = array('recursos', 'temas', 'temas');
-        $opciones_menus['temas/nuevo'] = array('recursos', 'temas', 'temas');
-        $opciones_menus['temas/importar'] = array('recursos', 'temas', 'temas');
-        $opciones_menus['temas/importar_ut'] = array('recursos', 'temas', 'temas');
-        $opciones_menus['temas/archivos'] = array('recursos', 'temas', 'temas');
-        $opciones_menus['temas/quices'] = array('recursos', 'temas', 'temas');
-        $opciones_menus['temas/links'] = array('recursos', 'temas', 'temas');
-        $opciones_menus['temas/programas'] = array('recursos', 'temas', 'temas');
-        $opciones_menus['temas/paginas'] = array('recursos', 'temas', 'temas');
-        $opciones_menus['temas/preguntas'] = array('recursos', 'temas', 'temas');
-        $opciones_menus['temas/copiar'] = array('recursos', 'temas', 'temas');
-        $opciones_menus['temas/asignar_quices'] = array('recursos', 'temas', 'temas');
-        $opciones_menus['temas/asignar_quices_e'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['admin/temas/explore'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['admin/temas/editar'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['admin/temas/nuevo'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['admin/temas/importar'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['admin/temas/importar_ut'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['admin/temas/archivos'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['admin/temas/quices'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['admin/temas/links'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['admin/temas/programas'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['admin/temas/paginas'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['admin/temas/preguntas'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['admin/temas/copiar'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['admin/temas/asignar_quices'] = array('recursos', 'temas', 'temas');
+        $opciones_menus['admin/temas/asignar_quices_e'] = array('recursos', 'temas', 'temas');
 
         $opciones_menus['flipbooks/explorar'] = array('recursos', 'flipbooks', 'contenidos');
         $opciones_menus['flipbooks/asignar_taller'] = array('recursos', 'flipbooks', 'contenidos');
@@ -140,11 +140,11 @@
         $opciones_menus['flipbooks/copiar_flipbook'] = array('recursos', 'flipbooks', 'flipbooks');
         $opciones_menus['flipbooks/editar'] = array('recursos', 'flipbooks', 'flipbooks');
         
-        $opciones_menus['posts/ap_explorar'] = array('recursos', 'contenidos_ap', 'contenidos ap');
-        $opciones_menus['posts/ap_nuevo'] = array('recursos', 'contenidos_ap', 'contenidos ap');
-        $opciones_menus['posts/ap_leer'] = array('recursos', 'contenidos_ap', 'contenidos ap');
-        $opciones_menus['posts/ap_editar'] = array('recursos', 'contenidos_ap', 'contenidos ap');
-        $opciones_menus['posts/ap_instituciones'] = array('recursos', 'contenidos_ap', 'contenidos ap');
+        $opciones_menus['contenidos_ap/explorar'] = array('recursos', 'contenidos_ap', 'contenidos ap');
+        $opciones_menus['contenidos_ap/nuevo'] = array('recursos', 'contenidos_ap', 'contenidos ap');
+        $opciones_menus['contenidos_ap/leer'] = array('recursos', 'contenidos_ap', 'contenidos ap');
+        $opciones_menus['contenidos_ap/editar'] = array('recursos', 'contenidos_ap', 'contenidos ap');
+        $opciones_menus['contenidos_ap/instituciones'] = array('recursos', 'contenidos_ap', 'contenidos ap');
 
         $opciones_menus['quices/explorar'] = array('recursos', 'quices', 'quices');
         $opciones_menus['quices/construir'] = array('recursos', 'quices', 'quices');
@@ -170,10 +170,10 @@
 
         $opciones_menus['instituciones/flipbooks'] = array('recursos', 'flipbooks', 'flipbooks');
 
-        $opciones_menus['posts/explorar'] = array('recursos', 'recursos-posts', 'posts');
-        $opciones_menus['posts/nuevo'] = array('recursos', 'recursos-posts', 'posts');
-        $opciones_menus['posts/editar'] = array('recursos', 'recursos-posts', 'posts');
-        $opciones_menus['posts/leer'] = array('recursos', 'recursos-posts', 'posts');
+        $opciones_menus['admin/posts/explore'] = array('recursos', 'recursos-posts', 'posts');
+        $opciones_menus['admin/posts/nuevo'] = array('recursos', 'recursos-posts', 'posts');
+        $opciones_menus['admin/posts/editar'] = array('recursos', 'recursos-posts', 'posts');
+        $opciones_menus['admin/posts/leer'] = array('recursos', 'recursos-posts', 'posts');
         
     //Cuestionarios
         $opciones_menus['cuestionarios/explorar'] = array('cuestionarios', 'cuestionarios', 'cuestionarios');
@@ -193,10 +193,10 @@
         $opciones_menus['datos/cuestionarios'] = array('cuestionarios', 'cuestionarios', 'cuestionarios');
         $opciones_menus['datos/mis_cuestionarios'] = array('cuestionarios', 'mis_cuestionarios', 'mis cuestionarios');
 
-        $opciones_menus['datos/enunciados'] = array('cuestionarios', 'enunciados', 'lecturas');
-        $opciones_menus['datos/enunciados_nuevo'] = array('cuestionarios', 'enunciados', 'lecturas');
-        $opciones_menus['datos/enunciados_ver'] = array('cuestionarios', 'enunciados', 'lecturas');
-        $opciones_menus['datos/enunciados_editar'] = array('cuestionarios', 'enunciados', 'lecturas');
+        $opciones_menus['enunciados/explorar'] = array('cuestionarios', 'enunciados', 'lecturas');
+        $opciones_menus['enunciados/nuevo'] = array('cuestionarios', 'enunciados', 'lecturas');
+        $opciones_menus['enunciados/ver'] = array('cuestionarios', 'enunciados', 'lecturas');
+        $opciones_menus['enunciados/editar'] = array('cuestionarios', 'enunciados', 'lecturas');
 
         $opciones_menus['preguntas/explorar'] = array('cuestionarios', 'preguntas', 'preguntas');
         $opciones_menus['preguntas/detalle'] = array('cuestionarios', 'preguntas', 'preguntas');
@@ -333,11 +333,11 @@
 
             <ul class="sub_nav">
                 <li><a href="<?= base_url('kits/explorar') ?>" class="<?= $clase_sm['kits'] ?>"><i class="fa fa-suitcase"></i><span>kits</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url() ?>programas/explorar" class="<?= $clase_sm['programas'] ?>"><i class="fa fa-sitemap"></i><span>programas</span></a></li> <!-- subitem -->
-                <li><a href="<?= base_url()?>temas/explorar" class="<?= $clase_sm['temas'] ?>"><i class="fa fa-bars"></i><span>temas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url() ?>admin/programas/explore" class="<?= $clase_sm['programas'] ?>"><i class="fa fa-sitemap"></i><span>programas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url()?>admin/temas/explore" class="<?= $clase_sm['temas'] ?>"><i class="fa fa-bars"></i><span>temas</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url()?>flipbooks/explorar" class="<?= $clase_sm['flipbooks'] ?>"><i class="fa fa-book"></i><span>contenidos</span></a></li> <!-- subitem -->
                 <li>
-                    <a href="<?= base_url('posts/ap_explorar')?>" class="<?= $clase_sm['contenidos_ap'] ?>">
+                    <a href="<?= base_url('contenidos_ap/explorar')?>" class="<?= $clase_sm['contenidos_ap'] ?>">
                         <i class="fa fa-book"></i>
                         <span>contenidos ap</span>
                     </a>
@@ -352,7 +352,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="<?= base_url('posts/explorar')?>" class="<?= $clase_sm['recursos-posts'] ?>">
+                    <a href="<?= base_url('admin/posts/explore')?>" class="<?= $clase_sm['recursos-posts'] ?>">
                         <i class="fa fa-newspaper-o"></i>
                         <span>posts</span>
                     </a>
@@ -374,7 +374,7 @@
                         <span>cuestionarios</span>
                     </a>
                 </li>
-                <li><a href="<?= base_url()?>datos/enunciados" class="<?= $clase_sm['enunciados'] ?>"><i class="fa fa-quote-left"></i><span>lecturas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url()?>enunciados/explorar" class="<?= $clase_sm['enunciados'] ?>"><i class="fa fa-quote-left"></i><span>lecturas</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url()?>preguntas/explorar" class="<?= $clase_sm['preguntas'] ?>"><i class="fa fa-question"></i><span>preguntas</span></a></li> <!-- subitem -->
             </ul>
 

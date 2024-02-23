@@ -51,7 +51,7 @@
             <?php
                 //Variables
                 $nombre_elemento = $this->Pcrn->si_strlen($row_resultado->nombre_post, 'Post ' . $row_resultado->id);
-                $destino_elemento = "posts/ap_leer/{$row_resultado->id}";
+                $destino_elemento = "contenidos_ap/leer/{$row_resultado->id}";
                 $link_elemento = anchor($destino_elemento, $nombre_elemento);
                 $niveles = explode(',', $row_resultado->texto_2);
             ?>
@@ -91,7 +91,7 @@
                 </td>
                 
                 <td class="<?= $clases_col['botones'] ?>">
-                    <a href="<?php echo base_url("posts/ap_editar/{$row_resultado->id}") ?>" class="btn btn-xs btn-default">
+                    <a href="<?php echo base_url("contenidos_ap/editar/{$row_resultado->id}") ?>" class="btn btn-xs btn-default">
                         <i class="fa fa-pencil"></i>
                     </a>
                 </td>

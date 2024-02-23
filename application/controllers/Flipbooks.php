@@ -151,7 +151,33 @@ class Flipbooks extends CI_Controller{
         $this->load->view(TPL_ADMIN_NEW, $output);
     }
     
-    function editar()
+    /**
+     * Vista formulario edición de flipbooks
+     * 2024-02-22
+     */
+    function editar($flipbook_id)
+    {
+        //Cargando datos básicos
+        $data = $this->Flipbook_model->basico($flipbook_id);
+        
+        //Opciones para formulario
+            $data['arrAreas'] = $this->Item_model->arr_options('categoria_id = 1');
+            $data['arrNiveles'] = $this->Item_model->arr_options('categoria_id = 3');
+            $data['arrTipos'] = $this->Item_model->arr_options('categoria_id = 11');
+
+            $condition = "tipo_flipbook_id = 1 AND area_id = {$data['row']->area_id} AND nivel = {$data['row']->nivel}";
+            $data['arrTalleres'] = $this->Flipbook_model->arr_options($condition);
+
+            $this->load->model('Post_model');
+            $data['arrPosts'] = $this->Post_model->arr_options('tipo_id  = 127');
+            
+        //Solicitar vista
+            $data['head_subtitle'] = 'Editar';
+            $data['view_a'] = 'admin/flipbooks/edit_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
+    }
+
+    function editar_ant()
     {
         //Cargando datos básicos
             $tema_id = $this->uri->segment(4);
@@ -300,6 +326,8 @@ class Flipbooks extends CI_Controller{
                 1 => 'flipbooks/crear_cuestionario_v',
                 3 => 'flipbooks/crear_cuestionario_ut_v',
                 4 => 'flipbooks/crear_cuestionario_v',
+                5 => 'flipbooks/crear_cuestionario_v',
+                6 => 'flipbooks/crear_cuestionario_v',
             );
         
         //Solicitar vista
@@ -643,6 +671,9 @@ class Flipbooks extends CI_Controller{
      */
     function inicio()
     {
+        if ( $this->input->get('profiler') == 1 ) {
+            $this->output->enable_profiler(TRUE);
+        }
         $data['arr_flipbooks'] = $this->session->userdata('arr_flipbooks');
         $data['arr_cuestionarios'] = $this->session->userdata('arr_cuestionarios');
         $data['arr_grupos'] = $this->session->userdata('arr_grupos');
@@ -669,7 +700,7 @@ class Flipbooks extends CI_Controller{
      * Seleccionar función con la cual se abre el flipbook para vista lectura
      * 2020-02-03
      */
-    function abrir($flipbook_id, $num_pagina = NULL, $tema_id = NULL)
+    function abrir($flipbook_id, $num_pagina = NULL, $tema_id = 0)
     {
         $row = $this->Pcrn->registro_id('flipbook', $flipbook_id);
         $destino = "flipbooks/leer/{$flipbook_id}/{$num_pagina}";
@@ -678,6 +709,7 @@ class Flipbooks extends CI_Controller{
         if ( $row->tipo_flipbook_id == 3 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         if ( $row->tipo_flipbook_id == 4 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         if ( $row->tipo_flipbook_id == 5 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
+        if ( $row->tipo_flipbook_id == 6 ) { $destino = "flipbooks/leer_v6/{$flipbook_id}/{$tema_id}";}
         
         //Selección de navegador
         //Redirigir
@@ -918,6 +950,7 @@ class Flipbooks extends CI_Controller{
      */
     function leer_v5($flipbook_id, $num_pagina = NULL)
     {
+        //$this->output->enable_profiler(TRUE);
         //Datos básicos
             $data = $this->Flipbook_model->basico($flipbook_id);
             
@@ -928,11 +961,37 @@ class Flipbooks extends CI_Controller{
             $data['carpeta_iconos'] = URL_IMG . 'flipbook/';
             $data['colores'] = $this->App_model->arr_color_area();
             $data['elementos_fb'] = $this->Flipbook_model->elementos_fb($data['row']);
+            $data['es_profesor'] = ( in_array($this->session->userdata('role'),[0,1,2,3,4,5]) ) ? TRUE : FALSE ;
 
         //Seleccionar vista
             $main_view = 'flipbooks/leer_cd/leer_v';
             if ( $data['row']->tipo_flipbook_id == 3 ) { $main_view = 'flipbooks/leer_ut/leer_v';}
             if ( $data['row']->tipo_flipbook_id == 5 ) { $main_view = 'flipbooks/leer_lectura/leer_v';}
+            if ( $data['row']->tipo_flipbook_id == 6 ) { $main_view = 'flipbooks/lectura/6_articulos/leer_v';}
+            
+        //Cargar vista
+        $this->load->view($main_view, $data);
+    }
+
+    /**
+     * Vista de lectura para contenidos con artículos HTML
+     * 2023-11-25
+     */
+    function leer_v6($flipbook_id, $articulo_id = 0)
+    {
+        //Datos básicos
+        $data = $this->Flipbook_model->basico($flipbook_id);
+            
+        //Datos referencia
+            $data['carpeta_uploads'] = URL_UPLOADS;
+            $data['carpeta_iconos'] = URL_IMG . 'flipbook/';
+            $data['colores'] = $this->App_model->arr_color_area();
+            $data['elementos_fb'] = $this->Flipbook_model->elementos_fb($data['row']);
+            $data['es_profesor'] = ( in_array($this->session->userdata('role'),[0,1,2,3,4,5]) ) ? TRUE : FALSE ;
+            $data['articulo_id'] = $articulo_id;
+
+        //Seleccionar vista
+            $main_view = 'flipbooks/lectura/6_articulos/leer_v';
             
         //Cargar vista
         $this->load->view($main_view, $data);
@@ -1174,6 +1233,7 @@ class Flipbooks extends CI_Controller{
                 //Construir el registro que se va a insertar
                 $arr_row = array(
                     'pagina_id' => $datos_pagina['id'],
+                    'tema_id' => $datos_pagina['tema_id'],
                     'anotacion' => $this->input->post('anotacion'),
                     'tipo_detalle_id' => 3,
                     'publico' => 0,
@@ -1194,10 +1254,11 @@ class Flipbooks extends CI_Controller{
     /**
      * AJAX JSON
      * Listado anotaciones con filtros determinados
+     * 2023-11-07
      */
     function get_anotaciones_grupo($grupo_id, $flipbook_id = NULL, $tema_id = 0)
     {
-        $anotaciones = $this->Flipbook_model->anotaciones_grupo($grupo_id, $flipbook_id, $tema_id);
+        $anotaciones = $this->Flipbook_model->anotaciones_grupo_tema($grupo_id, $flipbook_id, $tema_id);
         $data['list'] = $anotaciones->result();
         $data['avg_calificacion'] = 0;  //Valor por defecto
 
@@ -1224,7 +1285,7 @@ class Flipbooks extends CI_Controller{
      */
     function get_anotaciones_estudiante($usuario_id, $flipbook_id = NULL)
     {
-        $anotaciones = $this->Flipbook_model->anotaciones_estudiante($usuario_id, $flipbook_id);
+        $anotaciones = $this->Flipbook_model->anotaciones_estudiante_tema($usuario_id, $flipbook_id);
         $data['list'] = $anotaciones->result();
         $data['avg_calificacion'] = 0;  //Valor por defecto
 

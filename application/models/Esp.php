@@ -153,16 +153,18 @@ class Esp extends CI_Model {
 
     /**
      * Variables de sesión de usuario, específicas para plataformaenlinea.com
-     * @param type $row_usuario
-     * @return type
+     * 2023-09-15
+     * @param object $row_usuario
+     * @return array $data
      */
-    function session_data_app($row_usuario) {
+    function session_data_app($row_usuario)
+    {
         $data['institucion_id'] = $this->Pcrn->si_nulo($row_usuario->institucion_id, 0);
         $data['grupo_id'] = $this->Pcrn->si_nulo($row_usuario->grupo_id, 0);
 
         //Flipbooks
         $this->load->model('Usuario_model');
-        $flipbooks = $this->Usuario_model->flipbooks($row_usuario, '0,1,3,4,5');
+        $flipbooks = $this->Usuario_model->flipbooks($row_usuario, '0,1,3,4,5,6');
         $data['arr_flipbooks'] = $flipbooks->result_array();
 
         //Cuestionarios

@@ -206,6 +206,20 @@ div.pf_datos{
     background: #666;
 }
 
+/* BACKGROUND DE ÁREAS */
+/*-----------------------------------------------------------------------------*/
+.bg-area-0{ background-color: #666}
+.bg-area-50{ background-color: #006bab}
+.bg-area-51{ background-color: #a678c3}
+.bg-area-52{ background-color: #04bdbf}
+.bg-area-53{ background-color: #86bc42}
+.bg-area-464{ background-color: #f57c00}
+.bg-area-599{ background-color: #666}
+.bg-area-605{ background-color: #ff577e}
+.bg-area-957{ background-color: #ff577e}
+.bg-area-1004{ background-color: #ff577e}
+
+
 /* MÓDULO DE VENTAS */
 /*-----------------------------------------------------------------------------*/
 

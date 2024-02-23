@@ -49,7 +49,7 @@
 
     var base_url = '<?= base_url() ?>';
     var elemento_id = '<?= $row->id ?>';
-    var controlador = 'posts';
+    var controlador = 'contenidos_ap';
     
 // Document Ready
 //-----------------------------------------------------------------------------
@@ -71,11 +71,11 @@
     {
      $.ajax({
        type: 'POST',
-           url: base_url + controlador + '/ap_crud/insertar',
+           url: base_url + controlador + '/crud/insertar',
             data: $('#formulario').serialize(),
             success: function(resultado){
                 if ( resultado.nuevo_id > 0){
-                    window.location = base_url + 'posts/ap_editar/' + resultado.nuevo_id;
+                    window.location = base_url + 'contenidos_ap/editar/' + resultado.nuevo_id;
                 }
             }
      });
