@@ -62,6 +62,13 @@
                         sections: []
                     },
                     {
+                        text: 'Archivos',
+                        active: false,
+                        icon: 'fas fa-image',
+                        cf: 'admin/files/explore',
+                        sections: ['files/explore', 'files/edit', 'files/add', 'files/info', 'files/cropping', 'files/change']
+                    },
+                    {
                         text: 'Archivos temas',
                         active: false,
                         icon: 'far fa-folder',

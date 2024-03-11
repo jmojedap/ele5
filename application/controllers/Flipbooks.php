@@ -698,18 +698,23 @@ class Flipbooks extends CI_Controller{
     
     /**
      * Seleccionar función con la cual se abre el flipbook para vista lectura
-     * 2020-02-03
+     * 2024-02-23
      */
     function abrir($flipbook_id, $num_pagina = NULL, $tema_id = 0)
     {
-        $row = $this->Pcrn->registro_id('flipbook', $flipbook_id);
+        $row = $this->Db_model->row_id('flipbook', $flipbook_id);
         $destino = "flipbooks/leer/{$flipbook_id}/{$num_pagina}";
 
         //Clase dinámica
         if ( $row->tipo_flipbook_id == 3 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         if ( $row->tipo_flipbook_id == 4 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         if ( $row->tipo_flipbook_id == 5 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
-        if ( $row->tipo_flipbook_id == 6 ) { $destino = "flipbooks/leer_v6/{$flipbook_id}/{$tema_id}";}
+        if ( $row->tipo_flipbook_id == 6 ) { $destino = "flipbooks/leer_v6/{$flipbook_id}/{$tema_id}"; }
+
+        // Si tiene asociado un contenido de enfoque lector
+        if ( $row->post_asociado_id > 0 ) {
+            $destino = "enfoque_lector/panel/{$row->post_asociado_id}/{$flipbook_id}";
+        }
         
         //Selección de navegador
         //Redirigir
@@ -747,6 +752,12 @@ class Flipbooks extends CI_Controller{
         if ( $row->tipo_flipbook_id == 3 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         if ( $row->tipo_flipbook_id == 4 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         if ( $row->tipo_flipbook_id == 5 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
+        if ( $row->tipo_flipbook_id == 6 ) { $destino = "flipbooks/leer_v6/{$flipbook_id}/{$tema_id}"; }
+
+        // Si tiene asociado un contenido de enfoque lector
+        if ( $row->post_asociado_id > 0 ) {
+            $destino = "enfoque_lector/panel/{$row->post_asociado_id}/{$flipbook_id}";
+        }
             
         //Si el navegador es antiguo
             $this->load->model('Esp');

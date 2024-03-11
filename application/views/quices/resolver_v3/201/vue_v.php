@@ -5,7 +5,7 @@ var resolverQuiz = createApp({
     data(){
         return{
             quiz: {},
-            step: 'respuesta',
+            step: 'inicio',
             status: 'leyendo',
             loading: false,
             quices: [],
@@ -13,7 +13,8 @@ var resolverQuiz = createApp({
                 id: 0,
                 opciones:'',
                 respuesta:'',
-                texto_respuesta: ''
+                texto_respuesta: '',
+                comprobado: -1,
             },
             currentKey: 0,
             opcionSeleccionada: '',
@@ -59,6 +60,7 @@ var resolverQuiz = createApp({
         seleccionarOpcion: function(opcionSeleccionada){
             this.quices[this.currentKey].respuesta = opcionSeleccionada
             this.quices[this.currentKey].respondido = 1
+            this.comprobarRespuesta()
         },
         comprobarRespuesta: function(){
             this.quices[this.currentKey].resultado = 0
@@ -102,13 +104,13 @@ var resolverQuiz = createApp({
             var optionClass = 'btn-light'
             if ( this.currentQuiz.respondido == 1 ) {
                 if ( opcion == this.currentQuiz.respuesta ) {
-                    optionClass = 'btn-primary'
+                    optionClass = 'active'
                 }
             }
             if ( this.currentQuiz.comprobado == 1 ) {
                 if ( opcion == this.currentQuiz.respuesta ) {
-                    if ( this.currentQuiz.resultado == 0 ) optionClass = 'btn-danger'
-                    if ( this.currentQuiz.resultado == 1 ) optionClass = 'btn-success'
+                    if ( this.currentQuiz.resultado == 0 ) optionClass = 'bg-danger'
+                    if ( this.currentQuiz.resultado == 1 ) optionClass = 'bg-success'
                 }
             }
             return optionClass
@@ -117,25 +119,28 @@ var resolverQuiz = createApp({
             this.loading = true
             var formValues = new FormData()
             formValues.append('num_rows', 5)
+            formValues.append('tp', 201)
             axios.post(URL_API + 'quices/get_random_quices/', formValues)
             .then(response => {
                 this.loading = false
                 this.quices = response.data.quices
-                this.setCurrent(0)
+                //this.setCurrent(0)
             })
             .catch( function(error) {console.log(error)} )
         },
 
     },
     computed: {
-        opciones: function(){
-            return this.currentQuiz.opciones.split(',')
-        },
         respuestasCompletas: function(){
-            var cantidadResponidos = this.quices.reduce((acumulador, elemento) => acumulador + elemento.respondido, 0);
-            if ( cantidadResponidos == this.quices.length ) return true
+            var cantidadRespondidos = this.quices.reduce((acumulador, elemento) => acumulador + elemento.respondido, 0);
+            if ( cantidadRespondidos == this.quices.length ) return true
             return false
         },
+        arrOpciones: function(){
+            var opciones = []
+            opciones = this.currentQuiz.opciones.split(',')
+            return opciones
+        }
     },
     mounted(){
         this.getQuices()

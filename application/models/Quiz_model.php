@@ -5,8 +5,7 @@ class Quiz_Model extends CI_Model{
     {
         
         $elementos = $this->elementos($quiz_id);
-        
-        $row_quiz = $this->Pcrn->registro_id('quiz', $quiz_id);
+        $row_quiz = $this->Db_model->row_id('quiz', $quiz_id);
         
         //Datos adicionales
         $row_quiz->cant_elementos = $elementos->num_rows();
@@ -199,44 +198,48 @@ class Quiz_Model extends CI_Model{
 
 // Otras
 //-----------------------------------------------------------------------------
+
     /**
-     * Búsqueda de quices
-     * 
+     * Eliminar quiz y datos relacionados
+     * 2024-02-29
      */
-    function buscar($busqueda, $per_page = NULL, $offset = NULL)
+    function delete($quiz_id)
     {
-
-        //Construir búsqueda
-        
-            //Texto búsqueda
-                //Crear array con términos de búsqueda
-                if ( strlen($busqueda['q']) > 2 ){
-                    $palabras = $this->Busqueda_model->palabras($busqueda['q']);
-
-                    foreach ($palabras as $palabra) {
-                        $this->db->like('CONCAT(cod_quiz, nombre_quiz, IF(ISNULL(texto_enunciado), 0, texto_enunciado))', $palabra);
-                    }
-                }
+        //Eliminar elementos
+            $this->db->where('quiz_id', $quiz_id);
+            $this->db->delete('quiz_elemento');
             
-            //Otros filtros
-                if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
-                if ( $busqueda['n'] != '' ) { $this->db->where('nivel', $busqueda['n']); }  //Nivel
-                if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_quiz_id', $busqueda['tp']); }  //Tipo quiz
-                if ( $busqueda['e'] != '' ) { $this->db->where('editado', $busqueda['e']); }  //Editado
-                
-                
-            //Otros
-                $this->db->order_by('cod_quiz', 'ASC');
-            
-        //Obtener resultados
-        if ( is_null($per_page) ){
-            $query = $this->db->get('quiz'); //Resultados totales
-        } else {
-            $query = $this->db->get('quiz', $per_page, $offset); //Resultados por página
-        }
+        //Eliminar de recursos
+            $this->db->where('referente_id', $quiz_id);
+            $this->db->where('tipo_recurso_id', 3); //Tipo quiz
+            $this->db->delete('recurso');
         
-        return $query;
+        //Eliminar quiz
+            $this->db->where('id', $quiz_id);
+            $this->db->delete('quiz');
+
+        $qty_deleted = $this->db->affected_rows();
+
+        return $qty_deleted;
     }
+
+    /**
+     * Array from HTTP:POST, adding edition data
+     * 2024-02-29
+     */
+    function aRow($data_from_post = TRUE)
+    {
+        $aRow = array();
+
+        if ( $data_from_post ) { $aRow = $this->input->post(); }
+        
+        $aRow['usuario_id'] = $this->session->userdata('user_id');
+        $aRow['editado'] = date('Y-m-d H:i:s');
+
+        return $aRow;
+    }
+
+    
     
     /**
      * Devuelve el ayuda_id,
@@ -261,7 +264,8 @@ class Quiz_Model extends CI_Model{
             13 => 180,   //M
             112 => 180,   //L2
             113 => 180,   //M2
-            202 => 180,   //PL3
+            201 => 0,   //PL1
+            202 => 0,   //PL3
             203 => 0,   //PL2
         );
         
@@ -282,30 +286,6 @@ class Quiz_Model extends CI_Model{
         
         //$crud->columns('');
             $crud->where('quiz_id', $quiz_id);
-        
-        //Títulos de los campos
-            //$crud->display_as('usuario_id', 'Creado por');
-        
-        //Relaciones
-            //$crud->set_relation('usuario_id', 'usuario', '{nombre} {apellidos} ({username})');
-        
-
-        //Formulario Edit
-            /*$crud->edit_fields(
-                'nombre_quiz',
-                'descripcion',
-                'editado'
-            );*/
-
-        //Formulario Add
-            /*$crud->add_fields(
-                'nombre_quiz',
-                'descripcion',
-                'usuario_id'
-            );*/
-
-        //Reglas de validación
-            //$crud->required_fields('nombre_quiz');
             
         //Valores por defecto
             $crud->change_field_type('quiz_id', 'hidden', $quiz_id);
@@ -320,23 +300,56 @@ class Quiz_Model extends CI_Model{
         
     }
     
+// IMAGES
+//-----------------------------------------------------------------------------
+
     /**
-     * Link para Grocery Crud de los quices
-     * 
-     * @param type $value
-     * @param type $row
-     * @return type
+     * Imágenes asociadas al quiz
+     * 2024-03-11
      */
-    function gc_link_quiz($value, $row)
+    function images($quiz_id)
     {
-        $texto = substr($row->nombre_quiz, 0, 50);
-        $att = 'title="Ir al quiz ' . $value. '"';
-        return anchor("quices/detalle/{$row->id}", $texto, $att);
+        $this->db->select('files.id, files.title, url, url_thumbnail, files.integer_1 AS main, position');
+        $this->db->where('is_image', 1);
+        $this->db->where('table_id', '4370');      //Tabla quiz
+        $this->db->where('related_1', $quiz_id);   //Relacionado con el quix
+        $this->db->order_by('position', 'ASC');
+        $images = $this->db->get('files');
+
+        return $images;
     }
-    
-    function gc_after_insert($post_array, $primary_key)
+
+    /**
+     * Establecer una imagen asociada a un quiz como la imagen principal (tabla file)
+     * 2024-0-11
+     */
+    function set_main_image($quiz_id, $file_id)
     {
-        redirect("quices/flipbooks/{$primary_key}");
+        $data = array('status' => 0);
+
+        $row_file = $this->Db_model->row_id('files', $file_id);
+        if ( ! is_null($row_file) )
+        {
+            //Quitar otro principal
+            $this->db->query("UPDATE files SET integer_1 = 0 WHERE table_id = 4370 AND related_1 = {$quiz_id} AND integer_1 = 1");
+
+            //Poner nuevo principal
+            $this->db->query("UPDATE files SET integer_1 = 1 WHERE id = {$file_id} AND related_1 = {$quiz_id}");
+
+            //Actualizar registro en tabla post
+            $aRow['imagen_id'] = $row_file->id;
+            $aRow['url_image'] = $row_file->url;
+            $aRow['url_thumbnail'] = $row_file->url_thumbnail;
+            $aRow['usuario_id'] = $this->session->userdata('user_id');
+            $aRow['editado'] = date('Y-m-d H:i:s');
+
+            $this->db->where('id', $quiz_id);
+            $this->db->update('quiz', $aRow);
+
+            $data['status'] = 1;
+        }
+
+        return $data;
     }
 
 // DATOS
@@ -358,7 +371,7 @@ class Quiz_Model extends CI_Model{
     }
     
     /**
-     * Imágenes incluídas en un quiz
+     * Imágenes incluídas en un quiz, en quiz_elemento
      * 2019-12-02
      */
     function imagenes($quiz_id)
@@ -562,22 +575,6 @@ class Quiz_Model extends CI_Model{
         
         $this->db->where('id', $quiz_id);
         $this->db->update('quiz', $registro);
-    }
-    
-    function eliminar($quiz_id)
-    {
-        //Eliminar elementos
-            $this->db->where('quiz_id', $quiz_id);
-            $this->db->delete('quiz_elemento');
-            
-        //Eliminar de recursos
-            $this->db->where('referente_id', $quiz_id);
-            $this->db->where('tipo_recurso_id', 3); //Tipo quiz
-            $this->db->delete('recurso');
-        
-        //Eliminar quiz
-            $this->db->where('id', $quiz_id);
-            $this->db->delete('quiz');
     }
     
     /**
@@ -936,9 +933,6 @@ class Quiz_Model extends CI_Model{
             $i++;
             if ( $i >= $num_rows ) break;
         }
-
-
-
         return $arrQuices;
     }
 }

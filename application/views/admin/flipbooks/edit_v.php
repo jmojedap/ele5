@@ -81,6 +81,18 @@
                             </div>
                         </div>
 
+                        <div class="mb-3 row">
+                            <label for="archivo_portada" class="col-md-4 col-form-label text-end text-right">Archivo portada</label>
+                            <div class="col-md-8">
+                                <input
+                                    name="archivo_portada" type="text" class="form-control"
+                                    pattern="[a-zA-Z0-9_\-\.]*" title="Sin espacios, solo se permiten letras, números, guiones medios, guiones bajos y puntos, Ej. enfoque-lector.jpg"
+                                    v-model="fields.archivo_portada"
+                                >
+                                <small id="emailHelp" class="form-text text-muted">Sin espacios, solo se permiten letras, números, guiones medios, guiones bajos y puntos</small>
+                            </div>
+                        </div>
+
                         
 
                         <div class="mb-3 row">

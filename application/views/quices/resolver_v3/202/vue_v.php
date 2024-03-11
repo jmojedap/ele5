@@ -20,7 +20,7 @@ var resolverQuiz = createApp({
             resultadoTotal: 0,
             porcentajeTotal: 0,
             porcentajeAncho: 0,
-            milisegundosCaracter: 2,
+            milisegundosCaracter: 20,
         }
     },
     methods: {

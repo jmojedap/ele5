@@ -43,12 +43,11 @@
                 <div class="mb-3 row">
                     <label for="texto_1" class="col-md-4 col-form-label text-end text-right">IDs Lecturas</label>
                     <div class="col-md-8">
-                        <input
-                            name="texto_1" type="text" class="form-control"
-                            required
+                        <textarea
+                            name="texto_1" rows="3" class="form-control"
                             title="IDs Lecturas" placeholder="IDs Lecturas dinámicas"
                             v-model="fields.texto_1"
-                        >
+                        ></textarea>
                         <small class="form-text text-muted">Escriba los ID's de las lecturas dinámicas asociados al contenido enfoque lector, separados por coma.
                             Ejemplo: 125,765,385,74685
                         </small>

@@ -613,7 +613,7 @@ public $url_controller = URL_ADMIN . 'temas/';
             $data['parrafos_ayuda'] = $parrafos_ayuda;
         
         //Variables específicas
-            $data['destino_form'] = "temas/asignar_quices_e";
+            $data['destino_form'] = "admin/temas/asignar_quices_e";
             $data['nombre_archivo'] = $nombre_archivo;
             $data['nombre_hoja'] = 'temas_quices';
             $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");

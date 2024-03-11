@@ -20,11 +20,19 @@
         cf: 'quices/explorar',
         anchor: true
     };
+
+    sections.add = {
+        icon: '',
+        text: 'Nuevo',
+        class: '<?= $cl_nav_2['quices_add'] ?>',
+        cf: 'quices/add',
+        anchor: true
+    };
     
     //Secciones para cada rol
-    sections_rol.dvlp = ['explorar'];
-    sections_rol.admn = ['explorar'];
-    sections_rol.edtr = ['explorar'];
+    sections_rol.dvlp = ['explorar', 'add'];
+    sections_rol.admn = ['explorar', 'add'];
+    sections_rol.edtr = ['explorar', 'add'];
     sections_rol.comr = ['explorar'];
     sections_rol.digt = ['explorar'];
     sections_rol.dig2 = ['explorar'];

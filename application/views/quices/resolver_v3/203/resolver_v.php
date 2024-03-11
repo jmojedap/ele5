@@ -13,7 +13,7 @@
     <div class="center_box_750 quiz-container flex-column">
         <!-- INICIO -->
         <div v-show="step ==  `inicio`" class="text-center w-100 mb-2">
-            <h3>Práctica 2</h3>
+            <h3>Práctica 3</h3>
             <p>
                 Lee cada oración y selecciona si es Falsa o Verdadera
             </p>

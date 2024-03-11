@@ -14,9 +14,11 @@
                         <i class="fa fa-chevron-left"></i>
                     </button>
 
-                    <a href="<?php echo base_url() ?>" class="btn btn-light boton_fb w2" title="Inicio">
-                        <i class="fa fa-home"></i>
-                    </a>
+                    <?php if ( $this->input->get('embed') != 1 ) : ?>
+                        <a href="<?php echo base_url() ?>" class="btn btn-light boton_fb w2" title="Inicio">
+                            <i class="fa fa-home"></i>
+                        </a>
+                    <?php endif; ?>
 
                     <button
                         id="alternar_menu_recursos"

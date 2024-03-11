@@ -10,22 +10,22 @@
     
     //Atributos de los elementos del menú
         $arr_menus['explorar'] = array(
-            'icono' => '<i class="fa fa-list-alt"></i>',
+            'icono' => '',
             'texto' => 'Explorar',
             'link' => "flipbooks/explorar/",
             'atributos' => 'title="Explorar contenidos"'
         );
         
         $arr_menus['importar'] = array(
-            'icono' => '<i class="fa fa-file-excel-o"></i>',
+            'icono' => '',
             'texto' => 'Asignar talleres',
             'link' => "flipbooks/asignar_taller/",
             'atributos' => 'title="Asignar taller a contenidos con archivo MS-Excel"'
         );
         
         $arr_menus['nuevo'] = array(
-            'icono' => '<i class="fa fa-plus"></i>',
-            'texto' => 'Nuevo',
+            'icono' => '',
+            'texto' => 'Crear',
             'link' => "flipbooks/nuevo/add/",
             'atributos' => 'title="Agregar un nuevo contenido"'
         );

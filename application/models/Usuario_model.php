@@ -1649,7 +1649,7 @@ class Usuario_model extends CI_Model{
             }
         
         //Construyendo consulta
-            $this->db->select("flipbook.id, nombre_flipbook, nivel, area_id, flipbook_id, bookmark, usuario_flipbook.id AS uf_id");
+            $this->db->select("flipbook.id, nombre_flipbook, nivel, area_id, flipbook_id, bookmark, usuario_flipbook.id AS uf_id, archivo_portada");
             $this->db->where('usuario_id', $row_usuario->id);
             $this->db->where('nivel', $nivel);
             $this->db->join('flipbook', 'flipbook.id = usuario_flipbook.flipbook_id');
@@ -1668,7 +1668,7 @@ class Usuario_model extends CI_Model{
         //Condición profesor
         $condicion_profesor = $this->condicion_fb_profesor($row_usuario->id);
         
-        $this->db->select("flipbook.id AS flipbook_id, nombre_flipbook, flipbook.tipo_flipbook_id, nivel, area_id");
+        $this->db->select("flipbook.id AS flipbook_id, nombre_flipbook, flipbook.tipo_flipbook_id, nivel, area_id, archivo_portada");
         $this->db->where($condicion_profesor);
         $this->db->group_by('flipbook.id, nombre_flipbook, tipo_flipbook_id, nivel, area_id');
         if ( ! is_null($tipos) ) { $this->db->where("tipo_flipbook_id IN ({$tipos})"); }    //2017-01-12

@@ -34,9 +34,10 @@ public $url_controller = URL_APP . 'enfoque_lector/';
      * Vista panel principal de lectura de contenidos módulo enfoque lector
      * 2024-02-19
      */
-    function panel($post_id)
+    function panel($post_id, $flipbook_id = 4004)
     {
         $data = $this->Post_model->basic($post_id);
+        $data['flipbook'] = $this->Db_model->row_id('flipbook', $flipbook_id);
 
         //Lecturas dinámicas
             $idsCondition = 'id = 0';
@@ -62,7 +63,7 @@ public $url_controller = URL_APP . 'enfoque_lector/';
         $this->load->model('Tema_model');
         $data['ledin_id'] = $ledin_id;
         $data['ledin'] = $this->Tema_model->ledin($ledin_id);
-        $data['segundosLectura'] = 3;
+        $data['segundosLectura'] = 60;
         
         $data['view_a'] = 'enfoque_lector/fluidez_lectora/fluidez_lectora_v';
         $data['head_title'] = $data['ledin']->nombre_post;

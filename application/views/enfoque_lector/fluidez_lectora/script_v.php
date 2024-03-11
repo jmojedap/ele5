@@ -43,11 +43,6 @@ var fluidezLectora = createApp({
         },
         reiniciarApp: function(){
             location.reload()
-            /*this.seccion = 'presentacion'
-            this.status = 'leyendo'
-            this.numeroElemento = 0
-            const progressBar = document.getElementById('time-progress-bar');
-            progressBar.style.width = '0%';*/
         },
     },
     computed:{

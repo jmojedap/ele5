@@ -110,11 +110,11 @@
                         sections: []
                     },
                     {
-                        text: 'Archivos temas',
+                        text: 'Archivos',
                         active: false,
-                        icon: 'far fa-folder',
-                        cf: 'recursos/archivos',
-                        sections: ['recursos/archivos', 'recursos/asignar', 'recursos/asignar_e', 'recursos/procesos_archivos', 'recursos/archivos_no_asignados']
+                        icon: 'fas fa-image',
+                        cf: 'admin/files/explore',
+                        sections: ['files/explore', 'files/edit', 'files/add', 'files/info', 'files/cropping', 'files/change']
                     },
                     {
                         text: 'Links',
@@ -129,6 +129,13 @@
                         icon: 'fa fa-newspaper',
                         cf: 'admin/posts/explore',
                         sections: ['posts/explorar', 'posts/editar', 'posts/nuevo', 'posts/leer']
+                    },
+                    {
+                        text: 'Archivos temas',
+                        active: false,
+                        icon: 'far fa-folder',
+                        cf: 'recursos/archivos',
+                        sections: ['recursos/archivos', 'recursos/asignar', 'recursos/asignar_e', 'recursos/procesos_archivos', 'recursos/archivos_no_asignados']
                     },
                 ],
                 sections: []

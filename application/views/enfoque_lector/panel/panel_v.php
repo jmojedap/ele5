@@ -38,7 +38,7 @@
         <div class="container">
             <div class="pt-5">
                 <h1 class="principal fw-bold">Bienvenido</h1>
-                <h2 class="subtitulo"><?= $row->nombre_post ?></h2>
+                <h2 class="subtitulo"><?= $row->nombre_post ?> {{ flipbookSrc }}</h2>
             </div>
             <div class="d-flex">
                 <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('lecturas')"
@@ -83,10 +83,9 @@
             <!-- CONTENIDO LECTURAS -->
             <div class="container" v-show="contenido == 'lecturas'">
                 <h3 class="text-center mb-5" style="color:white;">Selecciona  la lectura que quieres realizar</h3>
-                <div class="d-flex justify-content-between">
-                    <div v-for="lectura in lecturas" v-on:click="setLecturaDinamica(lectura.id)">
-                        <img v-bind:src="`<?= URL_UPLOADS . 'lecturas_dinamicas_portadas/'?>` + lectura.id + `.jpg`" class="portada animate__animated animate__zoomIn"
-                            alt="Imagen portada libro" onerror="this.src='<?= URL_UPLOADS ?>lecturas_dinamicas_portadas/portada.jpg'" v-bind:title="lectura.nombre_post">
+                <div class="lecturas">
+                    <div v-for="lectura in lecturas" v-on:click="setLecturaDinamica(lectura.id)" class="card-lectura">
+                        {{ lectura.nombre_post }}
                     </div>
                 </div>
             </div>

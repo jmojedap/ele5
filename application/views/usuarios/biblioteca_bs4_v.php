@@ -45,8 +45,12 @@
             <div class="flipbooks_strip" style="width: <?= $att_flipbooks['ancho'] ?>px;">
                 
                 <?php foreach ($flipbooks as $row_flipbook): ?>
-                    <?php 
+                    <?php
                         $imagen_flipbook = $url_resources . "flipbook-{$row_flipbook['area_id']}-{$row_flipbook['nivel']}-mini.jpg";
+                        if ( strlen($row_flipbook['archivo_portada']) > 0 ) {
+                            $imagen_flipbook = URL_CONTENT . 'flipbook_portadas/' . $row_flipbook['archivo_portada'];
+                        }
+                        $openLink = "";
                     ?>
                     <div class="flipbook_container">
                         <a target="_blank" href="<?= base_url() . 'flipbooks/' . $funcion_flipbook . '/' . $row_flipbook['flipbook_id']; ?>">

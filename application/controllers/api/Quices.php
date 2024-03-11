@@ -83,4 +83,32 @@ class Quices extends CI_Controller{
         $data['quices'] = $quices;
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
+
+// QUIZ IMAGES
+//-----------------------------------------------------------------------------
+
+    /**
+     * AJAX JSON
+     * Imágenes de un quiz
+     * 2024-03-11
+     */
+    function get_images($quiz_id)
+    {
+        $images = $this->Quiz_model->images($quiz_id);
+        $data['images'] = $images->result();
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * Establecer imagen principal de un quiz
+     * 2024-03-11
+     */
+    function set_main_image($quiz_id, $file_id)
+    {
+        $data = $this->Quiz_model->set_main_image($quiz_id, $file_id);
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
 }

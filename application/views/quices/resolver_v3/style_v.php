@@ -7,10 +7,10 @@
     }
 
     .quiz-container {
-        /*min-height: 600px;*/
+        min-height: calc(100vh - 100px);
         width: 100%;
-        /*border: 1px solid red;
-        /*display: flex;*/
+        /*border: 1px solid red;*/
+        display: flex;
         align-items:center;
         justify-items: center;
     }

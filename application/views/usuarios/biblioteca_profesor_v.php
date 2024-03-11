@@ -54,10 +54,11 @@
     <div class="flipbooks_wrapper" style="height: 154px; overflow-x: <?= $att_flipbooks['overflow_x'] ?>; overflow-y: hidden; width: 715px; margin: 0px auto;">
         <div class="flipbooks_strip" style="width: <?= $att_flipbooks['ancho'] ?>px;">
             <?php foreach ($contenidos as $contenido): ?>
-                
                 <?php 
                     $imagen_flipbook = $url_resources . "flipbook-{$contenido['area_id']}-{$contenido['nivel']}-mini.jpg";
-                    //echo $imagen_flipbook;
+                    if ( strlen($contenido['archivo_portada']) > 0 ) {
+                        $imagen_flipbook = URL_CONTENT . 'flipbook_portadas/' . $contenido['archivo_portada'];
+                    }
                 ?>
                 <div class="flipbook_container">
                     <a target="_blank" href="<?php echo base_url() . 'flipbooks/' . $funcion_flipbook . '/' . $contenido['flipbook_id']; ?>">

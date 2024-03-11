@@ -8,6 +8,7 @@
 
         <!-- PRESENTACIÓN -->
         <div v-show="seccion == 'presentacion'" class="seccion">
+            <h3 class="text-center">¿Cuántas palabras lees en un minuto?</h3>
             <p>
                 En este test de lectura rápida podrás determinar tu velocidad de lectura y comprensión mediante una
                 corta lectura con la que podrás descubrir las palabras que lees por minuto y determinar si lees de

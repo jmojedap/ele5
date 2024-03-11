@@ -42,12 +42,12 @@
                                 <?= $this->session->userdata('username') ?>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="<?= URL_APP . 'accounts/profile' ?>">Mi cuenta</a></li>
+                                <li><a class="dropdown-item" href="<?= URL_APP . 'usuarios/contrasena' ?>">Mi cuenta</a></li>
                                 <?php if ( in_array($this->session->userdata('role'), array(1,2,3)) ) { ?>
                                     <li><a class="dropdown-item" href="<?= URL_ADMIN . 'users/explore' ?>">Administración</a></li>
                                 <?php } ?>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="<?= URL_APP . 'accounts/logout' ?>">Cerrar sesión</a></li>
+                                <li><a class="dropdown-item" href="<?= URL_APP . 'app/logout' ?>">Cerrar sesión</a></li>
                             </ul>
                         </li>
                     <?php else: ?>

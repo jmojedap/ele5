@@ -1,6 +1,7 @@
 <style>
     body {
         padding-top: 52px;
+        padding-bottom: 20px;
         background: #e7f5fe;
     }
 
@@ -60,7 +61,7 @@
         background: rgb(34,174,248);
         background: linear-gradient(0deg, rgba(34,174,248,1) 0%, rgba(125,207,251,1) 100%);
         color: white;
-        min-height: 400px;
+        min-height: 800px;
     }
 
     .contenidos .portada {
@@ -72,8 +73,34 @@
     }
 
     .contenidos .portada:hover {
-        width: 160px;
+        width: 153px;
         box-shadow: 0 12px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .lecturas {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* 4 columnas */
+        gap: 20px; /* Espacio entre las columnas */
+    }
+
+    .card-lectura {
+        color: #666;
+        width: 100%; /* Ancho de cada tarjeta */
+        background-color: #FFF;
+        border: 1px solid #FAFAFA;
+        padding: 1em;
+        box-sizing: border-box; /* Incluye padding y borde en el ancho */
+        cursor: pointer;
+        text-align:center;
+        border-left: 2px solid #dc3545;
+    }
+
+    .card-lectura:hover{
+        background-color: #FAFAFA;
+        color: #157CC1;
+        -webkit-box-shadow: 3px 3px 5px 5px rgba(62,184,249,1);
+        -moz-box-shadow: 3px 3px 5px 5px rgba(62,184,249,1);
+        box-shadow: 3px 3px 5px 5px rgba(62,184,249,1);
     }
 
     .herramienta-virtual {
@@ -125,4 +152,23 @@
         height: 36px;
         font-size: 0.9em;
     }
+
+/* RESPONSIVE */
+/*-----------------------------------------------------------------------------*/
+
+/* Para pantallas medianas (entre 576px y 991px) */
+@media (min-width: 576px) and (max-width: 991px) {
+  .lecturas {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+  }
+}
+
+/* Para dispositivos móviles (menor a 576px) */
+@media (max-width: 575px) {
+  .lecturas {
+    grid-template-columns: 1fr; /* 1 columna */
+    gap: 1em;
+  }
+}
+
 </style>

@@ -1,5 +1,5 @@
 <?php
-$seccion = $this->uri->segment(2);
+    $seccion = $this->uri->segment(2);
     //if ( $this->uri->segment(2) == 'otra_seccion' ) { $seccion = 'seccion'; }
 
     $clases[$seccion] = 'active';
@@ -25,19 +25,19 @@ $seccion = $this->uri->segment(2);
         'link' => "quices/construir/{$row->id}",
         'atributos' => 'title="Explorar evidencias"'
     );
-    
-    $arr_menus['resolver'] = array(
-        'icono' => '',
-        'texto' => 'Vista previa',
-        'link' => "quices/resolver/{$row->id}",
-        'atributos' => 'title="Vista previa de la Evidencia" target="_blank"'
-    );
         
     $arr_menus['elementos'] = array(
         'icono' => '',
         'texto' => 'Elementos',
         'link' => "quices/elementos/{$row->id}",
         'atributos' => 'title="Elementos de la evidencia"'
+    );
+
+    $arr_menus['images'] = array(
+        'icono' => '',
+        'texto' => 'Imágenes',
+        'link' => "quices/images/{$row->id}",
+        'atributos' => 'title="Imágenes de la evidencia"'
     );
         
     $arr_menus['detalle'] = array(
@@ -55,14 +55,20 @@ $seccion = $this->uri->segment(2);
     );
     
 //Elementos de menú según el rol del visitante
-    $elementos_rol[0] = array('explorar', 'temas', 'construir', 'editar', 'resolver', 'elementos', 'detalle');
-    $elementos_rol[1] = array('explorar', 'temas', 'construir', 'editar', 'resolver');
-    $elementos_rol[2] = array('explorar', 'temas', 'construir', 'editar', 'resolver');
-    $elementos_rol[9] = array('explorar', 'temas', 'construir', 'editar', 'resolver');
+    $elementos_rol[0] = array('explorar', 'temas', 'construir', 'images', 'editar', 'elementos', 'detalle');
+    $elementos_rol[1] = array('explorar', 'temas', 'construir', 'images', 'editar',);
+    $elementos_rol[2] = array('explorar', 'temas', 'construir', 'images', 'editar',);
+    $elementos_rol[9] = array('explorar', 'temas', 'construir', 'images', 'editar',);
+
     
 //Definiendo menú mostrar, según el rol del visitante
     $elementos = $elementos_rol[$this->session->userdata('rol_id')];
     
+//Modificar menús según el tipo
+    if ( $row->tipo_quiz_id > 200 ) {unset($elementos[2]);};
+    if ( $row->tipo_quiz_id < 200 ) {unset($elementos[3]);};
+    
+
 //Array data para la vista: comunes/menu_v
     $data_menu['elementos'] = $elementos;
     $data_menu['clases'] = $clases;

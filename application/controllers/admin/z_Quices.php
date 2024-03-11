@@ -2,14 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Quices extends CI_Controller{
-
-// Variables generales
-//-----------------------------------------------------------------------------
-    public $views_folder = 'admin/quices/';
-    public $url_controller = URL_ADMIN . 'quices/';
-
-// Constructor
-//-----------------------------------------------------------------------------
+    
     function __construct() {
         parent::__construct();
         
@@ -19,22 +12,13 @@ class Quices extends CI_Controller{
         date_default_timezone_set("America/Bogota");
     }
     
-    /**
-     * Redireccionamiento automático
-     * 2024-03-04
-     */
     function index($quiz_id = NULL)
     {   
-        $destination = 'quices/explorar';
-        if ( ! is_null($quiz_id) ) {
-            $destination = "quices/construir/{$quiz_id}";
-            $row = $this->Db_model->row_id('quiz', $quiz_id);
-            if ( $row->tipo_quiz_id >= 200 ) {
-                $destination = "quices/editar/{$quiz_id}";
-            }
+        if ( is_null($quiz_id) ) {
+            $this->explorar();
+        } else {
+            redirect("quices/construir/{$quiz_id}");
         }
-
-        redirect($destination);
     }
 
 //INFORMACIÓN DE QUIZ
@@ -66,22 +50,6 @@ class Quices extends CI_Controller{
         //Cargar vista
             $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
-
-    /**
-     * JSON
-     * Listado de quices
-     */
-    function get($num_page, $per_page = 10)
-    {
-        //Identificar filtros de búsqueda
-        $this->load->model('Search_model');
-        $filters = $this->Search_model->filters();
-
-        $data = $this->Quiz_model->get($filters, $num_page, $per_page);
-
-        //Salida JSON
-        $this->output->set_content_type('application/json')->set_output(json_encode($data));
-    }
     
     /**
      * Exporta el resultado de la búsqueda a un archivo de Excel
@@ -108,44 +76,6 @@ class Quices extends CI_Controller{
         
         $this->load->view('comunes/descargar_phpexcel_v', $data);
     }
-
-    /**
-     * AJAX
-     * Eliminar un grupo de registros seleccionados
-     * 2024-02-29
-     */
-    function delete_selected()
-    {
-        $selected = explode(',', $this->input->post('selected'));
-        $data['qty_deleted'] = 0;
-        
-        foreach ( $selected as $row_id ) $data['qty_deleted'] += $this->Quiz_model->delete($row_id);
-        
-        $this->output->set_content_type('application/json')->set_output(json_encode($data));
-    }
-
-// CRUD
-//-----------------------------------------------------------------------------
-
-    /**
-     * Vista Formulario para la creación de un nuevo quiz
-     * 2024-02-29
-     */
-    function add()
-    {
-        //Parámetros
-            $data['arrTipos'] = $this->Item_model->arr_options('categoria_id = 9');
-            $data['arrAreas'] = $this->Item_model->arr_options('categoria_id = 1');
-            $data['arrNiveles'] = $this->Item_model->arr_options('categoria_id = 3');
-
-        //Variables generales
-            $data['head_title'] = 'Evidencias de Aprendizaje';
-            $data['head_subtitle'] = 'Nuevo';
-            $data['nav_2'] = 'quices/explore/menu_v';
-            $data['view_a'] = 'quices/add/add_v';
-
-        $this->App_model->view(TPL_ADMIN_NEW, $data);
-    }
     
     function reciente()
     {
@@ -154,12 +84,6 @@ class Quices extends CI_Controller{
         
         $quiz_id = $quices->row()->id;
         
-        redirect("quices/construir/{$quiz_id}");
-    }
-    
-    function crear($tema_id, $tipo_quiz_id)
-    {
-        $quiz_id = $this->Quiz_model->crear($tema_id, $tipo_quiz_id);
         redirect("quices/construir/{$quiz_id}");
     }
     
@@ -183,46 +107,15 @@ class Quices extends CI_Controller{
         $data = $this->Quiz_model->basico($quiz_id);
 
         $data['options_tipo_quiz_id'] = $this->Item_model->options('categoria_id = 9', 'Todos los tipos');
-        $data['arrAreas'] = $this->Item_model->arr_options('categoria_id = 1');
-        $data['arrNiveles'] = $this->Item_model->arr_options('categoria_id = 3');
 
         $view_a = 'quices/editar_v';
-        if ( $data['row']->tipo_quiz_id >= 200  ) {
-            $view_a = "quices/editar/editar_{$data['row']->tipo_quiz_id}_v";
+        if ( $data['row']->tipo_quiz_id == 202  ) {
+            $view_a = 'quices/editar/editar_202_v';
+        } else if ( $data['row']->tipo_quiz_id == 203 ) {
+            $view_a = 'quices/editar/editar_203_v';
         }
         
         $data['view_a'] = $view_a;
-        $this->App_model->view(TPL_ADMIN_NEW, $data);
-    }
-
-    /**
-     * Crear o actualizar un registro en tabla quices
-     * 2024-02-29
-     */
-    function save()
-    {
-        $aRow = $this->Quiz_model->aRow();
-        $data['saved_id'] = $this->Db_model->save_id('quiz', $aRow);
-
-        //Salida JSON
-        $this->output->set_content_type('application/json')->set_output(json_encode($data));
-    }
-
-// QUIZ IMAGES
-//-----------------------------------------------------------------------------
-
-    /**
-     * Vista, gestión de imágenes de un quiz
-     * 2024-03-11
-     */
-    function images($quiz_id)
-    {
-        $data = $this->Quiz_model->basico($quiz_id);
-
-        $data['images'] = $this->Quiz_model->images($quiz_id);
-
-        $data['view_a'] = $this->views_folder . 'images/images_v';
-        $data['back_link'] = $this->url_controller . 'explore';
         $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
@@ -242,121 +135,6 @@ class Quices extends CI_Controller{
         $data['view_a'] = "quices/temas_v";
 
         $this->load->view(TPL_ADMIN_NEW, $data);
-    }
-    
-    /**
-     * REDIRECT
-     * 
-     * @param int $quiz_id
-     */
-    function quitar_tema($quiz_id, $tema_id)
-    {
-        $this->load->model('Tema_model');
-        $cant_eliminados = $this->Tema_model->quitar_quiz($tema_id, $quiz_id);
-        
-        $resultado['ejecutado'] = 1;
-        $resultado['mensaje'] = "Se eliminaron {$cant_eliminados} registros";
-        $resultado['clase'] = 'alert-success';
-        $resultado['icono'] = 'fa-check';
-        
-        $this->session->set_flashdata('resultado', $resultado);
-        
-        redirect("quices/temas/{$quiz_id}");
-    }
-    
-    /**
-     * REDIRECT
-     * 2017-05-09, para evitar error en links
-     * 
-     * @param int $quiz_id
-     */
-    function ver($quiz_id)
-    {
-        redirect("quices/construir/{$quiz_id}");
-    }
-    
-    /**
-     * Inicia el proceso de respuesta de un quiz, por parte de un usuario,
-     * Crea los registros para guardar la información del proceso de respuesta
-     * 
-     * @param int $quiz_id
-     */
-    function iniciar($quiz_id = NULL)
-    {
-        if ( ! is_null($quiz_id) )
-        {
-            //Crear registro en la tabla usuario_asignación
-                $ua_id = $this->Quiz_model->iniciar($quiz_id);   //Al abrir, establecer por defecto: incorrecto
-
-            //Registrar inicio de respuesta en la tabla evento
-                $this->load->model('Evento_model');
-                $this->Evento_model->guardar_inicia_quiz($quiz_id, $ua_id);
-
-            redirect("quices/resolver/{$quiz_id}");  
-        }
-        else
-        {
-            $data['titulo_pagina'] = 'Prueba no encontrada';
-            $data['vista_a'] = 'app/mensaje_v';
-            $data['mensaje'] = '<i class="fa fa-info-circle"></i> La evidencia no fue encontrada o no está asignada correctamente. Consulte a su asesor.';
-            $this->load->view(PTL_ADMIN, $data);
-        }
-        
-    }
-    
-    /**
-     * Vista para ejecutar y responder el quiz
-     * 2023-11-20
-     */
-    function resolver($quiz_id)
-    {   
-        //Registrar en evento
-        $data = $this->Quiz_model->basico($quiz_id);
-
-        //Cargar datos
-        $data['elementos'] = $this->Quiz_model->elementos($quiz_id);
-        $data['imagen'] = $this->Quiz_model->imagen($quiz_id);
-        $data['row_tipo_quiz'] = $this->Quiz_model->row_tipo_quiz($data['row']->tipo_quiz_id);
-        $data['row_tema'] = $this->Pcrn->registro_id('tema', $data['row']->tema_id);
-        
-        $tipo_quiz_id = $data['row']->tipo_quiz_id;
-        $formato = $data['row']->formato;
-        
-        $data['view_a'] = "quices/resolver/resolver_{$tipo_quiz_id}_v";
-
-        $view_ptl = 'quices/resolver/resolver_v';
-        if ( $tipo_quiz_id >= 100 && $tipo_quiz_id < 200 )
-        {
-            $data['view_a'] = "quices/resolver_v2/resolver_{$tipo_quiz_id}_f{$formato}_v";
-            $view_ptl = 'templates/monster/quiz_v';
-        } else if ( $tipo_quiz_id >= 200 ) {
-            $data['view_a'] = "quices/resolver_v3/{$tipo_quiz_id}/resolver_v";
-            $view_ptl = 'templates/evidencias3/main';
-        }
-
-        $this->load->view($view_ptl, $data);
-    }
-
-    /**
-     * Vista para resolver quices de práctica lectora
-     * 2023-12-06
-     */
-    function practica_lectora($tipo = 202)
-    {
-        $data['head_title'] = 'Práctica lectora';
-        $data['view_a'] = "quices/resolver_v3/{$tipo}/resolver_v";
-        $this->load->view('templates/evidencias3/main', $data);
-    }
-    
-    function eliminar($quiz_id, $tema_id = NULL)
-    {
-        $this->Quiz_model->eliminar($quiz_id);
-        
-        if ( is_null($tema_id) ) {
-            redirect("quices/explorar");
-        } else {
-            redirect("temas/quices/{$tema_id}");
-        }
     }
     
     function construir($quiz_id)
@@ -401,105 +179,6 @@ class Quices extends CI_Controller{
             $output = array_merge($data,(array)$output);
             $this->load->view(TPL_ADMIN_NEW, $output);
         
-    }
-    
-//GESTIÓN DE ELEMENTOS
-//---------------------------------------------------------------------------------------------------
-    
-    /**
-     * AJAX
-     * edita o crea registro en la tabla usuario_asignacion
-     * 
-     * El tipo detalle 'Quiz' corresponde al tipo_asignacion_id = 3,
-     * tabla: item.categoria_id = 16
-     */
-    function guardar_resultado()
-    {
-        
-        $ua_id = $this->Quiz_model->guardar_resultado();
-        
-        $this->load->model('Evento_model');
-        $this->Evento_model->guardar_fin_quiz($ua_id);
-
-        //Salida JSON
-        $this->output->set_content_type('application/json')->set_output(json_encode($ua_id));
-    }
-    
-    /**
-     * AJAX
-     * Crea un registro en la tabla 'quiz_elemento'
-     * 
-     */
-    function guardar_elemento()
-    {
-        //Valor por defecto
-        $qe_id = 0;
-        
-        //Si es una página existente
-        if ( $this->input->post('quiz_id') > 0 ){
-            //Construir el registro que se va a insertar
-            $registro = array(
-                'id_alfanumerico' => $this->input->post('id_alfanumerico'),
-                'quiz_id' => $this->input->post('quiz_id'),
-                'tipo_id' => $this->input->post('tipo_id'),
-                'orden' => $this->input->post('orden'),
-                'texto' => $this->input->post('texto'),
-                'detalle' => $this->input->post('detalle'),
-                'clave' => $this->input->post('clave'),
-                'x' => $this->input->post('x'),
-                'y' => $this->input->post('y'),
-                'alto' => $this->input->post('alto'),
-                'ancho' => $this->input->post('ancho')
-            );
-
-            $qe_id = $this->Quiz_model->guardar_elemento($registro);
-        }
-
-        //Respuesta
-        echo $qe_id;
-    }
-    
-    /**
-     * AJAX
-     * Elimina un registro de la tabla 'quiz_elemento'
-     * 
-     */
-    function eliminar_elemento($id_alfanumerico)
-    {   
-        $qty_deleted = $this->Quiz_model->eliminar_elemento($id_alfanumerico);
-        
-        echo $qty_deleted;
-    }
-    
-    /**
-     * AJAX
-     * Crea un registro de anotación en la tabla 'quiz_elemento', con posición
-     */
-    function guardar_elemento_pos()
-    {
-        //Valor por defecto
-        $qe_id = 0;
-        
-        //Si es una página existente
-        if ( $this->input->post('quiz_id') > 0 )
-        {
-            //Construir el registro que se va a insertar
-            $registro = array(
-                'id_alfanumerico' => $this->input->post('id_alfanumerico'),
-                'quiz_id' => $this->input->post('quiz_id'),
-                'tipo_id' => $this->input->post('tipo_id'),
-                'x' => $this->input->post('x'),
-                'y' => $this->input->post('y'),
-                'alto' => $this->input->post('alto'),
-                'ancho' => $this->input->post('ancho')
-            );
-
-            $qe_id = $this->Quiz_model->guardar_elemento($registro);
-        }
-
-        //Respuesta
-        //Salida JSON
-        $this->output->set_content_type('application/json')->set_output($qe_id);
     }
     
 //IMÁGENES

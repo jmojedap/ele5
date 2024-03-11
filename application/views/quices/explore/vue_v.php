@@ -38,13 +38,13 @@ var app_explore = new Vue({
         all_selected: false,
         filters: <?= json_encode($filters) ?>,
         str_filters: '<?= $str_filters ?>',
-        showing_filters: false,
+        displayFilters: false,
         search_num_rows: <?= $search_num_rows ?>,
         options_area: <?= json_encode($options_area) ?>,
         options_nivel: <?= json_encode($options_nivel) ?>,
         options_tipo: <?= json_encode($options_tipo) ?>,
         loading: false,
-        app_rid: app_rid
+        app_rid: app_rid,
     },
     methods: {
         get_list: function(){
@@ -87,7 +87,7 @@ var app_explore = new Vue({
                 {
                     this.hide_deleted();
                     toastr_cl = 'info';
-                    toastr_text = 'Usuarios eliminados: ' + response.data.qty_deleted;
+                    toastr_text = 'Registros eliminados: ' + response.data.qty_deleted;
                     this.selected = [];
                 } else {
                     toastr_cl = 'error';
@@ -95,9 +95,7 @@ var app_explore = new Vue({
                 }
                 toastr[toastr_cl](toastr_text);
             })
-            .catch(function (error) {
-                console.log(error);
-            });
+            .catch(function (error) { console.log(error) })
         },
         hide_deleted: function(){
             for (let index = 0; index < this.selected.length; index++) {
@@ -111,8 +109,7 @@ var app_explore = new Vue({
             this.element = this.list[key];
         },
         toggle_filters: function(){
-            this.showing_filters = !this.showing_filters;
-            $('#adv_filters').toggle('fast');
+            this.displayFilters = !this.displayFilters
         },
     }
 });
