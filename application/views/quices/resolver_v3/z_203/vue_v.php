@@ -13,15 +13,15 @@ var resolverQuiz = createApp({
                 id: 0,
                 opciones:'',
                 respuesta:'',
-                texto_respuesta: '',
-                comprobado: -1,
+                texto_respuesta: ''
             },
             currentKey: 0,
             opcionSeleccionada: '',
             resultadoTotal: 0,
             porcentajeTotal: 0,
             porcentajeAncho: 0,
-            milisegundosCaracter: 2,
+            milisegundosCaracter: 50,
+            opciones: ['Falso','Verdadero']
         }
     },
     methods: {
@@ -60,7 +60,6 @@ var resolverQuiz = createApp({
         seleccionarOpcion: function(opcionSeleccionada){
             this.quices[this.currentKey].respuesta = opcionSeleccionada
             this.quices[this.currentKey].respondido = 1
-            this.comprobarRespuesta()
         },
         comprobarRespuesta: function(){
             this.quices[this.currentKey].resultado = 0
@@ -86,7 +85,7 @@ var resolverQuiz = createApp({
                 if ( response.data.saved_id > 0 ) {
                     toastr['success']('Guardado')
                 } else {
-                    //toastr['warning']('Ocurrió un error. No se guardó el resultado.')
+                    toastr['warning']('Ocurrió un error. No se guardó el resultado.')
                 }
                 this.loading = false
             })
@@ -104,13 +103,13 @@ var resolverQuiz = createApp({
             var optionClass = 'btn-light'
             if ( this.currentQuiz.respondido == 1 ) {
                 if ( opcion == this.currentQuiz.respuesta ) {
-                    optionClass = 'active'
+                    optionClass = 'btn-primary'
                 }
             }
             if ( this.currentQuiz.comprobado == 1 ) {
                 if ( opcion == this.currentQuiz.respuesta ) {
-                    if ( this.currentQuiz.resultado == 0 ) optionClass = 'bg-danger'
-                    if ( this.currentQuiz.resultado == 1 ) optionClass = 'bg-success'
+                    if ( this.currentQuiz.resultado == 0 ) optionClass = 'btn-danger'
+                    if ( this.currentQuiz.resultado == 1 ) optionClass = 'btn-success'
                 }
             }
             return optionClass
@@ -124,7 +123,6 @@ var resolverQuiz = createApp({
             .then(response => {
                 this.loading = false
                 this.quices = response.data.quices
-                //this.setCurrent(0)
             })
             .catch( function(error) {console.log(error)} )
         },
@@ -132,15 +130,10 @@ var resolverQuiz = createApp({
     },
     computed: {
         respuestasCompletas: function(){
-            var cantidadRespondidos = this.quices.reduce((acumulador, elemento) => acumulador + elemento.respondido, 0);
-            if ( cantidadRespondidos == this.quices.length ) return true
+            var cantidadResponidos = this.quices.reduce((acumulador, elemento) => acumulador + elemento.respondido, 0);
+            if ( cantidadResponidos == this.quices.length ) return true
             return false
         },
-        arrOpciones: function(){
-            var opciones = []
-            opciones = this.currentQuiz.opciones.split(',')
-            return opciones
-        }
     },
     mounted(){
         this.getQuices()

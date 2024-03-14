@@ -38,19 +38,10 @@
         <div class="container">
             <div class="pt-5">
                 <h1 class="principal fw-bold">Bienvenido</h1>
-                <h2 class="subtitulo"><?= $row->nombre_post ?> {{ flipbookSrc }}</h2>
+                <h2 class="subtitulo"><?= $row->nombre_post ?></h2>
             </div>
             <div class="d-flex">
-                <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('lecturas')"
-                    v-bind:class="{'active': contenido == 'lecturas' }"
-                >
-                    <div>
-                        <i class="fas fa-circle-chevron-right"></i>
-                    </div>
-                    <div class="ms-1">
-                        Lecturas
-                    </div>
-                </a>
+                
                 <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setVerLibro()">
                     <div>
                         <i class="fas fa-circle-chevron-right"></i>
@@ -59,7 +50,7 @@
                         Ver libro
                     </div>
                 </a>
-                <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setFluidezLectora(0)">
+                <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="seccion = 'fluidez-lectora'">
                     <div>
                         <i class="fas fa-circle-chevron-right"></i>
                     </div>
@@ -77,6 +68,16 @@
                         Herramientas <br> virtuales
                     </div>
                 </a>
+                <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('lecturas')"
+                    v-bind:class="{'active': contenido == 'lecturas' }"
+                >
+                    <div>
+                        <i class="fas fa-circle-chevron-right"></i>
+                    </div>
+                    <div class="ms-1">
+                        Lecturas
+                    </div>
+                </a>
             </div>
         </div>
         <div class="contenidos">
@@ -84,7 +85,8 @@
             <div class="container" v-show="contenido == 'lecturas'">
                 <h3 class="text-center mb-5" style="color:white;">Selecciona  la lectura que quieres realizar</h3>
                 <div class="lecturas">
-                    <div v-for="lectura in lecturas" v-on:click="setLecturaDinamica(lectura.id)" class="card-lectura">
+                    <div v-for="(lectura,i) in lecturas" v-on:click="setLecturaDinamica(lectura.id)" class="card-lectura">
+                        <span class="badge bg-color-2 px-2">{{ i+1 }}</span>
                         {{ lectura.nombre_post }}
                     </div>
                 </div>
@@ -113,6 +115,15 @@
 
     <div v-show="seccion != 'inicio'">
         <div class="container">
+            <div v-show="seccion == 'fluidez-lectora'">
+                <div class="d-flex mb-2 justify-content-center">
+                    <button class="a4 me-1" v-for="(lectura,i) in lecturas" :key="lectura.id" v-bind:title="lectura.nombre_post"
+                        v-on:click="setFluidezLectora(lectura.id)" v-bind:class="{'active': lectura.id == lecturaFluidezId }"
+                    >
+                        {{ i + 1 }}
+                    </button>
+                </div>
+            </div>
             <iframe v-bind:src="frameContent" frameborder="0" class="frame-herramienta"></iframe>
         </div>
     </div>

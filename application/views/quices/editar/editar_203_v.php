@@ -6,13 +6,13 @@
                     <input type="hidden" name="id" value="<?= $row->id ?>">
 
                     <div class="mb-2 row">
-                        <label for="nombre_quiz" class="col-md-4 col-form-label text-right">Nombre</label>
+                        <label for="nombre_quiz" class="col-md-4 col-form-label text-right">Nombre <span class="text-danger">*</span></label>
                         <div class="col-md-8">
                             <input
                                 name="nombre_quiz" type="text" class="form-control"
                                 required
                                 title="Nombre" placeholder="Nombre"
-                                v-model="form_values.nombre_quiz"
+                                v-model="fields.nombre_quiz"
                             >
                         </div>
                     </div>
@@ -23,37 +23,59 @@
                             <input
                                 name="cod_quiz" type="text" class="form-control"
                                 title="Código evidencia" placeholder="Código evidencia"
-                                v-model="form_values.cod_quiz"
+                                v-model="fields.cod_quiz"
                             >
                         </div>
                     </div>
 
                     <div class="mb-2 row">
-                        <label for="tipo_quiz_id" class="col-md-4 col-form-label text-right">Tipo</label>
+                        <label for="texto_enunciado" class="col-md-4 col-form-label text-right">Texto o enunciado <span class="text-danger">*</span></label>
                         <div class="col-md-8">
-                            <select name="tipo_quiz_id" v-model="form_values.tipo_quiz_id" class="form-control" required>
+                            <textarea
+                                name="texto_enunciado" rows="2" class="form-control" required
+                                title="Enunciado especial" placeholder="Enunciado especial"
+                                v-model="fields.texto_enunciado"
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="opciones" class="col-md-4 col-form-label text-end text-right">Opciones de respuesta <span class="text-danger">*</span></label>
+                        <div class="col-md-8">
+                            <textarea
+                                name="opciones" rows="2" class="form-control"
+                                required
+                                title="Opciones de respuesta"
+                                v-model="fields.opciones"
+                            ></textarea>
+                            <small class="form-text text-muted">Opciones de respuesta separadas por coma</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="clave" class="col-md-4 col-form-label text-end text-right">Respuesta correcta <span class="text-danger">*</span></label>
+                        <div class="col-md-8">
+                            <select name="clave" v-model="fields.clave" class="form-select form-control" required v-bind:disabled="arrOpcionesRespuesta.length == 0">
+                                <option v-for="optionRespuesta in arrOpcionesRespuesta" v-bind:value="optionRespuesta">{{ optionRespuesta }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-2 row">
+                        <label for="tipo_quiz_id" class="col-md-4 col-form-label text-right">Tipo <span class="text-danger">*</span></label>
+                        <div class="col-md-8">
+                            <select name="tipo_quiz_id" v-model="fields.tipo_quiz_id" class="form-control" required>
                                 <option v-for="(option_tipo_quiz_id, key_tipo_quiz_id) in options_tipo_quiz_id" v-bind:value="key_tipo_quiz_id">{{ option_tipo_quiz_id }}</option>
                             </select>
                         </div>
                     </div>
 
-                    <div class="mb-2 row">
-                        <label for="texto_enunciado" class="col-md-4 col-form-label text-right">Enunciado especial</label>
+                    <div class="mb-3 row">
+                        <label for="area_id" class="col-md-4 col-form-label text-end text-right">Área <span class="text-danger">*</span></label>
                         <div class="col-md-8">
-                            <textarea
-                                name="texto_enunciado" rows="8" class="form-control"
-                                title="Enunciado especial" placeholder="Enunciado especial"
-                                v-model="form_values.texto_enunciado"
-                            ></textarea>
-                        </div>
-                    </div>
-
-                    <div class="mb-2 row">
-                        <label for="clave" class="col-md-4 col-form-label text-right">Respuesta correcta</label>
-                        <div class="col-md-8">
-                            <select name="clave" v-model="form_values.clave" class="form-control" required>
-                                <option value="">[ Seleccione la respuesta correcta ]</option>
-                                <option v-for="optionRespuesta in optionsRespuesta" v-bind:value="optionRespuesta">{{ optionRespuesta }}</option>
+                            <select name="area_id" v-model="fields.area_id" class="form-select form-control" required>
+                                <option value="">[ Todos ]</option>
+                                <option v-for="optionArea in arrAreas" v-bind:value="optionArea.id">{{ optionArea.name }}</option>
                             </select>
                         </div>
                     </div>
@@ -82,11 +104,11 @@
 var editar_quiz_app = new Vue({
     el: '#editar_quiz_app',
     data: {
-        form_values: row,
+        fields: row,
         options_tipo_quiz_id: <?= json_encode($options_tipo_quiz_id) ?>,
         options_formato: <?= json_encode($options_formato) ?>,
+        arrAreas: <?= json_encode($arrAreas) ?>,
         loading: false,
-        optionsRespuesta: ['Falso','Verdadero']
     },
     methods: {
         send_form: function(){
@@ -101,6 +123,15 @@ var editar_quiz_app = new Vue({
             })
             .catch( function(error) {console.log(error)} )
         },
-    }
+    },
+    computed: {
+        arrOpcionesRespuesta: function(){
+            var opcionesRespuesta = []
+            if ( this.fields.opciones.length > 0 ) {
+                opcionesRespuesta = this.fields.opciones.split(',')
+            }
+            return opcionesRespuesta
+        },
+    },
 })
 </script>

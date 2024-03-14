@@ -17,7 +17,8 @@ var enfoqueLectorApp = createApp({
             loading: false,
             fields: {},
             seccion: 'inicio',
-            contenido: 'lecturas',
+            //seccion: 'fuidez-lectora',
+            contenido: 'herramientas_virtuales',
             lecturas: arrLecturas,
             lecturaDinamicaIdActiva: <?= $arrLecturas[0] ?>,
             herramientasVirtuales: [
@@ -39,8 +40,9 @@ var enfoqueLectorApp = createApp({
             this.seccion = 'lectura-dinamica'
             this.showFrame = true
         },
-        setFluidezLectora: function(index){
-            this.lecturaFluidezId = this.lecturasFluidez[index]
+        setFluidezLectora: function(lecturaId){
+            this.lecturaFluidezId = lecturaId
+            console.log(this.frameContent)
             this.seccion = 'fluidez-lectora'
             showFrame: true
         },
@@ -61,7 +63,7 @@ var enfoqueLectorApp = createApp({
                 return URL_APP + 'temas/lectura_dinamica/' + this.lecturaDinamicaIdActiva
             }
             if ( this.seccion == 'fluidez-lectora' ) {
-                return URL_APP + 'enfoque_lector/fluidez_lectora/' + this.lecturaDinamicaIdActiva
+                return URL_APP + 'enfoque_lector/fluidez_lectora/' + this.lecturaFluidezId
             }
             if ( this.seccion == 'practica-lectora-1' ) {
                 return URL_APP + 'quices/practica_lectora/201'

@@ -86,17 +86,18 @@
     .card-lectura {
         color: #666;
         width: 100%; /* Ancho de cada tarjeta */
-        background-color: #FFF;
-        border: 1px solid #FAFAFA;
+        background-color: #FAFAFA;
+        border: 1px solid #EEE;
         padding: 1em;
         box-sizing: border-box; /* Incluye padding y borde en el ancho */
         cursor: pointer;
         text-align:center;
-        border-left: 2px solid #dc3545;
+        border-radius: 3px;
     }
 
     .card-lectura:hover{
-        background-color: #FAFAFA;
+        background: rgb(241,241,241);
+        background: radial-gradient(circle, rgba(241,241,241,1) 0%, rgba(255,255,255,1) 20%, rgba(255,255,255,1) 80%, rgba(241,241,241,1) 100%);
         color: #157CC1;
         -webkit-box-shadow: 3px 3px 5px 5px rgba(62,184,249,1);
         -moz-box-shadow: 3px 3px 5px 5px rgba(62,184,249,1);
@@ -147,10 +148,20 @@
         background-color: #2db2f8;
     }
 
+    .bg-color-2 {
+        background-color: #7ac42a;
+    }
+
     .btn-circle {
         width: 36px;
         height: 36px;
         font-size: 0.9em;
+    }
+
+    .a4.active{
+        color: white;
+        background-color: #2db2f8;
+        border-color: #2db2f8;
     }
 
 /* RESPONSIVE */

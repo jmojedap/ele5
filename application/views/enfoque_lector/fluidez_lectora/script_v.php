@@ -6,7 +6,7 @@ var fluidezLectora = createApp({
         return {
             row: <?= json_encode($ledin) ?>,
             loading: false,
-            seccion: 'presentacion',
+            seccion: 'preparacion',
             status: 'leyendo',
             elementos: <?= $ledin->contenido_json ?>,
             numeroElemento: 0,
@@ -23,7 +23,7 @@ var fluidezLectora = createApp({
             progressBar.style.width = '100%';
             
             setTimeout(function() {
-                new bootstrap.Modal($('#exampleModal')).show();
+                new bootstrap.Modal($('#timeOutModal')).show();
             }, this.segundosLectura * 1000);
         },
         reiniciarProgressBar: function(){
@@ -32,7 +32,6 @@ var fluidezLectora = createApp({
             progressBar.style.width = '0%';
         },
         resaltarAvance: function(){
-            // Seleccionar los primeros 10 elementos <span> dentro del div
             this.status = 'resultado'
             var spanElements = document.querySelectorAll('#lectura-dinamica-resultado span');
 
@@ -57,11 +56,15 @@ var fluidezLectora = createApp({
     }
 }).mount('#fluidezLectora')
 
+// Functions
+//-----------------------------------------------------------------------------
+
+//Evento click sobre un span de la lectura dinámica
 document.addEventListener('DOMContentLoaded', function() {
-    // Obtén el div
+    // Obtener el DIV
     const divLectura = document.getElementById('lectura-dinamica');
 
-    // Añade un event listener a cada span
+    // Añadir un event listener a cada span
     divLectura.querySelectorAll('span').forEach(function(span, index) {
         span.addEventListener('click', function() {
             fluidezLectora.numeroElemento = index + 1;
@@ -70,7 +73,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
-
 
 </script>

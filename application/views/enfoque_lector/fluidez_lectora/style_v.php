@@ -10,8 +10,11 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center; /* Centra los elementos en el eje transversal (vertical en este caso) */
-    justify-content: center; 
-    
+    justify-content: center;   
+}
+
+.bg-primary {
+    background-color: #2db2f8 !important;
 }
 
 #time-progress-bar {
@@ -46,7 +49,13 @@ body {
 }
 
 .titulo-lectura {
-    color: #b71c1c;
+    color: #0691db;
     text-align: center;
+}
+
+.resultado{
+    background-color: #e7f5fe;
+    color: #0691db;
+    border: 1px solid #2db2f8;
 }
 </style>

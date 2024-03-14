@@ -29,7 +29,7 @@
     <link type="text/css" rel="stylesheet" href="<?= URL_RESOURCES . 'templates/easypml/theme-editores.css' ?>">
     <link type="text/css" rel="stylesheet" href="<?= URL_RESOURCES . 'templates/easypml/style.css' ?>">
 
-    <?php $this->load->view('assets/toastr') ?>
+    <?php $this->load->view('templates/evidencias3/toastr') ?>
 
     <!-- PML Tools -->
     <link type="text/css" rel="stylesheet" href="<?= URL_RESOURCES . 'css/style_pml.css' ?>">

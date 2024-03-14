@@ -7,40 +7,18 @@
         font-size: 2em;
         font-weight: bold;
     }
-
-    .btn-opcion{
-        border: 0px;
-        font-size: 1.2em;
-        background-color: #FFF;
-        font-weight: bold;
-        color: #6d6d6d;
-        min-width: 130px;
-        margin-right: 0.2em;
-        border-radius: 0.3em;
-        background-color: #f1f1f1;
-        padding: 0em 0.5em;
-    }
-
-    .btn-opcion:hover{
-        color: white;
-        background-color: #82d0fb;
-    }
-
-    .btn-opcion.active{
-        color: white;
-        background-color: #3eb8f9;
-    }
-
-    .btn-opcion.bg-success, .btn-opcion.bg-danger{
-        color: white;
-    }
 </style>
 
 <div id="resolverQuiz">
+    <div class="center_box_750">
+        <div class="progress my-3 w-100" style="height: 4px;">
+            <div class="progress-bar bg-primary" id="time-progress-bar" role="progressbar" style="width: 0%"></div>
+        </div>
+    </div>
     <div class="center_box_750 quiz-container">
         <!-- INICIO -->
-        <div v-show="step == `inicio`" class="text-center w-100 mb-2">
-            <h3>Práctica 2</h3>
+        <div v-show="step ==  `inicio`" class="text-center w-100 mb-2">
+            <h3>Práctica 3</h3>
             <p>
                 Lee cada oración y selecciona si es Falsa o Verdadera
             </p>
@@ -62,11 +40,6 @@
                     </li>
                 </ul>
             </nav>
-
-            <p class="lead text-center">
-                Mira la imagen, lee la oración y determina si es Falsa o Verdadera
-            </p>
-
             <p class="text-center lead text-muted">
                 {{ currentKey + 1 }}/{{ quices.length }}
             </p>
@@ -83,38 +56,33 @@
                     porcentaje total: {{ porcentajeTotal }}
                     &middot;
                     respuestas completas: {{ respuestasCompletas }}
-                </div>            
-                
+                </div>
+
                 <div class="text-center mb-2">
                     <img
                         v-bind:src="currentQuiz.url_image"
-                        class="rounded w480p" alt="imagen del quiz"
+                        class="rounded" alt="imagen del quiz"
                         onerror="this.src='<?= URL_IMG ?>app/sm_nd_square.png'"
                     >
                 </div>
-
+                
                 <p class="enunciado">
                     {{ currentQuiz.texto_enunciado }}
                 </p>
-
+                
                 <div class="text-center mb-2 center_box_320">
-                    <div class="d-flex justify-content-center">
-                        <button class="btn-opcion" type="button"
-                            v-for="opcion in arrOpciones"
+                    <div class="d-flex justify-content-beetween">
+                        <button class="btn me-1 btn-lg w-100" type="button"
+                            v-for="opcion in opciones"
                             v-on:click="seleccionarOpcion(opcion)"
                             v-bind:class="optionClass(opcion)"
                             v-bind:disabled="currentQuiz.comprobado == 1"
                             >
-                            {{ opcion }}
-                            <br>
                             <span v-show="currentQuiz.comprobado == 1">
-                                <i class="fas fa-circle-check" v-show="opcion == currentQuiz.respuesta && currentQuiz.resultado == 1"></i>
-                                <i class="fas fa-times-circle" v-show="opcion == currentQuiz.respuesta && currentQuiz.resultado == 0"></i>
-                                <i class="fa fa-circle-o" v-show="opcion != currentQuiz.respuesta"></i>
+                                <i class="fas fa-check" v-show="opcion == currentQuiz.respuesta && currentQuiz.resultado == 1"></i>
+                                <i class="fas fa-times" v-show="opcion == currentQuiz.respuesta && currentQuiz.resultado == 0"></i>
                             </span>
-                            <span v-show="currentQuiz.comprobado == 0">
-                                <i class="fa fa-circle-o"></i>
-                            </span>
+                            {{ opcion }}
                         </button>
                     </div>
                 </div>
@@ -129,11 +97,11 @@
                             <div class="text-center" v-show="status == `respondiendo`">
                                 
         
-                                <button class="btn btn-primary" type="button"
+                                <button class="btn btn-success" type="button"
                                     v-on:click="comprobarRespuesta"
                                     v-show="currentQuiz.comprobado == 0"
                                     v-bind:disabled="currentQuiz.respuesta == ''">
-                                    SIGUIENTE <i class="fas fa-arrow-right"></i>
+                                    COMPROBAR
                                 </button>
                                 <button class="btn btn-primary" type="button"
                                     v-on:click="setCurrent(currentKey+1)"

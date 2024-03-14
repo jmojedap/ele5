@@ -2,8 +2,25 @@
 
 <div id="fluidezLectora">
     <div class="center_box_750">
-        <div class="progress my-3 w-100" style="height: 2px;">
+        <div class="progress my-3 w-100" style="height: 4px;">
             <div class="progress-bar bg-primary" id="time-progress-bar" role="progressbar" style="width: 0%;"></div>
+        </div>
+
+        <!-- PREPARACIÓN -->
+        <div v-show="seccion == 'preparacion'" class="seccion">
+            <h2 class="titulo-lectura mb-5">{{ row.nombre_post }}</h2>
+            <h3 class="text-center">¿Cuántas palabras lees en un minuto?</h3>
+            <p>Tienes un minuto para leer el texto que aparecerá en pantalla.</p>
+            <p>Pasados los 60 segundos haz clic en la palabra hasta la que llegaste</p>
+            <div class="text-center">
+                <button class="btn btn-warning btn-lg mb-2" v-on:click="iniciarLectura">
+                    INICIAR LECTURA
+                </button>
+                <br>
+                <button class="btn btn-light" v-on:click="seccion = 'presentacion'">
+                    AYUDA
+                </button>
+            </div>
         </div>
 
         <!-- PRESENTACIÓN -->
@@ -30,51 +47,42 @@
                 permitirá proyectar tu objetivo de mejoramiento
             </p>
             <div class="text-center">
-                <button class="btn btn-warning btn-lg" v-on:click="seccion = 'preparacion'">
-                    CONTINUAR
+                <button class="btn btn-warning" v-on:click="seccion = 'preparacion'">
+                    <i class="fas fa-arrow-left"></i>
+                    VOLVER
                 </button>
             </div>
         </div>
 
-        <div v-show="seccion == 'preparacion'" class="seccion">
-            <p>Tienes un minuto para leer el texto que aparecerá en pantalla.</p>
-            <p>Pasados los 60 segundos haz clic en la palabra hasta la que llegaste</p>
-            <div class="text-center">
-                <button class="btn btn-warning btn-lg" v-on:click="iniciarLectura">
-                    INICIAR LECTURA
-                </button>
-            </div>
-        </div>
-
+        <!-- LECTURA -->
         <div v-show="seccion == 'lectura'" class="contenido-lectura-dinamica">
             <h2 class="titulo-lectura">{{ row.nombre_post }}</h2>
-            <div id="lectura-dinamica" v-html="elementos.lectura_dinamica" v-show="status == 'leyendo'"></div>
-
+            
             <div v-show="mostrarResultado == true">
-                <div class="alert alert-success text-center">
+                <div class="alert resultado text-center">
                     <strong>Resultado: </strong><b>{{ palabrasPorMinuto }}</b> palabras por minuto
                 </div>
+            </div>
+            
+            <div>
                 <div class="mb-2 text-center">
                     <button class="btn btn-light" v-on:click="reiniciarApp">
-                        Reiniciar
+                        REINICIAR
                     </button>
                 </div>
             </div>
 
+            <div id="lectura-dinamica" v-html="elementos.lectura_dinamica" v-show="status == 'leyendo'"></div>
             <div id="lectura-dinamica-resultado" v-html="elementos.lectura_dinamica" v-show="status == 'resultado'"></div>
-        </div>
-
-        <div>
-
         </div>
     </div>
 
     <!-- Modal final del tiempo -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="timeOutModal" tabindex="-1" aria-labelledby="timeOutModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Se acabó el tiempo</h5>
+                    <h5 class="modal-title" id="timeOutModalLabel">Se acabó el tiempo</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
