@@ -239,6 +239,24 @@ class Posts extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
+// ARCHIVOS ASOCIADOS AL POST
+//-----------------------------------------------------------------------------
+
+    /**
+     * Vista, gestión de archivos de un post
+     * 2020-07-14
+     */
+    function files($post_id)
+    {
+        $data = $this->Post_model->basic($post_id);
+
+        $data['files'] = $this->Post_model->files($post_id);
+
+        $data['view_a'] = $this->views_folder . 'files/files_v';
+        $data['back_link'] = $this->url_controller . 'explore';
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
+    }
+
 // COMENTARIOS
 //-----------------------------------------------------------------------------
 

@@ -1666,7 +1666,7 @@ class Tema_Model extends CI_Model{
 //-----------------------------------------------------------------------------
 
     /**
-     * Importa posts a la base de datos
+     * Importa lecturas dinámicas a la base de datos
      * 2020-02-27
      */
     function importar_ledins($arr_sheet)
@@ -1798,6 +1798,9 @@ class Tema_Model extends CI_Model{
         return $contenido;
     }
 
+    /**
+     * 2024-04-24
+     */
     function ledin_diccionario($contenido)
     {
         $diccionario = $contenido['lectura'];

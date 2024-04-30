@@ -112,7 +112,6 @@
             },
             toggle_filters: function(){
                 this.showing_filters = !this.showing_filters;
-                $('#adv_filters').toggle('fast');
             },
             // Funciones especiales usuarios/explorar
             //-----------------------------------------------------------------------------

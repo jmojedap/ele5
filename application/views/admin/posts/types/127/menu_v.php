@@ -15,6 +15,12 @@ var sections = [
         cf: 'admin/posts/info/' + element_id,
         roles: [0,1,2,9]
     },
+    {    
+        text: 'Archivos',
+        id: 'posts_files',
+        cf: 'admin/posts/files/' + element_id,
+        roles: [0,1,2,9]
+    },
     {
         text: 'Detalles',
         id: 'posts_details',

@@ -436,6 +436,26 @@ class Post_model extends CI_Model{
         return $data;
     }
 
+// ARCHIVOS DEL POST
+//-----------------------------------------------------------------------------
+
+    /**
+     * Archivos asociadas al post en una colcción específica (album_id)
+     * 2024-04-24
+     */
+    function files($post_id, $album_id = null)
+    {
+        $this->db->select('files.id, files.title, url, url_thumbnail, files.integer_1 AS main, position');
+        //$this->db->where('is_image', 0);
+        $this->db->where('table_id', '2000');      //Tabla post
+        if ( ! is_null($album_id) ) { $this->db->where('album_id', $album_id); }
+        $this->db->where('related_1', $post_id);   //Relacionado con el post
+        $this->db->order_by('position', 'ASC');
+        $files = $this->db->get('files');
+
+        return $files;
+    }
+
 // POST INFO
 //-----------------------------------------------------------------------------
 

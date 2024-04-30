@@ -36,9 +36,6 @@ Vue.filter('componente_name', function (value) {
 
 var app_explore = new Vue({
     el: '#app_explore',
-    created: function(){
-        //this.get_list();
-    },
     data: {
         cf: '<?php echo $cf; ?>',
         controller: '<?php echo $controller; ?>',
@@ -51,7 +48,7 @@ var app_explore = new Vue({
         filters: <?php echo json_encode($filters) ?>,
         str_filters: '<?= $str_filters ?>',
         search_num_rows: <?= $search_num_rows ?>,
-        showing_filters: false,
+        displayFilters: false,
         group_id: 0,
         loading: false,
     },
@@ -126,8 +123,7 @@ var app_explore = new Vue({
             this.element = this.list[key];
         },
         toggle_filters: function(){
-            this.showing_filters = !this.showing_filters;
-            $('#adv_filters').toggle('fast');
+            this.displayFilters = !this.displayFilters;
         },
         //Especiales
         //Programación de link a grupo en calendario 

@@ -8,41 +8,58 @@
         <?php if ( ! is_null($ledin) ) { ?>
         <?php
             $elementos = json_decode($ledin->contenido_json);
+            $lectura_diccionario = $elementos->diccionario;
+
+            if ( $this->input->get('bsversion') == 5 ){
+                //Volver el contenido compatible con Bootstrap 5, tooltips 2024-04-24
+                $lectura_diccionario = str_replace('data-toggle="popover"', 'data-bs-toggle="tooltip"', $lectura_diccionario);
+                $lectura_diccionario = str_replace('data-trigger="hover"', '', $lectura_diccionario);
+                $lectura_diccionario = str_replace('data-placement="top"', 'data-bs-placement="top"', $lectura_diccionario);
+                $lectura_diccionario = str_replace('data-content=', 'title=', $lectura_diccionario);
+            }
+
         ?>
-        <h2 class="text-center"><?php echo $ledin->nombre_post ?></h2>
-
-        <?php if ( $ledin->texto_2 ) { ?>
-        <img src="<?php echo URL_UPLOADS . 'lecturas_dinamicas_imagenes/' . $ledin->texto_2 ?>" alt="" width="100%"
-            class="rounded mb-3">
-        <?php } ?>
-
-        <div class="mb-3">
-            <button class="btn btn-success w4 stopped" id="btn_play">
-                Iniciar Lectura
-            </button>
-            <button class="btn btn-warning w4 playing btn_stop_ledin">
-                Detener
-            </button>
-            <div class="btn-group stopped" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-secondary" disabled>Velocidad</button>
-                <?php foreach ( $arr_lapses as $key => $lapse ) { ?>
-                <?php
-                            $cl_lapse = $this->Pcrn->clase_activa($key, $lapse_index, 'btn-primary', 'btn-light');
-                        ?>
-                <button type="button" class="btn w2 btn_speed <?php echo $cl_lapse ?>"
-                    data-lapse="<?php echo $lapse ?>">
-                    <?php echo $key; ?>
-                </button>
-                <?php } ?>
-            </div>
+        <div class="text-end">
+            <?php foreach ( $files->result() as $file ) : ?>
+                <a href="<?= $file->url ?>" title="<?= $file->title ?>" target="_blank">
+                    <img src="<?= URL_IMG ?>flipbook/fb_pdf.png" alt="Archivo PDF">
+                </a>
+            <?php endforeach ?>
         </div>
+        <h2 class="text-center">
+            <?= $ledin->nombre_post ?>
+        </h2>
+
+            <?php if ( $ledin->texto_2 ) { ?>
+                <img src="<?= URL_UPLOADS . 'lecturas_dinamicas_imagenes/' . $ledin->texto_2 ?>" alt="" width="100%" class="rounded mb-3">
+            <?php } ?>
+
+            <div class="mb-3">
+                <button class="btn btn-success w4 stopped" id="btn_play">
+                    Iniciar Lectura
+                </button>
+                <button class="btn btn-warning w4 playing btn_stop_ledin">
+                    Detener
+                </button>
+                <div class="btn-group stopped" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-secondary" disabled>Velocidad</button>
+                    <?php foreach ( $arr_lapses as $key => $lapse ) { ?>
+                    <?php
+                        $cl_lapse = $this->Pcrn->clase_activa($key, $lapse_index, 'btn-primary', 'btn-light');
+                    ?>
+                    <button type="button" class="btn w2 btn_speed <?= $cl_lapse ?>" data-lapse="<?= $lapse ?>">
+                        <?= $key; ?>
+                    </button>
+                    <?php } ?>
+                </div>
+            </div>
 
         <?php if ( isset($elementos) ) : ?>
         <div id="lectura_diccionario" class="ledin_contenido stopped">
-            <?php echo $elementos->diccionario ?>
+            <?= $lectura_diccionario ?>
         </div>
         <div id="lectura_dinamica" class="ledin_contenido playing">
-            <?php echo $elementos->lectura_dinamica ?>
+            <?= $elementos->lectura_dinamica ?>
         </div>
         <?php endif; ?>
         <?php } ?>
@@ -67,3 +84,12 @@
         </div>
     </div>
 </div>
+
+<!-- Script para inicializar tooltips -->
+<script>
+  // Inicializa los tooltips
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+</script>

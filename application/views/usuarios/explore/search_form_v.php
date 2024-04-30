@@ -31,7 +31,7 @@
             </button>
         </div>
     </div>
-    <div id="adv_filters" style="<?= $filters_style ?>">
+    <div id="adv_filters" v-show="showing_filters">
         <div class="form-group row">
             <div class="col-md-9">
                 <select name="rol" class="form-control">

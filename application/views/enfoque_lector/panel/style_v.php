@@ -164,6 +164,10 @@
         border-color: #2db2f8;
     }
 
+    table.archivos-descargables{
+        background-color: #FAFAFA;
+    }
+
 /* RESPONSIVE */
 /*-----------------------------------------------------------------------------*/
 

@@ -13,7 +13,7 @@
             <th>Link</th>
             <th>Tema</th>
             <th>Detalles</th>
-            <th width="80px"></th>
+            <th width="120px"></th>
         </thead>
         <tbody>
             <tr v-for="(element, key) in list" v-bind:id="`row_` + element.id">
@@ -21,8 +21,8 @@
                     <input type="checkbox" v-bind:id="`check_` + element.id" v-model="selected" v-bind:value="element.id">
                 </td>
                 <td>
-                    <a v-bind:href="element.url" class="btn btn-primary btn-sm" target="_blank">
-                        <i class="fa fa-external-link-alt"></i>Abrir
+                    <a v-bind:href="element.url" class="btn btn-light" target="_blank">
+                        Abrir
                     </a>
                 </td>
                 <td>

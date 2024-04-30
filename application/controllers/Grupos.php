@@ -247,6 +247,7 @@ class Grupos extends CI_Controller{
      */
     function anotaciones($grupo_id, $flipbook_id = NULL, $tema_id = 0)
     {        
+        //$this->output->enable_profiler(TRUE);
         $this->load->model('Flipbook_model');
         
         $data = $this->Grupo_model->basico($grupo_id);

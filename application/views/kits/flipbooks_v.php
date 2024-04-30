@@ -36,11 +36,11 @@
     </div>
     
     <div class="col col-md-8">
-        <table class="table table-default bg-white">
+        <table class="table bg-white">
             <thead>
                 <th width="40px">No.</th>
                 <th width="40px">ID</th>
-                <th>Contenido</th>
+                <th>Contenidos (<?= $flipbooks->num_rows() ?>)</th>
                 <th>Área</th>
                 <th width="40px"></th>
             </thead>

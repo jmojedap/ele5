@@ -3,9 +3,16 @@
 ?>
 
 <script>
+    var files = [];
+    <?php if ( $files->num_rows() > 0 ) : ?>
+        files = <?= json_encode($files->result()) ?>,
+    <?php endif; ?>
+</script>
+
+<script>
     var i = 0;  //Índice palabra
-    var lapse = <?php echo $arr_lapses[$lapse_index] ?>;
-    var lapse_index = <?php echo $lapse_index; ?>;
+    var lapse = <?= $arr_lapses[$lapse_index] ?>;
+    var lapse_index = <?= $lapse_index; ?>;
     var pending = {};
     var restart_timeout;
 
@@ -85,13 +92,13 @@
             var definicion = $(this).data('content');
         });
 
-        $('.con_definicion').click(function(){
+        /*$('.con_definicion').click(function(){
             var definicion = $(this).data('content');
             var titulo = $(this).html();
             console.log(titulo);
             $('#definicion').html(definicion);
             $('#titulo_modal').html(titulo);
             new bootstrap.Modal($('#definicionModal')).show();
-        });
-    });    
+        });*/
+    });
 </script>

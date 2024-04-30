@@ -25,35 +25,35 @@
         );
             
         $arr_menus['flipbooks'] = array(
-            'icono' => '<i class="fa fa-book"></i>',
+            'icono' => '',
             'texto' => 'Contenidos',
             'link' => "kits/flipbooks/{$row->id}",
             'atributos' => 'title="Contenidos del kit"'
         );
             
         $arr_menus['cuestionarios'] = array(
-            'icono' => '<i class="fa fa-question"></i>',
+            'icono' => '',
             'texto' => 'Cuestionarios',
             'link' => "kits/cuestionarios/{$row->id}",
             'atributos' => 'title="Cuestionarios del kit"'
         );
             
         $arr_menus['instituciones'] = array(
-            'icono' => '<i class="fa fa-bank"></i>',
+            'icono' => '',
             'texto' => 'Instituciones',
             'link' => "kits/instituciones/{$row->id}",
             'atributos' => 'title="Instituciones con el kit asignado"'
         );
             
         $arr_menus['importar_elementos'] = array(
-            'icono' => '<i class="fa fa-file-excel-o"></i>',
+            'icono' => '',
             'texto' => 'Importar elementos',
             'link' => "kits/importar_elementos/{$row->id}",
             'atributos' => 'title="Importar elementos del kit con archivo MS Excel"'
         );
             
         $arr_menus['editar'] = array(
-            'icono' => '<i class="fa fa-pencil"></i>',
+            'icono' => '',
             'texto' => 'Editar',
             'link' => "kits/editar/edit/{$row->id}",
             'atributos' => 'title="Editar kit"'

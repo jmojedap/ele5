@@ -28,6 +28,7 @@
                 </select>
             </div>
         </div>
+        
         <div class="table-responsive">
 
             <table class="table bg-white">
@@ -43,12 +44,15 @@
                         <td></td>
                         <td></td>
                         <td><strong>PROMEDIO</strong></td>
-                        <td style="width: 150px;" class="text-center">
-                            <i class="star fa-star" v-bind:class="star_class(avg_calificacion, 1)"></i>
-                            <i class="star fa-star" v-bind:class="star_class(avg_calificacion, 2)"></i>
-                            <i class="star fa-star" v-bind:class="star_class(avg_calificacion, 3)"></i>
-                            <i class="star fa-star" v-bind:class="star_class(avg_calificacion, 4)"></i>
-                            <i class="star fa-star" v-bind:class="star_class(avg_calificacion, 5)"></i>
+                        <td style="width: 150px;" class="d-flex justify-content-center">
+                            <div v-for="star in stars">
+                                <span v-show="!displayStar(avg_calificacion, star)">
+                                    <i class="star far fa-star"></i>
+                                </span>
+                                <span v-show="displayStar(avg_calificacion, star)">
+                                    <i class="star fas fa-star"></i>
+                                </span>
+                            </div>
                         </td>
                         <td class="text-center" v-bind:class="calificacion_color(avg_calificacion)">
                             {{ calificacion_name(avg_calificacion) }}
@@ -71,12 +75,15 @@
                             <p>{{ anotacion.anotacion }}</p>
                         </td>
                         <td>
-                            <div v-bind:class="{'pointer': calificable == true }" class="text-center">
-                                <i class="star fa-star" v-bind:class="star_class(anotacion.calificacion, 1)" v-on:click="set_calificacion(anotacion_key, 20)"></i>
-                                <i class="star fa-star" v-bind:class="star_class(anotacion.calificacion, 2)" v-on:click="set_calificacion(anotacion_key, 40)"></i>
-                                <i class="star fa-star" v-bind:class="star_class(anotacion.calificacion, 3)" v-on:click="set_calificacion(anotacion_key, 60)"></i>
-                                <i class="star fa-star" v-bind:class="star_class(anotacion.calificacion, 4)" v-on:click="set_calificacion(anotacion_key, 80)"></i>
-                                <i class="star fa-star" v-bind:class="star_class(anotacion.calificacion, 5)" v-on:click="set_calificacion(anotacion_key, 100)"></i>
+                            <div v-bind:class="{'pointer': calificable == true }" class="d-flex justify-content-center">
+                                <div v-for="star in stars">
+                                    <span v-on:click="set_calificacion(anotacion_key, star * 20)" v-show="displayStar(anotacion.calificacion, star)">
+                                        <i class="star fa-star fas"></i>
+                                    </span>
+                                    <span v-on:click="set_calificacion(anotacion_key, star * 20)" v-show="!displayStar(anotacion.calificacion, star)">
+                                        <i class="star fa-star far"></i>
+                                    </span>
+                                </div>
                             </div>
                         </td>
                         <td class="text-center" v-bind:class="calificacion_color(anotacion.calificacion)">

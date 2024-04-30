@@ -6,6 +6,7 @@
 // Variables
 //-----------------------------------------------------------------------------
     var arrLecturas = <?= json_encode($lecturas->result()) ?>;
+    var arrArchivosDescargables = <?= json_encode($files->result()) ?>;
 
 // VueApp
 //-----------------------------------------------------------------------------
@@ -17,15 +18,19 @@ var enfoqueLectorApp = createApp({
             loading: false,
             fields: {},
             seccion: 'inicio',
-            //seccion: 'fuidez-lectora',
             contenido: 'herramientas_virtuales',
             lecturas: arrLecturas,
             lecturaDinamicaIdActiva: <?= $arrLecturas[0] ?>,
             herramientasVirtuales: [
+                {id:1,texto:'Práctica lectora',numero:'1',imagen:'icono-practica-lectora-2.png', destino: 'practicas_lectoras'},
+                {id:2,texto:'Ejercicios descargables',numero:'2',imagen:'icono-ejercicios-descargables.png', destino: 'archivos_descargables'},
+            ],
+            practicasLectoras: [
                 {id:1,texto:'Práctica',numero:'1',imagen:'practica_lectora_1.png', seccion: 'practica-lectora-1'},
                 {id:2,texto:'Práctica',numero:'2',imagen:'practica_lectora_2.png', seccion: 'practica-lectora-2'},
                 {id:3,texto:'Práctica',numero:'3',imagen:'practica_lectora_3.png', seccion: 'practica-lectora-3'},
             ],
+            archivosDescargables: arrArchivosDescargables,
             lecturasFluidez: <?= json_encode($lecturas->result()) ?>,
             lecturaFluidezId: <?= $arrLecturas[0] ?>,
             showFrame: true
@@ -33,6 +38,7 @@ var enfoqueLectorApp = createApp({
     },
     methods: {
         setContenido: function(nuevoContenido){
+            console.log(nuevoContenido)
             this.contenido = nuevoContenido
         },
         setLecturaDinamica: function(lecturaDinamicaId){
@@ -60,7 +66,7 @@ var enfoqueLectorApp = createApp({
                 return URL_APP + this.getFlipbookSrc
             }
             if ( this.seccion == 'lectura-dinamica' ) {
-                return URL_APP + 'temas/lectura_dinamica/' + this.lecturaDinamicaIdActiva
+                return URL_APP + 'temas/lectura_dinamica/' + this.lecturaDinamicaIdActiva + '?bsversion=5'
             }
             if ( this.seccion == 'fluidez-lectora' ) {
                 return URL_APP + 'enfoque_lector/fluidez_lectora/' + this.lecturaFluidezId

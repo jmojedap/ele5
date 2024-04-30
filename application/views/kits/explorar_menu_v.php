@@ -6,14 +6,14 @@
     
     //Atributos de los elementos del menú
         $arr_menus['explorar'] = array(
-            'icono' => '<i class="fa fa-list-alt"></i>',
+            'icono' => '',
             'texto' => 'Explorar',
             'link' => "kits/explorar/",
             'atributos' => 'title="Explorar kits"'
         );
         
         $arr_menus['nuevo'] = array(
-            'icono' => '<i class="fa fa-plus"></i>',
+            'icono' => '',
             'texto' => 'Nuevo',
             'link' => "kits/nuevo/add/",
             'atributos' => 'title="Agregar un nuevo kit"'

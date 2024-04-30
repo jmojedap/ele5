@@ -154,9 +154,12 @@ class Kits extends CI_Controller{
 //GESTIÓN DE FLIPBOOKS
 //---------------------------------------------------------------------------------------------------
     
+    /**
+     * Listado de contenidos asignados al kit
+     * 2024-03-18
+     */
     function flipbooks($kit_id)
     {
-        //$this->output->enable_profiler(TRUE);
         //Cargando datos básicos
             $data = $this->Kit_model->basico($kit_id);
             
@@ -164,7 +167,7 @@ class Kits extends CI_Controller{
             $this->load->model('Busqueda_model');
             $this->load->model('Flipbook_model');
             $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda['condicion'] = "tipo_flipbook_id IN (0,3) AND id NOT IN (SELECT elemento_id FROM kit_elemento WHERE kit_id = {$kit_id} AND tipo_elemento_id = 1)";
+            $busqueda['condicion'] = "tipo_flipbook_id IN (0,3,4,6) AND id NOT IN (SELECT elemento_id FROM kit_elemento WHERE kit_id = {$kit_id} AND tipo_elemento_id = 1)";
             //$busqueda['tp'] = '0'; //Tipo flipbook estudiantes
             $data['resultados'] = $this->Flipbook_model->buscar($busqueda, 100, 0); //Se limita a 100 resultados
             

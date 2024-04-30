@@ -23,7 +23,8 @@ var anotaciones_app = new Vue({
         anotaciones: [],
         pa_asignadas: <?= json_encode($pa_asignadas) ?>,
         avg_calificacion: 0,
-        sur: <?= $this->session->userdata('role') ?>
+        sessionUserRole: <?= $this->session->userdata('role') ?>,
+        stars: [1,2,3,4,5]
     },
     methods: {
         get_list: function(){
@@ -49,6 +50,7 @@ var anotaciones_app = new Vue({
             });
         },
         set_calificacion: function(anotacion_key, calificacion){
+            console.log('Calificando...', this.calificable)
             if ( this.calificable )
             {
                 var meta_id = this.anotaciones[anotacion_key].id;
@@ -66,9 +68,7 @@ var anotaciones_app = new Vue({
                         toastr['success']('Calificación guardada');
                     }
                 })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                .catch(function (error) { console.log(error) })
             }
         },
         update_avg_calificacion: function(){
@@ -94,8 +94,12 @@ var anotaciones_app = new Vue({
         },
         star_class: function(calificacion, num){
             var star_class = 'far';
-            if ( calificacion > 20 * (num - 1) ) star_class = 'fa';
+            if ( calificacion > 20 * (num - 1) ) star_class = 'fas';
             return star_class;
+        },
+        displayStar: function(calificacion, num){
+            if ( calificacion > 20 * (num - 1) ) return true;
+            return false
         },
         calificacion_name: function(calificacion){
             var calificacion_name = '';
@@ -124,7 +128,7 @@ var anotaciones_app = new Vue({
         calificable: function(){
             int_flipbook_id = parseInt(this.flipbook_id);
             calificable = this.user_flipbooks.includes(int_flipbook_id);
-            if ( this.sur > 5 ) calificable = false;
+            if ( this.sessionUserRole > 5 ) calificable = false;
             return calificable;
         },
     }

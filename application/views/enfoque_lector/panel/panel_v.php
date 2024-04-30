@@ -44,7 +44,7 @@
                 
                 <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setVerLibro()">
                     <div>
-                        <i class="fas fa-circle-chevron-right"></i>
+                        <i class="fas fa-chevron-circle-right"></i>
                     </div>
                     <div class="ms-1">
                         Ver libro
@@ -52,7 +52,7 @@
                 </a>
                 <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="seccion = 'fluidez-lectora'">
                     <div>
-                        <i class="fas fa-circle-chevron-right"></i>
+                        <i class="fas fa-chevron-circle-right"></i>
                     </div>
                     <div class="ms-1">
                         Fluidez <br> lectora
@@ -62,7 +62,7 @@
                     v-bind:class="{'active': contenido == 'herramientas_virtuales' }"
                 >
                     <div>
-                        <i class="fas fa-circle-chevron-right"></i>
+                        <i class="fas fa-chevron-circle-right"></i>
                     </div>
                     <div class="ms-1">
                         Herramientas <br> virtuales
@@ -72,7 +72,7 @@
                     v-bind:class="{'active': contenido == 'lecturas' }"
                 >
                     <div>
-                        <i class="fas fa-circle-chevron-right"></i>
+                        <i class="fas fa-chevron-circle-right"></i>
                     </div>
                     <div class="ms-1">
                         Lecturas
@@ -96,7 +96,27 @@
             <div class="container" v-show="contenido == 'herramientas_virtuales'">
                 <h3 class="text-center mb-5" style="color:white;">Herramientas virtuales</h3>
                 <div class="d-flex justify-content-center">
-                    <div v-for="herramienta in herramientasVirtuales" v-on:click="seccion = herramienta.seccion"
+                    <div v-for="herramienta in herramientasVirtuales" v-on:click="setContenido(herramienta.destino)"
+                        class="herramienta-virtual animate__animated animate__zoomIn">
+                        <div class="d-flex justify-content-center">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <img v-bind:src="`<?= URL_IMG . 'enfoque_lector/'?>` + herramienta.imagen" alt="Imagen herramienta virtual" class="icono">
+                            </div>
+                            <div class="text-center">
+                                <div>
+                                    <p class="lead">{{ herramienta.texto }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTENIDO PRÁCTICAS LECTORAS -->
+            <div class="container" v-show="contenido == 'practicas_lectoras'">
+                <h3 class="text-center mb-5" style="color:white;">Selecciona la práctica que deseas realizar</h3>
+                <div class="d-flex justify-content-center">
+                    <div v-for="herramienta in practicasLectoras" v-on:click="seccion = herramienta.seccion"
                         class="herramienta-virtual animate__animated animate__zoomIn">
                         <div class="d-flex justify-content-center">
                             <div class="d-flex align-items-center justify-content-center">
@@ -108,6 +128,32 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- CONTENIDO ARCHIVOS DESCARGABLES -->
+            <div class="container" v-show="contenido == 'archivos_descargables'">
+                <h3 class="text-center mb-5" style="color:white;">Selecciona el archivo que vas a ver o descargar</h3>
+                <div class="center_box_750">
+                    <p class="text-center" style="color:white;" v-show="archivosDescargables.length == 0">Todavía no hay archivos asignados a este contenido</p>
+                    <table class="table archivos-descargables">
+                        <tbody>
+                            <tr v-for="(archivo, keyArchivo) in archivosDescargables">
+                                <td width="10px">{{ keyArchivo + 1 }}</td>
+                                <td>{{ archivo.title }}</td>
+                                <td width="10px">
+                                    <a v-bind:href="archivo.url" class="btn btn-light btn-sm" target="_blank" title="Ver archivo">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                </td>
+                                <td width="10px">
+                                    <a v-bind:href="archivo.url" class="btn btn-light btn-sm" target="_blank" title="Descargar archivo" download>
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

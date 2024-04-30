@@ -58,7 +58,7 @@
             selected: [],
             all_selected: false,
             filters: <?php echo json_encode($filters) ?>,
-            showing_filters: false,
+            displayFilters: false,
             qty_selectorp: <?php echo $qty_selectorp ?>,
             loading: false
         },
@@ -133,8 +133,7 @@
                 this.element = this.list[key];
             },
             toggle_filters: function(){
-                this.showing_filters = !this.showing_filters;
-                $('#adv_filters').toggle('fast');
+                this.displayFilters = !this.displayFilters;
             },
             //Especiales
             add_to_selectorp: function(){

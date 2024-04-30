@@ -889,7 +889,6 @@ class Pcrn extends CI_Model{
 
     function rango_valor($rangos, $valor_comparacion)
     {
-        
         //Valor inicial
         $limite_inferior = 0;
         $rango = 0;

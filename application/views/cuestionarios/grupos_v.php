@@ -98,16 +98,16 @@
     //Ajax
     function eliminar()
     {
-        $.ajax({        
-            type: 'POST',
-            url: base_url + 'cuestionarios/eliminar_seleccionados_uc',
-            data: {
+        $.ajax({
+            type: 'POST',
+            url: base_url + 'cuestionarios/eliminar_seleccionados_uc',
+            data: {
                 seleccionados : seleccionados.substring(1)
             },
             success: function(){
                 window.location = base_url + cf_url + cuestionario_id + '/' + institucion_id + '/' + grupo_id;
             }
-        });
+        });
     }
 </script>
 
@@ -232,8 +232,12 @@
 
                         $resultado = $this->App_model->res_cuestionario($row->id, "usuario_id = {$row_estudiante->usuario_id}");
                         $porcentaje_correctas = $this->Pcrn->int_percent($cant_correctas, $row->num_preguntas);
+
+                        //Porcentaje correctas con decimales
+                        $pct_correctas = 0;
+                        if ( $row->num_preguntas > 0 ) $pct_correctas = $cant_correctas / $row->num_preguntas;
                         
-                        $rango_usuario = $this->App_model->rango_cuestionarios($porcentaje_correctas/100);
+                        $rango_usuario = $this->App_model->rango_cuestionarios($pct_correctas);
                         
                         $clase_rango = '';
                         if ( $rango_usuario > 0 ){ $clase_rango = $clases_rango[$rango_usuario]; }

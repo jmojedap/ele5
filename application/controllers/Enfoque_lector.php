@@ -49,6 +49,9 @@ public $url_controller = URL_APP . 'enfoque_lector/';
             $this->db->where($idsCondition);
             $data['lecturas'] = $this->db->get('post');
 
+        //Archivos de enfoque lector tipo 10
+        $data['files'] = $this->Post_model->files($post_id, 10);
+
         $data['head_title'] = 'Enfoque Lector';
         $data['view_a'] = $this->views_folder . 'panel/panel_v';
         $this->App_model->view('templates/easypml/full', $data);

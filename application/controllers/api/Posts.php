@@ -113,6 +113,23 @@ class Posts extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
+// ARCHIVOS
+//-----------------------------------------------------------------------------
+
+    /**
+     * AJAX JSON
+     * Archivos de un post en una colección específica (album_id)
+     * 2024-04-24
+     */
+    function get_files($post_id, $album_id = null)
+    {
+        $files = $this->Post_model->files($post_id, $album_id);
+        $data['files'] = $files->result();
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
 // COMENTARIOS
 //-----------------------------------------------------------------------------
 

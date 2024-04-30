@@ -1305,11 +1305,10 @@ class Instituciones extends CI_Controller
     
     /**
      * Mostrar los flipbooks que han sido asignados a los estudiantes de una institución
-     * @param type $institucion_id 
+     * @param int $institucion_id 
      */
     function flipbooks($institucion_id)
-    {
-        
+    {   
         //Cargando datos básicos ($basico)
         if ( in_array($this->session->userdata('rol_id'), array(3,4,5)) ) { $institucion_id = $this->session->userdata('institucion_id'); }
         $data = $this->Institucion_model->basic($institucion_id);

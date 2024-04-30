@@ -30,7 +30,7 @@ public $url_controller = 'temas/';
 
     /**
      * Vista pantalla completa para ejecución de aplicación de lectura dinámica
-     * 2023-12-03
+     * 2024-04-29
      */
     function lectura_dinamica($ledin_id, $json = FALSE)
     {
@@ -40,6 +40,9 @@ public $url_controller = 'temas/';
             1 => '2000', 2 => '950', 3 => '515',
             4 => '280', 5 => '130'
         );
+
+        $this->load->model('Post_model');
+        $data['files'] = $this->Post_model->files($ledin_id, 10);
         
         if ( $json )
         {
@@ -50,7 +53,7 @@ public $url_controller = 'temas/';
             
             $data['view_a'] = $this->views_folder . 'lectura_dinamica/lectura_dinamica_v';
             $data['head_title'] = $data['ledin']->nombre_post;
-            $data['subtitle_head'] = 'Lecturas dinámicas';
+            //$data['subtitle_head'] = 'Lecturas dinámicas';
             $this->load->view('templates/easypml/empty', $data);
         }
     }

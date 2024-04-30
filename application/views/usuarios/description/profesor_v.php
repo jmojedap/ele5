@@ -3,13 +3,13 @@
 ?>
 
 <p class="d-none d-sm-block">
-    <span class="text-danger"><?= $this->Item_model->nombre(6, $row->rol_id); ?></span> | 
-    <span class="suave">Username:</span>
-    <span class="text-danger"><?= $row->username ?></span> | 
-    <span class="suave"><i class="fa fa-bank"></i></span>
+    <span class="text-danger"><?= $this->Item_model->nombre(6, $row->rol_id); ?></span> &middot; 
+    <span class="text-muted">Username:</span>
+    <span class="text-danger"><?= $row->username ?></span> &middot; 
+    <span class="text-muted">Institución:</span>
     <span class="text-danger"><?= $nombre_institucion ?></span>
 
-    <span class="text-muted">|</span>
+    <span class="text-muted">&middot;</span>
 
     <?php if ( $this->session->userdata('rol_id') <= 1 ) { ?>
         <span class="text-muted">

@@ -1153,31 +1153,6 @@ class Usuarios extends CI_Controller{
         
         redirect("usuarios/flipbooks/{$usuario_id}");
     }
-    
-    function anotaciones_ant($usuario_id, $flipbook_id = NULL)
-    {
-        //Cargando
-            $this->load->model('Flipbook_model');
-            $this->load->model('Pagina_model');
-        
-        //Cargando datos básicos
-        $data = $this->Usuario_model->basico($usuario_id);
-        $flipbooks = $this->Usuario_model->flipbooks($data['row']);
-        
-        if ( $flipbooks->num_rows() > 0 ){
-            $flipbook_id = $this->Pcrn->si_nulo($flipbook_id, $flipbooks->row()->flipbook_id);
-        }
-       
-       //Variables
-            $data['flipbook_id'] = $flipbook_id;
-            $data['anotaciones'] = $this->Flipbook_model->anotaciones_estudiante($flipbook_id, $usuario_id);
-            $data['flipbooks'] = $flipbooks;
-        
-        //Cargar vista
-            $data['head_subtitle'] = 'Anotaciones';
-            $data['view_a'] = 'usuarios/anotaciones_v';
-            $this->load->view(TPL_ADMIN_NEW, $data);
-    }
 
     function anotaciones($usuario_id, $flipbook_id = NULL)
     {
@@ -1197,7 +1172,6 @@ class Usuarios extends CI_Controller{
        
        //Variables
             $data['flipbook_id'] = '0' . intval($flipbook_id);
-            $data['anotaciones'] = $this->Flipbook_model->anotaciones_estudiante($flipbook_id, $usuario_id);
             $data['flipbooks'] = $flipbooks;
         
         //Cargar vista
@@ -1267,8 +1241,8 @@ class Usuarios extends CI_Controller{
     /**
      * Resultados de un usuario en un cuestionario
      * 
-     * @param type $usuario_id
-     * @param type $uc_id 
+     * @param int $usuario_id
+     * @param int $uc_id => usuario_cuestionario_id
      */
     function resultados($usuario_id, $uc_id)
     {

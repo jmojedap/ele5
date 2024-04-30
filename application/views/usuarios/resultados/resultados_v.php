@@ -23,10 +23,10 @@
     
     $texto_rango = array(
         0 => 'NA',
-        1 => 'BAJO',
-        2 => 'MEDIO BAJO',
-        3 => 'MEDIO BAJO',
-        4 => 'ALTO',
+        1 => '[1] BAJO',
+        2 => '[2] MEDIO BAJO',
+        3 => '[3] MEDIO ALTO',
+        4 => '[4] ALTO',
     );
 ?>
 
@@ -54,7 +54,6 @@
 
                 Puntaje: <span class="text-primary"><?= $res_usuario['porcentaje'] ?>%</span> &middot; 
                 Rango: <span class="text-primary"><?= $texto_rango[$rango_usuario] ?></span>
-
             <?php } ?>
         </p>
     </div>

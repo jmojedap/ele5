@@ -335,7 +335,8 @@ class Recursos extends CI_Controller{
 
         $data['query'] = $this->Recurso_model->links($filters);
 
-        if ( $data['query']->num_rows() <= MAX_REG_EXPORT ) {
+        //if ( $data['query']->num_rows() <= MAX_REG_EXPORT ) {
+        if ( $data['query']->num_rows() <= 50000 ) {
             //Preparar datos
                 $data['sheet_name'] = 'links';
 
@@ -357,7 +358,7 @@ class Recursos extends CI_Controller{
             $data['link_volver'] = "recursos/links/?{$str_filters}";
             $data['view_a'] = 'app/mensaje_v';
             
-            $this->load->view(TPL_ADMIN_NEW_NEW, $data);
+            $this->load->view(TPL_ADMIN, $data);
         }
     }
 

@@ -1061,11 +1061,11 @@ class App_model extends CI_Model {
 
     /**
      *
-     * @param type $valor_comparacion
+     * @param float $valor_comparacion
      * @return type 
      */
     function rango_cuestionarios($valor_comparacion) {
-        $rangos = array(0.3, 0.5, 0.7, 1.01);
+        $rangos = [0.3, 0.5, 0.7, 1.01];
         $rango = $this->Pcrn->rango_valor($rangos, $valor_comparacion);
 
         return $rango;

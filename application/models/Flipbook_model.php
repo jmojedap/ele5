@@ -1336,13 +1336,9 @@ class Flipbook_model extends CI_Model {
         $this->db->where('tipo_detalle_id', 3);
         $this->db->join('flipbook_contenido', 'pagina_flipbook_detalle.pagina_id = flipbook_contenido.pagina_id');
 
-        //$this->db->where('flipbook_contenido.flipbook_id', $flipbook_id);
-        //$this->db->where('usuario_id', $usuario_id);
-
         if ( $filters['u'] != '' ) $this->db->where('usuario_id', $filters['u']);
         if ( $filters['fb'] != '' ) $this->db->where('flipbook_contenido.flipbook_id', $filters['fb']);
 
-        //$this->db->order_by('num_pagina', 'ASC');
         $anotaciones = $this->db->get('pagina_flipbook_detalle', 10);
 
         return $anotaciones;
@@ -1367,6 +1363,8 @@ class Flipbook_model extends CI_Model {
         $this->db->where('flipbook_contenido.flipbook_id', $flipbook_id);
         $this->db->where('pagina_flipbook_detalle.usuario_id', $usuario_id);
         $this->db->order_by('num_pagina', 'ASC');
+        $this->db->group_by('pagina_flipbook_detalle.id, flipbook_contenido.pagina_id, anotacion, num_pagina,
+        pagina_flipbook_detalle.editado, integer_1, nombre_tema, pagina_flipbook.tema_id');
         $anotaciones = $this->db->get('pagina_flipbook_detalle');
 
         return $anotaciones;
@@ -1374,7 +1372,7 @@ class Flipbook_model extends CI_Model {
 
     /**
      * Listado de anotaciones realizadas por un estudiante en un flipbook
-     * 2023-09-21
+     * 2024-04-29 => Adición de sección group_by, para evitar repetidos en lista
      * @param int $flipbook_id
      * @param int $usuario_id
      * @return object $anotaciones (query db codeigniter)
@@ -1392,6 +1390,8 @@ class Flipbook_model extends CI_Model {
         $this->db->join('tema', 'pagina_flipbook_detalle.tema_id = tema.id', 'left');
         $this->db->where('flipbook_contenido.flipbook_id', $flipbook_id);
         $this->db->where('pagina_flipbook_detalle.usuario_id', $usuario_id);
+        $this->db->group_by('pagina_flipbook_detalle.id, anotacion, pagina_flipbook_detalle.tema_id, 
+            pagina_flipbook_detalle.pagina_id, integer_1, nombre_tema');
         $anotaciones = $this->db->get('pagina_flipbook_detalle');
 
         return $anotaciones;

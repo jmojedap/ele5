@@ -23,9 +23,9 @@
                     v-on:change="get_list"
                     >
                 <div class="input-group-append" title="Buscar">
-                    <button a="button" class="btn btn-light btn-block" v-on:click="toggle_filters" title="Búsqueda avanzada">
-                        <i class="fa fa-chevron-up" v-show="showing_filters"></i>
-                        <i class="fa fa-chevron-down" v-show="!showing_filters"></i>
+                    <button type="button" class="btn btn-light btn-block" v-on:click="toggle_filters" title="Búsqueda avanzada">
+                        <i class="fa fa-chevron-up" v-show="displayFilters"></i>
+                        <i class="fa fa-chevron-down" v-show="!displayFilters"></i>
                     </button>
                 </div>
             </div>
@@ -37,7 +37,7 @@
             </button>
         </div>
     </div>
-    <div id="adv_filters" style="<?php echo $filters_style ?>">
+    <div id="adv_filters" v-show="displayFilters">
         <div class="form-group row">
             <div class="col-md-9">
                 <?php echo form_dropdown('a', $options_area, $filters['a'], 'class="form-control" title="Filtrar por área" v-model="filters.a"'); ?>
