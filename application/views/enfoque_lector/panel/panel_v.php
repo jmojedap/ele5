@@ -1,5 +1,6 @@
 <?php $this->load->view('enfoque_lector/panel/style_v') ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+<?php $this->load->view('assets/bootstrap_datepicker'); ?>
 
 <div id="enfoqueLectorApp">
     <div class="container my-2" v-show="seccion != 'inicio'">
@@ -141,6 +142,14 @@
                             <tr v-for="(archivo, keyArchivo) in archivosDescargables">
                                 <td width="10px">{{ keyArchivo + 1 }}</td>
                                 <td>{{ archivo.title }}</td>
+                                <?php if ( $this->session->userdata('srol') == 'institucional' ) : ?>
+                                    <td width="10px">
+                                        <button class="btn btn-light btn-sm" title="Programar archivo a grupo"
+                                            data-bs-toggle="modal" data-bs-target="#modal-asignar-archivo" v-on:click="setCurrentArchivo(keyArchivo)">
+                                            <i class="fas fa-calendar-plus"></i>
+                                        </button>
+                                    </td>
+                                <?php endif; ?>
                                 <td width="10px">
                                     <a v-bind:href="archivo.url" class="btn btn-light btn-sm" target="_blank" title="Ver archivo">
                                         <i class="fas fa-external-link-alt"></i>
@@ -174,6 +183,7 @@
         </div>
     </div>
     <?php $this->load->view('enfoque_lector/panel/lectura_modal_v') ?>
+    <?php $this->load->view('enfoque_lector/panel/asignar_archivo_modal_v') ?>
 </div>
 
 <?php $this->load->view('enfoque_lector/panel/vue_v') ?>

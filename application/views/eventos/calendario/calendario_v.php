@@ -117,6 +117,21 @@
                         grupo_id: '0<?= $row_evento->grupo_id ?>'
                     },
                 <?php endforeach ?>
+
+                //Eventos, programación de archivos asignados (7)
+                <?php foreach ($eventos[7]->result() as $row_evento) : ?>
+                    {
+                        id: <?= $row_evento->id ?>,
+                        title: 'Archivo: > <?= $this->Pcrn->texto_url($row_evento->nombre_evento) ?>',
+                        start: '<?= $row_evento->fecha_inicio ?>',
+                        end: '<?= $row_evento->fecha_inicio ?>',
+                        url: "<?= $row_evento->url ?>",
+                        color : '<?= $colores_evento[7] ?>',
+                        tipo: 'archivo_asignado',
+                        fecha_inicio: '<?= $row_evento->fecha_inicio ?>',
+                        grupo_id: '0<?= $row_evento->grupo_id ?>'
+                    },
+                <?php endforeach ?>
             ],
             eventClick: function(info) {
                 info.jsEvent.preventDefault(); // don't let the browser navigate

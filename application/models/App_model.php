@@ -1314,6 +1314,42 @@ class App_model extends CI_Model {
         return $opciones_grupo;
     }
 
+    /**
+     * Array con datos de grupos asociados al usuario en sesión
+     * 2024-05-02
+     */
+    function arrGrupos($condition)
+    {
+        $select = "grupo.id AS cod, CONCAT(anio_generacion, ' · ', nombre_grupo, ' · ', nombre_institucion) AS name, 
+            institucion_id, nivel, institucion.nombre_institucion, nombre_grupo, anio_generacion";
+
+        $this->db->select($select);
+        $this->db->where($condition);
+        $this->db->join('institucion', 'grupo.institucion_id = institucion.id');
+        $this->db->order_by('anio_generacion', 'DESC');
+        $this->db->order_by('nivel', 'ASC');
+        $this->db->order_by('nombre_institucion', 'ASC');
+        $grupos = $this->db->get('grupo');
+
+        return $grupos->result_array();
+    }
+
+    /**
+     * Array con datos de grupos asociados al usuario en sesión
+     * 2024-05-02
+     */
+    function misGrupos()
+    {
+        //Selección de grupos
+        $str_grupos = '0';
+        $arr_grupos = $this->session->userdata('arr_grupos');
+        if ( count($arr_grupos) > 0 ) { $str_grupos = implode(',', $arr_grupos); }
+        $condition = 'grupo.id IN (' . $str_grupos . ')';
+        $arrMisGrupos = $this->arrGrupos($condition);
+
+        return $arrMisGrupos;
+    }
+
     function opciones_nivel($campo, $texto_vacio = NULL)
     {
 

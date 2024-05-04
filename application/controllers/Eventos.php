@@ -90,21 +90,23 @@ class Eventos extends CI_Controller{
         if ( $this->session->userdata('srol') =='estudiante' ) 
         {
             //Estudiante
-            $tipos_evento = '1,2,3,4,5,6';
+            $tipos_evento = '1,2,3,4,5,6,7';
             $eventos[1] = $this->Evento_model->evs_cuestionarios_ant($busqueda);    //Asignación de cuestionarios
             $eventos[2] = $this->Evento_model->evs_temas($busqueda);                //Programación de temas
             $eventos[3] = $this->Evento_model->evs_quices($busqueda);               //Programación de quices
             $eventos[4] = $this->Evento_model->evs_links($busqueda);                //Programación de links
             $eventos[5] = $this->Evento_model->evs_links_internos($busqueda);        //Programación de links internos
             $eventos[6] = $this->Evento_model->evs_sesionv($busqueda);               //Sesiones virtuales programadas
+            $eventos[7] = $this->Evento_model->eventos_arhivos_programados($busqueda);               //Archivos asignados programados
             $view_a = 'eventos/calendario/calendario_v';
         } else {
             //Los demás usuarios
-            $tipos_evento = '2,4,5,6,22';
+            $tipos_evento = '2,4,5,6,7,22';
             $eventos[2] = $this->Evento_model->evs_temas($busqueda);                 //Programación de temas
             $eventos[4] = $this->Evento_model->evs_links($busqueda);                 //Programación de links personalizados
             $eventos[5] = $this->Evento_model->evs_links_internos($busqueda);        //Programación de links internos
             $eventos[6] = $this->Evento_model->evs_sesionv($busqueda);               //Sesiones virtuales programadas
+            $eventos[7] = $this->Evento_model->eventos_arhivos_programados($busqueda);               //Archivos asignados programados
             $eventos[22] = $this->Evento_model->evs_cuestionarios_prf($busqueda);    //Asignación de cuestionarios
             $view_a = 'eventos/calendario_prf/calendario_prf_v';
         }

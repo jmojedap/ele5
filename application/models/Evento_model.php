@@ -190,7 +190,7 @@ class Evento_Model extends CI_Model{
         return $order_options;
     }
 
-// Separador
+// ELIMINACIÓN
 //-----------------------------------------------------------------------------
     
     /**
@@ -233,6 +233,44 @@ class Evento_Model extends CI_Model{
         }
             
         return $qty_deleted;
+    }
+
+// GUARDAR EVENTOS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Guarda un registro en la tabla evento
+     * 2020-10-21
+     */
+    function save($aRow, $conditionAdd = NULL)
+    {
+        //Condición para identificar el registro del evento
+            $condition = "tipo_id = {$aRow['tipo_id']} AND referente_id = {$aRow['referente_id']}";
+            if ( ! is_null($conditionAdd) ) $condition .= " AND " . $condicionAdd;
+        
+            $eventoId = $this->Db_model->exists('evento', $condition);
+        
+        //Datos adicionales del registro
+            $aRow['editado'] = date('Y-m-d H:i:s');
+        
+        //Guardar el evento
+        if ( $eventoId == 0 ) 
+        {
+            //No existe, se inserta
+            $aRow['periodo_id'] = intval(date('Ym'));
+            $aRow['creado'] = date('Y-m-d H:i:s');
+            $aRow['creador_id'] = $this->Pcrn->si_nulo($this->session->userdata('user_id'), 1001);   //1001, ELE Automático
+            $aRow['ip_address'] = $this->input->ip_address();
+            
+            $this->db->insert('evento', $aRow);
+            $eventoId = $this->db->insert_id();
+        } else {
+            //Ya existe, editar
+            $this->db->where('id', $eventoId);
+            $this->db->update('evento', $aRow);
+        }
+        
+        return $eventoId;
     }
     
     /**
@@ -1083,6 +1121,32 @@ class Evento_Model extends CI_Model{
         }
         
         $this->db->where('tipo_id', 6); //Tipo 6 => sesión virtual programada
+        $query = $this->db->get('evento');
+        
+        return $query;
+    }
+
+    /**
+     * Programación asignación de archivos a grupos (7)
+     * 2024-05-04
+     */
+    function eventos_arhivos_programados($busqueda)
+    {
+        //Filtros
+        if ( $busqueda['a'] != '' ) { $this->db->where('area_id', $busqueda['a']); }    //Área
+        if ( $busqueda['g'] != '' ) { $this->db->where('grupo_id', $busqueda['g']); }    //Grupo
+        if ( $busqueda['tp'] != '' ) { $this->db->where('tipo_id', $busqueda['tp']); }    //Tipo, filtro adicional
+        
+        if ( $this->session->userdata('rol_id') == 6 ) {
+            //Estudiante
+            $this->db->where('grupo_id', $this->session->userdata('grupo_id'));
+        } else {
+            //Los que corresponden a sus grupos
+            $str_grupos = implode(',', $this->session->userdata('arr_grupos'));
+            $this->db->where("grupo_id IN ($str_grupos)");
+        }
+        
+        $this->db->where('tipo_id', 7); //Tipo 7 => sesión virtual programada
         $query = $this->db->get('evento');
         
         return $query;

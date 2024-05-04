@@ -22,7 +22,7 @@
         <div class="text-end">
             <?php foreach ( $files->result() as $file ) : ?>
                 <a href="<?= $file->url ?>" title="<?= $file->title ?>" target="_blank">
-                    <img src="<?= URL_IMG ?>flipbook/fb_pdf.png" alt="Archivo PDF">
+                    <img src="<?= URL_IMG ?>enfoque_lector/icono-anexo-lectura-dinamica-sm.png" alt="Archivo PDF" class="border" style="width: 120px;">
                 </a>
             <?php endforeach ?>
         </div>

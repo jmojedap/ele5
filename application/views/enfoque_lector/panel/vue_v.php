@@ -1,12 +1,9 @@
-<?php
-    $arrLecturas = explode(',',$row->texto_1);
-?>
-
 <script>
 // Variables
 //-----------------------------------------------------------------------------
-    var arrLecturas = <?= json_encode($lecturas->result()) ?>;
-    var arrArchivosDescargables = <?= json_encode($files->result()) ?>;
+var arrLecturas = <?= json_encode($lecturas->result()) ?>;
+var arrArchivosDescargables = <?= json_encode($files->result()) ?>;
+var misGrupos = <?= json_encode($this->App_model->misGrupos()); ?>
 
 // VueApp
 //-----------------------------------------------------------------------------
@@ -19,8 +16,9 @@ var enfoqueLectorApp = createApp({
             fields: {},
             seccion: 'inicio',
             contenido: 'herramientas_virtuales',
+            //contenido: 'archivos_descargables',
             lecturas: arrLecturas,
-            lecturaDinamicaIdActiva: <?= $arrLecturas[0] ?>,
+            lecturaDinamicaIdActiva: arrLecturas[0],
             herramientasVirtuales: [
                 {id:1,texto:'Práctica lectora',numero:'1',imagen:'icono-practica-lectora-2.png', destino: 'practicas_lectoras'},
                 {id:2,texto:'Ejercicios descargables',numero:'2',imagen:'icono-ejercicios-descargables.png', destino: 'archivos_descargables'},
@@ -31,8 +29,11 @@ var enfoqueLectorApp = createApp({
                 {id:3,texto:'Práctica',numero:'3',imagen:'practica_lectora_3.png', seccion: 'practica-lectora-3'},
             ],
             archivosDescargables: arrArchivosDescargables,
-            lecturasFluidez: <?= json_encode($lecturas->result()) ?>,
-            lecturaFluidezId: <?= $arrLecturas[0] ?>,
+            currentArchivo: {id:0, title:''},
+            lecturasFluidez: arrLecturas,
+            lecturaFluidezId: arrLecturas[0].id,
+            misGrupos: misGrupos,
+            fields: {grupo_id:0},
             showFrame: true
         }
     },
@@ -55,10 +56,27 @@ var enfoqueLectorApp = createApp({
         setVerLibro: function(){
             this.seccion = 'ver-libro'
             showFrame: true
-        }
-    },
-    mounted(){
-        //this.getList()
+        },
+        setCurrentArchivo: function(index){
+            this.currentArchivo = this.archivosDescargables[index]
+        },
+        handleSubmit: function(){
+            this.loading = true
+            var formValues = new FormData(document.getElementById('asignarArchivoForm'))
+            formValues.append('condition_add', 'grupo_id = ' + this.fields.grupo_id)
+            axios.post(URL_API + 'eventos/save/', formValues)
+            .then(response => {
+                if ( response.data.saved_id > 0 ) {
+                    toastr['success']('Programado')
+                    modalProgramarArchivo.hide()
+                    console.log('savedId:',response.data.saved_id)
+                } else {
+                    toastr['warning']('No se pudo programar el archivo')
+                }
+                this.loading = false
+            })
+            .catch( function(error) {console.log(error)} )
+        },
     },
     computed:{
         frameContent() {
@@ -90,4 +108,6 @@ var enfoqueLectorApp = createApp({
         },
     }
 }).mount('#enfoqueLectorApp')
+
+var modalProgramarArchivo = new bootstrap.Modal(document.getElementById('modal-asignar-archivo'));
 </script>
