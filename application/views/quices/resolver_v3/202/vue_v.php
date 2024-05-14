@@ -1,4 +1,35 @@
+<?php
+    $velocidadesNivel = [
+        1 => 60,
+        2 => 57,
+        3 => 55,
+        4 => 52,
+        5 => 50,
+        6 => 47,
+        7 => 45,
+        8 => 42,
+        9 => 40,
+        10 => 37,
+        11 => 35,
+    ];
+
+    //Valores por defecto
+    $nivel = 1;
+    $milisegundosCaracter = 60;
+
+    if ( $this->input->get('nivel') ) {
+        $nivel = $this->input->get('nivel');
+        $milisegundosCaracter = $velocidadesNivel[$nivel];
+    }
+
+    if ( $this->input->get('test') == 1 ) {
+        $milisegundosCaracter = 60;
+    }
+?>
+
 <script>
+const milisegundosCaracter = <?= $milisegundosCaracter ?>;
+
 // VueApp
 //-----------------------------------------------------------------------------
 var resolverQuiz = createApp({
@@ -20,7 +51,7 @@ var resolverQuiz = createApp({
             resultadoTotal: 0,
             porcentajeTotal: 0,
             porcentajeAncho: 0,
-            milisegundosCaracter: 60,
+            milisegundosCaracter: milisegundosCaracter,
         }
     },
     methods: {

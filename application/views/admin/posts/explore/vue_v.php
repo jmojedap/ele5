@@ -20,7 +20,7 @@ var appExplore = new Vue({
         allSelected: false,
         filters: <?= json_encode($filters) ?>,
         strFilters: '<?= $strFilters ?>',
-        showFilters: false,
+        showFilters: true,
         loading: false,
         activeFilters: false,
         arrType: <?= json_encode($arrType) ?>,
@@ -85,7 +85,7 @@ var appExplore = new Vue({
             Object.keys(this.filters).forEach(key => {
                 this.filters[key] = ''
             })
-            this.showFilters = false
+            //this.showFilters = false
             setTimeout(() => { this.getList() }, 100)
         },
         calculateShowFilters: function(){

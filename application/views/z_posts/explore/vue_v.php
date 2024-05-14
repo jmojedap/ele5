@@ -31,7 +31,7 @@
             selected: [],
             all_selected: false,
             filters: <?php echo json_encode($filters) ?>,
-            showing_filters: false
+            showing_filters: true
         },
         methods: {
             get_list: function(){

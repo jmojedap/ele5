@@ -1,7 +1,12 @@
-<?php $this->load->view('quices/resolver_v3/style_v') ?>
+<link rel="stylesheet" href="<?= URL_RESOURCES  ?>css/quices/quices_v3.css">
 
 <div id="resolverQuiz">
-    <div class="center_box_750 quiz-container flex-column">
+    <div class="center_box_750">
+        <div class="progress my-3 w-100" style="height: 3px;">
+            <div class="progress-bar bg-primary" id="time-progress-bar" role="progressbar" style="width: 0%"></div>
+        </div>
+    </div>
+    <div class="center_box_750 quiz-container">
         <!-- INICIO -->
         <div v-show="step ==  `inicio`" class="text-center w-100 mb-2">
             <h3>Práctica Lectora</h3>
@@ -11,11 +16,7 @@
             <button class="btn btn-warning btn-lg" v-on:click="setCurrent(0)">
                 INICIAR PRÁCTICA
             </button>
-        </div>
-
-        <div class="progress my-3 w-100" style="height: 2px;">
-            <div class="progress-bar bg-primary" id="time-progress-bar" role="progressbar" style="width: 0%"></div>
-        </div>
+        </div>        
 
         <!-- RESPUESTA  -->
         <div v-show="step ==  `respuesta`" class="w-100">

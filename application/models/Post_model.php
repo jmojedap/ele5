@@ -67,6 +67,8 @@ class Post_model extends CI_Model{
         $arr_select['general'] = 'id, nombre_post, resumen, tipo_id, url_thumbnail, url_image, slug, publicado, status';
         $arr_select['export'] = '*';
         $arr_select['lectura_dinamica'] = 'id, nombre_post';
+        $arr_select['enfoque_lector'] = 'id, nombre_post AS titulo_contenido, tipo_id, texto_1 AS lecturas, 
+            integer_1 AS nivel';
 
         return $arr_select[$format];
     }

@@ -37,12 +37,13 @@ public $url_controller = URL_APP . 'enfoque_lector/';
     function panel($post_id, $flipbook_id = 4004)
     {
         $data = $this->Post_model->basic($post_id);
+        $data['row'] = $this->Post_model->row($post_id, 'enfoque_lector');
         $data['flipbook'] = $this->Db_model->row_id('flipbook', $flipbook_id);
 
         //Lecturas dinámicas
             $idsCondition = 'id = 0';
-            if ( strlen($data['row']->texto_1) > 0 ) {
-                $idsCondition = "id IN ({$data['row']->texto_1})";
+            if ( strlen($data['row']->lecturas) > 0 ) {
+                $idsCondition = "id IN ({$data['row']->lecturas})";
             } 
             
             $this->db->select('id, nombre_post');

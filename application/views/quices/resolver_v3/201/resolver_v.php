@@ -1,31 +1,5 @@
-<?php $this->load->view('quices/resolver_v3/style_v') ?>
-
-<style>
-    .silaba{
-        border: 0px;
-        font-size: 2em;
-        background-color: #FFF;
-        font-weight: bold;
-        color: #6d6d6d;
-        min-width: 50px;
-        margin-right: 0.2em;
-    }
-
-    .silaba:hover{
-        color: white;
-        background-color: #82d0fb;
-    }
-
-    .silaba.active{
-        color: white;
-        background-color: #3eb8f9;
-    }
-
-    .silaba.bg-success, .silaba.bg-danger{
-        color: white;
-    }
-</style>
-
+<link rel="stylesheet" href="<?= URL_RESOURCES  ?>css/quices/quices_v3.css">
+<link rel="stylesheet" href="<?= URL_RESOURCES  ?>css/quices/quiz_201.css">
 <div id="resolverQuiz">
     <div class="center_box_750 quiz-container">
         <!-- INICIO -->

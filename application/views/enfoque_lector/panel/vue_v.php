@@ -16,7 +16,6 @@ var enfoqueLectorApp = createApp({
             fields: {},
             seccion: 'inicio',
             contenido: 'herramientas_virtuales',
-            //contenido: 'archivos_descargables',
             lecturas: arrLecturas,
             lecturaDinamicaIdActiva: arrLecturas[0],
             herramientasVirtuales: [
@@ -96,7 +95,7 @@ var enfoqueLectorApp = createApp({
                 return URL_APP + 'quices/practica_lectora/203'
             }
             if ( this.seccion == 'practica-lectora-3' ) {
-                return URL_APP + 'quices/practica_lectora/202'
+                return URL_APP + 'quices/practica_lectora/202/?nivel=' + this.post['nivel']
             }       
         },
         getFlipbookSrc: function(){

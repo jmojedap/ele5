@@ -1,0 +1,23 @@
+.silaba{
+    border: 0px;
+    font-size: 2em;
+    background-color: #FFF;
+    font-weight: bold;
+    color: #6d6d6d;
+    min-width: 50px;
+    margin-right: 0.2em;
+}
+
+.silaba:hover{
+    color: white;
+    background-color: #82d0fb;
+}
+
+.silaba.active{
+    color: white;
+    background-color: #3eb8f9;
+}
+
+.silaba.bg-success, .silaba.bg-danger{
+    color: white;
+}

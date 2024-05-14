@@ -31,7 +31,7 @@
             </button>
         </div>
     </div>
-    <div id="adv_filters" style="<?php echo $filters_style ?>">
+    <div id="adv_filters">
         <div class="form-group row">
             <div class="col-md-9">
                 <?php echo form_dropdown('tp', $options_type, $filters['tp'], 'class="form-control" title="Filtrar por tipo"'); ?>

@@ -1,40 +1,5 @@
-<?php $this->load->view('quices/resolver_v3/style_v') ?>
-
-<style>
-    .enunciado {
-        text-align: center;
-        color: #6d6d6d;
-        font-size: 2em;
-        font-weight: bold;
-    }
-
-    .btn-opcion{
-        border: 0px;
-        font-size: 1.2em;
-        background-color: #FFF;
-        font-weight: bold;
-        color: #6d6d6d;
-        min-width: 130px;
-        margin-right: 0.2em;
-        border-radius: 0.3em;
-        background-color: #f1f1f1;
-        padding: 0em 0.5em;
-    }
-
-    .btn-opcion:hover{
-        color: white;
-        background-color: #82d0fb;
-    }
-
-    .btn-opcion.active{
-        color: white;
-        background-color: #3eb8f9;
-    }
-
-    .btn-opcion.bg-success, .btn-opcion.bg-danger{
-        color: white;
-    }
-</style>
+<link rel="stylesheet" href="<?= URL_RESOURCES  ?>css/quices/quices_v3.css">
+<link rel="stylesheet" href="<?= URL_RESOURCES  ?>css/quices/quiz_203.css">
 
 <div id="resolverQuiz">
     <div class="center_box_750 quiz-container">

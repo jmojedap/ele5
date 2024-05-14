@@ -78,19 +78,8 @@ var resolverQuiz = createApp({
             this.porcentajeTotal = Pcrn.intPercent(this.resultadoTotal, this.quices.length)
         },
         handleSubmit: function(){
-            this.loading = true
-            var formValues = new FormData(document.getElementById('quizForm'))
-            axios.post(URL_API + 'quices/guardar_resultado/', formValues)
-            .then(response => {
-                this.step = 'finalizado'
-                if ( response.data.saved_id > 0 ) {
-                    toastr['success']('Guardado')
-                } else {
-                    toastr['warning']('Ocurrió un error. No se guardó el resultado.')
-                }
-                this.loading = false
-            })
-            .catch( function(error) {console.log(error)} )
+            this.step = 'finalizado'
+            //Pendiente guardar resultados 20240508
         },
         reiniciar: function(){
 
