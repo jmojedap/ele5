@@ -56,15 +56,16 @@ body{
 }
 
 .navbar-nav .nav-link {
+    border-bottom: 2px solid var(--color-main-app);
     color: var(--color-nav-font);
 }
 .navbar-nav .nav-link.active {
     color: var(--color-nav-font-active);
-    border-bottom: 2px solid var(--color-main-app);
+    border-bottom: 2px solid var(--color-dark);
 }
 .navbar-nav .nav-link:hover {
     color: var(--color-nav-font-active);
-    border-bottom: 2px solid var(--color-main-app);
+    border-bottom: 2px solid var(--color-dark);
 }
 
 .navbar-toggler{

@@ -1,4 +1,4 @@
-<?php $this->load->view('enfoque_lector/panel/style_v') ?>
+<link rel="stylesheet" href="<?= URL_RESOURCES ?>css/enfoque_lector.css"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 <?php $this->load->view('assets/bootstrap_datepicker'); ?>
 
@@ -8,7 +8,6 @@
             <button class="btn btn-primary btn-circle text-white" v-on:click="seccion = 'inicio'">
                 <i class="fas fa-arrow-left"></i>
             </button>
-
 
             <div class="text-center w-100" v-show="seccion == 'fluidez-lectora'">
                 <h3 class="text-center titulo-seccion">
@@ -37,14 +36,14 @@
     <!-- SECCIÓN INICIO -->
     <div class="inicio" v-show="seccion == 'inicio'">
         <div class="container">
-            <div class="pt-5">
+            <div class="welcome-container">
                 <h1 class="principal fw-bold">Bienvenido</h1>
-                <h2 class="subtitulo"><?= $row->nombre_post ?></h2>
+                <h2 class="subtitulo"><?= $row->titulo_contenido ?></h2>
             </div>
-            <div class="d-flex">
+            <div class="d-flex flex-wrap">
                 
                 <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setVerLibro()">
-                    <div>
+                    <div class="only-lg">
                         <i class="fas fa-chevron-circle-right"></i>
                     </div>
                     <div class="ms-1">
@@ -52,7 +51,7 @@
                     </div>
                 </a>
                 <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="seccion = 'fluidez-lectora'">
-                    <div>
+                    <div class="only-lg">
                         <i class="fas fa-chevron-circle-right"></i>
                     </div>
                     <div class="ms-1">
@@ -62,7 +61,7 @@
                 <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('herramientas_virtuales')"
                     v-bind:class="{'active': contenido == 'herramientas_virtuales' }"
                 >
-                    <div>
+                    <div class="only-lg">
                         <i class="fas fa-chevron-circle-right"></i>
                     </div>
                     <div class="ms-1">
@@ -72,7 +71,7 @@
                 <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('lecturas')"
                     v-bind:class="{'active': contenido == 'lecturas' }"
                 >
-                    <div>
+                    <div class="only-lg">
                         <i class="fas fa-chevron-circle-right"></i>
                     </div>
                     <div class="ms-1">
@@ -84,7 +83,7 @@
         <div class="contenidos">
             <!-- CONTENIDO LECTURAS -->
             <div class="container" v-show="contenido == 'lecturas'">
-                <h3 class="text-center mb-5" style="color:white;">Selecciona  la lectura que quieres realizar</h3>
+                <h3 class="titulo-subseccion">Selecciona  la lectura que quieres realizar</h3>
                 <div class="lecturas">
                     <div v-for="(lectura,i) in lecturas" v-on:click="setLecturaDinamica(lectura.id)" class="card-lectura">
                         <span class="badge bg-color-2 px-2">{{ i+1 }}</span>
@@ -95,10 +94,10 @@
 
             <!-- CONTENIDO HERRAMIENTAS VIRTUALES -->
             <div class="container" v-show="contenido == 'herramientas_virtuales'">
-                <h3 class="text-center mb-5" style="color:white;">Herramientas virtuales</h3>
-                <div class="d-flex justify-content-center">
+                <h3 class="titulo-subseccion">Herramientas virtuales</h3>
+                <div class="d-flex justify-content-center flex-wrap">
                     <div v-for="herramienta in herramientasVirtuales" v-on:click="setContenido(herramienta.destino)"
-                        class="herramienta-virtual animate__animated animate__zoomIn">
+                        class="herramienta-virtual animate__animated animate__zoomIn mb-2">
                         <div class="d-flex justify-content-center">
                             <div class="d-flex align-items-center justify-content-center">
                                 <img v-bind:src="`<?= URL_IMG . 'enfoque_lector/'?>` + herramienta.imagen" alt="Imagen herramienta virtual" class="icono">
@@ -114,11 +113,11 @@
             </div>
 
             <!-- CONTENIDO PRÁCTICAS LECTORAS -->
-            <div class="container" v-show="contenido == 'practicas_lectoras'">
-                <h3 class="text-center mb-5" style="color:white;">Selecciona la práctica que deseas realizar</h3>
-                <div class="d-flex justify-content-center">
+            <div class="container_no" v-show="contenido == 'practicas_lectoras'">
+                <h3 class="titulo-subseccion">Selecciona la práctica que deseas realizar</h3>
+                <div class="d-flex justify-content-center flex-wrap">
                     <div v-for="herramienta in practicasLectoras" v-on:click="seccion = herramienta.seccion"
-                        class="herramienta-virtual animate__animated animate__zoomIn">
+                        class="herramienta-virtual animate__animated animate__zoomIn mb-2">
                         <div class="d-flex justify-content-center">
                             <div class="d-flex align-items-center justify-content-center">
                                 <img v-bind:src="`<?= URL_IMG . 'enfoque_lector/'?>` + herramienta.imagen" alt="Imagen herramienta virtual" class="icono">
@@ -141,7 +140,18 @@
                         <tbody>
                             <tr v-for="(archivo, keyArchivo) in archivosDescargables">
                                 <td width="10px">{{ keyArchivo + 1 }}</td>
-                                <td>{{ archivo.title }}</td>
+                                <td>
+                                    {{ archivo.title }}
+                                    <div class="only-sm">
+                                        <a v-bind:href="archivo.url" target="_blank" title="Ver archivo">
+                                            Abrir
+                                        </a>
+                                        &middot;
+                                        <a v-bind:href="archivo.url" target="_blank" title="Descargar archivo" download>
+                                            Descargar
+                                        </a>
+                                    </div>
+                                </td>
                                 <?php if ( $this->session->userdata('srol') == 'institucional' ) : ?>
                                     <td width="10px">
                                         <button class="btn btn-light btn-sm" title="Programar archivo a grupo"
@@ -150,12 +160,12 @@
                                         </button>
                                     </td>
                                 <?php endif; ?>
-                                <td width="10px">
+                                <td width="10px" class="only-lg">
                                     <a v-bind:href="archivo.url" class="btn btn-light btn-sm" target="_blank" title="Ver archivo">
                                         <i class="fas fa-external-link-alt"></i>
                                     </a>
                                 </td>
-                                <td width="10px">
+                                <td width="10px" class="only-lg">
                                     <a v-bind:href="archivo.url" class="btn btn-light btn-sm" target="_blank" title="Descargar archivo" download>
                                         <i class="fas fa-download"></i>
                                     </a>
