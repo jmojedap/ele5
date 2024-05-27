@@ -62,14 +62,14 @@ public $url_controller = URL_APP . 'enfoque_lector/';
      * Vista pantalla completa para ejecución de aplicación de lectura dinámica
      * 2023-12-03
      */
-    function fluidez_lectora($ledin_id, $json = FALSE)
+    function ritmo_lector($ledin_id, $json = FALSE)
     {
         $this->load->model('Tema_model');
         $data['ledin_id'] = $ledin_id;
         $data['ledin'] = $this->Tema_model->ledin($ledin_id);
         $data['segundosLectura'] = 60;
         
-        $data['view_a'] = 'enfoque_lector/fluidez_lectora/fluidez_lectora_v';
+        $data['view_a'] = 'enfoque_lector/ritmo_lector/ritmo_lector_v';
         $data['head_title'] = $data['ledin']->nombre_post;
         $data['subtitle_head'] = 'Lecturas dinámicas';
         $this->load->view('templates/easypml/empty', $data);

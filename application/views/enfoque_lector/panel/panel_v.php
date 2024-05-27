@@ -2,6 +2,15 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 <?php $this->load->view('assets/bootstrap_datepicker'); ?>
 
+<?php if ( strlen($row->archivo_fondo) > 0 ) : ?>
+    <!-- PERSONALIZAR FONDO DEL PANEL -->
+    <style>
+        .inicio {
+            background-image: url('<?= URL_CONTENT . 'fondos_enfoque_lector/' . $row->archivo_fondo ?>');
+        }
+    </style>
+<?php endif; ?>
+
 <div id="enfoqueLectorApp">
     <div class="container my-2" v-show="seccion != 'inicio'">
         <div class="d-flex">
@@ -9,10 +18,10 @@
                 <i class="fas fa-arrow-left"></i>
             </button>
 
-            <div class="text-center w-100" v-show="seccion == 'fluidez-lectora'">
+            <div class="text-center w-100" v-show="seccion == 'ritmo-lector'">
                 <h3 class="text-center titulo-seccion">
-                    <img src="<?= URL_IMG ?>enfoque_lector/icono-fluidez-lectora.png" alt="Icono fluidez lectora" class="w40p me-3">
-                    Fluidez lectora
+                    <img src="<?= URL_IMG ?>enfoque_lector/icono-ritmo-lector.png" alt="Icono ritmo lector" class="w40p me-3">
+                    Ritmo lector
                 </h3>
             </div>
 
@@ -41,7 +50,6 @@
                 <h2 class="subtitulo"><?= $row->titulo_contenido ?></h2>
             </div>
             <div class="d-flex flex-wrap">
-                
                 <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setVerLibro()">
                     <div class="only-lg">
                         <i class="fas fa-chevron-circle-right"></i>
@@ -50,22 +58,22 @@
                         Ver libro
                     </div>
                 </a>
-                <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="seccion = 'fluidez-lectora'">
+                <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="seccion = 'ritmo-lector'">
                     <div class="only-lg">
                         <i class="fas fa-chevron-circle-right"></i>
                     </div>
                     <div class="ms-1">
-                        Fluidez <br> lectora
+                        Ritmo <br> lector
                     </div>
                 </a>
-                <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('herramientas_virtuales')"
-                    v-bind:class="{'active': contenido == 'herramientas_virtuales' }"
+                <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('practicas_lectoras')"
+                    v-bind:class="{'active': contenido == 'practicas_lectoras' }"
                 >
                     <div class="only-lg">
                         <i class="fas fa-chevron-circle-right"></i>
                     </div>
                     <div class="ms-1">
-                        Herramientas <br> virtuales
+                        Ejercitación <br> lectora
                     </div>
                 </a>
                 <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('lecturas')"
@@ -76,6 +84,16 @@
                     </div>
                     <div class="ms-1">
                         Lecturas
+                    </div>
+                </a>
+                <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('juegos_descargables')"
+                    v-bind:class="{'active': contenido == 'juegos_descargables' }"
+                >
+                    <div class="only-lg">
+                        <i class="fas fa-chevron-circle-right"></i>
+                    </div>
+                    <div class="ms-1">
+                        Juegos descargables
                     </div>
                 </a>
             </div>
@@ -92,6 +110,7 @@
                 </div>
             </div>
 
+            <!-- INACTIVA DESDE 2024-05-27 -->
             <!-- CONTENIDO HERRAMIENTAS VIRTUALES -->
             <div class="container" v-show="contenido == 'herramientas_virtuales'">
                 <h3 class="titulo-subseccion">Herramientas virtuales</h3>
@@ -104,7 +123,7 @@
                             </div>
                             <div class="text-center">
                                 <div>
-                                    <p class="lead">{{ herramienta.texto }}</p>
+                                    <p class="lead">{{ herramienta.texto }}NO</p>
                                 </div>
                             </div>
                         </div>
@@ -131,8 +150,8 @@
                 </div>
             </div>
 
-            <!-- CONTENIDO ARCHIVOS DESCARGABLES -->
-            <div class="container" v-show="contenido == 'archivos_descargables'">
+            <!-- CONTENIDO JUEGOS DESCARGABLES DESCARGABLES -->
+            <div class="container" v-show="contenido == 'juegos_descargables'">
                 <h3 class="text-center mb-5" style="color:white;">Selecciona el archivo que vas a ver o descargar</h3>
                 <div class="center_box_750">
                     <p class="text-center" style="color:white;" v-show="archivosDescargables.length == 0">Todavía no hay archivos asignados a este contenido</p>
@@ -180,10 +199,10 @@
 
     <div v-show="seccion != 'inicio'">
         <div class="container">
-            <div v-show="seccion == 'fluidez-lectora'">
+            <div v-show="seccion == 'ritmo-lector'">
                 <div class="d-flex mb-2 justify-content-center">
                     <button class="a4 me-1" v-for="(lectura,i) in lecturas" :key="lectura.id" v-bind:title="lectura.nombre_post"
-                        v-on:click="setFluidezLectora(lectura.id)" v-bind:class="{'active': lectura.id == lecturaFluidezId }"
+                        v-on:click="setRitmoLector(lectura.id)" v-bind:class="{'active': lectura.id == lecturaRitmoId }"
                     >
                         {{ i + 1 }}
                     </button>

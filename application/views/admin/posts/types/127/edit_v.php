@@ -29,6 +29,20 @@
                 </div>
 
                 <div class="mb-3 row">
+                    <label for="texto_2" class="col-md-4 col-form-label text-end text-right">Archivo fondo</label>
+                    <div class="col-md-8">
+                        <input
+                            name="texto_2" type="text" class="form-control"
+                            required
+                            title="Archivo fondo" placeholder="Archivo fondo"
+                            v-model="fields.texto_2"
+                        >
+                        <small class="form-text text-muted">Este archivo debe estar ubicado en /content/fondos_enfoque_lector
+                        </small>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
                     <label for="referente_1_id" class="col-md-4 col-form-label text-end text-right">ID Contenido</label>
                     <div class="col-md-8">
                         <input

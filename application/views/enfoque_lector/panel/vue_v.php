@@ -15,10 +15,11 @@ var enfoqueLectorApp = createApp({
             loading: false,
             fields: {},
             seccion: 'inicio',
-            contenido: 'herramientas_virtuales',
+            contenido: 'practicas_lectoras',
             lecturas: arrLecturas,
             lecturaDinamicaIdActiva: arrLecturas[0],
             herramientasVirtuales: [
+                //INACTIVA 2024-05-27
                 {id:1,texto:'Práctica lectora',numero:'1',imagen:'icono-practica-lectora-2.png', destino: 'practicas_lectoras'},
                 {id:2,texto:'Ejercicios descargables',numero:'2',imagen:'icono-ejercicios-descargables.png', destino: 'archivos_descargables'},
             ],
@@ -29,8 +30,8 @@ var enfoqueLectorApp = createApp({
             ],
             archivosDescargables: arrArchivosDescargables,
             currentArchivo: {id:0, title:''},
-            lecturasFluidez: arrLecturas,
-            lecturaFluidezId: arrLecturas[0].id,
+            lecturasRitmo: arrLecturas,
+            lecturaRitmoId: arrLecturas[0].id,
             misGrupos: misGrupos,
             fields: {grupo_id:0},
             showFrame: true
@@ -46,10 +47,10 @@ var enfoqueLectorApp = createApp({
             this.seccion = 'lectura-dinamica'
             this.showFrame = true
         },
-        setFluidezLectora: function(lecturaId){
-            this.lecturaFluidezId = lecturaId
+        setRitmoLector: function(lecturaId){
+            this.lecturaRitmoId = lecturaId
             console.log(this.frameContent)
-            this.seccion = 'fluidez-lectora'
+            this.seccion = 'ritmo-lector'
             showFrame: true
         },
         setVerLibro: function(){
@@ -85,8 +86,8 @@ var enfoqueLectorApp = createApp({
             if ( this.seccion == 'lectura-dinamica' ) {
                 return URL_APP + 'temas/lectura_dinamica/' + this.lecturaDinamicaIdActiva + '?bsversion=5'
             }
-            if ( this.seccion == 'fluidez-lectora' ) {
-                return URL_APP + 'enfoque_lector/fluidez_lectora/' + this.lecturaFluidezId
+            if ( this.seccion == 'ritmo-lector' ) {
+                return URL_APP + 'enfoque_lector/ritmo_lector/' + this.lecturaRitmoId
             }
             if ( this.seccion == 'practica-lectora-1' ) {
                 return URL_APP + 'quices/practica_lectora/201'

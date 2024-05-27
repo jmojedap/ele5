@@ -1,4 +1,4 @@
-<?php $this->load->view('enfoque_lector/fluidez_lectora/style_v') ?>
+<?php $this->load->view('enfoque_lector/ritmo_lector/style_v') ?>
 
 <div id="fluidezLectora">
     <div class="center_box_750">
@@ -60,7 +60,8 @@
             
             <div v-show="mostrarResultado == true">
                 <div class="alert resultado text-center">
-                    <strong>Resultado: </strong><b>{{ palabrasPorMinuto }}</b> palabras por minuto
+                    Leíste <b>{{ palabrasPorMinuto }}</b> palabras por minuto. 
+                    Mejora tu ritmo lector resolviendo el taller correspondiente en la sección Lecturas.
                 </div>
             </div>
             
@@ -96,4 +97,4 @@
     </div>
 </div>
 
-<?php $this->load->view('enfoque_lector/fluidez_lectora/script_v') ?>
+<?php $this->load->view('enfoque_lector/ritmo_lector/script_v') ?>
