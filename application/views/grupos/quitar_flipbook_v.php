@@ -28,8 +28,8 @@
 <div class="row">
     <div class="col col-md-3">
         
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card card-default">
+            <div class="card-body">
                 
                 <p>
                     Seleccione el Contenido que quiere quitar de este grupo
@@ -92,7 +92,7 @@
             </div>
         </div>
         
-        <table class="table table-default bg-blanco" cellspacing="0">
+        <table class="table table-default bg-white" cellspacing="0">
             <thead>
                 <tr>
                     <th width="10px"><input type="checkbox" id="check_todos"></th>

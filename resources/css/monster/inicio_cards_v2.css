@@ -37,6 +37,15 @@
     background: linear-gradient(90deg, rgba(245,124,0,1) 0%, rgba(255,158,62,1) 100%);
 }
 
+.card_area_1004 .card_area_header {
+    background: rgb(255,196,0);
+    background: linear-gradient(90deg, rgb(255, 196, 0) 0%, rgb(233, 205, 45) 100%);
+}
+.card_area_957 .card_area_header {
+    background: rgb(200, 45, 15);
+    background: linear-gradient(90deg, rgb(200, 45, 15) 0%, rgb(223, 106, 98) 100%);
+}
+
 .label_level{
     display: inline-block;
     background-color: #F0F01D;

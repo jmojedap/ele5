@@ -3,7 +3,7 @@
 <?php
     $niveles = [];
     $arr_areas = array();
-    $areas_activas = array(50,51,52,53,464);
+    $areas_activas = array(50,51,52,53,464,957,1004);
     foreach ($areas as $area)
     {
         if ( in_array($area['id'], $areas_activas) )
@@ -39,7 +39,7 @@
     }
 ?>
 
-<link rel="stylesheet" href="<?= URL_RESOURCES ?>css/monster/inicio_cards_v1.css">
+<link rel="stylesheet" href="<?= URL_RESOURCES ?>css/monster/inicio_cards_v2.css">
 
 <div id="inicio_app" class="container_narrow">
     <div class="d-flex justify-content-center mb-2">

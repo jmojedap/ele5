@@ -15,14 +15,14 @@
 
         if ( $att_flipbooks['ancho'] > 700 ) { $att_flipbooks['overflow_x'] = 'scroll'; }
         
-    //Atributos estante talleres
+    //Atributos estante Actividades Resueltas: talleres
         $talleres = array();
         foreach ( $flipbooks as $flipbook )
         {
             if ( $flipbook['tipo_flipbook_id'] == 1 ) { $talleres[] = $flipbook; }
         }
         
-        $img_flipbook_general = $url_resources . 'flipbook_general.png';
+        $img_taller_general = $url_resources . 'flipbook_general.png';
 
         $att_talleres['ancho'] = 132 * count($talleres);
         $att_talleres['overflow_x'] = 'hidden';
@@ -79,10 +79,13 @@
             <?php foreach ($talleres as $taller): ?>
                 <?php
                     $imagen_taller = $url_resources . "taller-{$taller['area_id']}-{$taller['nivel']}-mini.jpg";
+                    if ( strlen($taller['archivo_portada']) > 0 ) {
+                        $imagen_taller = URL_CONTENT . 'flipbook_portadas/' . $taller['archivo_portada'];
+                    }
                 ?>
                 <div class="flipbook_container">
                     <a target="_blank" href="<?= base_url() . 'flipbooks/' . $funcion_flipbook . '/' . $taller['flipbook_id']; ?>">
-                        <img width="100" src="<?= $imagen_taller ?>" onError="this.src='<?= $imagen_taller_general ?>'">
+                        <img width="100" src="<?= $imagen_taller ?>" onError="this.src='<?= $img_taller_general ?>'">
                     </a>
                 </div>
             <?php endforeach; ?>

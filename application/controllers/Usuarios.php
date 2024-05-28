@@ -1015,7 +1015,7 @@ class Usuarios extends CI_Controller{
         //Flipbooks
             $data['funcion_flipbook'] = 'abrir_flipbook';
             $data['flipbooks'] = $this->session->userdata('arr_flipbooks');
-            $this->output->enable_profiler(TRUE);
+            //$this->output->enable_profiler(TRUE);
 
         //Cuestionarios
             $data['cuestionarios'] = $this->session->userdata('arr_cuestionarios');
