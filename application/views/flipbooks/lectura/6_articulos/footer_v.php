@@ -21,10 +21,10 @@
     <div>
         <?php $this->load->view('flipbooks/lectura/6_articulos/audios_button_v') ?>
         <?php $this->load->view('flipbooks/lectura/6_articulos/animaciones_button_v') ?>
-        <?php $this->load->view('flipbooks/lectura/6_articulos/quices_button_v') ?>
+        <?php //$this->load->view('flipbooks/lectura/6_articulos/quices_button_v') ?>
 
-        <!-- Links asociados al tema -->
-        <div class="btn-group dropup">
+        <!-- Links asociados al tema DESACTIVADOS 2024-07-07 -->
+        <!-- <div class="btn-group dropup">
             <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
                 aria-expanded="false" v-bind:disabled="filteredLinks.length == 0">
                 <span class="badge rounded-pill bg-danger me-1">
@@ -39,7 +39,9 @@
                     <a class="dropdown-item" v-bind:href="link.url" target="_blank">{{ link.titulo }}</a>
                 </li>
             </ul>
-        </div>
+        </div> -->
+
+        
     </div>
 
     <?php if ( $es_profesor ) : ?>
@@ -59,4 +61,14 @@
             </a>
         </div>
     <?php endif; ?>
+
+    <?php if ( $this->input->get('demo-ia') == 1 ) : ?>
+        <a
+            title="Contenidos complementarios con inteligencia artificial"
+            class="btn btn-light" type="button" v-on:click="section = 'chat-ia'"
+            >
+            <img src="<?= URL_IMG . 'flipbook/v6_ia_icon_2.png' ?>" style="height: 18px;">
+        </a>
+    <?php endif; ?>
+
 </footer>

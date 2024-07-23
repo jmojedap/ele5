@@ -1008,6 +1008,31 @@ class Flipbooks extends CI_Controller{
         $this->load->view($main_view, $data);
     }
 
+    /**
+     * Vista de lectura para contenidos con artículos HTML
+     * 2023-11-25
+     */
+    function leer_v7_demo($flipbook_id, $articulo_id = 0)
+    {
+        //Datos básicos
+        $data = $this->Flipbook_model->basico($flipbook_id);
+            
+        //Datos referencia
+            $data['carpeta_uploads'] = URL_UPLOADS;
+            $data['carpeta_iconos'] = URL_IMG . 'flipbook/';
+            $data['colores'] = $this->App_model->arr_color_area();
+            $data['elementos_fb'] = $this->Flipbook_model->elementos_fb($data['row']);
+            $data['es_profesor'] = ( in_array($this->session->userdata('role'),[0,1,2,3,4,5]) ) ? TRUE : FALSE ;
+            $data['articulo_id'] = $articulo_id;
+
+        //Seleccionar vista
+            $main_view = 'flipbooks/lectura/6_articulos_demo/leer_v';
+            if ( $this->input->get('demo') == 1 ) { $main_view = 'flipbooks/lectura/6_articulos_demo/leer_v'; }
+            
+        //Cargar vista
+        $this->load->view($main_view, $data);
+    }
+
     function leer_api($flipbook_id)
     {
         //Datos básicos

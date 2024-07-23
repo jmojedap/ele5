@@ -43,9 +43,25 @@ var flipbookApp = createApp({
                 {'filename_answer':'pentagrama.txt','texto': '¿Hace cuánto tiempo se inventó el pentagrama?'},
             ],
             iaFilenameAnswer: 'mercurio.txt',
+            demoCuestionarios: [
+                {'nombre':'Prueba diagnóstica'},
+                {'nombre':'Evaluación prueba 1'},
+                {'nombre':'Evaluación prueba 2'},
+                {'nombre':'Prueba periódica'},
+            ],
+            demoArchivos: [
+                {'icono':'fas fa-file-pdf text-danger', 'nombre':'Rueda de Palabras C1'},
+                {'icono':'fas fa-play-circle text-primary', 'nombre':'Veo Veo C8'},
+                {'icono':'fas fa-file-pdf text-danger', 'nombre':'¿Quién es quién? C9'},
+                {'icono':'fas fa-image text-warning', 'nombre':'¿Quién es quién? C11'},
+                {'icono':'fas fa-file-pdf text-danger', 'nombre':'Crucigrama gráfico'},
+            ],
         }
     },
     methods: {
+        setSection: function(newSection){
+            this.section = newSection
+        },
         getFlipbookData: function(){
             axios.get(URL_API + 'flipbooks/data/' + this.flipbook.id)
             .then(response => {
@@ -64,6 +80,7 @@ var flipbookApp = createApp({
             this.getAnotaciones()
         },
         getArticulo(articuloId, keyArticulo){
+            this.section = 'pagina'
             this.loading = true
             this.articuloId = articuloId
             axios.get(URL_API + 'flipbooks/get_articulo/' + this.articuloId)
@@ -72,7 +89,7 @@ var flipbookApp = createApp({
                 this.setAnotacion()
                 this.numPage = keyArticulo + 1
                 this.loading = false
-                history.pushState(null, null, URL_FRONT + 'flipbooks/leer_v6/' + this.flipbook.id + '/' + this.articuloId)
+                history.pushState(null, null, URL_FRONT + 'flipbooks/leer_v7_demo/' + this.flipbook.id + '/' + this.articuloId)
             })
             .catch(function(error) { console.log(error) })
         },
