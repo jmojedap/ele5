@@ -1,7 +1,7 @@
 <?php $this->load->view('assets/lightbox2') ?>
 
 <div id="postFiles">
-    <div class="card center_box_750 mb-2" v-show="files.length < 50">
+    <div class="card center_box_750 mb-2" v-show="files.length < 15">
         <div class="card-body">
             <?php $this->load->view('common/bs4/upload_file_form_v') ?>
         </div>
@@ -28,12 +28,6 @@
                         </a>
                     </td>
                     <td width="190px">
-                        <button class="btn btn-sm" v-on:click="setMainImage(fileKey)"
-                            v-bind:class="{'btn-primary': file.main == 1, 'btn-light': file.main == 0 }"
-                            title="Establecer como principal">
-                            <i class="far fa-check-circle" v-show="file.main == 1"></i>
-                            <i class="far fa-circle" v-show="file.main == 0"></i>
-                        </button>
                         <button class="btn btn-light btn-sm"
                             v-on:click="updatePosition(file.id, parseInt(file.position) - 1)" v-show="file.position > 0">
                             <i class="fa fa-arrow-up"></i>

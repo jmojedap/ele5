@@ -51,7 +51,7 @@ public $url_controller = URL_APP . 'enfoque_lector/';
             $data['lecturas'] = $this->db->get('post');
 
         //Archivos de enfoque lector tipo 10
-        $data['files'] = $this->Post_model->files($post_id, 10);
+        $data['files'] = $this->Post_model->files($post_id, 'album_id = 10');
 
         $data['head_title'] = 'Enfoque Lector';
         $data['view_a'] = $this->views_folder . 'panel/panel_v';
@@ -73,5 +73,12 @@ public $url_controller = URL_APP . 'enfoque_lector/';
         $data['head_title'] = $data['ledin']->nombre_post;
         $data['subtitle_head'] = 'Lecturas dinámicas';
         $this->load->view('templates/easypml/empty', $data);
+    }
+
+    function chat_ele()
+    {
+        $data['head_title'] = 'Enfoque Lector';
+        $data['view_a'] = $this->views_folder . 'chat_ele/chat_ele_v';
+        $this->App_model->view('templates/easypml/empty', $data);
     }
 }

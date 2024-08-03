@@ -249,8 +249,12 @@ class Posts extends CI_Controller{
     function files($post_id)
     {
         $data = $this->Post_model->basic($post_id);
+        $condition = null;
+        if ( null !== $this->input->post('condition') ) {
+            $condition = $this->input->post('condition');
+        }
 
-        $data['files'] = $this->Post_model->files($post_id);
+        $data['files'] = $this->Post_model->files($post_id, $condition);
 
         $data['view_a'] = $this->views_folder . 'files/files_v';
         $data['back_link'] = $this->url_controller . 'explore';

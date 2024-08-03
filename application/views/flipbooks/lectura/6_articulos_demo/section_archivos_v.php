@@ -1,28 +1,22 @@
-<div class="center_box_750">
-    <div class="mt-5">
-        <h3 class="title-white">Selecciona el archivo para ver o descargar</h3>
-    </div>
-    <div class="card mt-2">
-        <div class="card-body">
-            <table class="table bg-white">
-                <tbody>
-                    <tr v-for="(archivo, key) in demoArchivos">
-                        <td width="10px">{{ key + 1 }}</td>
-                        <td width="10px">
-                            <i v-bind:class="archivo.icono"></i>
-                        </td>
-                        <td class="text-primary">{{ archivo.nombre }}</td>
-                        <td width="90px">
-                            <button class="btn btn-sm btn-light" title="">
-                                <i class="fas fa-external-link-alt"></i>
-                            </button>
-                            <button class="btn btn-sm btn-light" title="">
-                                <i class="fas fa-download"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+<h3 class="title-light">Selecciona el archivo para ver o descargar</h3>
+<table class="table bg-white mt-3">
+    <tbody>
+        <tr v-for="(file, key) in currentUnidad.files">
+            <td width="10px">{{ key + 1 }}</td>
+            <td width="10px">
+                <!-- <i v-bind:class="file.icono"></i> -->
+            </td>
+            <td class="text-primary">
+                <a v-bind:href="file.url" class="link-archivo" target="_blank">{{ file.title }}</a>
+            </td>
+            <td width="90px">
+                <a class="btn btn-sm btn-light me-1" title="Abrir archivo" v-bind:href="file.url" target="_blank">
+                    <i class="fas fa-external-link-alt"></i>
+                </a>
+                <a class="btn btn-sm btn-light" title="Descargar archivo" v-bind:href="file.url" download>
+                    <i class="fas fa-download"></i>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>

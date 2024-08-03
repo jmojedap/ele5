@@ -1012,7 +1012,7 @@ class Flipbooks extends CI_Controller{
      * Vista de lectura para contenidos con artículos HTML
      * 2023-11-25
      */
-    function leer_v7_demo($flipbook_id, $articulo_id = 0)
+    function leer_v7_demo($flipbook_id, $numeroUnidad = 1)
     {
         //Datos básicos
         $data = $this->Flipbook_model->basico($flipbook_id);
@@ -1023,7 +1023,7 @@ class Flipbooks extends CI_Controller{
             $data['colores'] = $this->App_model->arr_color_area();
             $data['elementos_fb'] = $this->Flipbook_model->elementos_fb($data['row']);
             $data['es_profesor'] = ( in_array($this->session->userdata('role'),[0,1,2,3,4,5]) ) ? TRUE : FALSE ;
-            $data['articulo_id'] = $articulo_id;
+            $data['numeroUnidad'] = $numeroUnidad;
 
         //Seleccionar vista
             $main_view = 'flipbooks/lectura/6_articulos_demo/leer_v';

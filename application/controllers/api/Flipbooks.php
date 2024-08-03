@@ -99,4 +99,29 @@ class Flipbooks extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output(json_encode($data));   
     }
 
+// Unidades
+//-----------------------------------------------------------------------------
+
+    /**
+     * JSON
+     * Devuelve contenido HTML de la unidad de un Libro ($flipbookId)
+     */
+    function get_html_unidad($flipbookId, $numeroUnidad = 1)
+    {
+        $rutaArchivo = PATH_CONTENT . "flipbooks_unidad/{$flipbookId}_{$numeroUnidad}.html";
+        $data['html'] = '<p>No disponible</p>';
+
+        if ( file_exists($rutaArchivo) )
+        {
+            //El archivo JSON ya existe, se lee
+            $data['html'] = file_get_contents($rutaArchivo);
+        } else {
+            //El archivo JSON del flipbook no existe, se crea.
+            $data['html'] = $this->Flipbook_model->crear_html_unidad($flipbookId, $numeroUnidad, $rutaArchivo);
+        }
+            
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
 }

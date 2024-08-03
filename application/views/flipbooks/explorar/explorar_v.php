@@ -38,7 +38,10 @@
     </div>
     
     <div class="col-md-3">
-        <div class="pull-right sep1">
+        <div class="float-right">
+            <span class="mr-2">
+                <span id="cant_resultados"><?= $cant_resultados ?></span> resultados
+            </span>
             <?php $this->load->view('comunes/bs4/paginacion_ajax_v'); ?>
         </div>
     </div>

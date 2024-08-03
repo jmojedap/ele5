@@ -1,9 +1,9 @@
 <?php $this->load->view('assets/lightbox2') ?>
 
 <div id="postImages">
-    <div class="card center_box_750 mb-2" v-show="images.length < 50">
+    <div class="card center_box_750 mb-2" v-show="images.length < 1">
         <div class="card-body">
-            <?php $this->load->view('common/upload_file_form_v') ?>
+            <?php $this->load->view('common/bs4/upload_file_form_v') ?>
         </div>
     </div>
     <div class="text-center my-2">

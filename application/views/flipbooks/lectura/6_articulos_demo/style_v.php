@@ -1,93 +1,17 @@
 <style>
-    .chat-container {
-        display: flex;
-        flex-direction: column;
-        width: 720px;
-        margin: 0 auto;
-        height: calc(100vh - 65px);
-    }
-    .chat-messages {
-        flex: 1;
-        padding: 10px;
-        overflow-y: auto;
-        border-bottom: 1px solid #FFF;
-        margin-bottom: 1em;
-    }
-    .chat-input {
-        display: flex;
-        height: 52px;
-        border-radius: 26px;
-        background-color: #FFF;
-    }
-    .chat-input input {
-        flex: 1;
-        padding: 10px;
-        padding-left: 20px;
-        border: none;
-        border-radius: 26px 0px 0px 26px;
-    }
-    .chat-input button {
-        padding: 8px;
-        border: none;
-        background-color: #c53c99;
-        color: white;
-        width: 40px;
-        height: 40px;
-        margin-top: 6px;
-        margin-right: 6px;
-        border-radius: 20px;
+    .articulo-link {
+        text-decoration: none;
+        color: #333;
+        display: block;
+        padding: 0.2em;
     }
 
-    .chat-input input:focus {
-        outline: none;
-        box-shadow: none;
-        border: none;
+    .articulo-link:hover {
+        color: #c53c99;
     }
-
-    .chat-mensaje {
-        padding: 1em;
-    }
-
-    .chat-pregunta {
+    .articulo-link.active {
         background-color: #c53c99;
         color: #FFF;
-        border-radius: 1em 0em 1em 1em;
-        width: calc(100% - 2em);
-        margin-left: 2em;
-    }
-
-    .chat-respuesta {
-        background-color: #e7f1ff;
-        padding: 1em;
-        border-radius: 0em 1em 1em 1em;
-        width: calc(100% - 2em);
-        margin-right: 2em;
-    }
-    
-    .typing-effect {
-        display: inline-block;
-        white-space: pre;
-        border-right: 2px solid rgba(0,0,0,0.75);
-        animation: blink 0.7s steps(44) infinite;
-    }
-    @keyframes blink {
-        0%, 100% { border-color: transparent; }
-        50% { border-color: rgba(0,0,0,0.75); }
-    }
-
-    .chat-pregunta-ejemplo {
-        background-color: #FFF;
-        padding: 0.5em;
-        font-size: 0.9em;
-        border-radius: 0.3em;
-        border: 1px solid #CCC;
-        cursor: pointer;
-    }
-
-    .chat-pregunta-ejemplo:hover {
-        background-color: #e7f1ff;
-        color: #0C63E4;
-        border-color: #FFF;
     }
 
 /* DEMO CUESTIONARIOS */
@@ -96,6 +20,72 @@
         color:white;
         text-align: center;
     }
+    .title-blue{
+        color: #c53c99;
+        text-align: center;
+    }
+    .title-light{
+        color: #999;
+        text-align: center;
+    }
+
+/* UNIDADES */
+/*-----------------------------------------------------------------------------*/
+
+.numero-unidad{
+    text-align: center;
+    width: 100%;
+}
+
+.numero-unidad:hover{
+    cursor:pointer;
+    background-color: #c53c99;
+    color: #FFF;
+}
+
+.numero-unidad.active{
+    background-color: #c53c99;
+    color: #FFF;
+}
+
+.unidad-container{
+    background-color: #FFF;
+    padding: 2em;
+}
+
+.unidad-menu{
+    padding: 0.5em;
+    border: 1px solid #FFF;
+    width:100%;
+    cursor:pointer;
+    color: #2b4193;
+    text-decoration: none;
+}
+
+.unidad-menu:hover{
+    border: 1px solid #FAFAFA;
+    cursor:pointer;
+    color: #c53c99;
+}
+
+.unidad-menu.active{
+    border: 1px solid red;
+}
+
+a.link-archivo{
+    text-decoration:none;
+    color: #2b4193;
+}
+a.link-archivo:hover{
+    color: #2b4193;
+}
+
+.text-color-green{ color: #66aa21;}
+.text-color-2{ color: #c53c99;}
+.text-color-3{ color: #5E4296;}
+.text-color-4{ color: #0097A7;}
+.text-color-5{ color: #E39800;}
+.text-color-6{ color: #EE3248;}
 
 
 </style>

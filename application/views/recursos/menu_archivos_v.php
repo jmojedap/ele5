@@ -6,28 +6,28 @@
     
     //Atributos de los elementos del menú
         $arr_menus['archivos'] = array(
-            'icono' => '<i class="fa fa-search"></i>',
+            'icono' => '',
             'texto' => 'Explorar',
             'link' => "recursos/archivos/",
             'atributos' => 'title="Explorar archivos"'
         );
             
         $arr_menus['asignar'] = array(
-            'icono' => '<i class="fa fa-file-excel-o"></i>',
+            'icono' => '',
             'texto' => 'Asignar',
             'link' => 'recursos/asignar',
             'atributos' => 'title="Cargar listado de archivos para temas - MS Excel"'
         );
         
         $arr_menus['procesos_archivos'] = array(
-            'icono' => '<i class="fa fa-gear"></i>',
+            'icono' => '',
             'texto' => 'Procesos',
             'link' => 'recursos/procesos_archivos',
             'atributos' => 'title="Procesos con archivos"'
         );
         
         $arr_menus['archivos_no_asignados'] = array(
-            'icono' => '<i class="fa fa-unlink"></i>',
+            'icono' => '',
             'texto' => 'No asignados',
             'link' => 'recursos/archivos_no_asignados',
             'atributos' => 'title="Asociar archivos por código"'

@@ -70,7 +70,7 @@ class Recursos extends CI_Controller{
             $data['head_subtitle'] = $resultados_total->num_rows();
             $data['view_a'] = 'recursos/archivos_v';
             $data['nav_2'] = 'recursos/menu_archivos_v';
-            $this->load->view(TPL_ADMIN_NEW_NEW, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -123,7 +123,7 @@ class Recursos extends CI_Controller{
             $data['view_a'] = 'comunes/bs4/importar_v';
             $data['nav_2'] = 'recursos/menu_archivos_v';
         
-        $this->load->view(TPL_ADMIN_NEW_NEW, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -157,7 +157,7 @@ class Recursos extends CI_Controller{
             $data['head_subtitle'] = 'Asignar';
             $data['view_a'] = 'comunes/bs4/resultado_importacion_v';
             $data['nav_2'] = 'recursos/menu_archivos_v';
-            $this->load->view(TPL_ADMIN_NEW_NEW, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     function procesos_archivos()
@@ -173,7 +173,7 @@ class Recursos extends CI_Controller{
             $data['head_title'] = 'Archivos';
             $data['head_subtitle'] = 'Asociación automática';
             $data['view_a'] = 'recursos/procesos_archivos_v';
-            $this->load->view(TPL_ADMIN_NEW_NEW, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**
@@ -224,7 +224,7 @@ class Recursos extends CI_Controller{
             $data['head_subtitle'] = 'Disponibles sin asignar a un tema';
             $data['view_a'] = 'recursos/archivos_no_asignados_v';
             $data['nav_2'] = 'recursos/menu_archivos_v';
-            $this->load->view(TPL_ADMIN_NEW_NEW, $data);
+            $this->load->view(TPL_ADMIN_NEW, $data);
         
     }
     
@@ -379,7 +379,7 @@ class Recursos extends CI_Controller{
             $data['head_title'] = 'Links';
             $data['head_subtitle'] = 'Programados';
             
-        $this->App_model->view(TPL_ADMIN_NEW_NEW, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
     /**
@@ -462,7 +462,7 @@ class Recursos extends CI_Controller{
             $data['view_a'] = 'common/import_result_v';
             $data['nav_2'] = 'recursos/links/explore/menu_v';
 
-        $this->App_model->view(TPL_ADMIN_NEW_NEW, $data);
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
     /**

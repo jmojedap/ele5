@@ -10,6 +10,7 @@
     var seleccionados_todos = '<?php echo $seleccionados_todos ?>';
     var registro_id = 0;
     var srol = '<?php echo $this->session->userdata("srol"); ?>';
+    var cant_resultados = <?= $cant_resultados ?>;
         
 // Document Ready
 //-----------------------------------------------------------------------------
@@ -90,17 +91,17 @@
     //Actualizar la tabla explorar al cambiar de página
     function tabla_explorar()
     {
-        $.ajax({        
-            type: 'POST',
-            url: base_url + controlador + '/tabla_explorar/' + num_pagina + '/?' + busqueda_str,
-            data: $("#formulario_busqueda").serialize(),
+        $.ajax({
+            type: 'POST',
+            url: base_url + controlador + '/tabla_explorar/' + num_pagina + '/?' + busqueda_str,
+            data: $("#formulario_busqueda").serialize(),
             beforeSend: function(){
                 $('#tabla_resultados').html('<div class="text-center"><i class="text-center fa fa-spinner fa-spin fa-2x"></i></div>');
             },
             success: function(response){
                 act_resultados(response);
             }
-        });
+        });
     }
 
     /**
@@ -110,6 +111,7 @@
     function act_resultados(response)
     {
         $('#tabla_resultados').html(response.html);
+        $('#cant_resultados').html(response.cant_resultados);
         $('#head_subtitle').html(response.cant_resultados);
         $('#campo-num_pagina').val(parseInt(num_pagina));
         $('#campo-num_pagina').prop('title', parseInt(num_pagina) + ' páginas en total');
@@ -124,10 +126,10 @@
 
     //AJAX - Eliminar elementos seleccionados.
     function eliminar(){
-        $.ajax({        
-            type: 'POST',
-            url: base_url + '/' + controlador + '/eliminar_seleccionados/',
-            data: {
+        $.ajax({        
+            type: 'POST',
+            url: base_url + '/' + controlador + '/eliminar_seleccionados/',
+            data: {
                 seleccionados : seleccionados.substring(1)
             },
             success: function(response){
@@ -136,7 +138,7 @@
                     ocultar_eliminados();
                 }
             }
-        });
+        });
     }
 
     //Oculta las filas de los registros eliminados
@@ -150,9 +152,9 @@
 
     //Ajax
     function crear_json(flipbook_id){
-        $.ajax({        
-            type: 'POST',
-            url: base_url + 'flipbooks/crear_json/' + flipbook_id,
+        $.ajax({        
+            type: 'POST',
+            url: base_url + 'flipbooks/crear_json/' + flipbook_id,
             success: function(data){
                 if ( data.status == 1 ) {
                     $('#crear_json_' + flipbook_id).toggleClass('btn-light');
@@ -161,6 +163,6 @@
                     console.log('Archivo actualizado: ' + flipbook_id);
                 }
             }
-        });
+        });
     }
 </script>

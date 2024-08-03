@@ -419,10 +419,10 @@ class Post_model extends CI_Model{
         if ( ! is_null($row_file) )
         {
             //Quitar otro principal
-            $this->db->query("UPDATE files SET integer_1 = 0 WHERE table_id = 2000 AND referente_1_id = {$post_id} AND integer_1 = 1");
+            $this->db->query("UPDATE files SET integer_1 = 0 WHERE table_id = 2000 AND related_1 = {$post_id} AND integer_1 = 1");
 
             //Poner nuevo principal
-            $this->db->query("UPDATE files SET integer_1 = 1 WHERE id = {$file_id} AND referente_1_id = {$post_id}");
+            $this->db->query("UPDATE files SET integer_1 = 1 WHERE id = {$file_id} AND related_1 = {$post_id}");
 
             //Actualizar registro en tabla post
             $arr_row['imagen_id'] = $row_file->id;
@@ -442,15 +442,14 @@ class Post_model extends CI_Model{
 //-----------------------------------------------------------------------------
 
     /**
-     * Archivos asociadas al post en una colcción específica (album_id)
-     * 2024-04-24
+     * Archivos asociadas al post y con una condición específica (album_id)
+     * 2024-08-02
      */
-    function files($post_id, $album_id = null)
+    function files($post_id, $condition = null)
     {
-        $this->db->select('files.id, files.title, url, url_thumbnail, files.integer_1 AS main, position');
-        //$this->db->where('is_image', 0);
+        $this->db->select('files.id, files.title, url, url_thumbnail, files.integer_1 AS main, position, album_id, ext');
         $this->db->where('table_id', '2000');      //Tabla post
-        if ( ! is_null($album_id) ) { $this->db->where('album_id', $album_id); }
+        if ( ! is_null($condition) ) { $this->db->where($condition); }
         $this->db->where('related_1', $post_id);   //Relacionado con el post
         $this->db->order_by('position', 'ASC');
         $files = $this->db->get('files');

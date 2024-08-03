@@ -292,3 +292,28 @@ div.pf_datos{
 .price {
     font-weight: bold;
 }
+
+/* Galería de imágenes edición */
+/*-----------------------------------------------------------------------------*/
+#image_gallery{
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+}
+
+@media (max-width: 1499px) {
+  #image_gallery { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 1049px) {
+  #image_gallery { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 819px) {
+  #image_gallery { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 419px) {
+  #image_gallery {  grid-template-columns: 1fr;}
+}

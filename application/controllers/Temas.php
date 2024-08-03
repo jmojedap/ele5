@@ -42,7 +42,7 @@ public $url_controller = 'temas/';
         );
 
         $this->load->model('Post_model');
-        $data['files'] = $this->Post_model->files($ledin_id, 10);
+        $data['files'] = $this->Post_model->files($ledin_id, 'album_id = 10');
         
         if ( $json )
         {

@@ -80,10 +80,10 @@ class Flipbook_model extends CI_Model {
     /**
      * Búsqueda de flipbooks
      * 
-     * @param type $busqueda
-     * @param type $per_page
-     * @param type $offset
-     * @return type
+     * @param array $busqueda
+     * @param int $per_page
+     * @param int $offset
+     * @return object $query
      */
     function buscar($busqueda, $per_page = NULL, $offset = NULL)
     {
@@ -531,11 +531,13 @@ class Flipbook_model extends CI_Model {
         //Variables 
         $data['paginas'] = $this->paginas($flipbook_id)->result();
         $data['articulos'] = $this->articulos($flipbook_id)->result();
+        $data['unidades'] = $this->unidades($flipbook_id);
         $data['indice'] = $this->indice($flipbook_id);
         $data['archivos'] = $this->archivos($rowFlipbook)->result();
         $data['audios'] = $this->archivos($rowFlipbook, 621)->result();
         $data['animaciones'] = $this->archivos($rowFlipbook, 619)->result();
         $data['planes_aula'] = $this->planes_aula($flipbook_id)->result();
+        
         if ( $rowFlipbook->tipo_flipbook_id < 5 ) {
             $data['quices'] = $this->quices($flipbook_id)->result();
             $data['links'] = $this->links($flipbook_id)->result();
@@ -582,6 +584,31 @@ class Flipbook_model extends CI_Model {
         $articulos = $this->db->get('flipbook_contenido');
 
         return $articulos;
+    }
+
+    /**
+     * Query con Unidades (post 60) asociados a un flipbook mediante el campo post.texto_1
+     * 2024-08-02
+     */
+    function unidades($flipbook_id)
+    {
+        $this->load->model('Post_model');
+
+        $this->db->select('post.id AS unidad_id, nombre_post AS titulo, texto_1 AS flipbooks_ids,
+            integer_1 AS numero, resumen AS subtitulo, imagen_id, url_image, url_thumbnail');
+        $this->db->where('tipo_id',60); //Post tipo unidad
+        $this->db->where("texto_1 LIKE '%{$flipbook_id}%'");
+        $this->db->order_by('integer_1', 'ASC');
+        $unidades_pre = $this->db->get('post');
+
+        $unidades = [];
+        foreach($unidades_pre->result_array() as $unidad){
+            $files = $this->Post_model->files($unidad['unidad_id'], 'album_id = 10');
+            $unidad['files'] = $files->result_array();
+            $unidades[] = $unidad;
+        }
+
+        return $unidades;
     }
 
     /**
@@ -969,6 +996,33 @@ class Flipbook_model extends CI_Model {
         $ledins = $this->db->get('post');
 
         return $ledins;
+    }
+
+    /**
+     * Crear archivo HTML con todos temas
+     * 2024-08-03
+     */
+    function crear_html_unidad($flipbookId, $numeroUnidad, $rutaArchivo) 
+    {
+        //El archivo JSON del flipbook no existe, se crea.
+        //Datos básicos
+        $data = $this->basico($flipbookId);
+        $rowFlipbook = $data['row'];
+        $contenidoHTML = '';
+
+        //Variables 
+        $articulos = $this->articulos($flipbookId);
+        foreach($articulos->result() as $articuloPre){
+            $articulo = $this->articulo($articuloPre->articulo_id);
+            if ( $articuloPre->unidad == $numeroUnidad ) {
+                $data['articulo'] = $articulo;
+                $contenidoHTML .= $this->load->view('flipbooks/render/articulo_v', $data, TRUE);
+            }
+        }
+        
+        file_put_contents($rutaArchivo, $contenidoHTML);
+
+        return $contenidoHTML;
     }
 
 //GESTIÓN DE PÁGINAS    

@@ -121,9 +121,15 @@ class Posts extends CI_Controller{
      * Archivos de un post en una colección específica (album_id)
      * 2024-04-24
      */
-    function get_files($post_id, $album_id = null)
+    function get_files($post_id)
     {
-        $files = $this->Post_model->files($post_id, $album_id);
+        $condition = null;
+        if ( null !== $this->input->post('condition') ) {
+            $condition = $this->input->post('condition');
+        }
+
+        $files = $this->Post_model->files($post_id, $condition);
+
         $data['files'] = $files->result();
 
         //Salida JSON

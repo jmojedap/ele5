@@ -1,5 +1,5 @@
 <script>
-let articuloId = <?= $articulo_id?>;
+let numeroUnidad = <?= $numeroUnidad ?>;
 
 // VueApp
 //-----------------------------------------------------------------------------
@@ -7,11 +7,12 @@ var flipbookApp = createApp({
     data(){
         return{
             section: 'pagina',
-            //section: 'chat-ia',
+            //section: 'portada-unidad',
+            subsection: 'imagen-unidad',
             flipbook: <?= json_encode($row) ?>,
             loading: true,
             numPage: 1,
-            articuloId: articuloId,
+            articuloId: 0,
             currentArticulo:{
                 id:0,
                 titulo:'',
@@ -23,7 +24,14 @@ var flipbookApp = createApp({
             unidades:[],
             bookData:{
                 articulos:[],
-                links:[]
+                links:[],
+                unidades: []
+            },
+            currentUnidad: {
+                numero:1,
+                titulo:'Unidad 1',
+                subtitulo:'',
+                html:'<h1>Probando</h1>'
             },
             anotaciones: [],
             anotacion: {anotacion: '', calificacion: 0},
@@ -31,18 +39,6 @@ var flipbookApp = createApp({
             preguntaAbiertaId: 0,
             preguntasAbiertasAsignadas: [],
             preguntaAbiertaPersonalizada: false,
-            iaChatRespuesta: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam nostrum ratione odit sapiente expedita. Doloribus perferendis consequuntur ut! Expedita error incidunt commodi ex ducimus, earum quidem nesciunt facere quia corrupti?',
-            iaChatMensajes: [],
-            iaChatInput: '',
-            iaLoading: false,
-            iaPreguntas: [
-                {'filename_answer':'adicion.txt','texto': '¿Cuál es la diferencia entre adición y sustracción y cuáles son sus términos?'},
-                {'filename_answer':'adicion_edad.txt','texto': '¿Cuál es la diferencia entre adición y sustracción y cuáles son sus términos? Crea una respuesta para niños entre 8 y 9 años.'},
-                {'filename_answer':'estrategia.txt','texto': 'Crea una estrategia didáctica para explicar la diferencia entre adición y sustracción y cuáles son sus términos.'},
-                {'filename_answer':'mercurio.txt','texto': '¿Por que algunos termómetros usan mercurio para su funcionamiento?'},
-                {'filename_answer':'pentagrama.txt','texto': '¿Hace cuánto tiempo se inventó el pentagrama?'},
-            ],
-            iaFilenameAnswer: 'mercurio.txt',
             demoCuestionarios: [
                 {'nombre':'Prueba diagnóstica'},
                 {'nombre':'Evaluación prueba 1'},
@@ -66,8 +62,7 @@ var flipbookApp = createApp({
             axios.get(URL_API + 'flipbooks/data/' + this.flipbook.id)
             .then(response => {
                 this.bookData = response.data;
-                this.getFirstArticulo()
-                this.setUnidades()
+                this.getContenidoUnidad(this.currentUnidad.numero)
             })
             .catch(function (error) { console.log(error) })
         },
@@ -76,31 +71,37 @@ var flipbookApp = createApp({
             if (this.bookData.articulos.length > 0 && this.articuloId == 0) {
                 this.articuloId = this.bookData.articulos[0].articulo_id
             }
-            this.getArticulo(this.articuloId, 0)
+            this.setArticulo(this.articuloId, 0)
             this.getAnotaciones()
         },
-        getArticulo(articuloId, keyArticulo){
+        setArticulo(articuloId, keyArticulo){
             this.section = 'pagina'
-            this.loading = true
+            //this.loading = true
             this.articuloId = articuloId
-            axios.get(URL_API + 'flipbooks/get_articulo/' + this.articuloId)
+            //this.setAnotacion()
+            /*axios.get(URL_API + 'flipbooks/get_articulo/' + this.articuloId)
             .then(response => {
                 this.currentArticulo = response.data.articulo
-                this.setAnotacion()
                 this.numPage = keyArticulo + 1
-                this.loading = false
+                //this.loading = false
                 history.pushState(null, null, URL_FRONT + 'flipbooks/leer_v7_demo/' + this.flipbook.id + '/' + this.articuloId)
             })
-            .catch(function(error) { console.log(error) })
+            .catch(function(error) { console.log(error) })*/
         },
-        setUnidades: function(){
-            // Llena el arreglo 'unidades' con los elementos necesarios
-            for (let i = 1; i <= this.bookData.row.cantidad_unidades; i++) {
-                this.unidades.push({
-                    id: i,
-                    nombre: `Unidad ${i}`
-                });
-            }
+        setUnidad: function(unidad){
+            this.section = 'portada-unidad'
+            this.currentUnidad = unidad
+            this.getContenidoUnidad(unidad['numero'])
+        },
+        getContenidoUnidad: function(numeroUnidad){
+            this.loading = true
+            axios.get(URL_API + 'flipbooks/get_html_unidad/' + this.flipbook.id + '/' + numeroUnidad)
+            .then(response => {
+                this.currentUnidad['html'] = response.data.html
+                this.loading = false
+                history.pushState(null, null, URL_FRONT + 'flipbooks/leer_v7_demo/' + this.flipbook.id + '/' + this.currentUnidad.numero)
+            })
+            .catch(function(error) { console.log(error) })
         },
         // Gestión de preguntas abiertas
         //-----------------------------------------------------------------------------
@@ -196,42 +197,6 @@ var flipbookApp = createApp({
             if ( articuloEnUnidad.length > 0 ) return true
             return false
         },
-        // IA CHAT
-        //-----------------------------------------------------------------------------
-        sendIAMessage: function(){
-            this.iaLoading = true
-            console.log(this.iaChatInput)
-            var chatElemento = {
-                'user':'Mauricio',
-                'texto': this.iaChatInput,
-            }
-            this.agregarIAMensaje(chatElemento)
-            this.iaChatInput = ''
-            this.loadIARespuesta()
-        },
-        loadIARespuesta: function(){
-            var formValues = new FormData(document.getElementById('ia-chat-form'))
-            axios.post(URL_API + 'chat_ele/get_answer/', formValues)
-            .then(response => {
-                if (response.data.answer.length > 0) {
-                    typeText(response.data.answer, 5);
-                }
-            })
-            .catch( function(error) {console.log(error)} )
-        },
-        agregarIAMensaje(chatElemento){
-            this.iaChatMensajes.push(chatElemento)
-        },
-        classIAMensaje(chatElemento){
-            if ( chatElemento.user == 'ele') {
-                return 'chat-respuesta'
-            }
-            return 'chat-pregunta'
-        },
-        setIAInput: function(pregunta){
-            this.iaChatInput = pregunta.texto
-            this.iaFilenameAnswer = pregunta.filename_answer
-        }
     },
     computed: {
         filteredLinks(){
@@ -253,30 +218,4 @@ var flipbookApp = createApp({
         this.cargarPreguntasAbiertasAsignadas()
     }
 }).mount('#flipbookApp')
-
-
-// Mostrar texto caracter por caracter
-//-----------------------------------------------------------------------------
-function typeText(text, interval) {
-    const container = document.getElementById('typing-respuesta');
-    let index = 0;
-    container.textContent = ''
-    
-    function showText() {
-        if (index < text.length) {
-            container.textContent += text[index];
-            index++;
-        } else {
-            clearInterval(intervalId);
-            var chatElemento = {
-                'user':'ele',
-                'texto': text
-            }
-            flipbookApp.agregarIAMensaje(chatElemento)
-            flipbookApp.iaLoading = false
-        }
-    }
-    
-    const intervalId = setInterval(showText, interval);
-}
 </script>

@@ -14,14 +14,14 @@
                         </div>
                     </div>
                     <div v-show="!loading">
-                        <h1 class="articulo-titulo">{{ currentArticulo.titulo }}</h1>
-                        <p class="subtitulo">{{ currentArticulo.subtitle }}</p>
-                        <div v-show="currentArticulo.resumen.length > 1">
-                            <p class="epigrafe">{{ currentArticulo.resumen }}</p>
-                        </div>
-                        <div class="contenido" v-html="currentArticulo.contenido"></div>
+                        <div v-html="currentUnidad.html"></div>
+                        
                     </div>
                 </div>
+            </div>
+
+            <div v-show="section == 'portada-unidad'" class="container">
+                <?php $this->load->view('flipbooks/lectura/6_articulos_demo/portada_unidad_v') ?>
             </div>
 
             <div v-show="section == 'preguntas-abiertas'" class="container">
@@ -29,15 +29,10 @@
             </div>
 
             <div v-show="section == 'chat-ia'" class="container">
-                <?php $this->load->view('flipbooks/lectura/6_articulos_demo/chat_ia_v') ?>
+                <iframe src="<?= URL_APP ?>enfoque_lector/chat_ele" frameborder="0" style="width: 100%; height: calc(100vh - 60px);"></iframe>
             </div>
 
-            <div v-show="section == 'demo-cuestionarios'" class="container">
-                <?php $this->load->view('flipbooks/lectura/6_articulos_demo/section_cuestionarios_v') ?>
-            </div>
-            <div v-show="section == 'demo-archivos'" class="container">
-                <?php $this->load->view('flipbooks/lectura/6_articulos_demo/section_archivos_v') ?>
-            </div>
+            
 
             <?php $this->load->view('flipbooks/lectura/6_articulos_demo/anotaciones_v') ?>
     

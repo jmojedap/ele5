@@ -13,11 +13,15 @@ var postFiles = new Vue({
     },
     methods: {
         getList: function(){
-            axios.get(URL_API + 'posts/get_files/' + this.post_id)
+            this.loading = true
+            var formValues = new FormData()
+            formValues.append('condition', 'album_id = 10')
+            axios.post(URL_API + 'posts/get_files/' + this.post_id, formValues)
             .then(response => {
-                this.files = response.data.files;
+                this.files = response.data.files
+                this.loading = false
             })
-            .catch(function (error) { console.log(error) })
+            .catch( function(error) { console.log(error) } )
         },
         submitFileForm: function(){
             let formValues = new FormData();
@@ -51,16 +55,6 @@ var postFiles = new Vue({
             axios.get(URL_API + 'files/delete/' + file_id)
             .then(response => {
                 this.getList()
-            })
-            .catch(function (error) { console.log(error) })
-        },
-        setMainImage: function(key){
-            this.setCurrent(key)
-            var file_id = this.currentImage.id
-            console.log(this.currentImage)
-            axios.get(URL_API + 'posts/set_main_file/' + this.post_id + '/' + file_id)
-            .then(response => {
-                if ( response.data.status == 1 ) this.getList()
             })
             .catch(function (error) { console.log(error) })
         },
