@@ -20,7 +20,6 @@ class Busquedas extends CI_Controller{
      */
     function explorar_redirect($controlador)
     {
-        //$this->output->enable_profiler(TRUE);
         $this->load->model('Busqueda_model');
         $busqueda_str = $this->Busqueda_model->busqueda_str();
         redirect("{$controlador}/explorar/?{$busqueda_str}");

@@ -501,9 +501,6 @@ class Flipbooks extends CI_Controller{
     
     function aperturas($flipbook_id)
     {
-        
-        //$this->output->enable_profiler(TRUE);
-        
         //Cargando datos básicos (_basico)
             $data = $this->Flipbook_model->basico($flipbook_id);
         
@@ -784,7 +781,8 @@ class Flipbooks extends CI_Controller{
         if ( $row->tipo_flipbook_id == 3 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         if ( $row->tipo_flipbook_id == 4 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         if ( $row->tipo_flipbook_id == 5 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
-        if ( $row->tipo_flipbook_id == 6 ) { $destino = "flipbooks/leer_v6/{$flipbook_id}/{$tema_id}"; }
+        //if ( $row->tipo_flipbook_id == 6 ) { $destino = "flipbooks/leer_v7/{$flipbook_id}/{$tema_id}"; }
+        if ( $row->tipo_flipbook_id == 6 ) { $destino = "flipbooks/leer_v7/{$flipbook_id}/"; }
 
         // Si tiene asociado un contenido de enfoque lector
         if ( $row->post_asociado_id > 0 ) {
@@ -1078,6 +1076,31 @@ class Flipbooks extends CI_Controller{
 
         //Seleccionar vista
             $main_view = 'flipbooks/lectura/6_articulos/leer_v';
+            
+        //Cargar vista
+        $this->load->view($main_view, $data);
+    }
+
+    /**
+     * Vista de lectura para contenidos con artículos HTML
+     * 2024-08-17
+     */
+    function leer_v7($flipbook_id, $numeroUnidad = 1)
+    {
+        //Datos básicos
+        $data = $this->Flipbook_model->basico($flipbook_id);
+            
+        //Datos referencia
+            $data['carpeta_uploads'] = URL_UPLOADS;
+            $data['carpeta_iconos'] = URL_IMG . 'flipbook/';
+            $data['colores'] = $this->App_model->arr_color_area();
+            $data['elementos_fb'] = $this->Flipbook_model->elementos_fb($data['row']);
+            $data['es_profesor'] = ( in_array($this->session->userdata('role'),[0,1,2,3,4,5]) ) ? TRUE : FALSE ;
+            $data['numeroUnidad'] = $numeroUnidad;
+
+        //Seleccionar vista
+            $main_view = 'flipbooks/lectura/7_articulos/leer_v';
+            if ( $this->input->get('demo') == 1 ) { $main_view = 'flipbooks/lectura/6_articulos_demo/leer_v'; }
             
         //Cargar vista
         $this->load->view($main_view, $data);

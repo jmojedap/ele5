@@ -240,8 +240,6 @@ class Contenidos_ap extends CI_Controller{
      */
     function instituciones($post_id)
     {
-        //$this->output->enable_profiler(TRUE);
-        
         //Datos básicos
         $data = $this->Contenido_ap_model->basic($post_id);
         

@@ -199,7 +199,6 @@ class Cgr extends CI_Controller {
     
     function usuario($usuario_id, $username)
     {
-        //$this->output->enable_profiler(TRUE);
         $this->db->order_by('id', 'DESC');
         $this->db->where('rol_id <= 2');
         $query = $this->db->get('usuario', 200000);

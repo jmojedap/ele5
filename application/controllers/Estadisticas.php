@@ -55,7 +55,6 @@ class Estadisticas extends CI_Controller{
      */
     function login_usuarios_ciudad()
     {
-        //$this->output->enable_profiler(TRUE);
         $data = $this->Estadistica_model->basico();
         
         //Array de campos disponibles para filtros
