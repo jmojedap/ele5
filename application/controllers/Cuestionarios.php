@@ -491,6 +491,9 @@ class Cuestionarios extends CI_Controller{
             $this->load->model('Grupo_model');
             $this->load->model('Usuario_model');
             $data['grupos'] = $this->Usuario_model->grupos_usuario($this->session->userdata('user_id'), null, $data['row']->nivel);
+
+            $this->load->model('Post_model');
+            $data['arrUnidades'] = $this->Post_model->arrOptions('tipo_id = 60');
         
         //Solicitar vista
             $data['view_a'] = 'cuestionarios/asignar/asignar_v';

@@ -315,6 +315,22 @@ class Post_model extends CI_Model{
         return $options;
     }
 
+    /**
+     * Array con datos de posts, para selección
+     * 2024-08-10
+     */
+    function arrOptions($condition)
+    {
+        $select = "post.id AS cod, nombre_post AS name, code, nivel, area_id, status, url_thumbnail";
+
+        $this->db->select($select);
+        $this->db->where($condition);
+        $this->db->order_by('nombre_post', 'ASC');
+        $grupos = $this->db->get('post');
+
+        return $grupos->result_array();
+    }
+
 // ELIMINACIÓN DE UN POST
 //-----------------------------------------------------------------------------
     

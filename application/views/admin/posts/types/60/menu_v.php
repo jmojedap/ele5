@@ -22,6 +22,12 @@ var sections = [
         roles: [0,1,2,9]
     },
     {    
+        text: 'Cuestionarios',
+        id: 'unidades_cuestionarios',
+        cf: 'admin/unidades/cuestionarios/' + element_id,
+        roles: [0,1,2,9]
+    },
+    {    
         text: 'Imagen',
         id: 'posts_images',
         cf: 'admin/posts/images/' + element_id,

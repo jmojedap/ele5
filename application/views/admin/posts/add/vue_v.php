@@ -2,8 +2,8 @@
 // Variables
 //-----------------------------------------------------------------------------
 var fields = {
-    post_name: '',
-    type_id: ''
+    nombre_post: '',
+    tipo_id: '<?= $tipoId ?>'
 };
 
 // VueApp

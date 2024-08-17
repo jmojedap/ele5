@@ -13,11 +13,121 @@ class Meta_model extends CI_Model{
         parent::__construct();
         
     }
+
+// CRUD
+//-----------------------------------------------------------------------------
+
+    /**
+     * Guarda un registro en la tabla meta
+     * Inserta o edita, según la condición
+     * 
+     * @param array $registro
+     * @param string $tipo_clave
+     * @return int $metaId : Id registro guardado
+     */
+    function save($aRow, $tipoClave = 'relacionado_id')
+    {
+        $aRow['creado'] = date('Y-m-d H:i:s');
+        $aRow['editado'] = date('Y-m-d H:i:s');
+        $aRow['fecha'] = date('Y-m-d H:i:s');
+        $aRow['usuario_id'] = $this->session->userdata('usuario_id');
+        
+        $condition = $this->condition($aRow, $tipoClave);    
+        $metaId = $this->Db_model->save('meta', $condition, $aRow);
+        
+        return $metaId;
+    }
+    
+    /**
+     * Devuelve condicion WHERE sql para verificar antes de guardar un
+     * registro en la tabla meta
+     * 
+     * @param type $registro
+     * @param type $tipo_clave
+     * @return type
+     */
+    function condition($aRow, $tipoClave)
+    {   
+        $keyFields = array(
+            'tabla_id',
+            'elemento_id'
+        );
+        
+        if ( $tipoClave == 'relacionado_id' ) { 
+            $keyFields = array(
+                'tabla_id',
+                'elemento_id',
+                'dato_id',
+                'relacionado_id'
+            );  
+        }
+        
+        $condicion_and = '';
+            foreach( $keyFields AS $fieldName ) {
+                $condicion_and .= "{$fieldName} = {$aRow[$fieldName]} AND ";
+            }
+
+            $condicion = substr($condicion_and, 0, -5); //Quitar cadena final ' AND '  
+        
+        return $condicion;
+    }
+
+// ELIMINACIÓN DE UN REGISTRO META
+//-----------------------------------------------------------------------------
+    
+    /**
+     * Verifica si el usuario en sesión tiene permiso para eliminar un registro
+     * tabla meta
+     * 2024-08-10
+     */
+    function deleteable($metaId)
+    {
+        $row = $this->Db_model->row_id('meta', $metaId);
+
+        $deleteable = 0;    //Valor por defecto
+
+        //Es Administrador
+        if ( in_array($this->session->userdata('role'), [0,1,2]) ) {
+            $deleteable = 1;
+        }
+
+        //Es el creador
+        if ( $row->usuario_id = $this->session->userdata('user_id') ) {
+            $deleteable = 1;
+        }
+
+        //Debe estar con sesióniniciada
+        if ( ! $this->session->userdata('logged') ) { $deleteable = 0; }
+
+        return $deleteable;
+    }
+
+    /**
+     * Eliminar un registro de la tabla meta
+     * 2024-08-10
+     */
+    function delete($metaId, $relacionadoId)
+    {
+        $qtyDeleted = 0;
+
+        if ( $this->deleteable($metaId) ) 
+        {
+                $this->db->where('id', $metaId)
+                ->where('relacionado_id', $relacionadoId)
+                ->delete('meta');
+
+            $qtyDeleted = $this->db->affected_rows();
+        }
+
+        return $qtyDeleted;
+    }
     
 // CRUD META
 //---------------------------------------------------------------------------------------------------------
+
+
     
-    function buscar($busqueda, $per_page = NULL, $offset = NULL)
+    function buscar($busqueda, $perPage = NULL, $offset = NULL)
     {
         
         $this->load->model('Busqueda_model');
@@ -36,10 +146,10 @@ class Meta_model extends CI_Model{
             $this->db->order_by('fecha', 'DESC');
             
         //Obtener resultados
-        if ( is_null($per_page) ){
+        if ( is_null($perPage) ){
             $query = $this->db->get('meta'); //Resultados totales
         } else {
-            $query = $this->db->get('meta', $per_page, $offset); //Resultados por página
+            $query = $this->db->get('meta', $perPage, $offset); //Resultados por página
         }
         
         return $query;
@@ -89,8 +199,8 @@ class Meta_model extends CI_Model{
      * Guarda un registro en la tabla meta
      * Inserta o edita, según la condición
      * 
-     * @param type $registro
-     * @param type $tipo_clave
+     * @param array $registro
+     * @param  $tipo_clave
      * @return type
      */
     function guardar($registro, $tipo_clave = 'relacionado_id')
@@ -195,5 +305,29 @@ class Meta_model extends CI_Model{
         $meta_id = $this->guardar($registro);
         
         return $meta_id;
+    }
+
+// Especiales
+//-----------------------------------------------------------------------------
+
+    /**
+     * Cuesitonarios asociados a un post tipo unidad (60)
+     * @param int $postId: Id del post tipo unidad
+     * @return object $cuestionarios
+     * 2024-08-10
+     */
+    function cuestionarios_unidad($postId)
+    {
+        $this->db->select('meta.id AS meta_id, cuestionario.id AS cuestionario_id,
+            nombre_cuestionario, cuestionario.nivel, cuestionario.area_id, cuestionario.tipo_id,
+            post.id AS unidad_id, integer_1 AS numero_unidad');
+        $this->db->join('cuestionario', 'cuestionario.id = meta.relacionado_id', 'left');
+        $this->db->join('post', 'post.id = meta.elemento_id', 'left');
+        $this->db->where('dato_id', 200011);    //Tipo cuestionario asociado
+        $this->db->where('elemento_id', $postId);
+        
+        $cuestionarios = $this->db->get('meta');
+
+        return $cuestionarios;
     }
 }

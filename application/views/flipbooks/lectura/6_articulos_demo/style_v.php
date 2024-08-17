@@ -72,12 +72,12 @@
     border: 1px solid red;
 }
 
-a.link-archivo{
+a.link-titulo{
     text-decoration:none;
-    color: #2b4193;
+    color: #3f5fd7;
 }
-a.link-archivo:hover{
-    color: #2b4193;
+a.link-titulo:hover{
+    color: #c53c99;
 }
 
 .text-color-green{ color: #66aa21;}

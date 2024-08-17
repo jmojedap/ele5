@@ -33,7 +33,7 @@
             <?php
                 //Variables
                     $nombre_elemento = character_limiter($row_resultado->nombre_flipbook, 50);
-                    $link_elemento = anchor("{$controlador}/temas/{$row_resultado->id}", $nombre_elemento);
+                    $link_elemento = anchor("{$controlador}/info/{$row_resultado->id}", $nombre_elemento);
 
                 //Taller
                     $nombre_taller = $this->App_model->nombre_flipbook($row_resultado->taller_id);

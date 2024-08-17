@@ -39,10 +39,9 @@ class Cuestionario_model extends CI_Model
         return $data;
     }
 
-    function get($filters, $num_page)
+    function get($filters, $num_page, $per_page = 10)
     {
         //Referencia
-            $per_page = 10;                             //Cantidad de registros por página
             $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
 
         //Búsqueda y Resultados
@@ -111,7 +110,7 @@ class Cuestionario_model extends CI_Model
 
     /**
      * String con condición WHERE SQL para filtrar post
-     * 2020-08-01
+     * 2024-08-10
      */
     function search_condition($filters)
     {
@@ -120,7 +119,7 @@ class Cuestionario_model extends CI_Model
         $condition .= $this->role_filter() . ' AND ';
 
         //q words condition
-        $words_condition = $this->Search_model->words_condition($filters['q'], array('nombre_cuestionario', 'descripcion'));
+        $words_condition = $this->Search_model->words_condition($filters['q'], array('cuestionario.id','nombre_cuestionario', 'descripcion'));
         if ( $words_condition )
         {
             $condition .= $words_condition . ' AND ';

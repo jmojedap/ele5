@@ -15,6 +15,188 @@ class Flipbook_model extends CI_Model {
         return $basico;
     }
 
+// EXPLORE FUNCTIONS - flipbooks/explore
+//-----------------------------------------------------------------------------
+    
+    /**
+     * Array con los datos para la vista de exploración
+     */
+    function explore_data($filters, $num_page, $per_page = 10)
+    {
+        //Data inicial, de la tabla
+            $data = $this->get($filters, $num_page, $per_page);
+        
+        //Elemento de exploración
+            $data['controller'] = 'flipbooks';                       //Nombre del controlador
+            $data['cf'] = 'flipbooks/explore/';                      //Nombre del controlador
+            $data['views_folder'] = 'flipbooks/explore/';      //Carpeta donde están las vistas de exploración
+            $data['numPage'] = $num_page;                       //Número de la página
+            
+        //Vistas
+            $data['head_title'] = 'Contenidos';
+            $data['view_a'] = $data['views_folder'] . 'explore_v';
+            $data['nav_2'] = $data['views_folder'] . 'menu_v';
+        
+        return $data;
+    }
+
+    function get($filters, $num_page, $per_page = 10)
+    {
+        //Load
+            $this->load->model('Search_model');
+
+        //Búsqueda y Resultados
+            $data['filters'] = $filters;
+            $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
+            $elements = $this->search($filters, $per_page, $offset);    //Resultados para página
+        
+        //Cargar datos
+            $data['list'] = $elements->result();
+            $data['strFilters'] = $this->Search_model->str_filters($filters, TRUE);
+            $data['qtyResults'] = $this->qty_results($filters);
+            $data['maxPage'] = ceil($this->pml->if_zero($data['qtyResults'],1) / $per_page);   //Cantidad de páginas
+
+        return $data;
+    }
+
+    /**
+     * Segmento Select SQL, con diferentes formatos, consulta de flipbooks
+     * 2022-08-06
+     */
+    function select($format = 'general')
+    {
+        $arr_select['general'] = '*';
+        $arr_select['export'] = '*';
+
+        return $arr_select[$format];
+    }
+    
+    /**
+     * Query con resultados de flipbooks filtrados, por página y offset
+     * 2020-07-15
+     */
+    function search($filters, $per_page = NULL, $offset = NULL)
+    {
+        //Segmento SELECT
+            $select_format = 'general';
+            if ( $filters['sf'] != '' ) { $select_format = $filters['sf']; }
+            $this->db->select($this->select($select_format));
+        
+        //Orden
+            if ( $filters['o'] != '' )
+            {
+                $order_type = $this->pml->if_strlen($filters['ot'], 'ASC');
+                $this->db->order_by($filters['o'], $order_type);
+            } else {
+                $this->db->order_by('editado', 'DESC');
+            }
+            
+        //Filtros
+            $search_condition = $this->search_condition($filters);
+            if ( $search_condition ) { $this->db->where($search_condition);}
+            
+        //Obtener resultados
+            $query = $this->db->get('flipbook', $per_page, $offset); //Resultados por página
+        
+        return $query;
+        
+    }
+
+    /**
+     * String con condición WHERE SQL para filtrar post
+     * 2022-05-02
+     */
+    function search_condition($filters)
+    {
+        $condition = NULL;
+
+        $condition .= $this->role_filter() . ' AND ';
+
+        //q words condition
+        $words_condition = $this->Search_model->words_condition($filters['q'],['nombre_flipbooks', 'descripcion', 'anio_generacion']);
+        if ( $words_condition )
+        {
+            $condition .= $words_condition . ' AND ';
+        }
+        
+        //Otros filtros
+        if ( $filters['type'] != '' ) { $condition .= "tipo_flipbook_id = {$filters['type']} AND "; }
+        if ( $filters['a'] != '' ) { $condition .= "area_id = {$filters['area_id']} AND "; }
+        if ( $filters['n'] != '' ) { $condition .= "nivel = {$filters['n']} AND "; }
+        if ( $filters['condition'] != '' ) { $condition .= "{$filters['condition']} AND "; }
+        
+        //Quitar cadena final de ' AND '
+        if ( strlen($condition) > 0 ) { $condition = substr($condition, 0, -5);}
+        
+        return $condition;
+    }
+    
+    /**
+     * Devuelve la cantidad de registros encontrados en la tabla con los filtros
+     * establecidos en la búsqueda
+     */
+    function qty_results($filters)
+    {
+        $this->db->select('id');
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+        $query = $this->db->get('flipbook'); //Para calcular el total de resultados
+
+        return $query->num_rows();
+    }
+
+    /**
+     * Query para exportar
+     * 2022-08-17
+     */
+    function query_export($filters)
+    {
+        //Select
+        $select = $this->select('export');
+        if ( $filters['sf'] != '' ) { $select = $this->select($filters['sf']); }
+        $this->db->select($select);
+
+        //Condición Where
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+
+        //Get
+        $query = $this->db->get('flipbook', 10000);  //Hasta 10.000 registros
+
+        return $query;
+    }
+    
+    /**
+     * Devuelve segmento SQL
+     */
+    function role_filter()
+    {
+        $role = $this->session->userdata('role');
+        $condition = 'id > 0';  //Valor por defecto, ningún post, se obtendrían cero posts.
+        
+        if ( $role <= 2 ) 
+        {   //Desarrollador, todos los post
+            $condition = 'id > 0';
+        }
+        
+        return $condition;
+    }
+    
+    /**
+     * Array con options para ordenar el listado de post en la vista de
+     * exploración
+     */
+    function order_options()
+    {
+        $order_options = array(
+            '' => '[ Ordenar por ]',
+            'id' => 'ID Flipbook',
+            'nombre_flipbook' => 'Nombre'
+        );
+        
+        return $order_options;
+    }
+
 // EXPLORACIÓN
 //-----------------------------------------------------------------------------
     
@@ -602,9 +784,17 @@ class Flipbook_model extends CI_Model {
         $unidades_pre = $this->db->get('post');
 
         $unidades = [];
-        foreach($unidades_pre->result_array() as $unidad){
+        foreach($unidades_pre->result_array() as $unidad)
+        {
+            //Archivos
             $files = $this->Post_model->files($unidad['unidad_id'], 'album_id = 10');
             $unidad['files'] = $files->result_array();
+
+            //Unidades
+            $this->load->model('Meta_model');
+            $cuestionarios = $this->Meta_model->cuestionarios_unidad($unidad['unidad_id']);
+            $unidad['cuestionarios'] = $cuestionarios->result_array();
+
             $unidades[] = $unidad;
         }
 

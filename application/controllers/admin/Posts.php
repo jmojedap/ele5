@@ -152,9 +152,10 @@ class Posts extends CI_Controller{
     /**
      * Vista Formulario para la creación de un nuevo post
      */
-    function add()
+    function add($tipoId = null)
     {
         $data['arrType'] = $this->Item_model->arr_options('categoria_id = 33');
+        $data['tipoId'] = $tipoId;
 
         //Variables generales
             $data['head_title'] = 'Posts';

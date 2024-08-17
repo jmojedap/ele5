@@ -7,7 +7,7 @@
                 <!-- <i v-bind:class="file.icono"></i> -->
             </td>
             <td class="text-primary">
-                <a v-bind:href="file.url" class="link-archivo" target="_blank">{{ file.title }}</a>
+                <a v-bind:href="file.url" class="link-titulo" target="_blank">{{ file.title }}</a>
             </td>
             <td width="90px">
                 <a class="btn btn-sm btn-light me-1" title="Abrir archivo" v-bind:href="file.url" target="_blank">

@@ -15,6 +15,63 @@ class Flipbooks extends CI_Controller{
     {
         $this->ver_flipbook($flipbook_id);
     }
+
+//EXPLORE FUNCTIONS
+//---------------------------------------------------------------------------------------------------
+
+    /** 
+    * Exploración de Flipbooks
+    * 2024-08-06
+    * */
+    function explore($num_page = 1)
+    {
+        //Identificar filtros de búsqueda
+            $this->load->model('Search_model');
+            $filters = $this->Search_model->filters();
+
+        //Datos básicos de la exploración
+            $data = $this->Flipbook_model->explore_data($filters, $num_page);
+        
+        //Opciones de filtros de búsqueda
+            $data['arrArea'] = $this->Item_model->arr_options('categoria_id = 1');
+            $data['arrTipo'] = $this->Item_model->arr_options('categoria_id = 11');
+            $data['opcionesNivel'] = $this->App_model->opciones_nivel('item_largo', 'Nivel');
+            
+        //Cargar vista
+            $this->App_model->view(TPL_ADMIN_NEW, $data);
+    }
+
+    /**
+     * Exportar resultados de búsqueda
+     * 2024-08-09
+     */
+    function export($element_name = 'contenidos')
+    {
+        set_time_limit(120);    //120 segundos, 2 minutos para el proceso
+
+        //Identificar filtros y búsqueda
+        $this->load->model('Search_model');
+        $filters = $this->Search_model->filters();
+
+        $data['query'] = $this->Flipbook_model->query_export($filters);
+
+        if ( $data['query']->num_rows() > 0 ) {
+            //Preparar datos
+                $data['sheet_name'] = $element_name;
+
+            //Objeto para generar archivo excel
+                $this->load->library('Excel');
+                $file_data['obj_writer'] = $this->excel->file_query($data);
+
+            //Nombre de archivo
+                $file_data['file_name'] = date('Ymd_His') . '_' . $data['sheet_name'];
+            $this->load->view('common/download_excel_file_v', $file_data);
+        } else {
+            $data = array('message' => 'No se encontraron registros para exportar');
+            //Salida JSON
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+    }
     
     
 //---------------------------------------------------------------------------------------------------
@@ -267,6 +324,24 @@ class Flipbooks extends CI_Controller{
     
 // SECCIONES
 //-----------------------------------------------------------------------------
+
+    /**
+     * Información general de un Contenido
+     */
+    function info($flipbookId)
+    {
+        //Cargando datos básicos (_basico)
+            $this->load->model('Tema_model');
+            $data = $this->Flipbook_model->basico($flipbookId);
+        
+        //Variables data
+            $data['temas'] = $this->Flipbook_model->temas($flipbookId);
+            $data['unidades'] = $this->Flipbook_model->unidades($flipbookId);
+        
+        //Solicitar vista
+            $data['view_a'] = 'flipbooks/info/info_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
+    }
     
     function temas($flipbook_id)
     {

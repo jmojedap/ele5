@@ -241,10 +241,10 @@ class Item_model extends CI_Model{
     /**
      * Devuelve el nombre de un item con el formato correspondiente.
      * 
-     * @param type $categoria_id
-     * @param type $id_interno
-     * @param type $campo
-     * @return type
+     * @param int $categoria_id
+     * @param int $id_interno
+     * @param string $campo
+     * @return string $nombre
      */
     function nombre($categoria_id, $id_interno, $campo = 'item')
     {
