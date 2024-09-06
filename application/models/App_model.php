@@ -1437,6 +1437,24 @@ class App_model extends CI_Model {
 
         return $areas;
     }
+
+    /**
+     * Lee un archivo json en la carpeta content y devuelve un array php con
+     * su contenido
+     * 2024-05-13
+     * @param string $filePath
+     * @return array $arrayContent
+     */
+    function getJsonContent($filePath)
+    {
+        $arrayContent = [];
+        if ( file_exists($filePath) ) {
+            $jsonContent = file_get_contents($filePath);
+            $arrayContent = json_decode($jsonContent, true);
+        }
+
+        return $arrayContent;
+    }
     
 // BOOTSTRAP
 //-----------------------------------------------------------------------------

@@ -1,4 +1,22 @@
+<?php
+    $nivel = 5;
+    if ( ! is_null($this->input->get('n')) ) {
+        $nivel = $this->input->get('n');
+    }
+    $unidad = 1;
+    if ( ! is_null($this->input->get('unidad')) ) {
+        $unidad = $this->input->get('unidad');
+    }
+?>
+
 <script>
+// Variables
+//-----------------------------------------------------------------------------
+const nivel = <?= $nivel ?>;
+const unidad = <?= $unidad ?>;
+
+// VueApp
+//-----------------------------------------------------------------------------
 var chatEle = createApp({
     data(){
         return{
@@ -7,14 +25,11 @@ var chatEle = createApp({
             iaChatMensajes: [],
             iaChatInput: '',
             iaLoading: false,
-            iaPreguntas: [
-                {'filename_answer':'adicion.txt','texto': '¿Cuál es la diferencia entre adición y sustracción y cuáles son sus términos?'},
-                {'filename_answer':'adicion_edad.txt','texto': '¿Cuál es la diferencia entre adición y sustracción y cuáles son sus términos? Crea una respuesta para niños entre 8 y 9 años.'},
-                {'filename_answer':'estrategia.txt','texto': 'Crea una estrategia didáctica para explicar la diferencia entre adición y sustracción y cuáles son sus términos.'},
-                {'filename_answer':'mercurio.txt','texto': '¿Por que algunos termómetros usan mercurio para su funcionamiento?'},
-                {'filename_answer':'pentagrama.txt','texto': '¿Hace cuánto tiempo se inventó el pentagrama?'},
-            ],
+            preguntas: <?= json_encode($preguntas) ?>,
             iaFilenameAnswer: 'mercurio.txt',
+            respuesta:'',
+            unidad: unidad,
+            nivel: nivel
         }
     },
     methods: {
@@ -30,14 +45,15 @@ var chatEle = createApp({
             this.loadIARespuesta()
         },
         loadIARespuesta: function(){
-            var formValues = new FormData(document.getElementById('ia-chat-form'))
+            typeText(this.respuesta, 10);
+            /*var formValues = new FormData(document.getElementById('ia-chat-form'))
             axios.post(URL_API + 'chat_ele/get_answer/', formValues)
             .then(response => {
                 if (response.data.answer.length > 0) {
                     typeText(response.data.answer, 5);
                 }
             })
-            .catch( function(error) {console.log(error)} )
+            .catch( function(error) {console.log(error)} )*/
         },
         agregarIAMensaje(chatElemento){
             this.iaChatMensajes.push(chatElemento)
@@ -49,9 +65,14 @@ var chatEle = createApp({
             return 'chat-pregunta'
         },
         setIAInput: function(pregunta){
-            this.iaChatInput = pregunta.texto
-            this.iaFilenameAnswer = pregunta.filename_answer
-        }
+            this.iaChatInput = pregunta.enunciado_pregunta
+            this.respuesta = pregunta.respuesta
+        },
+        showPregunta: function(pregunta){
+            if ( pregunta.nivel != this.nivel ) return false
+            if ( pregunta.numero_unidad != this.unidad ) return false
+            return true
+        },
     },
     mounted(){
         //this.getList()

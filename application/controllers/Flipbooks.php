@@ -781,7 +781,7 @@ class Flipbooks extends CI_Controller{
         if ( $row->tipo_flipbook_id == 3 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         if ( $row->tipo_flipbook_id == 4 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         if ( $row->tipo_flipbook_id == 5 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
-        //if ( $row->tipo_flipbook_id == 6 ) { $destino = "flipbooks/leer_v7/{$flipbook_id}/{$tema_id}"; }
+        //if ( $row->tipo_flipbook_id == 6 ) { $destino = "flipbooks/leer_v6/{$flipbook_id}/{$tema_id}"; }
         if ( $row->tipo_flipbook_id == 6 ) { $destino = "flipbooks/leer_v7/{$flipbook_id}/"; }
 
         // Si tiene asociado un contenido de enfoque lector
@@ -804,7 +804,7 @@ class Flipbooks extends CI_Controller{
 
     /**
      * Registra el evento de abrir el flipbook y redirige a la lectura
-     * 2020-04-24
+     * 2024-09-04
      */
     function abrir_flipbook($flipbook_id, $num_pagina = NULL, $tema_id = NULL)
     {
@@ -825,7 +825,7 @@ class Flipbooks extends CI_Controller{
         if ( $row->tipo_flipbook_id == 3 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         if ( $row->tipo_flipbook_id == 4 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
         if ( $row->tipo_flipbook_id == 5 ) { $destino = "flipbooks/leer_v5/{$flipbook_id}/{$num_pagina}";}
-        if ( $row->tipo_flipbook_id == 6 ) { $destino = "flipbooks/leer_v6/{$flipbook_id}/{$tema_id}"; }
+        if ( $row->tipo_flipbook_id == 6 ) { $destino = "flipbooks/leer_v7/{$flipbook_id}/"; }
 
         // Si tiene asociado un contenido de enfoque lector
         if ( $row->post_asociado_id > 0 ) {

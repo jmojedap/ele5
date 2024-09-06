@@ -13,11 +13,15 @@ var postImages = new Vue({
     },
     methods: {
         getList: function(){
-            axios.get(URL_API + 'posts/get_images/' + this.post_id)
+            this.loading = true
+            var formValues = new FormData()
+            formValues.append('condition', 'album_id = 0')
+            axios.post(URL_API + 'posts/get_images/' + this.post_id, formValues)
             .then(response => {
-                this.images = response.data.images;
+                this.files = response.data.files
+                this.loading = false
             })
-            .catch(function (error) { console.log(error) })
+            .catch( function(error) { console.log(error) } )
         },
         submitFileForm: function(){
             let formValues = new FormData();

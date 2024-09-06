@@ -15,7 +15,6 @@
                     </div>
                     <div v-show="!loading">
                         <div v-html="currentUnidad.html"></div>
-                        
                     </div>
                 </div>
             </div>
@@ -29,10 +28,8 @@
             </div>
 
             <div v-show="section == 'chat-ia'" class="container">
-                <iframe src="<?= URL_APP ?>enfoque_lector/chat_ele" frameborder="0" style="width: 100%; height: calc(100vh - 60px);"></iframe>
+                <iframe v-bind:src="`<?= URL_APP ?>enfoque_lector/chat_ele/?n=` + flipbook.nivel + `&unidad=` + currentUnidad.numero" frameborder="0" style="width: 100%; height: calc(100vh - 60px);"></iframe>
             </div>
-
-            
 
             <?php $this->load->view('flipbooks/lectura/7_articulos/anotaciones_v') ?>
     

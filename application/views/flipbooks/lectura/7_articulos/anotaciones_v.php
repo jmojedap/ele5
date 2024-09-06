@@ -43,6 +43,22 @@
             </div>
         </form>
 
-        <a href="<?= URL_APP . "usuarios/anotaciones/" . $this->session->userdata('user_id') . '/' . $row->id ?>">Ver todas mis notas</a>
+        <?php if ( $es_profesor ) : ?>
+            <p class="mt-3">Ir a notas de estudiantes sobre este libro:</p>
+
+            <div class="list-group">
+                <a v-for="grupo in misGrupos" v-bind:href="`<?= URL_APP . "grupos/anotaciones/" ?>` + grupo.cod + `/` + flipbook.id" href="_blank"
+                    class="list-group-item list-group-item-action"
+                >
+                    {{ grupo.name }}
+                </a>
+            </div>
+
+        <?php else: ?>
+            <a href="<?= URL_APP . "usuarios/anotaciones/" . $this->session->userdata('user_id') . '/' . $row->id ?>" href="_blank">
+                Ver todas mis notas
+            </a>
+        <?php endif; ?>
+
     </div>
 </div>

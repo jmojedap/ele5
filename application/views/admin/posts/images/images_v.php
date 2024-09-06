@@ -1,7 +1,7 @@
 <?php $this->load->view('assets/lightbox2') ?>
 
 <div id="postImages">
-    <div class="card center_box_750 mb-2" v-show="images.length < 1">
+    <div class="card center_box_750 mb-2" v-show="images.length < 10">
         <div class="card-body">
             <?php $this->load->view('common/bs4/upload_file_form_v') ?>
         </div>
@@ -11,7 +11,7 @@
     </div>
     <div class="text-center my-2" v-show="loading">
         <div class="spinner-border text-secondary" role="status">
-            <span class="sr-only">Loading...</span>
+            <span class="sr-only">Cargando...</span>
         </div>
     </div>
     <div id="image_gallery">

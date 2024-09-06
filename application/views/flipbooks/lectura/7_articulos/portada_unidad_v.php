@@ -28,6 +28,12 @@
                     Programar temas
                 </a>
             <?php endif; ?>
+            <div class="d-flex flex-column text-center unidad-menu" v-on:click="section = 'chat-ia'">
+                <div>
+                    <img src="<?= URL_IMG . 'flipbook/v6_ia_icon_2.png' ?>" style="height: 18px;">
+                </div>
+                Chat IA
+            </div>
         </div>
         
         <div class="text-center" v-show="subsection == 'imagen-unidad'">

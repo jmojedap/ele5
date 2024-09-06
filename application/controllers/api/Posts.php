@@ -95,7 +95,12 @@ class Posts extends CI_Controller{
      */
     function get_images($post_id)
     {
-        $images = $this->Post_model->images($post_id);
+        $condition = null;
+        if ( null !== $this->input->post('condition') ) {
+            $condition = $this->input->post('condition');
+        }
+
+        $images = $this->Post_model->images($post_id, $condition);
         $data['images'] = $images->result();
 
         //Salida JSON

@@ -19,8 +19,10 @@
             </p>
         </div>
         <div class="grid-columns-15rem mb-2">
-            <div v-for="pregunta in iaPreguntas" class="chat-pregunta-ejemplo" v-on:click="setIAInput(pregunta)">
-                {{ pregunta.texto }}
+            <div v-for="pregunta in preguntas" class="chat-pregunta-ejemplo" v-on:click="setIAInput(pregunta)" v-show="showPregunta(pregunta)">
+                <strong>{{ pregunta.tipo_pregunta }}</strong>
+                <br>
+                {{ pregunta.enunciado_pregunta }}
             </div>
         </div>
         <form accept-charset="utf-8" method="POST" id="ia-chat-form" @submit.prevent="sendIAMessage">

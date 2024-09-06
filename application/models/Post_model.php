@@ -411,10 +411,11 @@ class Post_model extends CI_Model{
      * Imágenes asociadas al post
      * 2022-01-11
      */
-    function images($post_id)
+    function images($post_id, $condition = null)
     {
         $this->db->select('files.id, files.title, url, url_thumbnail, files.integer_1 AS main, position');
         $this->db->where('is_image', 1);
+        if ( ! is_null($condition) ) { $this->db->where($condition); }
         $this->db->where('table_id', '2000');      //Tabla post
         $this->db->where('related_1', $post_id);   //Relacionado con el post
         $this->db->order_by('position', 'ASC');

@@ -1,11 +1,3 @@
-<?php
-    $options_group = array();
-    foreach ($this->session->arr_grupos as $grupo_id) 
-    {
-        $options_group['0' . $grupo_id] = $this->App_model->nombre_grupo($grupo_id);
-    }
-?>
-
 <div class="center_box_750 mt-2">
     <div class="card">
         <div class="card-body">
@@ -39,7 +31,9 @@
                         <input type="hidden" name="referente_2_id" value="2"><!-- TIPO DE PREGUNTA ABIERTA -->
     
                         <div class="mb-2" v-show="preguntaAbiertaPersonalizada">
-                            <label for="texto_pregunta">Escriba una pregunta sobre el tema:</label>
+                            <label for="texto_pregunta" class="mb-2">Escriba una pregunta sobre el tema:
+                                <strong class="text-primary">{{ currentArticulo.titulo }}</strong>
+                            </label>
                             <textarea id="field-texto_pregunta" name="contenido" class="form-control summernote_no"
                                 placeholder="Escriba la pregunta" title="Escriba la pregunta"></textarea>
                             <div class="invalid-feedback">
@@ -48,7 +42,9 @@
                         </div>
                         <div class="mb-2">
                             <label for="grupo_id">Asignar al grupo</label>
-                            <?php echo form_dropdown('grupo_id', $options_group, '00', 'class="form-select" v-model="grupoId" required v-on:change="cargarPreguntasAbiertasAsignadas"') ?>
+                            <select name="grupo_id" v-model="grupoId" class="form-select form-control" required v-on:change="cargarPreguntasAbiertasAsignadas">
+                                <option v-for="grupo in misGrupos" v-bind:value="grupo.cod">{{ grupo.name }}</option>
+                            </select>
                         </div>
                     </div>
                     <div class="mt-2 text-end">

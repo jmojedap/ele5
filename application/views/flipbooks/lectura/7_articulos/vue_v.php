@@ -1,5 +1,6 @@
 <script>
 let numeroUnidad = <?= $numeroUnidad ?>;
+const misGrupos = <?= json_encode($this->App_model->misGrupos()); ?>;
 
 // VueApp
 //-----------------------------------------------------------------------------
@@ -39,6 +40,7 @@ var flipbookApp = createApp({
             preguntaAbiertaId: 0,
             preguntasAbiertasAsignadas: [],
             preguntaAbiertaPersonalizada: false,
+            misGrupos: misGrupos,
         }
     },
     methods: {
@@ -63,17 +65,9 @@ var flipbookApp = createApp({
         },
         setArticulo(articuloId, keyArticulo){
             this.section = 'pagina'
-            //this.loading = true
             this.articuloId = articuloId
-            //this.setAnotacion()
-            /*axios.get(URL_API + 'flipbooks/get_articulo/' + this.articuloId)
-            .then(response => {
-                this.currentArticulo = response.data.articulo
-                this.numPage = keyArticulo + 1
-                //this.loading = false
-                history.pushState(null, null, URL_FRONT + 'flipbooks/leer_v7_demo/' + this.flipbook.id + '/' + this.articuloId)
-            })
-            .catch(function(error) { console.log(error) })*/
+            this.currentArticulo = this.bookData['articulos'].find(articulo => articulo['articulo_id'] == articuloId)
+            this.setAnotacion()
         },
         setUnidad: function(unidad){
             this.section = 'portada-unidad'
@@ -123,6 +117,11 @@ var flipbookApp = createApp({
                 }
             }
 
+            if ( this.currentArticulo.tema_id == 0 ) {
+                formularioEsValido = false;
+                toastr['warning']('Debe seleccionar un tema asociado en el menú lateral');
+            }
+
             if ( formularioEsValido ) { this.asignarPreguntaAbierta() }
         },
         asignarPreguntaAbierta: function(){
@@ -131,7 +130,6 @@ var flipbookApp = createApp({
                 console.log(response.data.message)
                 if ( response.data.status == 1 ) {
                     toastr['success']('La pregunta fue asignada al grupo');
-                    //$('#modal_pa').modal('hide');
                     $('#field-texto_pregunta').val('');    //Limpiar campo
                     this.cargarPreguntasAbiertasAsignadas();
                 } else {
@@ -158,7 +156,7 @@ var flipbookApp = createApp({
         guardarAnotacion: function(){
             this.loading = true
             var formValues = new FormData(document.getElementById('anotacion-form'))
-            formValues.append('pagina_id', this.currentArticulo.id)
+            formValues.append('pagina_id', this.currentArticulo.articulo_id)
             formValues.append('tema_id', this.currentArticulo.tema_id)
             formValues.append('tabla_contenido', 2000) //Tabla post
             axios.post(URL_API + 'flipbooks/save_anotacion/', formValues)

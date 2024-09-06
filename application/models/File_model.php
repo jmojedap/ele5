@@ -218,6 +218,7 @@ class File_model extends CI_Model{
 
         if ( $this->upload->do_upload('file_field') )  //Campo "file_field" del formulario
         {
+            $data = ['status' => 0];
             $upload_data = $this->upload->data();
 
             //Guardar registro en la tabla "file"
@@ -226,12 +227,12 @@ class File_model extends CI_Model{
                 
             //Si es imagen, se generan miniaturas y edita imagen original
                 if ( $row->is_image ) {
-                    $this->mod_original($upload_data['full_path']);
-                    $this->create_thumbnails($row);
+                    $data['original_modified'] = $this->mod_original($upload_data['full_path']);
+                    $data['thumbnails'] = $this->create_thumbnails($row);
                 }
             
             //Array resultado
-                $data = array('status' => 1);
+                if ( !is_null($row) ) $data['status'] = 1;
                 $data['row'] = $row;
         } else {
             //No se cargó
@@ -436,8 +437,11 @@ class File_model extends CI_Model{
      */
     function create_thumbnails($row_file)
     {
-        $this->create_thumbnail($row_file, 'sm_', 320);
+        $sizes = [];
+        $sizes[] = $this->create_thumbnail($row_file, 'sm_', 320);
         //$this->square_image($row_file, 'sm_');
+
+        return $sizes;
     }
     
     /**
@@ -464,6 +468,8 @@ class File_model extends CI_Model{
             $this->image_lib->initialize($config);
             $this->image_lib->resize();
             $this->image_lib->clear();
+
+        return $prefix . $pixels;
     }
 
     /**

@@ -208,7 +208,7 @@ class Posts extends CI_Controller{
     {
         $data = $this->Post_model->basic($post_id);
 
-        $data['images'] = $this->Post_model->images($post_id);
+        $data['images'] = $this->Post_model->images($post_id, 'album_id = 0');
 
         $data['view_a'] = $this->views_folder . 'images/images_v';
         $data['back_link'] = $this->url_controller . 'explore';
@@ -256,7 +256,6 @@ class Posts extends CI_Controller{
         }
 
         $data['files'] = $this->Post_model->files($post_id, $condition);
-
         $data['view_a'] = $this->views_folder . 'files/files_v';
         $data['back_link'] = $this->url_controller . 'explore';
         $this->App_model->view(TPL_ADMIN_NEW, $data);

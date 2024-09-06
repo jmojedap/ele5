@@ -44,7 +44,7 @@
                 
                 <?php foreach ($eventos[2]->result() as $row_evento) : ?>
                 <?php
-                    $url = base_url("flipbooks/abrir_flipbook/{$row_evento->referente_2_id}/{$row_evento->entero_1}/{$row_evento->referente_id}");
+                    $url = base_url("flipbooks/abrir/{$row_evento->referente_2_id}/{$row_evento->entero_1}/{$row_evento->referente_id}");
                 ?>
                 {
                     id: <?= $row_evento->id ?>,
