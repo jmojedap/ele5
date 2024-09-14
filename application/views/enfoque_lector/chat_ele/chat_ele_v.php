@@ -20,7 +20,9 @@
         </div>
         <div class="grid-columns-15rem mb-2">
             <div v-for="pregunta in preguntas" class="chat-pregunta-ejemplo" v-on:click="setIAInput(pregunta)" v-show="showPregunta(pregunta)">
-                <strong>{{ pregunta.tipo_pregunta }}</strong>
+                <span class="text-muted">{{ pregunta.tipo_pregunta }}</span>
+                <br>
+                <strong>{{ pregunta.titulo_tema }}</strong>
                 <br>
                 {{ pregunta.enunciado_pregunta }}
             </div>

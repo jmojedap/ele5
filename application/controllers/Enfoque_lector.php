@@ -75,6 +75,10 @@ public $url_controller = URL_APP . 'enfoque_lector/';
         $this->load->view('templates/easypml/empty', $data);
     }
 
+    /**
+     * Vista de chat En Línea Editores
+     * 2024-09-14
+     */
     function chat_ele()
     {
         $data['head_title'] = 'Enfoque Lector';

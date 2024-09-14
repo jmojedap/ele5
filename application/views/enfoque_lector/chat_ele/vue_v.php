@@ -1,4 +1,8 @@
 <?php
+    $areaId = 50;
+    if ( ! is_null($this->input->get('a')) ) {
+        $areaId = $this->input->get('a');
+    }
     $nivel = 5;
     if ( ! is_null($this->input->get('n')) ) {
         $nivel = $this->input->get('n');
@@ -12,6 +16,7 @@
 <script>
 // Variables
 //-----------------------------------------------------------------------------
+const areaId = <?= $areaId ?>;
 const nivel = <?= $nivel ?>;
 const unidad = <?= $unidad ?>;
 
@@ -28,6 +33,7 @@ var chatEle = createApp({
             preguntas: <?= json_encode($preguntas) ?>,
             iaFilenameAnswer: 'mercurio.txt',
             respuesta:'',
+            areaId: areaId,
             unidad: unidad,
             nivel: nivel
         }
@@ -69,6 +75,7 @@ var chatEle = createApp({
             this.respuesta = pregunta.respuesta
         },
         showPregunta: function(pregunta){
+            if ( pregunta.area_id != this.areaId ) return false
             if ( pregunta.nivel != this.nivel ) return false
             if ( pregunta.numero_unidad != this.unidad ) return false
             return true
