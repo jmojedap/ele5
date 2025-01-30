@@ -532,7 +532,8 @@ class Recurso_Model extends CI_Model{
             $registro['editado'] = date('Y-m-d H:i:s');
             $registro['disponible'] = 1;    //2016-11-28, por defecto disponible 1 (Sí)
         
-        foreach ( $array_hoja as $array_fila )
+        $data = array('qty_imported' => 0, 'results' => []);
+        foreach ( $array_hoja as $key => $array_fila )
         {
             //Identificar valores
                 $tema_id = $this->Pcrn->campo('tema', "cod_tema = '{$array_fila[0]}'", 'id');  //Columna A
@@ -554,15 +555,17 @@ class Recurso_Model extends CI_Model{
             {   
                 //Condición de comprobación
                 $condicion = "nombre_archivo = '{$registro['nombre_archivo']}' AND tema_id = {$registro['tema_id']}";
-                $this->Pcrn->guardar('recurso', $condicion, $registro );
+                $saved_id = $this->Pcrn->guardar('recurso', $condicion, $registro );
+                $dataImport = array('status' => 1, 'text' => 'Recurso asignado creado con ID: ' . $saved_id, 'imported_id' => $saved_id);
             } else {
-                $no_importados[] = $fila;
+                $dataImport = array('status' => 0, 'text' => 'Error al importar', 'imported_id' => 0);
             }
-            
-            $fila++;    //Para siguiente fila
+
+            $data['qty_imported'] += $dataImport['status'];
+            $data['results'][$key + 2] = $dataImport;
         }
         
-        return $no_importados;
+        return $data;
     }
     
     function insert_links($links)

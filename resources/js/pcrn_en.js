@@ -76,4 +76,24 @@ var Pcrn = new function()
         var intPercent = this.round(100 * num / total, 0)
         return intPercent
     }
+
+    /**
+     * Convierte un texto a un formato clase CSS, minúsculas sin espacios
+     * ni acentos
+     * 2024-05-16
+     * @param {string} inputText Texto de entrada
+     * @return {string} texto tranformado
+     */
+    this.textToClass = function textToClass(inputText){
+        let text = inputText.toLowerCase();
+        text = text.replace(/ /g, "-"); //Guines en lugar de espacios
+
+        //Quitar tildes
+        const accents = {'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u', 'ü': 'u'};
+        text = text.replace(/[áéíóúü]/g, function(letter) {
+            return accents[letter];
+        });
+
+        return text;
+    }
 };

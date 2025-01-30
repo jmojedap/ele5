@@ -54,71 +54,12 @@ class Cuestionarios extends CI_Controller{
     /**
      * Listado, filtrados por búsqueda, JSON
      */
-    function get($num_page = 1)
+    function z_get($num_page = 1)
     {
         $this->load->model('Search_model');
         $filters = $this->Search_model->filters();
 
         $data = $this->Cuestionario_model->get($filters, $num_page);
-        $this->output->set_content_type('application/json')->set_output(json_encode($data));
-    }
-    
-    /**
-     * AJAX JSON
-     * Eliminar un grupo de registros seleccionados
-     */
-    function delete_selected()
-    {
-        $selected = explode(',', $this->input->post('selected'));
-        $data['qty_deleted'] = 0;
-        
-        foreach ( $selected as $row_id ) 
-        {
-            $data['qty_deleted'] += $this->Cuestionario_model->delete($row_id);
-        }
-
-        //Establecer resultado
-        if ( $data['qty_deleted'] > 0 ) { $data['status'] = 1; }
-        $this->output->set_content_type('application/json')->set_output(json_encode($data));
-    }
-
-    /**
-     * AJAX JSON
-     * Eliminar cuestionarios filtrados
-     * 2020-09-25
-     */
-    function delete_filtered($qty_filtered = 0)
-    {
-        //Identificar filtros de búsqueda
-            $this->load->model('Search_model');
-            $filters = $this->Search_model->filters();
-
-        //Registrar evento de eliminación masiva
-            $evento_id = 0;
-            if ( $qty_filtered > 0 )
-            {
-                $arr_descripcion['filters'] = $filters;
-                $arr_descripcion['ip_address'] = $this->input->ip_address();
-                $arr_descripcion['qty_deleted'] = $qty_filtered;
-
-                $this->load->model('Evento_model');
-                $arr_row['fecha_inicio'] = date('Y-m-d');
-                $arr_row['hora_inicio'] = date('H:i:s');
-                $arr_row['fecha_fin'] = date('Y-m-d');
-                $arr_row['hora_fin'] = date('H:i:s');
-                $arr_row['tipo_id'] = 215;
-                $arr_row['referente_id'] = 4200;
-                $arr_row['entero_1'] = $qty_filtered;
-                $arr_row['descripcion'] = json_encode($arr_descripcion);
-
-                $evento_id = $this->Evento_model->guardar_evento($arr_row, 'id = 0');   //id=0, para que cree registro siempre, no edite
-            }
-
-        //Datos básicos de la exploración
-            $data = $this->Cuestionario_model->delete_filtered($filters);
-            $data['evento_id'] = $evento_id;
-
-        //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
@@ -479,18 +420,24 @@ class Cuestionarios extends CI_Controller{
      * de un grupo.
      * 2022-02-04
      */
-    function asignar($cuestionario_id, $grupo_id = 0)
+    function asignar($cuestionario_id, $institucion_id = 0, $grupo_id = 0)
     {
         //Función ubicada temporalmente en este punto, para calcular clave antes de la asignación.
             $this->Cuestionario_model->act_clave($cuestionario_id); 
         
         //Cargando datos básicos (Cuestionario_model->basico)
             $data = $this->Cuestionario_model->basico($cuestionario_id);
+            $data['institucion_id'] = $institucion_id;
             $data['grupo_id'] = $grupo_id;
 
             $this->load->model('Grupo_model');
             $this->load->model('Usuario_model');
-            $data['grupos'] = $this->Usuario_model->grupos_usuario($this->session->userdata('user_id'), null, $data['row']->nivel);
+            $data['grupos'] = $this->Usuario_model->grupos_usuario($this->session->userdata('user_id'), $institucion_id, $data['row']->nivel);
+
+            $data['instituciones'] = [];
+            if ( in_array($this->session->userdata('role'), [0,1,2]) ) {
+                $data['instituciones'] = $this->App_model->arr_instituciones();
+            }
 
             $this->load->model('Post_model');
             $data['arrUnidades'] = $this->Post_model->arrOptions('tipo_id = 60');
@@ -885,8 +832,10 @@ class Cuestionarios extends CI_Controller{
 
             $data['row_uc'] = $row_uc;
             $data['segundos_restantes'] = $segundos_restantes;
-            //$data['segundos_restantes'] = 5;
             $data['view_a'] = 'cuestionarios/resolver/resolver_v';
+            if ( $data['row']->tipo_id == 5 ) {
+                $data['view_a'] = 'cuestionarios/resolver_operaciones_mentales/resolver_v';
+            }
         } else {
             $data['head_title'] = 'Cuestionario finalizado';
             $data['view_a'] = 'app/no_permitido_v';
@@ -1037,7 +986,7 @@ class Cuestionarios extends CI_Controller{
      * Se ejecutan los procesos de finalización de un cuestionario, cálculo de
      * totales, acumuladores
      * 
-     * @param type $uc_id
+     * @param int $uc_id: ID registro en tabla usuario_cuestionaroi
      */
     function finalizar_externo($uc_id, $redirect = 'usuario')
     {
@@ -1058,13 +1007,15 @@ class Cuestionarios extends CI_Controller{
         redirect($destino);
     }
     
+    /**
+     * 2024-11-14
+     */
     function vista_previa($cuestionario_id, $num_pregunta = 1)
     {
         $data = $this->Cuestionario_model->basico($cuestionario_id);
         
         //Iniciales
             $cant_preguntas = $data['row']->num_preguntas;
-            //$cant_preguntas = 50;
             
         if ( $cant_preguntas > 0 )
         {
@@ -1091,6 +1042,7 @@ class Cuestionarios extends CI_Controller{
                 $data['arr_respuestas'] = $arr_respuestas;
                 $data['valor_opciones'] = array("","","","","");
                 $data['view_a'] = 'cuestionarios/vista_previa_v';
+                if ( $data['row']->tipo_id == 5 ) { $data['view_a'] = 'cuestionarios/vista_previa_operaciones_mentales_v'; }
                 $data['convertible'] = $this->Cuestionario_model->convertible($cuestionario_id);
         }
         else    //No tiene preguntas asignadas
@@ -1146,6 +1098,43 @@ class Cuestionarios extends CI_Controller{
         
         $this->session->set_flashdata('resultado', $resultado);
         redirect("cuestionarios/vista_previa/{$cuestionario_id}");
+    }
+
+// RESULTADOS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Resultados de un usuario en un cuestionario, detalle por preguntas
+     * 2025-01-14
+     */
+    function resultados_detalle($usuario_id, $uc_id)
+    {
+        $this->load->model('Usuario_model');
+        
+        $data = $this->Usuario_model->basico($usuario_id);
+        
+        //Variables
+            $data['row_uc'] = $this->Pcrn->registro('usuario_cuestionario', "id = {$uc_id}");
+            $data['row_cuestionario'] = $this->Pcrn->registro('cuestionario', "id = {$data['row_uc']->cuestionario_id}");
+            
+            //'Areas del cuestionario
+            $this->load->model('Cuestionario_model');
+            $data['areas'] = $this->Cuestionario_model->areas($data['row_uc']->cuestionario_id);
+        
+        //Cargando arrays de resultados
+            $data['respuestas_cuestionario'] = $this->Usuario_model->respuestas_cuestionario($uc_id);
+            $data['res_usuario'] = $this->Cuestionario_model->resultado_usuario($data['row_uc']->id);       //2014-06-02
+            $data['res_grupo'] = $this->Cuestionario_model->resultado($data['row_uc']->cuestionario_id, "grupo_id = {$data['row_uc']->grupo_id}");
+            $data['res_institucion'] = $this->Cuestionario_model->resultado($data['row_uc']->cuestionario_id, "institucion_id = {$data['row']->institucion_id}");
+            $data['res_total'] = $this->Cuestionario_model->resultado($data['row_uc']->cuestionario_id, 'institucion_id > 0');
+            
+        //Rango del estudiante
+            $porcentaje = $data['res_usuario']['porcentaje']/100;
+            $data['rango_usuario'] = $this->App_model->rango_cuestionarios($porcentaje);
+        
+        //Solicitar vista
+            $data['view_a'] = 'cuestionarios/resultados/operaciones_mentales/detalle_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
 //RESOLVER EN LOTE
@@ -1360,22 +1349,10 @@ class Cuestionarios extends CI_Controller{
             $data['cuestionario_id'] = $cuestionario_id;
             $data['view_a'] = 'cuestionarios/preguntas/preguntas_v';
 
+            //Si es operaciones mentales
+            if (  $data['row']->tipo_id == 5 ) { $data['view_a'] = 'cuestionarios/preguntas/preguntas_operaciones_mentales_v'; }
+
         $this->load->view(TPL_ADMIN_NEW, $data);
-    }
-
-    /**
-     * Eliminar un registro de la tabla 'cuestionario_pregunta'
-     * No se elimina el registro de la pregunta, solo se la quita del cuestionario
-     * 2019-10-15
-     */
-    function quitar_pregunta($cuestionario_id, $pregunta_id)
-    {
-        $this->Cuestionario_model->quitar_pregunta($cuestionario_id, $pregunta_id);
-        $this->Cuestionario_model->act_clave($cuestionario_id);
-
-        $data = array('status' => 1, 'message' => 'La pregunta se quitó del cuestionario');
-        
-        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     /**
@@ -1406,29 +1383,6 @@ class Cuestionarios extends CI_Controller{
             $data['view_a'] = "app/mensaje_v";
 
             $this->load->view(PTL_ADMIN, $data);
-        
-    }
-    
-    /**
-     * Cambia el valor del campo pregunta_cuestionario.orden
-     * 
-     * Se modifica también la posición de la pregunta contigua, + o - 1
-     * 
-     * @param type $cuestionario_id
-     * @param type $pregunta_id
-     * @param type $pos_final
-     */
-    function mover_pregunta($cuestionario_id, $pregunta_id, $pos_final)
-    {
-        //Cambiar la posición de una pregunta en un cuestionario
-        $data = $this->Cuestionario_model->cambiar_pos_pregunta($cuestionario_id, $pregunta_id, $pos_final);
-        
-        if ( $data['status'] )
-        {
-            $this->Cuestionario_model->act_clave($cuestionario_id);
-        }
-        
-        $this->output->set_content_type('application/json')->set_output(json_encode($data));
         
     }
     
@@ -1466,65 +1420,18 @@ class Cuestionarios extends CI_Controller{
         //Solicitar vista
             $data['cuestionario_id'] = $cuestionario_id;
             $data['view_form'] = 'preguntas/nuevo/form_cuestionario_v';
+
+            //Si es cuestionario tipo 5::Operaciones mentales
+            if( $data['row']->tipo_id == 5 ) { $data['view_form'] = 'preguntas/nuevo/form_operaciones_mentales_v'; }
+
             $data['view_a'] = 'preguntas/nuevo/nuevo_v';
             $data['form_destination'] = "cuestionarios/agregar_pregunta/{$cuestionario_id}/{$orden}";
             $data['success_destination'] = "cuestionarios/preguntas/{$cuestionario_id}";
             $data['options_letras'] = $this->Item_model->opciones('categoria_id = 57 AND id_interno <= 4');
+            $data['arrHabilidades'] = $this->Item_model->arr_options('categoria_id = 159');
+            $data['arrProcesos'] = $this->Item_model->arr_options('categoria_id = 160');
 
         $this->load->view(TPL_ADMIN_NEW, $data);
-    }
-
-    /**
-     * Ejecuta la creación e inserción de una pregunta nueva a un cuestionario
-     * 2019-10-16
-     */
-    function agregar_pregunta($cuestionario_id, $orden)
-    {
-        $this->load->model('Pregunta_model');
-        $data_pregunta = $this->Pregunta_model->save(0);
-
-        //Valor inicial por defecto
-        $data = array('status' => 0, 'message' => 'La pregunta no fue agregada');
-
-        //Si la pregunta se creó correctamente, se inserta en el cuestionario
-        if ( $data_pregunta['status'])
-        {
-            $arr_row['cuestionario_id'] = $cuestionario_id;
-            $arr_row['pregunta_id'] = $data_pregunta['saved_id'];
-            $arr_row['orden'] = $orden;
-
-            $data = $this->Cuestionario_model->insertar_cp($arr_row);
-        }
-
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
-    }
-
-    /**
-     * Función Temporal. Actualiza masivamente el campo usuario_pregunta.uc_id
-     * 2019-05-09
-     */
-    function temporal_act_uc_id()
-    {
-        set_time_limit(360);    //360 segundos, 6 minutos por ciclo
-
-        $sql = 'UPDATE usuario_pregunta, usuario_cuestionario';
-        $sql .= ' SET usuario_pregunta.uc_id = usuario_cuestionario.id';
-        $sql .= ' WHERE';
-        $sql .= ' usuario_pregunta.usuario_id = usuario_cuestionario.usuario_id';
-        $sql .= ' AND usuario_pregunta.cuestionario_id = usuario_cuestionario.cuestionario_id';
-        $sql .= ' AND usuario_pregunta.uc_id = 0';
-        //$sql .= ' ';
-
-        $this->db->query($sql);
-
-        $data = array('status' => 1, 'message' => 'Proceso ejecutado');
-        $data['affected_rows'] = $this->db->affected_rows();
-        
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($data));
     }
 
 // SelectorP Conctructor de Pregunta

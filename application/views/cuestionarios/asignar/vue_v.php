@@ -59,6 +59,8 @@ var asignarCuestionarioApp = new Vue({
         url_base: '<?= base_url() ?>',
         cuestionario_id: <?= $row->id ?>,
         loading: false,
+        instituciones: <?= json_encode($instituciones) ?>,
+        institucionId: <?= $institucion_id ?>,
         grupos: grupos,
         currGrupo: startGrupo,
         estudiantes: <?= json_encode($arrEstudiantes) ?>,
@@ -94,7 +96,7 @@ var asignarCuestionarioApp = new Vue({
         },
         setCurrGrupo: function(key){
             this.currGrupo = this.grupos[key];
-            history.pushState(null, null, this.url_base + 'cuestionarios/asignar/' + this.cuestionario_id + '/' + this.currGrupo.id);
+            history.pushState(null, null, this.url_base + 'cuestionarios/asignar/' + this.cuestionario_id + '/' + this.institucionId +  '/' + this.currGrupo.id);
             console.log(this.currGrupo)
         },
         selectGrupo: function(keyGrupo){
@@ -113,6 +115,9 @@ var asignarCuestionarioApp = new Vue({
                     this.estudiantes[index].selected = grupo.selected
                 }
             });
+        },
+        setInstitucion: function(){
+            window.location = this.url_base + 'cuestionarios/asignar/' + this.cuestionario_id + '/' + this.institucionId
         },
     },
     computed:{

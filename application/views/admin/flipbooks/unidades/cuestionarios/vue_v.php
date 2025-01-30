@@ -43,6 +43,7 @@ var cuestionariosApp = new Vue({
             formValues.append('dato_id',200011)
             formValues.append('elemento_id',this.unidad.id)
             formValues.append('relacionado_id',cuestionarioId)
+            formValues.append('orden',this.asignados.length)
             axios.post(URL_API + 'meta/save/', formValues)
             .then(response => {
                 if ( response.data.saved_id > 0 ) {
@@ -59,6 +60,17 @@ var cuestionariosApp = new Vue({
                 if ( response.data.qtyDeleted > 0 ) {
                     toastr['info']('Se quitó el cuestionario de la unidad')
                     this.getAsignados()
+                }
+            })
+            .catch(function(error) { console.log(error) })
+        },
+        updatePosition: function(metaId, newPosition){
+            axios.get(URL_API + 'meta/update_position/' + metaId + '/' + newPosition)
+            .then(response => {
+                if ( response.data.status == 1 ) {
+                    this.getAsignados()
+                } else {
+                    toastr['warning']('No se cambió el orden de los cuestionarios')
                 }
             })
             .catch(function(error) { console.log(error) })

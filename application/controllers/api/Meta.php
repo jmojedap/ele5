@@ -60,6 +60,21 @@ class Meta extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
+// Cambio de posición del registro, meta.orden
+//-----------------------------------------------------------------------------
+
+    /**
+     * Cambio de posición del registro meta
+     * 2024-09-26
+     */
+    function update_position($metaId, $newPosition)
+    {
+        $data = $this->Meta_model->update_position($metaId, $newPosition);
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
 // ESPECIALES
 //-----------------------------------------------------------------------------
 
@@ -72,4 +87,36 @@ class Meta extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
+    /**
+     * Función provisional para actualizar masivamente meta.orden
+     * ELIMINAR TRAS EJECUCIÓN Y ACTUALIZACIÓN INICIAL
+     * 2024-09-26
+     */
+    function update_meta_orden()
+    {
+        $this->db->select('*');
+        $this->db->where('dato_id', 200011);    //Asignación de cuestionarios a unidades
+        $this->db->order_by('elemento_id', 'ASC');
+        $this->db->order_by('relacionado_id', 'ASC');
+        $meta = $this->db->get('meta');
+
+        $orden = 0;
+        $elementoId = 0;
+        foreach ($meta->result() as $rowMeta)
+        {
+            if ( $elementoId == $rowMeta->elemento_id ) {
+                $orden++;
+            } else {
+                $orden = 0;
+            }
+            $sql = "UPDATE meta SET orden = {$orden} WHERE id = {$rowMeta->id}";
+            $this->db->query($sql);
+            $elementoId = $rowMeta->elemento_id;
+        }
+
+        $data['status'] = 'ejecutado';
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
 }

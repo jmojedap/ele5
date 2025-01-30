@@ -1272,6 +1272,27 @@ class App_model extends CI_Model {
     }
 
     /**
+     * Array con instituciones, especificando código y nombre. Filtrados por condición
+     * 2025-01-15
+     * 
+     * @param string $condition
+     * @return array $options
+     */
+    function arr_instituciones($condition = 'id > 0')
+    {
+        $select = 'id AS cod, nombre_institucion AS name';
+
+        $query = $this->db->select($select)
+            ->where($condition)
+            ->order_by('nombre_institucion', 'ASC')
+            ->get('institucion');
+        
+        $options = $query->result_array();
+        
+        return $options;
+    }
+
+    /**
      * Devuelve un array con las opciones de la tabla grupo, limitadas por una condición definida
      * en un formato ($formato) definido
      * 

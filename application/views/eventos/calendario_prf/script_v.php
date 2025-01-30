@@ -62,7 +62,7 @@ $(document).ready(function(){
                     title: 'Tema: <?= $nombre_evento_ajustado ?>',
                     start: '<?= $row_evento->fecha_inicio ?>',
                     end: '<?= $row_evento->fecha_inicio ?>',
-                    url: base_url + 'flipbooks/leer/' + <?= $row_evento->referente_2_id ?> + '/' + <?= $row_evento->entero_1 ?>,
+                    url: base_url + 'flipbooks/abrir/' + <?= $row_evento->referente_2_id ?> + '/' + <?= $row_evento->entero_1 ?>,
                     color : '<?= $color ?>'
                 },
             <?php endforeach ?>

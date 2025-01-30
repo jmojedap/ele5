@@ -77,6 +77,19 @@
             </div>
         </div>
         <div class="col-md-7">
+            <?php if ( $this->session->userdata('srol') == 'interno' ) : ?>
+                <div>
+                    <div class="mb-3 row">
+                        <label for="institucion_id" class="col-md-4 col-form-label text-end text-right">Institución</label>
+                        <div class="col-md-8">
+                            <select name="institucion_id" v-model="institucionId" class="form-select form-control" v-on:change="setInstitucion">
+                                <option v-for="optionInstitucion in instituciones" v-bind:value="optionInstitucion.cod">{{ optionInstitucion.name }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+            
             <ul class="nav nav-pills justify-content-start mb-2">
                 <li class="nav-item">
                     <a class="nav-link disabled" href="#" aria-disabled="true">Grupo:</a>

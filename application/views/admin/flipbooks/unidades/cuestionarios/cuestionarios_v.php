@@ -4,15 +4,32 @@
             <div class="col-md-6">
                 <table class="table bg-white">
                     <thead>
+                        <th></th>
                         <th>Asignados</th>
+                        <th></th>
+                        <th></th>
                     </thead>
                     <tbody>
                         <tr v-for="(cuestionario, key) in asignados">
+                            <td width="10px">
+                                {{ parseInt(cuestionario.orden) + 1 }}
+                            </td>
                             <td>
                                 <a v-bind:href="`<?= URL_APP . "cuestionarios/info/" ?>` + cuestionario.cuestionario_id">
                                     <span class="text-muted">{{ cuestionario.cuestionario_id }} &middot;</span>
                                     {{ cuestionario.nombre_cuestionario }}
                                 </a>
+                            </td>
+                            <td>
+                                <button class="a4"
+                                    v-on:click="updatePosition(cuestionario.meta_id, parseInt(cuestionario.orden) - 1)" v-show="cuestionario.orden > 0">
+                                    <i class="fa fa-arrow-up"></i>
+                                </button>
+                                <button class="a4"
+                                    v-on:click="updatePosition(cuestionario.meta_id, parseInt(cuestionario.orden) + 1)"
+                                    v-show="cuestionario.orden < (asignados.length-1)">
+                                    <i class="fa fa-arrow-down"></i>
+                                </button>
                             </td>
                             <td width="10px">
                                 <button class="a4" v-on:click="removeCuestionario(cuestionario)">

@@ -73,7 +73,7 @@
         );
         
         $arr_menus['editar'] = array(
-            'icono' => '<i class="fa fa-pencil-alt"></i>',
+            'icono' => '',
             'texto' => 'Editar',
             'link' => "cuestionarios/editar/edit/{$row->id}",
             'atributos' => ''

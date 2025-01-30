@@ -121,6 +121,46 @@ class Meta_model extends CI_Model{
 
         return $qtyDeleted;
     }
+
+    /**
+     * Actualizar el campo meta.orden, para un archivo específico
+     * 2024-09-26
+     */
+    function update_position($metaId, $newPosition)
+    {
+        $data['status'] = 0;   //Resultado por defecto
+
+        //Identificar row Meta
+        $rowMeta = $this->Db_model->row_id('meta', $metaId);
+
+        //Establecer posición máxima, según número de elementos
+        $condition = "tabla_id = {$rowMeta->tabla_id} AND elemento_id = {$rowMeta->elemento_id} AND dato_id = {$rowMeta->dato_id}";
+        $maxPosition = $this->Db_model->num_rows('meta', $condition);
+
+        if ( $newPosition >= 0 && $newPosition < $maxPosition ) {
+            if ( $newPosition > $rowMeta->orden ) {
+                //Si la posición aumenta, modificar anteriores
+                $sql = "UPDATE meta SET orden = (orden-1)
+                    WHERE {$condition}
+                    AND orden <= {$newPosition} AND orden > {$rowMeta->orden} AND orden > 0";
+                $this->db->query($sql);
+
+            } else if ( $newPosition < $rowMeta->orden ) {
+                //Si la posición disminuye, modificar siguientes
+                $sql = "UPDATE meta SET orden = (orden+1)
+                WHERE {$condition}
+                AND orden >= {$newPosition} AND orden < {$rowMeta->orden}";
+                $this->db->query($sql);
+            }
+    
+            //Actualizar orden, del registro
+            $this->db->query("UPDATE meta SET orden = {$newPosition} WHERE id = {$metaId}");
+    
+            if ( $this->db->affected_rows() > 0) $data['status'] = 1;
+        }
+
+        return $data;
+    }
     
 // CRUD META
 //---------------------------------------------------------------------------------------------------------
@@ -314,17 +354,19 @@ class Meta_model extends CI_Model{
      * Cuesitonarios asociados a un post tipo unidad (60)
      * @param int $postId: Id del post tipo unidad
      * @return object $cuestionarios
-     * 2024-08-10
+     * 2024-11-01
      */
     function cuestionarios_unidad($postId)
     {
-        $this->db->select('meta.id AS meta_id, cuestionario.id AS cuestionario_id,
+        $this->db->select('meta.id AS meta_id, meta.orden, cuestionario.id AS cuestionario_id,
             nombre_cuestionario, cuestionario.nivel, cuestionario.area_id, cuestionario.tipo_id,
+            cuestionario.archivo_imprimible,
             post.id AS unidad_id, integer_1 AS numero_unidad');
         $this->db->join('cuestionario', 'cuestionario.id = meta.relacionado_id', 'left');
         $this->db->join('post', 'post.id = meta.elemento_id', 'left');
         $this->db->where('dato_id', 200011);    //Tipo cuestionario asociado
         $this->db->where('elemento_id', $postId);
+        $this->db->order_by('orden', 'ASC');
         
         $cuestionarios = $this->db->get('meta');
 

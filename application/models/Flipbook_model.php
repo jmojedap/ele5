@@ -1090,9 +1090,9 @@ class Flipbook_model extends CI_Model {
     /**
      * Query con temas relacionados con el tema de cada página
      * 
-     * @param type $flipbook_id
-     * @param type $relacion_id
-     * @return type
+     * @param int $flipbook_id
+     * @param int $relacion_id
+     * @return object $query
      */
     function relacionados($flipbook_id, $relacion_id) {
         $this->db->select('meta.elemento_id AS tema_id, meta.relacionado_id, num_pagina, tema.nombre_tema AS nombre_tema_relacionado');

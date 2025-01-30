@@ -1297,6 +1297,11 @@ class Usuarios extends CI_Controller{
         //Variables
             $data['row_uc'] = $this->Pcrn->registro('usuario_cuestionario', "id = {$uc_id}");
             $data['row_cuestionario'] = $this->Pcrn->registro('cuestionario', "id = {$data['row_uc']->cuestionario_id}");
+
+            //Operaciones mentales
+            if ( $data['row_cuestionario']->tipo_id == 5 ) {
+                redirect("cuestionarios/resultados_detalle/{$usuario_id}/{$uc_id}");
+            }
             
             //'Areas del cuestionario
             $this->load->model('Cuestionario_model');
@@ -1318,9 +1323,6 @@ class Usuarios extends CI_Controller{
             $data['vista_c'] = 'usuarios/resultados/detalle_v';
             $data['vista_menu'] = 'usuarios/resultados/submenu_v';
             $this->load->view(TPL_ADMIN_NEW, $data);
-
-            //if ( $this->session->userdata('role') == 0 ) $this->output->enable_profiler(TRUE);
-        
     }
     
     /* Muestra los resultados de un usuario en un cuestionario por áreas

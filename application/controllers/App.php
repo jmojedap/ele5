@@ -64,6 +64,7 @@ class App extends CI_Controller{
         } else {
             $data['head_title'] = 'En Línea Editores :: Bienvenidos';
             $data['view_a'] = 'app/login_v';
+            $data['linkBanner'] = $this->App_model->valor_opcion(26);
             $this->load->view('templates/monster/start_width_v', $data);
         }
     }
@@ -180,6 +181,33 @@ class App extends CI_Controller{
         $this->App_model->view('templates/monster/public/public_v', $data);
 
     }
+
+    /**
+     * Vídeo presentación inicio
+     * 2024-10-04
+     */
+    function video_inicio()
+    {
+        $data['head_title'] = 'Plataforma en Línea';
+        $data['view_a'] = 'app/video_inicio_v';
+
+        $this->App_model->view('templates/monster/public/public_v', $data);
+    }
+
+    /**
+     * Vídeo específico
+     * 2025-01-29
+     */
+    function video($videoName = 'enfoque_integral_video')
+    {
+        $data['head_title'] = 'Vídeo';
+        $data['view_a'] = 'app/video_v';
+        $data['videoName'] = $videoName;
+
+        $this->App_model->view('templates/monster/public/public_v', $data);
+    }
+
+
     
 //FUNCIONES DE CONTROL DE CONTENIDO
 //---------------------------------------------------------------------------------------------------

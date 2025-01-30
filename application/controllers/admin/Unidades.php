@@ -27,6 +27,10 @@ class Unidades extends CI_Controller{
         }
     }
 
+    /**
+     * CRUD Listado de cuestionarios de una unidad
+     * 2024-09-26
+     */
     function cuestionarios($post_id)
     {
         $data = $this->Post_model->basic($post_id);

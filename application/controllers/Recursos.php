@@ -132,32 +132,30 @@ class Recursos extends CI_Controller{
     function asignar_e()
     {
         //Proceso
-            $this->load->model('Pcrn_excel');
-            $no_importados = array();
-            $letra_columna = 'C';   //Última columna con datos
+            $this->load->library('excel_new');
             
-            $resultado = $this->Pcrn_excel->array_hoja_default($letra_columna);
+            $imported_data = $this->excel_new->arr_sheet_default($this->input->post('nombre_hoja'));
 
-            if ( $resultado['valido'] )
+            if ( $imported_data['status'] == 1 )
             {
-                //$this->load->model('_model');
-                $no_importados = $this->Recurso_model->asignar($resultado['array_hoja']);
+                $data = $this->Recurso_model->asignar($imported_data['arr_sheet']);
             }
         
         //Cargue de variables
-            $data['valido'] = $resultado['valido'];
-            $data['mensaje'] = $resultado['mensaje'];
-            $data['array_hoja'] = $resultado['array_hoja'];
-            $data['nombre_hoja'] = $this->input->post('nombre_hoja');
-            $data['no_importados'] = $no_importados;
-            $data['destino_volver'] = "recursos/archivos/";
+            $data['status'] = $imported_data['status'];
+            $data['message'] = $imported_data['message'];
+            $data['arr_sheet'] = $imported_data['arr_sheet'];
+            $data['sheet_name'] = $this->input->post('sheet_name');
+            $data['back_destination'] = "recursos/archivos";
         
         //Cargar vista
             $data['head_title'] = 'Archivos';
             $data['head_subtitle'] = 'Asignar';
-            $data['view_a'] = 'comunes/bs4/resultado_importacion_v';
+            $data['view_a'] = 'common/import_result_v';
             $data['nav_2'] = 'recursos/menu_archivos_v';
             $this->load->view(TPL_ADMIN_NEW, $data);
+            //Salida JSON
+            //$this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
     
     function procesos_archivos()

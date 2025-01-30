@@ -98,6 +98,20 @@
                 <?php endforeach ?>
             </div>
         </div>
+
+        <h1 class="estante" style="background-color: #ffd600; color: #333;">
+            Otros recursos
+        </h1>
+        <div class="flipbooks_wrapper" style="height: 150px; overflow-x: <?= $att_cap['overflow_x'] ?>; overflow-y: hidden; width: 715px; margin: 0px auto;">
+
+            <div class="flipbooks_strip" style="width: <?= $att_cap['ancho'] ?>px;">
+                <div class="flipbook_container">
+                    <a href="<?= base_url("app/video/enfoque_integral_video_estudiantes") ?>" title="Vídeo estudiantes" target="_blank">
+                        <img width="100" src="<?= URL_CONTENT . 'varios/enfoque_integral_cover.png' ?>" onError="this.src='<?= $img_cap_general ?>'">
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

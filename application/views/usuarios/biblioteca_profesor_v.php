@@ -42,11 +42,11 @@
         if ( $att_cap['ancho'] > 700 ) { $att_cap['overflow_x'] = 'scroll'; }
 ?>
 
-<link rel="stylesheet" href="<?php echo URL_RESOURCES ?>templates/apanel3/biblioteca.css">
+<link rel="stylesheet" href="<?= URL_RESOURCES ?>templates/apanel3/biblioteca.css">
 
 <?php //$this->load->view('app/saludo_especial_v') ?>
 
-<article style="background:url(<?php echo URL_IMG ?>app/bookshelf.png) no-repeat;" class="library">
+<article style="background:url(<?= URL_IMG ?>app/bookshelf.png) no-repeat;" class="library">
     <h1 class="estante" style="background-color: #DD5044">
         Contenidos
     </h1>
@@ -61,8 +61,8 @@
                     }
                 ?>
                 <div class="flipbook_container">
-                    <a target="_blank" href="<?php echo base_url() . 'flipbooks/' . $funcion_flipbook . '/' . $contenido['flipbook_id']; ?>">
-                        <img width="100" src="<?php echo $imagen_flipbook ?>" onError="this.src='<?= $img_flipbook_general ?>'">
+                    <a target="_blank" href="<?= base_url() . 'flipbooks/' . $funcion_flipbook . '/' . $contenido['flipbook_id']; ?>">
+                        <img width="100" src="<?= $imagen_flipbook ?>" onError="this.src='<?= $img_flipbook_general ?>'">
                     </a>
                 </div>
             
@@ -121,7 +121,12 @@
         <div class="flipbooks_strip" style="width: <?= $att_cap['ancho'] ?>px;">
             <div class="flipbook_container">
                 <a href="<?= base_url("contenidos_ap/explorar/?f1=1") ?>" title="Estrategias pedagógicas">
-                    <img width="100" src="<?php echo URL_IMG . 'flipbook_resources/estrategias-pedagogicas.jpg' ?>" onError="this.src='<?= $img_cap_general ?>'">
+                    <img width="100" src="<?= URL_IMG . 'flipbook_resources/estrategias-pedagogicas.jpg' ?>" onError="this.src='<?= $img_cap_general ?>'">
+                </a>
+            </div>
+            <div class="flipbook_container">
+                <a href="<?= base_url("app/video/enfoque_integral_video_profesores") ?>" title="Vídeo profesores" target="_blank">
+                    <img width="100" src="<?= URL_CONTENT . 'varios/enfoque_integral_cover.png' ?>" onError="this.src='<?= $img_cap_general ?>'">
                 </a>
             </div>
         </div>

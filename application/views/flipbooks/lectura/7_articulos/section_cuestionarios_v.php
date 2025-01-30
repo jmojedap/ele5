@@ -22,16 +22,21 @@
                 <?php endif; ?>
             </td>
             <?php if ( $this->session->userdata('srol') != 'estudiante' ) : ?>
-                <td width="90px">
+                <td width="135px">
                     <a class="btn btn-sm btn-light me-1" title="Asignar a grupo" v-bind:href="`<?= URL_APP ?>cuestionarios/asignar/` + cuestionario.cuestionario_id"
                         target="_blank"
                     >
                         <i class="fa fa-calendar"></i>
                     </a>
-                    <a class="btn btn-sm btn-light" title="Vista previa" v-bind:href="`<?= URL_APP ?>cuestionarios/vista_previa/` + cuestionario.cuestionario_id"
+                    <a class="btn btn-sm btn-light me-1" title="Vista previa" v-bind:href="`<?= URL_APP ?>cuestionarios/vista_previa/` + cuestionario.cuestionario_id"
                         target="_blank"
                     >
                         <i class="fas fa-external-link-alt"></i>
+                    </a>
+                    <a class="btn btn-sm btn-light" title="Vista previa" v-bind:href="`<?= URL_CONTENT ?>cuestionarios/` + cuestionario.archivo_imprimible"
+                        target="_blank" v-show="cuestionario.archivo_imprimible.length > 0"
+                    >
+                        <i class="fa-solid fa-print"></i>
                     </a>
                 </td>
             <?php endif; ?>

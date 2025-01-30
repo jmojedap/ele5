@@ -306,7 +306,9 @@ class Pregunta_model extends CI_Model{
 
         if ( $editable ) {
             //Eliminar archivo
+            if (file_exists(RUTA_UPLOADS . 'preguntas/' . $row_pregunta->archivo_imagen)) {
                 unlink(RUTA_UPLOADS . 'preguntas/' . $row_pregunta->archivo_imagen);
+            }
     
             //Modificar registro
                 $arr_row['archivo_imagen'] = '';
@@ -1062,12 +1064,10 @@ class Pregunta_model extends CI_Model{
      * 
      * Se eliminan también los archivos de las imágenes asociadas
      * 
-     * @param type $pregunta_id 
+     * @param int $pregunta_id 
      */
-    function eliminar($pregunta_id){
-        
-        //$this->load->model('Cuestionario_model');
-
+    function eliminar($pregunta_id)
+    {
         $row = $this->Db_model->row_id('pregunta', $pregunta_id);
         
         //Eliminar archivos
@@ -1077,7 +1077,7 @@ class Pregunta_model extends CI_Model{
          * Al eliminarse una Pregunta, los números de Pregunta de las Preguntas siguientes deben disminuir
          * en uno.
          */
-            $cuestionarios = $this->cuestionarios($pregunta_id);   //Identificar todos los cuestionario en los que aparece la Pregunta
+            /*$cuestionarios = $this->cuestionarios($pregunta_id);   //Identificar todos los cuestionario en los que aparece la Pregunta
 
             foreach ($cuestionarios->result() as $row_cuestionario)  //Recorrer cada cuestionario y hacer la actualización de números de Pregunta
             {
@@ -1089,11 +1089,12 @@ class Pregunta_model extends CI_Model{
                 $sql .= "cuestionario_id = {$row_cuestionario->cuestionario_id}";
                 
                 $this->db->query($sql);
-            }
+            }*/
         
         //Eliminar registro de la Tabla principal
             $this->db->where('id', $pregunta_id);
             $this->db->delete('pregunta');
+            $qty_affected = $this->db->affected_rows();
         
         //Eliminar registros de las Tablas relacionadas
             $tablas = array(
@@ -1110,26 +1111,8 @@ class Pregunta_model extends CI_Model{
         //Reenumerar el campo pregunta.orden de las demás Preguntas del tema_id que la Pregunta eliminada tenía
             $this->load->model('Tema_model');
             $this->Tema_model->numerar_preguntas($row->tema_id);
-    }
-    
-    /**
-     * Elimina los archivos en el servidor,
-     * las imágenes asociadas a las Preguntas de los cuestionario
-     * Dos carpetas, tamaño original y miniatura
-     * 
-     * @param type $nombre_archivo 
-     */
-    function z_eliminar_img_pregunta($nombre_archivo)
-    {
-        //Construir rutas con las constantes definidas
-            $ruta_archivo = FCPATH . RUTA_UPLOADS . 'preguntas/' . $nombre_archivo;
-            
-            if ( file_exists($ruta_archivo) && strlen($nombre_archivo) > 2 )
-            { 
-                echo 'Archivo: ' . $nombre_archivo;
-                echo '</br>';
-                unlink($ruta_archivo);
-            }
+
+        return $qty_affected;
     }
     
     /**

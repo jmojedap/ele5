@@ -1,7 +1,7 @@
 <?php $this->load->view('assets/lightbox2') ?>
 
 
-<div id="preguntas">
+<div id="preguntas" class="container">
     <?php if ( $row->tipo_id > 3 or $this->session->userdata('role') < 3   ) : ?>
         <a href="<?= base_url("cuestionarios/pregunta_nueva/{$cuestionario_id}/0") ?>" class="btn btn-light mb-2" title="Agregar pregunta al inicio del cuestionario">
             <i class="fa fa-plus"></i>
@@ -19,25 +19,27 @@
                     <p>
                         <span class="badge badge-primary">Pregunta {{ key + 1 }}</span>
                     </p>
+                    <p>
+                        {{ pregunta.habilidad }} &middot; {{ pregunta.proceso_pensamiento }}
+                    </p>
                     
                     <p v-html="pregunta.texto_pregunta"></p>
                     <p v-html="pregunta.enunciado_2"></p>
                     <ul style="list-style: none;">
                         <li v-bind:class="{'right_answer': pregunta.clv == 1 }">
-                            <span class="badge badge-secondary">A</span>
+                            <span class="badge badge-secondary">Nivel básico</span>
+                            <br>
                             <span v-html="pregunta.opcion_1"></span> 
                         </li>
                         <li v-bind:class="{'right_answer': pregunta.clv == 2 }">
-                            <span class="badge badge-secondary">B</span>
+                            <span class="badge badge-secondary">Nivel medio</span>
+                            <br>
                             <span v-html="pregunta.opcion_2"></span> 
                         </li>
                         <li v-bind:class="{'right_answer': pregunta.clv == 3 }">
-                            <span class="badge badge-secondary">C</span>
+                            <span class="badge badge-secondary">Nivel avanzado</span>
+                            <br>
                             <span v-html="pregunta.opcion_3"></span> 
-                        </li>
-                        <li v-bind:class="{'right_answer': pregunta.clv == 4 }">
-                            <span class="badge badge-secondary">D</span>
-                            <span v-html="pregunta.opcion_4"></span> 
                         </li>
                     </ul>
 
@@ -56,20 +58,7 @@
                     </a>
                 <?php } ?>
 
-                <?php if ( $this->session->userdata('srol') == 'interno' ) { ?>
-                    <button class="btn btn-light" v-on:click="create_version(key)" v-show="pregunta.version_id == 0" title="Crear una versión alterna de la pregunta">
-                        <i class="fa fa-code-branch"></i>
-                    </button>
-                <?php } ?>
-
-                <a class="btn btn-primary" v-show="pregunta.version_id > 0" title="Ver versión alterna de la pregunta" v-bind:href="`<?= base_url('preguntas/version/') ?>` + pregunta.pregunta_id" target="_blank">
-                    Versión
-                </a>
-                <button class="btn btn-warning" v-show="pregunta.version_id > 0" title="Eliminar versión propuesta de esta pregunta" data-toggle="modal" data-target="#delete_version_modal" v-on:click="set_current(key)">
-                    <i class="fa fa-trash"></i> Versión
-                </button>
-
-                <?php if ( $editable && in_array($row->tipo_id,[4,5])  ) { ?>
+                <?php if ( $editable && in_array($row->tipo_id,[5])  ) { ?>
                     <a class="btn btn-light"
                         v-bind:href="`<?= base_url('preguntas/editar/') ?>` + pregunta.pregunta_id"
                         target="_blank"
@@ -90,14 +79,6 @@
                         <i class="fa fa-times"></i>
                     </button>
                 <?php } ?>
-            </div>
-
-            <div>
-                <p>
-                    Tema:
-                    <b class="text-success">{{ pregunta.nombre_tema }}</b>
-                    
-                </p>
             </div>
 
 

@@ -157,6 +157,7 @@ class Cuestionario_model extends CI_Model
     
     /**
      * Devuelve segmento SQL
+     * 2024-11-19
      */
     function role_filter()
     {
@@ -168,10 +169,10 @@ class Cuestionario_model extends CI_Model
             $condition = 'cuestionario.id > 0';
         } elseif ( in_array($row_user->rol_id, array(3,4)) ) {
             //Admin institucional y directivos
-            $condition = "( cuestionario.tipo_id IN (3,4) AND ( cuestionario.institucion_id = '{$this->session->userdata('institucion_id')}' ) )";
+            $condition = "( cuestionario.tipo_id IN (3,4,5) AND ( cuestionario.institucion_id = '{$this->session->userdata('institucion_id')}' ) )";
         } elseif ( $row_user->rol_id == 5 ) {
             //Profesor
-            $condition = "( cuestionario.tipo_id IN (3,4) AND cuestionario.creado_usuario_id = {$this->session->userdata('usuario_id')} )";
+            $condition = "( cuestionario.tipo_id IN (3,4,5) AND cuestionario.creado_usuario_id = {$this->session->userdata('usuario_id')} )";
         } elseif ( $row_user->rol_id == 7 ) {
             //Digitador
             $condition = "cuestionario.institucion_id IN (5)";
@@ -541,6 +542,9 @@ class Cuestionario_model extends CI_Model
 //GROCERY CRUD DE CUESTIONARIOS
 //---------------------------------------------------------------------------------------------------
     
+    /**
+     * 2025-01-14
+     */
     function crud_editar()
     {
         
@@ -570,6 +574,7 @@ class Cuestionario_model extends CI_Model
             $crud->display_as('creado_usuario_id', 'ID usuario editor');
             $crud->display_as('editado_usuario_id', 'ID usuario creador');
             $crud->display_as('institucion_id', 'ID Institución');
+            $crud->display_as('archivo_imprimible', 'Archivo imprimible');
         
         //Relaciones
             $crud->set_relation('area_id', 'item', 'item', 'categoria_id = 1');
@@ -583,6 +588,7 @@ class Cuestionario_model extends CI_Model
                 'interno',
                 'tiempo_minutos',
                 'descripcion',
+                'archivo_imprimible',
                 'editado',
                 'institucion_id',
                 'editado_usuario_id',
@@ -597,6 +603,7 @@ class Cuestionario_model extends CI_Model
                 'interno',
                 'tiempo_minutos',
                 'descripcion',
+                'archivo_imprimible',
                 'creado',
                 'editado',
                 'creado_usuario_id',
@@ -623,9 +630,9 @@ class Cuestionario_model extends CI_Model
             $crud->field_type('interno', 'dropdown', $opciones_interno);
             $crud->field_type('tipo_id', 'dropdown', $opciones_tipo);
             $crud->field_type('creado', 'hidden', date('Y-m-d H:i:s'));
-            //$crud->field_type('creado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
+            $crud->field_type('creado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
             $crud->field_type('editado', 'hidden', date('Y-m-d H:i:s'));
-            //$crud->field_type('editado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
+            $crud->field_type('editado_usuario_id', 'hidden', $this->session->userdata('usuario_id'));
             
         //Opciones nivel
             $opciones_nivel = $this->App_model->opciones_nivel('item_largo');
@@ -851,15 +858,16 @@ class Cuestionario_model extends CI_Model
 
     /**
      * Preguntas de un cuestionario, para edición
-     * 2019-10-21
+     * 2024-11-14
      * 
-     * @param type $cuestionario_id
-     * @return type
+     * @param int $cuestionario_id
+     * @return object $query
      */
     function lista_preguntas_detalle($cuestionario_id)
     {
         $select = 'pregunta.id AS pregunta_id, ';
-        $select .= 'texto_pregunta, enunciado_2, opcion_1, opcion_2, opcion_3, opcion_4, enunciado_id, version_id, tema_id, nombre_tema, ';
+        $select .= 'texto_pregunta, enunciado_2, opcion_1, opcion_2, opcion_3, opcion_4, enunciado_id, version_id, pregunta.tema_id, nombre_tema, ';
+        $select .= 'habilidad, proceso_pensamiento, ';
         $select .= 'CONCAT("' . URL_UPLOADS . 'preguntas/", (archivo_imagen)) AS url_imagen_pregunta, archivo_imagen, ' ;
         $select .= 'respuesta_correcta AS clv, "0" AS rta, "0" AS res, ';
         $select .= 'post.contenido AS contenido_enunciado, post.nombre_post AS titulo_enunciado, ';
@@ -1802,17 +1810,19 @@ class Cuestionario_model extends CI_Model
     
     /**
      * Devuelve el registro de una pregunta de un cuestionario según el orden establecido
-     * 2019-10-11
+     * 2024-11-14
      * 
-     * @param type $cuestionario_id
-     * @param type $num_pregunta
-     * @return type 
+     * @param int $cuestionario_id
+     * @param int $num_pregunta
+     * @return object $pregunta
      */
     function pregunta_cuestionario($cuestionario_id, $num_pregunta)
     {
         
         //Construyendo la consulta
-            $this->db->select('pregunta.id, cuestionario_pregunta.orden, texto_pregunta, enunciado_2, opcion_1, opcion_2, opcion_3, opcion_4, archivo_imagen, enunciado_id, post_id, respuesta_correcta, version_id, tema_id');
+            $this->db->select('pregunta.id, cuestionario_pregunta.orden, texto_pregunta, enunciado_2,
+                 opcion_1, opcion_2, opcion_3, opcion_4, archivo_imagen, enunciado_id, post_id,
+                 respuesta_correcta, version_id, tema_id, habilidad, proceso_pensamiento');
             $this->db->join('pregunta', 'cuestionario_pregunta.pregunta_id = pregunta.id');
             $this->db->where('cuestionario_id' , $cuestionario_id);
             $this->db->order_by('cuestionario_pregunta.orden', 'ASC');

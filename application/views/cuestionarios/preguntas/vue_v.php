@@ -5,15 +5,15 @@
             this.get_list();
         },
         data: {
-            app_url: '<?php echo base_url() ?>',
-            cuestionario_id: '<?php echo $row->id ?>',
+            app_url: '<?= base_url() ?>',
+            cuestionario_id: '<?= $row->id ?>',
             cant_preguntas: 0,
             lista: [],
             pregunta: []
         },
         methods: {
             get_list: function(){
-                axios.get(this.app_url + 'cuestionarios/lista_preguntas_detalle/' + this.cuestionario_id)
+                axios.get(URL_API + 'cuestionarios/lista_preguntas_detalle/' + this.cuestionario_id)
                 .then(response => {
                     this.lista = response.data.lista;
                     this.cant_preguntas = response.data.cant_preguntas;
@@ -42,20 +42,18 @@
                 });
             },
             delete_element: function(){
-                axios.get(this.app_url + 'cuestionarios/quitar_pregunta/' + this.cuestionario_id + '/' + this.pregunta.pregunta_id)
+                axios.get(URL_API + 'cuestionarios/quitar_pregunta/' + this.cuestionario_id + '/' + this.pregunta.pregunta_id)
                 .then(response => {
                     if ( response.data.status == 1) {    
                         this.get_list();
                         toastr['info']('La pregunta se quitó del cuestionario');
                     }
                 })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                .catch(function (error) {console.log(error)});
             },
             move_question: function(key, new_position){
                 this.set_current(key);
-                axios.get(this.app_url + 'cuestionarios/mover_pregunta/' + this.cuestionario_id + '/' + this.pregunta.pregunta_id + '/' + new_position)
+                axios.get(URL_API + 'cuestionarios/mover_pregunta/' + this.cuestionario_id + '/' + this.pregunta.pregunta_id + '/' + new_position)
                 .then(response => {
                     if (response.data.status == 1) {
                         this.get_list();
@@ -70,7 +68,7 @@
             },
             //Elimina la versión propuesta existente de una pregunta
             delete_version: function(){
-                axios.get(this.app_url + 'preguntas/delete_version/' + this.pregunta.pregunta_id + '/' + this.pregunta.version_id)
+                axios.get(URL_API + 'preguntas/delete_version/' + this.pregunta.pregunta_id + '/' + this.pregunta.version_id)
                 .then(response => {
                     if (response.data.status == 1) {
                         this.get_list();

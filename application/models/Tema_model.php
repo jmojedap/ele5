@@ -1218,10 +1218,11 @@ class Tema_Model extends CI_Model{
     }
     
     /**
-     * Actualiza el campo pregunta.orden, según el orden de las preguntas
-     * @param type $tema_id
+     * Actualiza el campo pregunta.orden, según el orden de las
+     * preguntas dentro de un tema
+     * @param int $tema_id
      */
-    function numerar_preguntas($tema_id)
+    function numerar_preguntas($tema_id = null)
     {
         $this->db->where('tema_id', $tema_id);
         $this->db->order_by('orden', 'ASC');

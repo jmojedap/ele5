@@ -113,22 +113,25 @@ class Preguntas extends CI_Controller{
     
     /**
      * AJAX
-     * Eliminar un grupo de instituciones seleccionados
+     * Eliminar un grupo de preguntas seleccionadas
+     * 2025-01-08
      */
     function delete_selected()
     {
-        $this->load->model('Tema_model');
-        
-        $str_seleccionados = $this->input->post('seleccionados');
+        $str_seleccionados = $this->input->post('selected');
         
         $seleccionados = explode('-', $str_seleccionados);
         
+        $qty_deleted = 0;
         foreach ( $seleccionados as $elemento_id ) 
         {
-            $this->Pregunta_model->eliminar($elemento_id);
+            $qty_deleted += $this->Pregunta_model->eliminar($elemento_id);
         }
         
-        echo count($seleccionados);
+        $data['qty_deleted'] = $qty_deleted;
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     
@@ -147,6 +150,7 @@ class Preguntas extends CI_Controller{
 
     /**
      * Formulario de edición de pregunta
+     * 2024-11-13
      */
     function editar($pregunta_id)
     {
@@ -159,13 +163,15 @@ class Preguntas extends CI_Controller{
             $data['options_nivel'] = $this->App_model->opciones_nivel('item_largo');
             $data['options_area'] = $this->Item_model->opciones_id('categoria_id = 1');
             $data['options_competencia'] = $this->Item_model->opciones_id('categoria_id = 4');
-            $data['options_componente'] = $this->Item_model->opciones_id('categoria_id = 8');
+            $data['arrHabilidades'] = $this->Item_model->arr_options('categoria_id = 159');
+            $data['arrProcesos'] = $this->Item_model->arr_options('categoria_id = 160');
         
         //Array data espefícicas
             $data['view_description'] = 'preguntas/pregunta_v';
             $data['nav_2'] = 'preguntas/menu_v';
             $data['view_a'] = 'preguntas/editar/editar_v';
             $data['view_form'] = 'preguntas/editar/form_v';
+            if ( $data['row']->tipo_pregunta_id == 15 ) { $data['view_form'] = 'preguntas/editar/form_operaciones_mentales_v'; }
 
         //Formulario limitado para usuarios institucionales
             if ( $this->session->userdata('srol') == 'institucional' ) {

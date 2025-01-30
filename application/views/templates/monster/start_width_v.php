@@ -74,14 +74,22 @@
                             </ul>
                         </div>
                     </div>
+
+                    <?php if ( ! is_null($linkBanner) ) : ?>
+                        <a href="<?= $linkBanner ?>">
+                            <img class="rounded" src="<?= URL_CONTENT ?>inicio/banner_inicio.jpg" alt="Imagen banner de inicio">
+                        </a>
+                    <?php endif; ?>
                 </div>
+
+
             </div>
         </div>
 
 
         <div class="fixed-bottom text-center pb-2">
             <span style="color: #FFFFFF">
-                © 2022 &middot; En Línea Editores &middot; Colombia
+                © 2024 &middot; En Línea Editores &middot; Colombia
             </span>
         </div>
         
